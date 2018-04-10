@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mahlo2", "Mahlo2\Mahlo2.csproj", "{B1825919-D85B-4E0E-8671-E6851E810CF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mahlo2Tests", "Mahlo2Tests\Mahlo2Tests.csproj", "{EFACEF8E-1FA2-4FDE-96F3-AAF6979D682A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1825919-D85B-4E0E-8671-E6851E810CF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1825919-D85B-4E0E-8671-E6851E810CF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1825919-D85B-4E0E-8671-E6851E810CF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1825919-D85B-4E0E-8671-E6851E810CF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFACEF8E-1FA2-4FDE-96F3-AAF6979D682A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFACEF8E-1FA2-4FDE-96F3-AAF6979D682A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFACEF8E-1FA2-4FDE-96F3-AAF6979D682A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFACEF8E-1FA2-4FDE-96F3-AAF6979D682A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {12095B22-9E89-400F-9AA8-C7BFF9D35669}
+	EndGlobalSection
+EndGlobal
