@@ -28,13 +28,26 @@ namespace Mahlo.Logic
     stpPLCCommError = 2
   }
 
-  class MeterLogic : IMeterLogic
+  abstract class MeterLogic<Model> : IMeterLogic<Model>
+    where Model : MahloRoll, new()
   {
     private IDbMfg dbMfg;
     private IDbLocal dbLocal;
     private ISewinQueue sewinQueue;
     private IMeterSrc srcData;
     private IAppInfoBAS appInfo;
+
+    private bool bMustClearUnlatchBit;
+    private bool bNotifyRollSize;
+    private double nLengthWhereSeamDetected;
+    private double nCounterResetAtFootage;
+    private bool bTurnOffStatusIndicator = false;
+    private UserAttentionEnum nUserAttentions;
+    private bool BowBiasMapIsValid;
+    private int nRollCheckCount;
+    private CriticalStopEnum nCriticalStops;
+    private string sPreviousStyle = string.Empty;
+    private int nStyleCheckCount;
 
     public MeterLogic(IMeterSrc srcData, ISewinQueue sewinQueue, IDbMfg dbMfg, IDbLocal dbLocal, IAppInfoBAS appInfo)
     {
@@ -55,17 +68,17 @@ namespace Mahlo.Logic
     /// <summary>
     /// Get the roll that is currently being processed
     /// </summary>
-    public MahloRoll CurrentRoll { get; private set; } = new MahloRoll();
+    public Model CurrentRoll { get; private set; } = new Model();
 
     /// <summary>
     /// Gets the list of rolls that have been processed and includes the current roll at the end
     /// </summary>
-    public List<MahloRoll> Rolls { get; private set; } = new List<MahloRoll>();
+    public List<Model> Rolls { get; private set; } = new List<Model>();
 
     /// <summary>
     /// Gets the roll map for the current roll
     /// </summary>
-    public List<MahloRoll> RollMap { get; private set; } = new List<MahloRoll>();
+    public List<Model> RollMap { get; private set; } = new List<Model>();
 
     public int CurrentRollId { get; private set; }
 
@@ -87,9 +100,6 @@ namespace Mahlo.Logic
           break;
       }
     }
-
-    bool bMustClearUnlatchBit;
-    bool bNotifyRollSize;
 
     private void MetersCountChanged()
     {
@@ -139,16 +149,6 @@ namespace Mahlo.Logic
       //  }
       //}
     }
-
-    double nLengthWhereSeamDetected;
-    double nCounterResetAtFootage;
-    bool bTurnOffStatusIndicator = false;
-    UserAttentionEnum nUserAttentions;
-    bool BowBiasMapIsValid;
-    int nRollCheckCount;
-    CriticalStopEnum nCriticalStops;
-    string sPreviousStyle = string.Empty;
-    private int nStyleCheckCount;
 
     protected virtual void SeamDetected()
     {
@@ -211,7 +211,7 @@ namespace Mahlo.Logic
       this.BowBiasMapIsValid = false;
 
       this.srcData.ResetMeterOffset();
-      this.RollMap = new List<MahloRoll>();
+      this.RollMap = new List<Model>();
       this.CurrentRollId++;
 
       this.CurrentGreigeRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollId == this.CurrentRollId);
@@ -257,6 +257,10 @@ namespace Mahlo.Logic
         dbMfg.SendEmail(this.appInfo.SendEmailAlertsTo, "Urgent: Mahlo Bow and Skew Alert!", "The operator has not responded to a system request in a timely manner." + Environment.NewLine + Environment.NewLine + "Please investigate.");
       }
     }
+
+    protected abstract void LoadRolls();
+    protected abstract void SaveRoll();
+    protected abstract void SaveRollMap();
 
     private void DisableMapping(bool ShowIndicator = true)
     {
@@ -314,12 +318,6 @@ namespace Mahlo.Logic
       {
         //await PLCForm.ExecuteDDECommand(frmSLC500.DDECommandEnum.ddeSetUserAttention, (nUserAttentions > 0) ? "1" : "0");
       }
-    }
-
-
-    private void SaveRollMap()
-    {
-      throw new NotImplementedException();
     }
 
     private void ShowMappingStatus()

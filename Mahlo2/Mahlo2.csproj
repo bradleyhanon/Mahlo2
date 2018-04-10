@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -95,6 +96,7 @@
     <Compile Include="Models\PatternRepeatRoll.cs" />
     <Compile Include="Models\GreigeRoll.cs" />
     <Compile Include="Opc\IBowAndSkewSrc.cs" />
+    <Compile Include="Opc\IMahloSrc.cs" />
     <Compile Include="Opc\IMeterSrc.cs" />
     <Compile Include="Opc\IPatternRepeatSrc.cs" />
     <Compile Include="Opc\IWidthSrc.cs" />
@@ -109,6 +111,10 @@
     <Compile Include="Repository\DbConnectionFactory.cs" />
     <Compile Include="AppSettings\PlcSettings.cs" />
     <Compile Include="SingleInstance.cs" />
+    <Compile Include="Utilities\ConcurrencyInfo.cs" />
+    <Compile Include="Utilities\IConcurrencyInfo.cs" />
+    <Compile Include="Utilities\ISchedulerProvider.cs" />
+    <Compile Include="Utilities\SchedulerProvider.cs" />
     <Compile Include="Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

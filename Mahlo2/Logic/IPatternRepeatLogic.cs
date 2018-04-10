@@ -1,6 +1,8 @@
-﻿namespace Mahlo.Logic
+﻿using Mahlo.Models;
+
+namespace Mahlo.Logic
 {
-  interface IPatternRepeatLogic: IMeterLogic
+  interface IPatternRepeatLogic: IMeterLogic<PatternRepeatRoll>
   {
   }
 }

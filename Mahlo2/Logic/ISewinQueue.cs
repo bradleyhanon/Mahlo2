@@ -1,11 +1,13 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using Mahlo.Models;
 
 namespace Mahlo.Logic
 {
-  interface ISewinQueue
+  interface ISewinQueue : IDisposable
   {
-    ObservableCollection<GreigeRoll> Rolls { get; }
+    BindingList<GreigeRoll> Rolls { get; }
 
     bool RollIsLeader(int currentRollId);
   }

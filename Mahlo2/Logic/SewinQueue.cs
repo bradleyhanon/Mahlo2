@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Mahlo.Models;
 using Mahlo.Repository;
+using Mahlo.Utilities;
 
 namespace Mahlo.Logic
 {
-  class SewinQueue : ISewinQueue
+  sealed class SewinQueue : ISewinQueue
   {
     private TimeSpan refreshInterval = TimeSpan.FromSeconds(10);
     private int firstRollId;
@@ -24,16 +30,25 @@ namespace Mahlo.Logic
     private string priorLastRoll = string.Empty;
     private int priorQueueSize;
 
-    public SewinQueue(IDbLocal dbLocal, IDbMfg dbMfg)
+    IDisposable timer;
+
+    public SewinQueue(IConcurrencyInfo concurrencyInfo, IDbLocal dbLocal, IDbMfg dbMfg)
     {
       this.dbLocal = dbLocal;
       this.dbMfg = dbMfg;
 
-      this.Rolls = new ObservableCollection<GreigeRoll>(this.dbLocal.GetGreigeRolls());
-      //this.RunAutoRefresh();
+      this.timer = Observable
+        .Interval(TimeSpan.FromSeconds(5), concurrencyInfo.SchedulerProvider.Default)
+        .ObserveOn(concurrencyInfo.SynchronizationContext)
+        .Subscribe(async _ => await this.Refresh());
     }
 
-    public ObservableCollection<GreigeRoll> Rolls { get; private set; } = new ObservableCollection<GreigeRoll>();
+    public BindingList<GreigeRoll> Rolls { get; private set; } = new BindingList<GreigeRoll>();
+
+    public void Dispose()
+    {
+      this.timer.Dispose();
+    }
 
     public bool RollIsLeader(int rollId)
     {
@@ -42,7 +57,6 @@ namespace Mahlo.Logic
       bool result = false;
       try
       {
-
         //RollQueue theQueue = new RollQueue();
         //int bk = -1;
         string sBk1 = "", sBk2 = "";

@@ -7,11 +7,11 @@ using Mahlo.Models;
 
 namespace Mahlo.Logic
 {
-  interface IMeterLogic
+  interface IMeterLogic<Model>
   {
     GreigeRoll CurrentGreigeRoll { get; }
-    MahloRoll CurrentRoll { get; }
-    List<MahloRoll> RollMap { get; }
-    List<MahloRoll> Rolls { get; }
+    Model CurrentRoll { get; }
+    List<Model> RollMap { get; }
+    List<Model> Rolls { get; }
   }
 }

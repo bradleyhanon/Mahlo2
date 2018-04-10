@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -10,6 +12,7 @@ using Mahlo.AppSettings;
 using Mahlo.Logic;
 using Mahlo.Opc;
 using Mahlo.Repository;
+using Mahlo.Utilities;
 using Mahlo.Views;
 using OpcLabs.EasyOpc;
 using OpcLabs.EasyOpc.DataAccess;
@@ -75,7 +78,9 @@ namespace Mahlo
       using (new Control()) { } ;
 
       //container.RegisterSingleton<MainForm>(new MainForm());
+      container.RegisterSingleton<ISchedulerProvider, SchedulerProvider>();
       container.RegisterSingleton<SynchronizationContext>(WindowsFormsSynchronizationContext.Current);
+      container.RegisterSingleton<IConcurrencyInfo, ConcurrencyInfo>();
       container.RegisterSingleton<ISewinQueue, SewinQueue>();
       container.RegisterSingleton<IMahloLogic, MahloLogic>();
       container.RegisterSingleton<IBowAndSkewLogic, BowAndSkewLogic>();
@@ -83,7 +88,7 @@ namespace Mahlo
       container.RegisterSingleton<ICutRollLogic, CutRollLogic>();
       container.RegisterSingleton<IBowAndSkewSrc>(() => container.GetInstance<MahloOpcClient>());
       container.RegisterSingleton<IPatternRepeatSrc>(() => container.GetInstance<MahloOpcClient>());
-      container.RegisterSingleton<IMeterSrc>(() => container.GetInstance<MahloOpcClient>());
+      container.RegisterSingleton<IMahloSrc>(() => container.GetInstance<MahloOpcClient>());
       container.RegisterSingleton<EasyDAClient>(() => new EasyDAClient());
 
       container.RegisterSingleton<IDbConnectionFactoryFactory, DbConnectionFactory.Factory>();

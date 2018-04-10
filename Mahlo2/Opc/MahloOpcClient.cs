@@ -13,7 +13,7 @@ using OpcLabs.EasyOpc.DataAccess.OperationModel;
 
 namespace Mahlo.Opc
 {
-  class MahloOpcClient : IMeterSrc, IBowAndSkewSrc, IPatternRepeatSrc, IWidthSrc
+  class MahloOpcClient : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc, IWidthSrc
   {
     private const string MahloServerClass = "mahlo.10AOpcServer.1";
     private const string PlcServerClass = "Kepware.KEPServerEX.V6";
