@@ -73,6 +73,7 @@
     <Compile Include="Controllers\MahloBowAndSkew.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Logic\CarpetProcessor.cs" />
+    <Compile Include="Logic\CriticalStops.cs" />
     <Compile Include="Logic\CutRollLogic.cs" />
     <Compile Include="Logic\IBowAndSkewLogic.cs" />
     <Compile Include="Logic\ICutRollLogic.cs" />
@@ -84,11 +85,13 @@
     <Compile Include="Logic\MahloLogic.cs" />
     <Compile Include="Logic\MeterLogic.cs" />
     <Compile Include="Logic\PatternRepeatLogic.cs" />
+    <Compile Include="Logic\RollLengthMonitor.cs" />
     <Compile Include="Logic\SewinQueue.cs" />
     <Compile Include="DbMigrations\M001CreateDatabase.cs" />
     <Compile Include="DbMigrations\Runner.cs" />
     <Compile Include="AppSettings\IPlcSettings.cs" />
     <Compile Include="Logic\BowAndSkewLogic.cs" />
+    <Compile Include="Logic\UserAttentions.cs" />
     <Compile Include="Models\BowAndSkewRoll.cs" />
     <Compile Include="Models\CutRoll.cs" />
     <Compile Include="Models\CutRollDetail.cs" />

@@ -14,15 +14,13 @@ namespace Mahlo.Logic
 {
   class BowAndSkewLogic : MeterLogic<BowAndSkewRoll>, IBowAndSkewLogic
   {
+    IDbLocal dbLocal;
+
     public BowAndSkewLogic(IDbMfg dbMfg, IDbLocal dbLocal, ISewinQueue sewinQueue, IBowAndSkewSrc srcData, IAppInfoBAS appInfo) 
       : base(srcData, sewinQueue, dbMfg, dbLocal, appInfo)
     {
+      this.dbLocal = dbLocal;
       srcData.Initialize<IBowAndSkewSrc>();
-    }
-
-    protected override void LoadRolls()
-    {
-      throw new NotImplementedException();
     }
 
     protected override void SaveRoll()

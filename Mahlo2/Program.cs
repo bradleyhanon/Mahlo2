@@ -47,7 +47,6 @@ namespace Mahlo
               Environment.Exit(0);
             }
 
-            container.GetInstance<CarpetProcessor>();
             Application.Run(container.GetInstance<MainForm>());
           }
         }
@@ -98,6 +97,7 @@ namespace Mahlo
       container.RegisterSingleton<IOpcSettings, OpcSettings>();
       container.RegisterSingleton<IMahloOpcSettings, MahloOpcSettings>();
       container.RegisterSingleton<IPlcSettings, PlcSettings>();
+      container.RegisterSingleton<CarpetProcessor>();
 
       container.Verify();
       return container;

@@ -22,5 +22,7 @@ namespace Mahlo.Opc
     void Initialize<I>() where I : IMeterSrc;
     void ResetMeterOffset();
     void ResetSeamDetector();
+    void SetStatusIndicator(bool value);
+    void SetCriticalAlarm(bool value);
   }
 }

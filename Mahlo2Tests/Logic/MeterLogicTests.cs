@@ -26,11 +26,13 @@ namespace Mahlo2Tests.Logic
 
     public MeterLogicTests()
     {
+      BindingList<GreigeRoll> rolls = new BindingList<GreigeRoll>();
       this.srcData = Substitute.For<IMahloSrc>();
       this.sewinQueue = Substitute.For<ISewinQueue>();
       this.dbMfg = Substitute.For<IDbMfg>();
       this.dbLocal = Substitute.For<IDbLocal>();
       this.appInfo = Substitute.For<IAppInfoBAS>();
+      this.sewinQueue.Rolls.Returns(rolls);
 
       this.sewinQueue.Rolls.Add(new Mahlo.Models.GreigeRoll()
       {
@@ -40,6 +42,7 @@ namespace Mahlo2Tests.Logic
       });
 
       this.mahloLogic = new MahloLogic(this.sewinQueue, this.srcData, this.dbMfg, this.dbLocal, this.appInfo);
+      this.mahloLogic.Start();
     }
 
     [Fact]
@@ -48,6 +51,14 @@ namespace Mahlo2Tests.Logic
       srcData.MetersCount = 5;
       srcData.PropertyChanged += Raise.Event<PropertyChangedEventHandler>(this, new PropertyChangedEventArgs(nameof(srcData.MetersCount)));
       Assert.Equal(5, mahloLogic.CurrentRoll.Meters);
+    }
+
+    [Fact]
+    public void StatusIndicatorTurnsOffAfterSeamDetectableThreshold()
+    {
+      srcData.MetersCount = 5;
+      srcData.PropertyChanged += Raise.Event<PropertyChangedEventHandler>(this, new PropertyChangingEventArgs(nameof(srcData.SeamDetected)));
+
     }
   }
 }

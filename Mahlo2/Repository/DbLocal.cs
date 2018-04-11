@@ -60,5 +60,13 @@ namespace Mahlo.Repository
     {
       throw new NotImplementedException();
     }
+
+    public IEnumerable<T> GetRolls<T>() where T : MahloRoll
+    {
+      using (connection = this.ConnectionFactory.GetOpenConnection())
+      {
+        return connection.GetAll<T>();
+      }
+    }
   }
 }

@@ -8,14 +8,6 @@ namespace Mahlo.Logic
 {
   class CarpetProcessor
   {
-    public ISewinQueue sewinQueue { get; }
-    public IMahloLogic mahloLogic { get; }
-    public IBowAndSkewLogic bowAndSkewLogic { get; }
-    public IPatternRepeatLogic patternRepeatLogic { get; }
-    public ICutRollLogic cutRollLogic { get; }
-
-    public int startRollId;
-
     public CarpetProcessor(
       ISewinQueue sewinQueue,
       IMahloLogic mahloLogic,
@@ -28,6 +20,21 @@ namespace Mahlo.Logic
       this.bowAndSkewLogic = bowAndSkewLogic;
       this.patternRepeatLogic = patternRepeatLogic;
       this.cutRollLogic = cutRollLogic;
+    }
+
+    public ISewinQueue sewinQueue { get; }
+    public IMahloLogic mahloLogic { get; }
+    public IBowAndSkewLogic bowAndSkewLogic { get; }
+    public IPatternRepeatLogic patternRepeatLogic { get; }
+    public ICutRollLogic cutRollLogic { get; }
+
+    public int startRollId;
+
+    public void Start()
+    {
+      this.mahloLogic.Start();
+      this.bowAndSkewLogic.Start();
+      this.patternRepeatLogic.Start();
     }
   }
 }

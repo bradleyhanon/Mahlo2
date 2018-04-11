@@ -56,8 +56,6 @@ namespace Mahlo.Logic
       this.sewinQueue = sewinQueue;
       this.srcData = srcData;
       this.appInfo = appInfo;
-
-      this.srcData.PropertyChanged += SrcData_PropertyChanged;
     }
 
     /// <summary>
@@ -82,9 +80,23 @@ namespace Mahlo.Logic
 
     public int CurrentRollId { get; private set; }
 
-    protected virtual MahloRoll CreateNewMahloRoll()
+    /// <summary>
+    /// Called to start data collection
+    /// </summary>
+    public void Start()
     {
-      return new MahloRoll();
+      this.srcData.PropertyChanged -= SrcData_PropertyChanged;
+      this.srcData.PropertyChanged += SrcData_PropertyChanged;
+
+      this.LoadRolls();
+      if (this.Rolls.Any())
+      {
+        this.CurrentRoll = this.Rolls.Last();
+      }
+      else
+      {
+        this.Rolls.Add(this.CurrentRoll);
+      }
     }
 
     private void SrcData_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -92,7 +104,7 @@ namespace Mahlo.Logic
       switch (e.PropertyName)
       {
         case nameof(srcData.MetersCount):
-          this.MetersCountChanged();
+          this.MetersCountChanged(srcData.MetersCount);
           break;
 
         case nameof(srcData.SeamDetected):
@@ -101,15 +113,16 @@ namespace Mahlo.Logic
       }
     }
 
-    private void MetersCountChanged()
+    private void MetersCountChanged(double meters)
     {
+      double feet = Extensions.MetersToFeet(meters);
       //if (bTurnOffStatusIndicator && this.srcData.FeetCount() != nLengthWhereSeamDetected && this.srcData.FeetCount() >= this.appInfo.SeamDetectableThreshold)
       //{
       //  //await PLCForm.ExecuteDDECommand(frmSLC500.DDECommandEnum.ddeSetStatusIndicator, "0");
       //  bTurnOffStatusIndicator = false;
       //}
 
-      this.CurrentRoll.Meters = this.srcData.MetersCount;
+      this.CurrentRoll.Meters = meters;
 
       //bool bRollTooLong = false;
       //if (bMustClearUnlatchBit && srcData.FeetCount() >= appInfo.SeamDetectableThreshold && srcData.FeetCount() < nCounterResetAtFootage)
@@ -258,7 +271,11 @@ namespace Mahlo.Logic
       }
     }
 
-    protected abstract void LoadRolls();
+    private void LoadRolls()
+    {
+      this.Rolls.AddRange(this.dbLocal.GetRolls<Model>());
+    }
+
     protected abstract void SaveRoll();
     protected abstract void SaveRollMap();
 

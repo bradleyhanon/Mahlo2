@@ -13,5 +13,7 @@ namespace Mahlo.Logic
     Model CurrentRoll { get; }
     List<Model> RollMap { get; }
     List<Model> Rolls { get; }
+
+    void Start();
   }
 }

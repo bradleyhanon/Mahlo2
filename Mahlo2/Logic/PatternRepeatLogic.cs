@@ -12,16 +12,14 @@ namespace Mahlo.Logic
 {
   class PatternRepeatLogic : MeterLogic<PatternRepeatRoll>, IPatternRepeatLogic
   {
+    IDbLocal dbLocal;
     public PatternRepeatLogic(IDbMfg dbMfg, IDbLocal dbLocal, ISewinQueue sewinQueue, IPatternRepeatSrc srcData, IAppInfoBAS appInfo) 
       : base(srcData, sewinQueue, dbMfg, dbLocal, appInfo)
     {
+      this.dbLocal = dbLocal;
       srcData.Initialize<IPatternRepeatSrc>();
     }
 
-    protected override void LoadRolls()
-    {
-      throw new NotImplementedException();
-    }
 
     protected override void SaveRoll()
     {

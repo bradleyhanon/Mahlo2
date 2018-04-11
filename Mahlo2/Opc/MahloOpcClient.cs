@@ -191,7 +191,7 @@ namespace Mahlo.Opc
         this.priorExceptionType = e.Exception.GetType();
       }
 
-      if (e.Exception == null)
+      if (e.Exception == null && e.Vtq.HasValue)
       {
         //this.synchronizationContext.Send(PostCallback, (e.Arguments.State, e.Vtq.Value));
         this.synchronizationContext.Post(new SendOrPostCallback((Action<object>)e.Arguments.State), e.Vtq.Value);
@@ -201,6 +201,16 @@ namespace Mahlo.Opc
         //log.DebugFormat("{0} = {1}", e.Arguments.NodeDescriptor, e.AttributeData.Value);
         this.priorExceptionType = null;
       }
+    }
+
+    public void SetStatusIndicator(bool value)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void SetCriticalAlarm(bool value)
+    {
+      throw new NotImplementedException();
     }
   }
 }

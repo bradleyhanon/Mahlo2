@@ -13,25 +13,28 @@ namespace Mahlo.Views
 {
   partial class MainForm : Form
   {
-    private ISewinQueue sewinQueue;
-    private IMahloLogic mahloLogic;
-    private IBowAndSkewLogic bowAndSkewLogic;
-    private IPatternRepeatLogic patternRepeatLogic;
+    CarpetProcessor carpetProcessor;
 
-    public MainForm(ISewinQueue sewinQueue, IMahloLogic mahloLogic, IBowAndSkewLogic bowAndSkewLogic, IPatternRepeatLogic patternRepeatLogic)
+    public MainForm(CarpetProcessor carpetProcessor)
     {
       InitializeComponent();
-      this.sewinQueue = sewinQueue;
-      this.mahloLogic = mahloLogic;
-      this.bowAndSkewLogic = bowAndSkewLogic;
-      this.patternRepeatLogic = patternRepeatLogic;
+      this.carpetProcessor = carpetProcessor;
+      this.grFeetColumn.HeaderCell.Style.Alignment = 
+        this.mahlo2FeetColumn.HeaderCell.Style.Alignment =
+        this.bowAndSkewFeetColumn.HeaderCell.Style.Alignment =
+        this.bowAndSkewBowColumn.HeaderCell.Style.Alignment =
+        this.bowAndSkewSkewColumn.HeaderCell.Style.Alignment =
+        this.patternRepeatFeetColumn.HeaderCell.Style.Alignment =
+        this.patternRepeatElongationColumn.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
     }
 
     private void MainForm_Load(object sender, EventArgs e)
     {
-      this.sewinGrid.DataSource = sewinQueue.Rolls;
-      this.sewinQueueSource.DataSource = sewinQueue.Rolls;
-      this.mahlo2Source.DataSource = mahloLogic.Rolls;
+      this.carpetProcessor.Start();
+      this.sewinGrid.DataSource = carpetProcessor.sewinQueue.Rolls;
+      this.mahlo2Grid.DataSource = carpetProcessor.mahloLogic.Rolls;
+      this.bowAndSkewGrid.DataSource = carpetProcessor.bowAndSkewLogic.Rolls;
+      this.patternRepeatGrid.DataSource = carpetProcessor.patternRepeatLogic.Rolls;
     }
   }
 }

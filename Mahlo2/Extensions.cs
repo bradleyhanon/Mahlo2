@@ -16,6 +16,11 @@ namespace Mahlo
       return meters * 3.28084;
     }
 
+    public static double FeetToMeters(double feet)
+    {
+      return feet / 3.28084;
+    }
+
     public static double FeetCount(this IMeterSrc src)
     {
       return MetersToFeet(src.MetersCount);

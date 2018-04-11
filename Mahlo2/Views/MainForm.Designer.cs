@@ -29,11 +29,35 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       this.sewinGrid = new System.Windows.Forms.DataGridView();
+      this.sewinQueueSource = new System.Windows.Forms.BindingSource(this.components);
       this.mahlo2Grid = new System.Windows.Forms.DataGridView();
+      this.mahlo2FeetColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.mahlo2Source = new System.Windows.Forms.BindingSource(this.components);
       this.bowAndSkewGrid = new System.Windows.Forms.DataGridView();
+      this.bowAndSkewFeetColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.bowAndSkewBowColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.bowAndSkewSkewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.bowAndSkewSource = new System.Windows.Forms.BindingSource(this.components);
       this.patternRepeatGrid = new System.Windows.Forms.DataGridView();
+      this.patternRepeatFeetColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.patternRepeatElongationColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.patternRepeatSource = new System.Windows.Forms.BindingSource(this.components);
       this.dataGridView5 = new System.Windows.Forms.DataGridView();
+      this.sapRollDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.lengthDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.maxBowDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.maxSkewDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.maxEPEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.dlotDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.finishRollSource = new System.Windows.Forms.BindingSource(this.components);
       this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
       this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
       this.label1 = new System.Windows.Forms.Label();
@@ -42,7 +66,6 @@
       this.label2 = new System.Windows.Forms.Label();
       this.label5 = new System.Windows.Forms.Label();
       this.dataGridView1 = new System.Windows.Forms.DataGridView();
-      this.mahlo2Source = new System.Windows.Forms.BindingSource(this.components);
       this.g2ROLLDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.g2STYLDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.f2SDSCDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,34 +75,19 @@
       this.g2RPLNDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.g2WTFDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.g2WTIDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.g2LTFDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.sewinQueueSource = new System.Windows.Forms.BindingSource(this.components);
-      this.bowAndSkewSource = new System.Windows.Forms.BindingSource(this.components);
-      this.sapRollDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.lengthDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.maxBowDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.maxSkewDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.maxEPEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.dlotDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.finishRollSource = new System.Windows.Forms.BindingSource(this.components);
-      this.elongationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.patternRepeatSource = new System.Windows.Forms.BindingSource(this.components);
-      this.Feet = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.bowDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.skewDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.feetDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.grFeetColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       ((System.ComponentModel.ISupportInitialize)(this.sewinGrid)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSource)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.mahlo2Grid)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.mahlo2Source)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewGrid)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewSource)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.patternRepeatGrid)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatSource)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.finishRollSource)).BeginInit();
       this.tableLayoutPanel1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.mahlo2Source)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSource)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewSource)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.finishRollSource)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatSource)).BeginInit();
       this.SuspendLayout();
       // 
       // sewinGrid
@@ -101,7 +109,7 @@
             this.g2RPLNDataGridViewTextBoxColumn,
             this.g2WTFDataGridViewTextBoxColumn,
             this.g2WTIDataGridViewTextBoxColumn,
-            this.g2LTFDataGridViewTextBoxColumn});
+            this.grFeetColumn});
       this.sewinGrid.DataSource = this.sewinQueueSource;
       this.sewinGrid.Location = new System.Drawing.Point(3, 19);
       this.sewinGrid.Name = "sewinGrid";
@@ -109,6 +117,10 @@
       this.sewinGrid.ScrollBars = System.Windows.Forms.ScrollBars.None;
       this.sewinGrid.Size = new System.Drawing.Size(667, 148);
       this.sewinGrid.TabIndex = 0;
+      // 
+      // sewinQueueSource
+      // 
+      this.sewinQueueSource.DataSource = typeof(Mahlo.Models.GreigeRoll);
       // 
       // mahlo2Grid
       // 
@@ -120,7 +132,7 @@
       this.mahlo2Grid.AutoGenerateColumns = false;
       this.mahlo2Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.mahlo2Grid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.feetDataGridViewTextBoxColumn});
+            this.mahlo2FeetColumn});
       this.mahlo2Grid.DataSource = this.mahlo2Source;
       this.mahlo2Grid.Location = new System.Drawing.Point(676, 19);
       this.mahlo2Grid.Name = "mahlo2Grid";
@@ -128,6 +140,21 @@
       this.mahlo2Grid.ScrollBars = System.Windows.Forms.ScrollBars.None;
       this.mahlo2Grid.Size = new System.Drawing.Size(55, 148);
       this.mahlo2Grid.TabIndex = 1;
+      // 
+      // mahlo2FeetColumn
+      // 
+      this.mahlo2FeetColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+      this.mahlo2FeetColumn.DataPropertyName = "Feet";
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.mahlo2FeetColumn.DefaultCellStyle = dataGridViewCellStyle2;
+      this.mahlo2FeetColumn.HeaderText = "Feet";
+      this.mahlo2FeetColumn.Name = "mahlo2FeetColumn";
+      this.mahlo2FeetColumn.ReadOnly = true;
+      this.mahlo2FeetColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      // 
+      // mahlo2Source
+      // 
+      this.mahlo2Source.DataSource = typeof(Mahlo.Models.MahloRoll);
       // 
       // bowAndSkewGrid
       // 
@@ -139,9 +166,9 @@
       this.bowAndSkewGrid.AutoGenerateColumns = false;
       this.bowAndSkewGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.bowAndSkewGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Feet,
-            this.bowDataGridViewTextBoxColumn,
-            this.skewDataGridViewTextBoxColumn});
+            this.bowAndSkewFeetColumn,
+            this.bowAndSkewBowColumn,
+            this.bowAndSkewSkewColumn});
       this.bowAndSkewGrid.DataSource = this.bowAndSkewSource;
       this.bowAndSkewGrid.Location = new System.Drawing.Point(737, 19);
       this.bowAndSkewGrid.Name = "bowAndSkewGrid";
@@ -149,6 +176,41 @@
       this.bowAndSkewGrid.ScrollBars = System.Windows.Forms.ScrollBars.None;
       this.bowAndSkewGrid.Size = new System.Drawing.Size(190, 148);
       this.bowAndSkewGrid.TabIndex = 2;
+      // 
+      // bowAndSkewFeetColumn
+      // 
+      this.bowAndSkewFeetColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+      this.bowAndSkewFeetColumn.DataPropertyName = "Feet";
+      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.bowAndSkewFeetColumn.DefaultCellStyle = dataGridViewCellStyle3;
+      this.bowAndSkewFeetColumn.HeaderText = "Feet";
+      this.bowAndSkewFeetColumn.Name = "bowAndSkewFeetColumn";
+      this.bowAndSkewFeetColumn.ReadOnly = true;
+      this.bowAndSkewFeetColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      // 
+      // bowAndSkewBowColumn
+      // 
+      this.bowAndSkewBowColumn.DataPropertyName = "Bow";
+      dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.bowAndSkewBowColumn.DefaultCellStyle = dataGridViewCellStyle4;
+      this.bowAndSkewBowColumn.HeaderText = "Bow";
+      this.bowAndSkewBowColumn.Name = "bowAndSkewBowColumn";
+      this.bowAndSkewBowColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.bowAndSkewBowColumn.Width = 67;
+      // 
+      // bowAndSkewSkewColumn
+      // 
+      this.bowAndSkewSkewColumn.DataPropertyName = "Skew";
+      dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.bowAndSkewSkewColumn.DefaultCellStyle = dataGridViewCellStyle5;
+      this.bowAndSkewSkewColumn.HeaderText = "Skew";
+      this.bowAndSkewSkewColumn.Name = "bowAndSkewSkewColumn";
+      this.bowAndSkewSkewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.bowAndSkewSkewColumn.Width = 67;
+      // 
+      // bowAndSkewSource
+      // 
+      this.bowAndSkewSource.DataSource = typeof(Mahlo.Models.BowAndSkewRoll);
       // 
       // patternRepeatGrid
       // 
@@ -160,7 +222,8 @@
       this.patternRepeatGrid.AutoGenerateColumns = false;
       this.patternRepeatGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.patternRepeatGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.elongationDataGridViewTextBoxColumn});
+            this.patternRepeatFeetColumn,
+            this.patternRepeatElongationColumn});
       this.patternRepeatGrid.DataSource = this.patternRepeatSource;
       this.patternRepeatGrid.Location = new System.Drawing.Point(933, 19);
       this.patternRepeatGrid.Name = "patternRepeatGrid";
@@ -168,6 +231,31 @@
       this.patternRepeatGrid.ScrollBars = System.Windows.Forms.ScrollBars.None;
       this.patternRepeatGrid.Size = new System.Drawing.Size(125, 148);
       this.patternRepeatGrid.TabIndex = 3;
+      // 
+      // patternRepeatFeetColumn
+      // 
+      this.patternRepeatFeetColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+      this.patternRepeatFeetColumn.DataPropertyName = "Feet";
+      dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.patternRepeatFeetColumn.DefaultCellStyle = dataGridViewCellStyle6;
+      this.patternRepeatFeetColumn.HeaderText = "Feet";
+      this.patternRepeatFeetColumn.Name = "patternRepeatFeetColumn";
+      this.patternRepeatFeetColumn.ReadOnly = true;
+      this.patternRepeatFeetColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      // 
+      // patternRepeatElongationColumn
+      // 
+      this.patternRepeatElongationColumn.DataPropertyName = "Elongation";
+      dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.patternRepeatElongationColumn.DefaultCellStyle = dataGridViewCellStyle7;
+      this.patternRepeatElongationColumn.HeaderText = "Elongation";
+      this.patternRepeatElongationColumn.Name = "patternRepeatElongationColumn";
+      this.patternRepeatElongationColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.patternRepeatElongationColumn.Width = 67;
+      // 
+      // patternRepeatSource
+      // 
+      this.patternRepeatSource.DataSource = typeof(Mahlo.Models.PatternRepeatRoll);
       // 
       // dataGridView5
       // 
@@ -193,6 +281,52 @@
       this.dataGridView5.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
       this.dataGridView5.Size = new System.Drawing.Size(462, 148);
       this.dataGridView5.TabIndex = 4;
+      // 
+      // sapRollDataGridViewTextBoxColumn
+      // 
+      this.sapRollDataGridViewTextBoxColumn.DataPropertyName = "SapRoll";
+      this.sapRollDataGridViewTextBoxColumn.HeaderText = "SapRoll";
+      this.sapRollDataGridViewTextBoxColumn.Name = "sapRollDataGridViewTextBoxColumn";
+      this.sapRollDataGridViewTextBoxColumn.Width = 67;
+      // 
+      // lengthDataGridViewTextBoxColumn1
+      // 
+      this.lengthDataGridViewTextBoxColumn1.DataPropertyName = "Length";
+      this.lengthDataGridViewTextBoxColumn1.HeaderText = "Length";
+      this.lengthDataGridViewTextBoxColumn1.Name = "lengthDataGridViewTextBoxColumn1";
+      this.lengthDataGridViewTextBoxColumn1.Width = 50;
+      // 
+      // maxBowDataGridViewTextBoxColumn
+      // 
+      this.maxBowDataGridViewTextBoxColumn.DataPropertyName = "MaxBow";
+      this.maxBowDataGridViewTextBoxColumn.HeaderText = "MaxBow";
+      this.maxBowDataGridViewTextBoxColumn.Name = "maxBowDataGridViewTextBoxColumn";
+      this.maxBowDataGridViewTextBoxColumn.Width = 67;
+      // 
+      // maxSkewDataGridViewTextBoxColumn
+      // 
+      this.maxSkewDataGridViewTextBoxColumn.DataPropertyName = "MaxSkew";
+      this.maxSkewDataGridViewTextBoxColumn.HeaderText = "MaxSkew";
+      this.maxSkewDataGridViewTextBoxColumn.Name = "maxSkewDataGridViewTextBoxColumn";
+      this.maxSkewDataGridViewTextBoxColumn.Width = 67;
+      // 
+      // maxEPEDataGridViewTextBoxColumn
+      // 
+      this.maxEPEDataGridViewTextBoxColumn.DataPropertyName = "MaxEPE";
+      this.maxEPEDataGridViewTextBoxColumn.HeaderText = "MaxEPE";
+      this.maxEPEDataGridViewTextBoxColumn.Name = "maxEPEDataGridViewTextBoxColumn";
+      this.maxEPEDataGridViewTextBoxColumn.Width = 67;
+      // 
+      // dlotDataGridViewTextBoxColumn
+      // 
+      this.dlotDataGridViewTextBoxColumn.DataPropertyName = "Dlot";
+      this.dlotDataGridViewTextBoxColumn.HeaderText = "Dlot";
+      this.dlotDataGridViewTextBoxColumn.Name = "dlotDataGridViewTextBoxColumn";
+      this.dlotDataGridViewTextBoxColumn.Width = 45;
+      // 
+      // finishRollSource
+      // 
+      this.finishRollSource.DataSource = typeof(Mahlo.Models.CutRoll);
       // 
       // tableLayoutPanel1
       // 
@@ -295,10 +429,6 @@
       this.dataGridView1.Size = new System.Drawing.Size(1079, 152);
       this.dataGridView1.TabIndex = 6;
       // 
-      // mahlo2Source
-      // 
-      this.mahlo2Source.DataSource = typeof(Mahlo.Models.MahloRoll);
-      // 
       // g2ROLLDataGridViewTextBoxColumn
       // 
       this.g2ROLLDataGridViewTextBoxColumn.DataPropertyName = "G2ROLL";
@@ -362,107 +492,15 @@
       this.g2WTIDataGridViewTextBoxColumn.Name = "g2WTIDataGridViewTextBoxColumn";
       this.g2WTIDataGridViewTextBoxColumn.Visible = false;
       // 
-      // g2LTFDataGridViewTextBoxColumn
+      // grFeetColumn
       // 
-      this.g2LTFDataGridViewTextBoxColumn.DataPropertyName = "G2LTF";
-      this.g2LTFDataGridViewTextBoxColumn.HeaderText = "Length";
-      this.g2LTFDataGridViewTextBoxColumn.Name = "g2LTFDataGridViewTextBoxColumn";
-      this.g2LTFDataGridViewTextBoxColumn.Width = 50;
-      // 
-      // sewinQueueSource
-      // 
-      this.sewinQueueSource.DataSource = typeof(Mahlo.Models.GreigeRoll);
-      // 
-      // bowAndSkewSource
-      // 
-      this.bowAndSkewSource.DataSource = typeof(Mahlo.Models.BowAndSkewRoll);
-      // 
-      // sapRollDataGridViewTextBoxColumn
-      // 
-      this.sapRollDataGridViewTextBoxColumn.DataPropertyName = "SapRoll";
-      this.sapRollDataGridViewTextBoxColumn.HeaderText = "SapRoll";
-      this.sapRollDataGridViewTextBoxColumn.Name = "sapRollDataGridViewTextBoxColumn";
-      this.sapRollDataGridViewTextBoxColumn.Width = 67;
-      // 
-      // lengthDataGridViewTextBoxColumn1
-      // 
-      this.lengthDataGridViewTextBoxColumn1.DataPropertyName = "Length";
-      this.lengthDataGridViewTextBoxColumn1.HeaderText = "Length";
-      this.lengthDataGridViewTextBoxColumn1.Name = "lengthDataGridViewTextBoxColumn1";
-      this.lengthDataGridViewTextBoxColumn1.Width = 50;
-      // 
-      // maxBowDataGridViewTextBoxColumn
-      // 
-      this.maxBowDataGridViewTextBoxColumn.DataPropertyName = "MaxBow";
-      this.maxBowDataGridViewTextBoxColumn.HeaderText = "MaxBow";
-      this.maxBowDataGridViewTextBoxColumn.Name = "maxBowDataGridViewTextBoxColumn";
-      this.maxBowDataGridViewTextBoxColumn.Width = 67;
-      // 
-      // maxSkewDataGridViewTextBoxColumn
-      // 
-      this.maxSkewDataGridViewTextBoxColumn.DataPropertyName = "MaxSkew";
-      this.maxSkewDataGridViewTextBoxColumn.HeaderText = "MaxSkew";
-      this.maxSkewDataGridViewTextBoxColumn.Name = "maxSkewDataGridViewTextBoxColumn";
-      this.maxSkewDataGridViewTextBoxColumn.Width = 67;
-      // 
-      // maxEPEDataGridViewTextBoxColumn
-      // 
-      this.maxEPEDataGridViewTextBoxColumn.DataPropertyName = "MaxEPE";
-      this.maxEPEDataGridViewTextBoxColumn.HeaderText = "MaxEPE";
-      this.maxEPEDataGridViewTextBoxColumn.Name = "maxEPEDataGridViewTextBoxColumn";
-      this.maxEPEDataGridViewTextBoxColumn.Width = 67;
-      // 
-      // dlotDataGridViewTextBoxColumn
-      // 
-      this.dlotDataGridViewTextBoxColumn.DataPropertyName = "Dlot";
-      this.dlotDataGridViewTextBoxColumn.HeaderText = "Dlot";
-      this.dlotDataGridViewTextBoxColumn.Name = "dlotDataGridViewTextBoxColumn";
-      this.dlotDataGridViewTextBoxColumn.Width = 45;
-      // 
-      // finishRollSource
-      // 
-      this.finishRollSource.DataSource = typeof(Mahlo.Models.CutRoll);
-      // 
-      // elongationDataGridViewTextBoxColumn
-      // 
-      this.elongationDataGridViewTextBoxColumn.DataPropertyName = "Elongation";
-      this.elongationDataGridViewTextBoxColumn.HeaderText = "Elongation";
-      this.elongationDataGridViewTextBoxColumn.Name = "elongationDataGridViewTextBoxColumn";
-      this.elongationDataGridViewTextBoxColumn.Width = 67;
-      // 
-      // patternRepeatSource
-      // 
-      this.patternRepeatSource.DataSource = typeof(Mahlo.Models.PatternRepeatRoll);
-      // 
-      // Feet
-      // 
-      this.Feet.DataPropertyName = "Feet";
-      this.Feet.HeaderText = "Feet";
-      this.Feet.Name = "Feet";
-      this.Feet.ReadOnly = true;
-      this.Feet.Width = 50;
-      // 
-      // bowDataGridViewTextBoxColumn
-      // 
-      this.bowDataGridViewTextBoxColumn.DataPropertyName = "Bow";
-      this.bowDataGridViewTextBoxColumn.HeaderText = "Bow";
-      this.bowDataGridViewTextBoxColumn.Name = "bowDataGridViewTextBoxColumn";
-      this.bowDataGridViewTextBoxColumn.Width = 67;
-      // 
-      // skewDataGridViewTextBoxColumn
-      // 
-      this.skewDataGridViewTextBoxColumn.DataPropertyName = "Skew";
-      this.skewDataGridViewTextBoxColumn.HeaderText = "Skew";
-      this.skewDataGridViewTextBoxColumn.Name = "skewDataGridViewTextBoxColumn";
-      this.skewDataGridViewTextBoxColumn.Width = 67;
-      // 
-      // feetDataGridViewTextBoxColumn
-      // 
-      this.feetDataGridViewTextBoxColumn.DataPropertyName = "Feet";
-      this.feetDataGridViewTextBoxColumn.HeaderText = "Feet";
-      this.feetDataGridViewTextBoxColumn.Name = "feetDataGridViewTextBoxColumn";
-      this.feetDataGridViewTextBoxColumn.ReadOnly = true;
-      this.feetDataGridViewTextBoxColumn.Width = 50;
+      this.grFeetColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+      this.grFeetColumn.DataPropertyName = "G2LTF";
+      dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.grFeetColumn.DefaultCellStyle = dataGridViewCellStyle1;
+      this.grFeetColumn.HeaderText = "Feet";
+      this.grFeetColumn.Name = "grFeetColumn";
+      this.grFeetColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       // 
       // MainForm
       // 
@@ -475,18 +513,18 @@
       this.Text = "MainForm";
       this.Load += new System.EventHandler(this.MainForm_Load);
       ((System.ComponentModel.ISupportInitialize)(this.sewinGrid)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSource)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.mahlo2Grid)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.mahlo2Source)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewGrid)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewSource)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.patternRepeatGrid)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatSource)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.finishRollSource)).EndInit();
       this.tableLayoutPanel1.ResumeLayout(false);
       this.tableLayoutPanel1.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.mahlo2Source)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSource)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewSource)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.finishRollSource)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatSource)).EndInit();
       this.ResumeLayout(false);
 
     }
@@ -505,7 +543,6 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn lengthDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn positionDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn positionDataGridViewTextBoxColumn1;
-    private System.Windows.Forms.DataGridViewTextBoxColumn elongationDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridView dataGridView5;
     private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     private System.Windows.Forms.Label label1;
@@ -513,16 +550,6 @@
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.DataGridViewTextBoxColumn g2ROLLDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn g2STYLDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn f2SDSCDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn g2CLRDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn f2CDSCDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn g2SBKDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn g2RPLNDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn g2WTFDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn g2WTIDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn g2LTFDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn greigeRollDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn sapRollDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn lengthDataGridViewTextBoxColumn1;
@@ -532,9 +559,21 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn dlotDataGridViewTextBoxColumn;
     private System.Windows.Forms.VScrollBar vScrollBar1;
     private System.Windows.Forms.DataGridView dataGridView1;
-    private System.Windows.Forms.DataGridViewTextBoxColumn feetDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn Feet;
-    private System.Windows.Forms.DataGridViewTextBoxColumn bowDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn skewDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn mahlo2FeetColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn bowAndSkewFeetColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn bowAndSkewBowColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn bowAndSkewSkewColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn patternRepeatFeetColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn patternRepeatElongationColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn g2ROLLDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn g2STYLDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn f2SDSCDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn g2CLRDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn f2CDSCDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn g2SBKDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn g2RPLNDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn g2WTFDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn g2WTIDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn grFeetColumn;
   }
 }

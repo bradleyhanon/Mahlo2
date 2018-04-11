@@ -14,5 +14,7 @@ namespace Mahlo.Repository
     void UpdateGreigeRoll(GreigeRoll roll);
 
     void DeleteGreigeRoll(GreigeRoll roll);
+
+    IEnumerable<T> GetRolls<T>() where T : MahloRoll;
   }
 }
