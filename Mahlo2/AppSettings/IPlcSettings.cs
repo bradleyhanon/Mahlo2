@@ -2,8 +2,6 @@
 {
   interface IPlcSettings
   {
-    string ServerUri { get; set; }
-
     string Mahlo2SeamDetectTag { get; set; }
     string Mahlo2SeamResetTag { get; set; }
 

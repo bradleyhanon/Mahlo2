@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mahlo.Opc
 {
-  interface IWidthSrc : IMeterSrc
+  interface IWidthSrc<Model> : IMeterSrc<Model>
   {
     bool OnOff { get; set; }
     int Status { get; set; }

@@ -10,24 +10,13 @@ using Mahlo.Repository;
 
 namespace Mahlo.Logic
 {
-  class MahloLogic : MeterLogic<MahloRoll>, IMahloLogic
+  class MahloLogic : IMahloLogic
   {
-    IDbLocal dbLocal;
-    public MahloLogic(ISewinQueue sewinQueue, IMahloSrc srcData, IDbMfg dbMfg, IDbLocal dbLocal, IAppInfoBAS appInfo)
-      : base(srcData, sewinQueue, dbMfg, dbLocal, appInfo)
-    {
-      this.dbLocal = dbLocal;
-      srcData.Initialize<IMeterSrc>();
-    }
+    IMeterLogic<MahloRoll> meterLogic;
 
-    protected override void SaveRoll()
+    public MahloLogic(IMeterLogic<MahloRoll> meterLogic)
     {
-      throw new NotImplementedException();
-    }
-
-    protected override void SaveRollMap()
-    {
-      throw new NotImplementedException();
+      //srcData.Initialize<IMeterSrc>();
     }
   }
 }

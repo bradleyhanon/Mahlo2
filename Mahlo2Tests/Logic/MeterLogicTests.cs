@@ -50,7 +50,7 @@ namespace Mahlo2Tests.Logic
     {
       srcData.MetersCount = 5;
       srcData.PropertyChanged += Raise.Event<PropertyChangedEventHandler>(this, new PropertyChangedEventArgs(nameof(srcData.MetersCount)));
-      Assert.Equal(5, mahloLogic.CurrentRoll.Meters);
+      Assert.Equal(5, mahloLogic.CurrentRoll.Feet);
     }
 
     [Fact]

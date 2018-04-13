@@ -2,7 +2,7 @@
 
 namespace Mahlo.Logic
 {
-  interface IBowAndSkewLogic : IMeterLogic<BowAndSkewRoll>
+  interface IBowAndSkewLogic : IModelLogic
   {
   }
 }

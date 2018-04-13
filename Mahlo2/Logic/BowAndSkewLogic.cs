@@ -12,25 +12,12 @@ using Mahlo.Repository;
 
 namespace Mahlo.Logic
 {
-  class BowAndSkewLogic : MeterLogic<BowAndSkewRoll>, IBowAndSkewLogic
+  class BowAndSkewLogic : IBowAndSkewLogic
   {
-    IDbLocal dbLocal;
-
-    public BowAndSkewLogic(IDbMfg dbMfg, IDbLocal dbLocal, ISewinQueue sewinQueue, IBowAndSkewSrc srcData, IAppInfoBAS appInfo) 
-      : base(srcData, sewinQueue, dbMfg, dbLocal, appInfo)
+    IMeterLogic<BowAndSkewRoll> meterLogic;
+    public BowAndSkewLogic(IMeterLogic<BowAndSkewRoll> meterLogic) 
     {
-      this.dbLocal = dbLocal;
-      srcData.Initialize<IBowAndSkewSrc>();
-    }
-
-    protected override void SaveRoll()
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override void SaveRollMap()
-    {
-      throw new NotImplementedException();
+      this.meterLogic = meterLogic;
     }
   }
 }

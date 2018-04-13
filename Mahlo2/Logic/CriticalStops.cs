@@ -9,61 +9,57 @@ using Mahlo.Opc;
 
 namespace Mahlo.Logic
 {
-  class CriticalStops
+  class CriticalStops<Model> : ICriticalStops<Model>
   {
-    private CriticalStopEnum nCriticalStops;
-    private Subject<bool> mahloStatus = new Subject<bool>();
-    private Subject<bool> plcStatus = new Subject<bool>();
+    private Stop stops;
+    private BehaviorSubject<ICriticalStops<Model>> changes;
 
-    public IMahloSrc MahloSrc { get; set; }
+    public CriticalStops()
+    {
+      this.changes = new BehaviorSubject<ICriticalStops<Model>>(this);
+    }
 
-    public bool Any => this.nCriticalStops != 0;
+    [Flags]
+    private enum Stop
+    {
+      MahloCommError = 1,
+      PLCCommError = 2
+    }
+
+    public IObservable<ICriticalStops<Model>> Changes => this.changes.AsObservable();
+
+    public bool Any => this.stops != 0;
 
     public bool IsMahloCommError
     {
-      get => (this.nCriticalStops & CriticalStopEnum.stpMahloCommError) != 0;
-      set
-      {
-        if (IsMahloCommError != value)
-        {
-          this.SetCriticalStops(CriticalStopEnum.stpMahloCommError, value);
-          this.mahloStatus.OnNext(value);
-        }
-      }
+      get => (this.stops & Stop.MahloCommError) != 0;
+      set => this.SetCriticalStops(Stop.MahloCommError, value);
     }
 
     public bool IsPlcCommError
     {
-      get => (this.nCriticalStops & CriticalStopEnum.stpPLCCommError) != 0;
-      set
-      {
-        if (this.IsPlcCommError != value)
-        {
-          this.SetCriticalStops(CriticalStopEnum.stpPLCCommError, value);
-          this.plcStatus.OnNext(value);
-        }
-      }
+      get => (this.stops & Stop.PLCCommError) != 0;
+      set => this.SetCriticalStops(Stop.PLCCommError, value);
     }
 
-    public IObservable<bool> PlcStatus => this.plcStatus.AsObservable();
-    public IObservable<bool> MahloStatus => this.mahloStatus.AsObservable();
+    public IMeterSrc<Model> MeterSrc { get; set; }
 
-    private void SetCriticalStops(CriticalStopEnum StopValue, bool Off)
+    public void Clear()
     {
-      if (Off)
-      {
-        this.nCriticalStops &= ~StopValue;
-      }
-      else
-      {
-        if ((nCriticalStops & StopValue) != StopValue)
-        {
-          nCriticalStops |= StopValue;
-        }
-      }
+      throw new NotImplementedException();
+    }
 
-      //cmdWaitForSeam.Enabled = (nCriticalStops == 0);
-      this.MahloSrc.SetCriticalAlarm(this.nCriticalStops != 0);
+    private void SetCriticalStops(Stop value, bool off)
+    {
+      var oldStops = this.stops;
+      this.stops = off ? this.stops &= ~value : this.stops |= value;
+      if (this.stops != oldStops)
+      {
+        this.changes.OnNext(this);
+
+        //cmdWaitForSeam.Enabled = (nCriticalStops == 0);
+        this.MeterSrc.SetCriticalAlarm(this.stops != 0);
+      }
     }
   }
 }

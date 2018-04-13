@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mahlo.Opc
 {
-  interface IMeterSrc : INotifyPropertyChanged
+  interface IMeterSrc<Model> : INotifyPropertyChanged
   {
     double MetersCount { get; set; }
     double MetersOffset { get; set; }
@@ -19,7 +19,12 @@ namespace Mahlo.Opc
     //IObservable<double> Speed { get; }
     //IObservable<bool> SeamDetected { get; }
 
-    void Initialize<I>() where I : IMeterSrc;
+    void Initialize();
+
+    IObservable<double> MeterCountObservable { get; }
+    IObservable<bool> SeamDetectedObservable { get; }
+    IObservable<double> SpeedObservable { get; }
+
     void ResetMeterOffset();
     void ResetSeamDetector();
     void SetStatusIndicator(bool value);

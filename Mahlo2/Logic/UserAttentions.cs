@@ -1,75 +1,96 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 using Mahlo.Opc;
 
 namespace Mahlo.Logic
 {
-  class UserAttentions
+  class UserAttentions<Model> : IUserAttentions<Model>
   {
-    private UserAttentionEnum userAttentions;
+    private Attention attentions;
+    private BehaviorSubject<IUserAttentions<Model>> changes;
 
-    public IMahloSrc MahloSrc { get; set; }
+    public UserAttentions()
+    {
+      this.changes = new BehaviorSubject<IUserAttentions<Model>>(this);
+    }
+
+    [Flags]
+    private enum Attention
+    {
+      VerifyRollSequence = 1,
+      RollTooLong = 2,
+      RollTooShort = 4,
+      SystemDisabled = 8,
+      All = VerifyRollSequence | RollTooLong | RollTooShort | SystemDisabled,
+    }
+
+    public IMeterSrc<Model> MeterSrc { get; set; }
+
+    public IObservable<IUserAttentions<Model>> Changes => this.changes.AsObservable();
 
     public bool IsSystemDisabled
     {
-      get => (this.userAttentions & UserAttentionEnum.attSystemDisabled) != 0;
-      set => this.SetUserAttention(UserAttentionEnum.attSystemDisabled, value);
+      get => (this.attentions & Attention.SystemDisabled) != 0;
+      set => this.SetUserAttention(Attention.SystemDisabled, value);
     }
 
     public bool IsRollTooLong
     {
-      get => (this.userAttentions & UserAttentionEnum.attRollTooLong) != 0;
-      set => this.SetUserAttention(UserAttentionEnum.attRollTooLong, value);
+      get => (this.attentions & Attention.RollTooLong) != 0;
+      set => this.SetUserAttention(Attention.RollTooLong, value);
     }
 
     public bool IsRollTooShort
     {
-      get => (this.userAttentions & UserAttentionEnum.attRollTooShort) != 0;
-      set => this.SetUserAttention(UserAttentionEnum.attRollTooShort, value);
+      get => (this.attentions & Attention.RollTooShort) != 0;
+      set => this.SetUserAttention(Attention.RollTooShort, value);
     }
 
     public bool IsTimeToCheckRollSequence
     {
-      get => (this.userAttentions & UserAttentionEnum.attVerifyRollSequence) != 0;
-      set => this.SetUserAttention(UserAttentionEnum.attVerifyRollSequence, value);
+      get => (this.attentions & Attention.VerifyRollSequence) != 0;
+      set => this.SetUserAttention(Attention.VerifyRollSequence, value);
     }
 
-    public bool Any => this.userAttentions != 0;
+    public bool Any => this.attentions != 0;
 
-    private void SetUserAttention(UserAttentionEnum AttentionValue, bool Off = false, bool ShowIndicator = true)
+    public void ClearAll()
     {
-      if (Off)
+      this.SetUserAttention(Attention.All, false);
+    }
+
+    private void SetUserAttention(Attention bitMask, bool state)
+    {
+      var oldValue = this.attentions;
+      if (!state)
       {
-        this.userAttentions &= ~AttentionValue;
+        this.attentions &= ~bitMask;
       }
-      else if ((userAttentions & AttentionValue) != AttentionValue)
+      else
       {
-        userAttentions |= AttentionValue;
+        attentions |= (bitMask | Attention.VerifyRollSequence);
 
-        switch (AttentionValue)
+        switch (bitMask)
         {
-          case UserAttentionEnum.attSystemDisabled:
-            SetUserAttention(UserAttentionEnum.attVerifyRollSequence, false, false);
+          case Attention.RollTooLong:
+            this.attentions &= ~(Attention.RollTooShort);
             break;
 
-          case UserAttentionEnum.attRollTooLong:
-            SetUserAttention(UserAttentionEnum.attRollTooShort, true, false);
-            SetUserAttention(UserAttentionEnum.attVerifyRollSequence, false, false);
-            break;
-
-          case UserAttentionEnum.attRollTooShort:
-            SetUserAttention(UserAttentionEnum.attRollTooLong, true, false);
-            SetUserAttention(UserAttentionEnum.attVerifyRollSequence, false, false);
+          case Attention.RollTooShort:
+            this.attentions &= ~(Attention.RollTooLong);
             break;
         }
       }
 
-      if (ShowIndicator)
+      if (this.attentions != oldValue)
       {
-        this.MahloSrc.SetStatusIndicator(this.userAttentions != 0);
+        this.changes.OnNext(this);
+        this.MeterSrc.SetStatusIndicator(this.attentions != 0);
       }
     }
   }

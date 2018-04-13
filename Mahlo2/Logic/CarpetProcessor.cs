@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mahlo.Models;
 
 namespace Mahlo.Logic
 {
@@ -10,31 +11,31 @@ namespace Mahlo.Logic
   {
     public CarpetProcessor(
       ISewinQueue sewinQueue,
-      IMahloLogic mahloLogic,
-      IBowAndSkewLogic bowAndSkewLogic,
-      IPatternRepeatLogic patternRepeatLogic,
+      IMeterLogic<MahloRoll> mahloMeter,
+      IMeterLogic<BowAndSkewRoll> bowAndSkewMeter,
+      IMeterLogic<PatternRepeatRoll> patternRepeatMeter,
       ICutRollLogic cutRollLogic)
     {
       this.sewinQueue = sewinQueue;
-      this.mahloLogic = mahloLogic;
-      this.bowAndSkewLogic = bowAndSkewLogic;
-      this.patternRepeatLogic = patternRepeatLogic;
+      this.mahloMeter = mahloMeter;
+      this.bowAndSkewMeter = bowAndSkewMeter;
+      this.patternRepeatMeter = patternRepeatMeter;
       this.cutRollLogic = cutRollLogic;
     }
 
     public ISewinQueue sewinQueue { get; }
-    public IMahloLogic mahloLogic { get; }
-    public IBowAndSkewLogic bowAndSkewLogic { get; }
-    public IPatternRepeatLogic patternRepeatLogic { get; }
+    public IMeterLogic<MahloRoll> mahloMeter { get; }
+    public IMeterLogic<BowAndSkewRoll> bowAndSkewMeter { get; }
+    public IMeterLogic<PatternRepeatRoll> patternRepeatMeter { get; }
     public ICutRollLogic cutRollLogic { get; }
 
     public int startRollId;
 
     public void Start()
     {
-      this.mahloLogic.Start();
-      this.bowAndSkewLogic.Start();
-      this.patternRepeatLogic.Start();
+      this.mahloMeter.Start();
+      this.bowAndSkewMeter.Start();
+      this.patternRepeatMeter.Start();
     }
   }
 }

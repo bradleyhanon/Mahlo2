@@ -9,29 +9,30 @@ using Mahlo.Opc;
 
 namespace Mahlo.Logic
 {
-  class RollLengthMonitor
+  class RollLengthMonitor<Model> : IRollLengthMonitor<Model>
+    where Model : MahloRoll
   {
+    private IUserAttentions<Model> userAttentions;
     IAppInfoBAS appInfo;
     private bool bTurnOffStatusIndicator;
     private double nLengthWhereSeamDetected;
     private bool bMustClearUnlatchBit;
     //private double nCounterResetAtFootage;
     private bool bNotifyRollSize;
-    private UserAttentionEnum nUserAttentions;
-    private CriticalStopEnum nCriticalStops;
+   
 
-    public RollLengthMonitor(IAppInfoBAS appInfo)
+    public RollLengthMonitor(IUserAttentions<Model> userAttentions, IAppInfoBAS appInfo)
     {
+      this.userAttentions = userAttentions;
       this.appInfo = appInfo;
     }
 
-    public IMeterSrc srcData { get; set; }
+    public IMeterSrc<Model> srcData { get; set; }
     public GreigeRoll CurrentGreigeRoll { get; set; }
     public MahloRoll CurrentRoll { get; set; }
 
-    public void MetersCountChanged(double metersCount)
+    public void MetersCountChanged(int feetCount)
     {
-      double feetCount = Extensions.MetersToFeet(metersCount);
       if (bTurnOffStatusIndicator && feetCount != nLengthWhereSeamDetected && feetCount >= this.appInfo.SeamDetectableThreshold)
       {
         srcData.SetStatusIndicator(false);
@@ -48,16 +49,15 @@ namespace Mahlo.Logic
 
       if (CurrentGreigeRoll.RollLength >= 100)
       {
-        bRollTooLong = (this.srcData.FeetCount() > (this.CurrentGreigeRoll.RollLength * 1.1d));
+        bRollTooLong = (feetCount > (this.CurrentGreigeRoll.RollLength * 1.1d));
       }
 
       if (bRollTooLong && bNotifyRollSize)
       {
         bNotifyRollSize = false;
         //modBowAndSkew.WriteToLogFile("lblMeasuredLen_Change", "Measured Len: " + rawData.MeasuredLength.ToString() + "; Roll Len: " + rawData.RollLength.ToString());
-        SetUserAttention(UserAttentionEnum.attRollTooLong);
+        this.userAttentions.IsRollTooLong = true;
       }
-
     }
 
     public void SeamDetected()
@@ -77,12 +77,12 @@ namespace Mahlo.Logic
       srcData.SetStatusIndicator(true);
       bTurnOffStatusIndicator = true;
 
-      if ((nUserAttentions & UserAttentionEnum.attSystemDisabled) == UserAttentionEnum.attSystemDisabled)
+      if (this.userAttentions.IsSystemDisabled)
       {
         // Do not respond to seam detection if system is disabled
         return;
       }
-      else if ((srcData.FeetCount() <= this.appInfo.SeamDetectableThreshold))
+      else if ((this.CurrentRoll.Feet <= this.appInfo.SeamDetectableThreshold))
       {
         // Do not respond to seam if footage is below threshold, could be detecting same seam
         return;
@@ -93,129 +93,79 @@ namespace Mahlo.Logic
         {
           if (this.CurrentGreigeRoll.RollLength >= 100)
           {
-            bRollTooShort = (srcData.FeetCount() < (this.CurrentGreigeRoll.RollLength * 0.9d));
+            bRollTooShort = (this.CurrentRoll.Feet < (this.CurrentGreigeRoll.RollLength * 0.9d));
           }
-          if ((bRollTooShort))
+          if (bRollTooShort)
           {
-            SetUserAttention(UserAttentionEnum.attRollTooShort);
+            this.userAttentions.IsRollTooShort = true;
           }
         }
-      }
-
-      if (nUserAttentions == 0 && nCriticalStops == 0)
-      {
-        this.BowBiasMapIsValid = true;
-      }
-
-      if (this.BowBiasMapIsValid)
-      {
-        this.SaveRollMap();
       }
 
       // Get measured footage at last seam detect
-      nLengthWhereSeamDetected = srcData.FeetCount();
+      nLengthWhereSeamDetected = this.CurrentRoll.Feet;
 
-      // Clear the charts
-      //ClearCharts();
+      //if (nUserAttentions == 0 && nCriticalStops == 0)
+      //{
+      //  this.BowBiasMapIsValid = true;
+      //}
 
-      this.BowBiasMapIsValid = false;
+      //if (this.BowBiasMapIsValid)
+      //{
+      //  this.SaveRollMap();
+      //}
 
-      this.srcData.ResetMeterOffset();
-      this.RollMap = new List<Model>();
-      this.CurrentRollId++;
+      //// Clear the charts
+      ////ClearCharts();
 
-      this.CurrentGreigeRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollId == this.CurrentRollId);
+      //this.BowBiasMapIsValid = false;
 
-      // Evaluate conditions that require user to re-check roll sequence
-      if (!this.CurrentGreigeRoll.IsCheckRoll)
-      {
-        if (this.CurrentGreigeRoll.StyleCode != sPreviousStyle)
-        {
-          sPreviousStyle = this.CurrentGreigeRoll.StyleCode;
-          nStyleCheckCount++;
-        }
-      }
+      //this.srcData.ResetMeterOffset();
+      //this.RollMap = new List<Model>();
+      //this.CurrentRollId++;
 
-      nRollCheckCount++;
-      if (this.CurrentGreigeRoll.IsCheckRoll || (nRollCheckCount >= this.appInfo.CheckAfterHowManyRolls) || (nStyleCheckCount >= this.appInfo.CheckAfterHowManyStyles))
-      {
-        if ((nUserAttentions & UserAttentionEnum.attVerifyRollSequence) == UserAttentionEnum.attVerifyRollSequence)
-        {
-          this.BowBiasMapIsValid = false;
-        }
-        else
-        {
-          SetUserAttention(UserAttentionEnum.attVerifyRollSequence);
-        }
-      }
+      //this.CurrentGreigeRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollId == this.CurrentRollId);
 
-      bNotifyRollSize = true;
+      //// Evaluate conditions that require user to re-check roll sequence
+      //if (!this.CurrentGreigeRoll.IsCheckRoll)
+      //{
+      //  if (this.CurrentGreigeRoll.StyleCode != sPreviousStyle)
+      //  {
+      //    sPreviousStyle = this.CurrentGreigeRoll.StyleCode;
+      //    nStyleCheckCount++;
+      //  }
+      //}
 
-      ShowMappingStatus();
+      //nRollCheckCount++;
+      //if (this.CurrentGreigeRoll.IsCheckRoll || (nRollCheckCount >= this.appInfo.CheckAfterHowManyRolls) || (nStyleCheckCount >= this.appInfo.CheckAfterHowManyStyles))
+      //{
+      //  if ((nUserAttentions & UserAttentionEnum.attVerifyRollSequence) == UserAttentionEnum.attVerifyRollSequence)
+      //  {
+      //    this.BowBiasMapIsValid = false;
+      //  }
+      //  else
+      //  {
+      //    SetUserAttention(UserAttentionEnum.attVerifyRollSequence);
+      //  }
+      //}
 
-      if (this.CurrentGreigeRoll.IsCheckRoll)
-      {
-        //Automatically disable mapping if Check Roll determined to be leader
-        if (this.sewinQueue.RollIsLeader(this.CurrentRollId))
-        {
-          DisableMapping(true);
-        }
-      }
+      //bNotifyRollSize = true;
 
-      if ((nUserAttentions & UserAttentionEnum.attVerifyRollSequence) == UserAttentionEnum.attVerifyRollSequence)
-      {
-        dbMfg.SendEmail(this.appInfo.SendEmailAlertsTo, "Urgent: Mahlo Bow and Skew Alert!", "The operator has not responded to a system request in a timely manner." + Environment.NewLine + Environment.NewLine + "Please investigate.");
-      }
-    }
+      //ShowMappingStatus();
 
-    private void SetUserAttention(UserAttentionEnum AttentionValue, bool Off = false, bool ShowIndicator = true)
-    {
-      if (Off)
-      {
-        if ((nUserAttentions & AttentionValue) == AttentionValue)
-        {
-          nUserAttentions ^= AttentionValue;
-        }
-      }
-      else
-      {
-        if ((nUserAttentions & AttentionValue) != AttentionValue)
-        {
-          nUserAttentions |= AttentionValue;
+      //if (this.CurrentGreigeRoll.IsCheckRoll)
+      //{
+      //  //Automatically disable mapping if Check Roll determined to be leader
+      //  if (this.sewinQueue.RollIsLeader(this.CurrentRollId))
+      //  {
+      //    DisableMapping(true);
+      //  }
+      //}
 
-          if (AttentionValue == UserAttentionEnum.attSystemDisabled)
-          {
-            //ErrorHandlingHelper.ResumeNext(
-            //  // Clear certain values
-            //  () => { lblMeasuredLen.Text = ""; },
-            //  () => { lblLineSpeed.Text = ""; },
-            //  () => { lblCarpetWidth.Text = ""; },
-            //  () => { lblBowDistortionPercent.Text = ""; },
-            //  () => { lblBowDistortionInches.Text = ""; },
-            //  () => { lblSkewDistortionPercent.Text = ""; },
-            //  () => { lblSkewDistortionInches.Text = ""; },
-            //  () => { ClearCharts(); });
-
-            SetUserAttention(UserAttentionEnum.attVerifyRollSequence, false, false);
-          }
-          else if (AttentionValue == UserAttentionEnum.attRollTooLong)
-          {
-            SetUserAttention(UserAttentionEnum.attRollTooShort, true, false);
-            SetUserAttention(UserAttentionEnum.attVerifyRollSequence, false, false);
-          }
-          else if (AttentionValue == UserAttentionEnum.attRollTooShort)
-          {
-            SetUserAttention(UserAttentionEnum.attRollTooLong, true, false);
-            SetUserAttention(UserAttentionEnum.attVerifyRollSequence, false, false);
-          }
-        }
-      }
-
-      ShowMappingStatus();
-      if (ShowIndicator /*&& PLCForm != null*/)
-      {
-        //await PLCForm.ExecuteDDECommand(frmSLC500.DDECommandEnum.ddeSetUserAttention, (nUserAttentions > 0) ? "1" : "0");
-      }
+      //if ((nUserAttentions & UserAttentionEnum.attVerifyRollSequence) == UserAttentionEnum.attVerifyRollSequence)
+      //{
+      //  dbMfg.SendEmail(this.appInfo.SendEmailAlertsTo, "Urgent: Mahlo Bow and Skew Alert!", "The operator has not responded to a system request in a timely manner." + Environment.NewLine + Environment.NewLine + "Please investigate.");
+      //}
     }
   }
 }

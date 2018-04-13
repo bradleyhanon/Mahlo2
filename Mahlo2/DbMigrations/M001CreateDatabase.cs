@@ -15,7 +15,7 @@ namespace Mahlo.DbMigrations
     {
       const string strGreigeRolls = "GreigeRolls";
       const string strRollId = "RollId";
-      const string strMeters = "Meters";
+      const string strFeet = "Feet";
       const string strCutId = "CutId";
       const string strBow = "Bow";
       const string strSkew = "Skew";
@@ -42,39 +42,39 @@ namespace Mahlo.DbMigrations
 
       this.Create.Table("MahloRolls")
         .WithColumn(strRollId).AsInt32().PrimaryKey()
-        .WithColumn(strMeters).AsDouble();
+        .WithColumn(strFeet).AsInt32();
 
       this.Create.Table("BowAndSkewRolls")
         .WithColumn(strRollId).AsInt32().PrimaryKey().ForeignKey(strGreigeRolls, strRollId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
-        .WithColumn(strMeters).AsDouble().NotNullable()
+        .WithColumn(strFeet).AsInt32().NotNullable()
         .WithColumn(strBow).AsDouble().NotNullable()
         .WithColumn(strSkew).AsDouble().NotNullable();
 
       this.Create.Table("BowAndSkewMaps")
         .WithColumn(strRollId).AsInt32().NotNullable().ForeignKey(strGreigeRolls, strRollId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
-        .WithColumn(strMeters).AsDouble().NotNullable()
+        .WithColumn(strFeet).AsInt32().NotNullable()
         .WithColumn(strBow).AsDouble().NotNullable()
         .WithColumn(strSkew).AsDouble().NotNullable();
 
-      this.Create.PrimaryKey().OnTable("BowAndSkewMaps").Columns(strRollId, strMeters);
+      this.Create.PrimaryKey().OnTable("BowAndSkewMaps").Columns(strRollId, strFeet);
 
       this.Create.Table("PatternRepeatRolls")
         .WithColumn(strRollId).AsInt32().PrimaryKey().ForeignKey(strGreigeRolls, strRollId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
-        .WithColumn(strMeters).AsDouble()
+        .WithColumn(strFeet).AsInt32()
         .WithColumn(strElongation).AsDouble();
 
       this.Create.Table("PatternRepeatMaps")
         .WithColumn(strRollId).AsInt32().NotNullable().ForeignKey(strGreigeRolls, strRollId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
-        .WithColumn(strMeters).AsDouble().NotNullable()
+        .WithColumn(strFeet).AsInt32().NotNullable()
         .WithColumn(strElongation).AsDouble();
 
-      this.Create.PrimaryKey().OnTable("PatternRepeatMaps").Columns(strRollId, strMeters);
+      this.Create.PrimaryKey().OnTable("PatternRepeatMaps").Columns(strRollId, strFeet);
 
       this.Create.Table("FinishedRolls")
         .WithColumn(strRollId).AsInt32().ForeignKey(strGreigeRolls, strRollId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
         .WithColumn(strCutId).AsInt32()
         .WithColumn("SapRoll").AsAnsiString().NotNullable()
-        .WithColumn(strMeters).AsDouble()
+        .WithColumn(strFeet).AsInt32()
         .WithColumn(strBow).AsDouble()
         .WithColumn(strSkew).AsDouble()
         .WithColumn(strElongation).AsDouble();
@@ -84,12 +84,12 @@ namespace Mahlo.DbMigrations
       this.Create.Table("FinishedRollMaps")
         .WithColumn(strRollId).AsInt32().NotNullable()
         .WithColumn(strCutId).AsInt32().NotNullable()
-        .WithColumn(strMeters).AsDouble().NotNullable()
+        .WithColumn(strFeet).AsInt32().NotNullable()
         .WithColumn(strBow).AsDouble().NotNullable()
         .WithColumn(strSkew).AsDouble().NotNullable()
         .WithColumn(strElongation).AsDouble().NotNullable();
 
-      this.Create.PrimaryKey().OnTable("FinishedRollMaps").Columns(strRollId, strCutId, strMeters);
+      this.Create.PrimaryKey().OnTable("FinishedRollMaps").Columns(strRollId, strCutId, strFeet);
 
       this.Create.ForeignKey()
         .FromTable("FinishedRollMaps").ForeignColumns(strRollId, strCutId)

@@ -20,15 +20,5 @@ namespace Mahlo
     {
       return feet / 3.28084;
     }
-
-    public static double FeetCount(this IMeterSrc src)
-    {
-      return MetersToFeet(src.MetersCount);
-    }
-
-    public static double FeetOffset(this IMeterSrc src)
-    {
-      return MetersToFeet(src.MetersOffset);
-    }
   }
 }

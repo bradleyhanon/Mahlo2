@@ -3,7 +3,7 @@ using Mahlo.Models;
 
 namespace Mahlo.Logic
 {
-  interface IMahloLogic : IMeterLogic<MahloRoll>
+  interface IMahloLogic : IModelLogic
   {
   }
 }

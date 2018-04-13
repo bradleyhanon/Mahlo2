@@ -2,7 +2,7 @@
 
 namespace Mahlo.Logic
 {
-  interface IPatternRepeatLogic: IMeterLogic<PatternRepeatRoll>
+  interface IPatternRepeatLogic : IModelLogic
   {
   }
 }

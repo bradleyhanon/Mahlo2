@@ -10,25 +10,14 @@ using Mahlo.Repository;
 
 namespace Mahlo.Logic
 {
-  class PatternRepeatLogic : MeterLogic<PatternRepeatRoll>, IPatternRepeatLogic
+  class PatternRepeatLogic : IPatternRepeatLogic
   {
-    IDbLocal dbLocal;
-    public PatternRepeatLogic(IDbMfg dbMfg, IDbLocal dbLocal, ISewinQueue sewinQueue, IPatternRepeatSrc srcData, IAppInfoBAS appInfo) 
-      : base(srcData, sewinQueue, dbMfg, dbLocal, appInfo)
-    {
-      this.dbLocal = dbLocal;
-      srcData.Initialize<IPatternRepeatSrc>();
-    }
+    IMeterLogic<PatternRepeatRoll> meterLogic;
 
-
-    protected override void SaveRoll()
+    public PatternRepeatLogic(IMeterLogic<PatternRepeatRoll> meterLogic) 
     {
-      throw new NotImplementedException();
-    }
-
-    protected override void SaveRollMap()
-    {
-      throw new NotImplementedException();
+      this.meterLogic = meterLogic;
+      //srcData.Initialize<IPatternRepeatSrc>();
     }
   }
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 using Mahlo.AppSettings;
@@ -10,21 +12,31 @@ using System.Collections.Concurrent;
 using System.Threading;
 using OpcLabs.EasyOpc.DataAccess;
 using OpcLabs.EasyOpc.DataAccess.OperationModel;
+using OpcLabs.EasyOpc.DataAccess.Generic;
 
 namespace Mahlo.Opc
 {
-  class MahloOpcClient : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc, IWidthSrc
+  class MahloOpcClient<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc
   {
     private const string MahloServerClass = "mahlo.10AOpcServer.1";
     private const string PlcServerClass = "Kepware.KEPServerEX.V6";
+    private const string MeterCountTag = "Readings.Bridge.0.General.0.MeterCount";
     //private const string MahloItemFormat = "nsu=mahlo.10AOpcServer.1;s={0}.{1}";
     //private const string PlcItemFormat = "nsu=KEPServerEX;ns=2;s={0}.{1}";
+    string mahloChannel;
+
     private EasyDAClient opcClient;
     private Type priorExceptionType = null;
     private IMahloOpcSettings mahloSettings;
     private IPlcSettings seamSettings;
     private string seamResetTag;
     private SynchronizationContext synchronizationContext;
+    private string seamAckTag;
+    private string seamDetectedTag;
+
+    private Subject<double> meterCountSubject = new Subject<double>();
+    private Subject<bool> seamDetectedSubject = new Subject<bool>();
+    private Subject<double> speedSubject = new Subject<double>();
 
     public MahloOpcClient(EasyDAClient opcClient, IMahloOpcSettings mahloSettings, IPlcSettings seamSettings, SynchronizationContext synchronizationContext)
     {
@@ -32,6 +44,7 @@ namespace Mahlo.Opc
       this.mahloSettings = mahloSettings;
       this.seamSettings = seamSettings;
       this.synchronizationContext = synchronizationContext;
+      this.Initialize();
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
@@ -40,6 +53,11 @@ namespace Mahlo.Opc
     public double MetersCount { get; set; }
     public double MetersOffset { get; set; }
     public double Speed { get; set; }
+    public bool SeamDetected { get; set; }
+
+    public IObservable<double> MeterCountObservable => this.meterCountSubject;
+    public IObservable<double> SpeedObservable => this.speedSubject;
+    public IObservable<bool> SeamDetectedObservable => this.seamDetectedSubject;
 
     //public bool WidthOnOff { get; set; }
     //public int WidthStatus { get; set; }
@@ -64,8 +82,6 @@ namespace Mahlo.Opc
     public double ValueInMeter { get; set; }
     //public int PrsControllerState { get; set; }
 
-    public bool SeamDetected { get; set; }
-
     public void ResetMeterOffset()
     {
       throw new NotImplementedException();
@@ -73,20 +89,11 @@ namespace Mahlo.Opc
 
     public void ResetSeamDetector()
     {
-      //UAWriteResult[] results = this.opcClient.WriteMultipleValues(new[]
-      //{
-      //  new UAWriteValueArguments(this.seamSettings.ServerUri, string.Format(PlcItemFormat, string.Empty, this.seamResetTag)),
-      //});
-
-      //var e = results[0];
-      //if (e.Exception != null && e.Exception.GetType() != priorExceptionType)
-      //{
-      //  // TODO: Add logging
-      //  //log.Error(e.Arguments.NodeDescriptor);
-      //  //log.Error(e.Exception.GetType());
-      //  //log.Error(e.ErrorMessage);
-      //  this.priorExceptionType = e.Exception.GetType();
-      //}
+      Task.Run(() =>
+      {
+        this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 1);
+        this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 0);
+      });
     }
 
     /// <summary>
@@ -114,16 +121,40 @@ namespace Mahlo.Opc
       this.Subscribe(PlcServerClass, channel, items);
     }
 
-    public void Initialize<I>()
-      where I : IMeterSrc
+    //public IObservable<double> CreateMeterCountObservable()
+    //{
+    //  string tag = $"{this.mahloChannel}.{MeterCountTag}";
+    //  var result = DAItemChangedObservable.Create<double>(string.Empty, MahloServerClass, tag, 100)
+    //    .Where(e => e.Exception == null && e.Vtq.HasValue)
+    //    .Select(e => (double)e.Vtq.Value);
+        
+    //  return result;
+    //}
+
+    //public IObservable<bool> CreateSeamDetectObservable()
+    //{
+    //  return CreateObservable<bool>(PlcServerClass, this.seamDetectedTag);
+    //}
+
+    //private IObservable<T> CreateObservable<T>(string serverClass, string tag)
+    //{
+    //  var result = DAItemChangedObservable.Create<double>(string.Empty, serverClass, tag, 100)
+    //    .Where(e => e.Exception == null && e.Vtq.HasValue)
+    //    .Select(e => (T)e.Vtq.Value);
+
+    //  return result;
+    //}
+
+    public void Initialize()
     {
-      string mahloChannel;
+      int seamDetectorId;
       var mahloTags = new List<(string, Action<object>)>();
       mahloTags.AddRange(new(string, Action<object>)[]
       {
-        ("Readings.Bridge.0.General.0.MeterCount", value => this.MetersCount = (double)value),
-        ("Readings.Bridge.0.General.0.MeterOffset", value => this.MetersOffset = (double)value),
-        ("Readings.Bridge.0.General.0.Speed", value => this.Speed = (double)value),
+        ("Current.Version.0.KeyColumn", value => this.Recipe = (string)value),
+        ("Readings.Bridge.0.General.0.MeterCount", value => {this.MetersCount = (double)value; this.meterCountSubject.OnNext((double)value); }),
+        //("Readings.Bridge.0.General.0.MeterOffset", value => this.MetersOffset = (double)value),
+        ("Readings.Bridge.0.General.0.Speed", value => { this.Speed = (double)value; this.speedSubject.OnNext((double)value); }),
       });
 
       //case IWidthSrc widthSrc:
@@ -137,38 +168,40 @@ namespace Mahlo.Opc
       //  });
       //  break;
 
-      if (typeof(I) == typeof(IBowAndSkewSrc))
+      if (typeof(Model) == typeof(BowAndSkewRoll))
       {
-        mahloChannel = mahloSettings.BowAndSkewChannelName;
+        seamDetectorId = 2;
+        this.mahloChannel = mahloSettings.BowAndSkewChannelName;
         mahloTags.AddRange(new(string, Action<object>)[]
         {
-            ("Current.Version.0.KeyColumn", value => this.Recipe = (string)value),
             ("Current.Bridge.0.Calc.1.OnOff", value => this.OnOff = (int)value == 1),
-            ("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
-            ("Readings.Bridge.0.Calc.1.MeterStamp", value => this.MeterStamp = (double)value),
-            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewValid", value => this.SkewValid = (int)value == 1),
+            //("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
+            //("Readings.Bridge.0.Calc.1.MeterStamp", value => this.MeterStamp = (double)value),
+            //("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewValid", value => this.SkewValid = (int)value == 1),
             ("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewInPercent", value => this.SkewInPercent = (double)value),
-            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowValid", value => this.BowValid = (int)value == 1),
+            //("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowValid", value => this.BowValid = (int)value == 1),
             ("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowInPercent", value => this.BowInPercent = (double)value),
-            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.Contr_State", value => this.ControllerState = (int)value),
+            //("Readings.Bridge.0.Calc.1.CalcDistortion.0.Contr_State", value => this.ControllerState = (int)value),
         });
       }
-      else if (typeof(I) == typeof(IPatternRepeatSrc))
+      else if (typeof(Model) == typeof(PatternRepeatRoll))
       {
-        mahloChannel = mahloSettings.PatternRepeatChannelName;
+        seamDetectorId = 3;
+        this.mahloChannel = mahloSettings.PatternRepeatChannelName;
         mahloTags.AddRange(new(string, Action<object>)[]
         {
-            ("Current.Bridge.0.Calc.2.OnOff", value => this.OnOff = (int)value == 1),
-            ("Readings.Bridge.0.Calc.2.Status", value => this.Status = (int)value),
-            ("Readings.Bridge.0.Calc.2.MeterStamp", value => this.MeterStamp = (double)value),
-            ("Readings.Bridge.0.Calc.2.CalcLengthRepeat.0.Valid", value => this.Valid = (int)value == 1),
-            ("Readings.Bridge.0.Calc.2.CalcLengthRepeat.0.ValueInMeter", value => this.ValueInMeter = (double)value),
-            ("Readings.Bridge.0.Calc.2.CalcLengthRepeat.0.Contr_State", value => this.ControllerState = (int)value),
+            ("Current.Bridge.0.Calc.1.OnOff", value => this.OnOff = (int)value == 1),
+            //("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
+            //("Readings.Bridge.0.Calc.1.MeterStamp", value => this.MeterStamp = (double)value),
+            //("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.Valid", value => this.Valid = (int)value == 1),
+            ("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.ValueInMeter", value => this.ValueInMeter = (double)value),
+            //("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.Contr_State", value => this.ControllerState = (int)value),
         });
       }
-      else if (typeof(I) == typeof(IMeterSrc))
+      else if (typeof(Model) == typeof(MahloRoll))
       {
-        mahloChannel = mahloSettings.Mahlo2ChannelName;
+        seamDetectorId = 1;
+        this.mahloChannel = mahloSettings.Mahlo2ChannelName;
 
         // Tags are already added
       }
@@ -177,7 +210,15 @@ namespace Mahlo.Opc
           throw new ArgumentException();
       }
 
-      this.MahloSubscribe(mahloChannel, mahloTags);
+      this.seamAckTag = $"MahloSeam.Mahlo{seamDetectorId}SeamAck";
+      this.seamDetectedTag = $"MahloSeam.Mahlo{seamDetectorId}SeamDetected";
+      var plcTags = new List<(string, Action<object>)>()
+      {
+        ($"Mahlo{seamDetectorId}SeamDetected", value => { this.SeamDetected = (bool)value; this.seamDetectedSubject.OnNext((bool)value); }),
+      };
+
+      this.PlcSubscribe("MahloSeam", plcTags);
+      this.MahloSubscribe(this.mahloChannel, mahloTags);
     }
 
     private void ItemChangeCallback(object sender, EasyDAItemChangedEventArgs e)

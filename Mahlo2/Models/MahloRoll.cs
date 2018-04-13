@@ -14,10 +14,7 @@ namespace Mahlo.Models
     [ExplicitKey]
     public int RollId { get; set; }
 
-    [DependsOn(nameof(Meters))]
-    public double Feet => Extensions.MetersToFeet(this.Meters);
-
-    public double Meters { get; set; }
+    public int Feet { get; set; }
 
     public virtual MahloRoll Create()
     {

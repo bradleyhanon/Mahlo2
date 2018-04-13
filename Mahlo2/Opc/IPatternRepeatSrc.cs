@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mahlo.Models;
 
 namespace Mahlo.Opc
 {
-  interface IPatternRepeatSrc : IMeterSrc
+  interface IPatternRepeatSrc : IMeterSrc<PatternRepeatRoll>
   {
     bool OnOff { get; set; }
     int Status { get; set; }

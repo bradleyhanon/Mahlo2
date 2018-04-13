@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mahlo.Models;
+using Xunit;
 
-namespace Mahlo.Opc
+namespace Mahlo2Tests.Logic
 {
-  interface IMahloSrc : IMeterSrc<MahloRoll>
+  class UserAttententionsTests
   {
+    //[Fact]
   }
 }
