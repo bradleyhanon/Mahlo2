@@ -35,8 +35,8 @@ namespace Mahlo.Opc
     private string seamDetectedTag;
 
     private Subject<double> meterCountSubject = new Subject<double>();
-    private Subject<bool> seamDetectedSubject = new Subject<bool>();
     private Subject<double> speedSubject = new Subject<double>();
+    private Subject<bool> seamDetectedSubject = new Subject<bool>();
 
     public MahloOpcClient(EasyDAClient opcClient, IMahloOpcSettings mahloSettings, IPlcSettings seamSettings, SynchronizationContext synchronizationContext)
     {
@@ -53,11 +53,16 @@ namespace Mahlo.Opc
     public double MetersCount { get; set; }
     public double MetersOffset { get; set; }
     public double Speed { get; set; }
-    public bool SeamDetected { get; set; }
 
-    public IObservable<double> MeterCountObservable => this.meterCountSubject;
-    public IObservable<double> SpeedObservable => this.speedSubject;
-    public IObservable<bool> SeamDetectedObservable => this.seamDetectedSubject;
+    public IObservable<int> FeetCounter => this.meterCountSubject
+      .Select(meters => (int)Extensions.MetersToFeet(meters))
+      .DistinctUntilChanged();
+
+    public IObservable<int> FeetPerMinute => this.speedSubject
+      .Select(speed => (int)Extensions.MetersToFeet(speed))
+      .DistinctUntilChanged();
+   
+    public IObservable<bool> SeamDetected => this.seamDetectedSubject;
 
     //public bool WidthOnOff { get; set; }
     //public int WidthStatus { get; set; }
@@ -214,7 +219,7 @@ namespace Mahlo.Opc
       this.seamDetectedTag = $"MahloSeam.Mahlo{seamDetectorId}SeamDetected";
       var plcTags = new List<(string, Action<object>)>()
       {
-        ($"Mahlo{seamDetectorId}SeamDetected", value => { this.SeamDetected = (bool)value; this.seamDetectedSubject.OnNext((bool)value); }),
+        ($"Mahlo{seamDetectorId}SeamDetected", value => this.seamDetectedSubject.OnNext((bool)value)),
       };
 
       this.PlcSubscribe("MahloSeam", plcTags);

@@ -13,9 +13,9 @@ using Mahlo.Models;
 
 namespace Mahlo.Repository
 {
-  class DbLocal : IDbLocal
+  class DbLocal : IDbLocal, IProgramStateProvider
   {
-    private IDbConnection connection;
+    //private IDbConnection connection;
 
     public DbLocal(IDbConnectionFactoryFactory factoryFactory)
     {
@@ -24,23 +24,22 @@ namespace Mahlo.Repository
 
     public IDbConnectionFactory ConnectionFactory { get; }
 
-    private IDbConnection Connection
-    {
-      get
-      {
-        if (this.connection == null)
-        {
-          this.connection = ConnectionFactory.GetOpenConnection();
-          this.connection.Open();
-        }
+    //private IDbConnection Connection
+    //{
+    //  get
+    //  {
+    //    if (this.connection == null)
+    //    {
+    //      this.connection = ConnectionFactory.GetOpenConnection();
+    //    }
 
-        return this.connection;
-      }
-    }
+    //    return this.connection;
+    //  }
+    //}
 
     public void AddGreigeRoll(GreigeRoll roll)
     {
-      
+
     }
 
     public void DeleteGreigeRoll(GreigeRoll roll)
@@ -50,7 +49,7 @@ namespace Mahlo.Repository
 
     public IEnumerable<GreigeRoll> GetGreigeRolls()
     {
-      using (connection = this.ConnectionFactory.GetOpenConnection())
+      using (var connection = this.GetOpenConnection())
       {
         return connection.GetAll<GreigeRoll>().OrderBy(item => item.RollId);
       }
@@ -63,10 +62,31 @@ namespace Mahlo.Repository
 
     public IEnumerable<T> GetRolls<T>() where T : MahloRoll
     {
-      using (connection = this.ConnectionFactory.GetOpenConnection())
+      using (var connection = this.GetOpenConnection())
       {
         return connection.GetAll<T>();
       }
+    }
+
+    public string GetProgramState()
+    {
+      using (var connection = this.GetOpenConnection())
+      {
+        return connection.QuerySingle<string>("SELECT Value FROM ProgramState");
+      }
+    }
+
+    public void SaveProgramState(string programState)
+    {
+      using (var connection = this.GetOpenConnection())
+      {
+        connection.Execute("UPDATE ProgramState SET Value = @Value WHERE Key = 0", new { Value = programState });
+      }
+    }
+
+    private IDbConnection GetOpenConnection()
+    {
+      return this.ConnectionFactory.GetOpenConnection();
     }
   }
 }

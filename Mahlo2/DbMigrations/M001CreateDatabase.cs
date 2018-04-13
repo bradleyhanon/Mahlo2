@@ -21,6 +21,15 @@ namespace Mahlo.DbMigrations
       const string strSkew = "Skew";
       const string strElongation = "Elongation";
 
+      this.Create.Table("ProgramState")
+        .WithColumn("Key").AsInt32().PrimaryKey().WithDefaultValue(0)
+        .WithColumn("Value").AsAnsiString().NotNullable().WithDefaultValue("<root/>");
+
+      this.Execute.Sql("ALTER TABLE ProgramState ADD CONSTRAINT ProgramState_KeyConstraint CHECK([Key] = 0)");
+
+      this.Insert.IntoTable("ProgramState")
+        .Row(new { Key = 0, Value = "{}" });
+
       this.Create.Table(strGreigeRolls)
         .WithColumn(strRollId).AsInt32().PrimaryKey()
         .WithColumn("GridImage").AsAnsiString().NotNullable()

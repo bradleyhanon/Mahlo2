@@ -9,21 +9,9 @@ namespace Mahlo.Opc
 {
   interface IMeterSrc<Model> : INotifyPropertyChanged
   {
-    double MetersCount { get; set; }
-    double MetersOffset { get; set; }
-    double Speed { get; set; }
-    bool SeamDetected { get; set; }
-
-    //IObservable<double> MeterCount { get; }
-    //IObservable<double> MeterOffset { get; }
-    //IObservable<double> Speed { get; }
-    //IObservable<bool> SeamDetected { get; }
-
-    void Initialize();
-
-    IObservable<double> MeterCountObservable { get; }
-    IObservable<bool> SeamDetectedObservable { get; }
-    IObservable<double> SpeedObservable { get; }
+    IObservable<int> FeetCounter { get; }
+    IObservable<int> FeetPerMinute { get; }
+    IObservable<bool> SeamDetected { get; }
 
     void ResetMeterOffset();
     void ResetSeamDetector();

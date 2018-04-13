@@ -32,9 +32,9 @@ namespace Mahlo.Views
     {
       this.carpetProcessor.Start();
       this.sewinGrid.DataSource = carpetProcessor.sewinQueue.Rolls;
-      this.mahlo2Grid.DataSource = carpetProcessor.mahloMeter.Rolls;
-      this.bowAndSkewGrid.DataSource = carpetProcessor.bowAndSkewMeter.Rolls;
-      this.patternRepeatGrid.DataSource = carpetProcessor.patternRepeatMeter.Rolls;
+      //this.mahlo2Grid.DataSource = carpetProcessor.mahloMeter.Rolls;
+      //this.bowAndSkewGrid.DataSource = carpetProcessor.bowAndSkewMeter.Rolls;
+      //this.patternRepeatGrid.DataSource = carpetProcessor.patternRepeatMeter.Rolls;
     }
   }
 }

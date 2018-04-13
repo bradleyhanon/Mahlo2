@@ -13,9 +13,11 @@ namespace Mahlo.Logic
   {
     private Stop stops;
     private BehaviorSubject<ICriticalStops<Model>> changes;
+    private IMeterSrc<Model> meterSrc;
 
-    public CriticalStops()
+    public CriticalStops(IMeterSrc<Model> meterSrc)
     {
+      this.meterSrc = meterSrc;
       this.changes = new BehaviorSubject<ICriticalStops<Model>>(this);
     }
 
@@ -42,8 +44,6 @@ namespace Mahlo.Logic
       set => this.SetCriticalStops(Stop.PLCCommError, value);
     }
 
-    public IMeterSrc<Model> MeterSrc { get; set; }
-
     public void Clear()
     {
       throw new NotImplementedException();
@@ -58,7 +58,7 @@ namespace Mahlo.Logic
         this.changes.OnNext(this);
 
         //cmdWaitForSeam.Enabled = (nCriticalStops == 0);
-        this.MeterSrc.SetCriticalAlarm(this.stops != 0);
+        this.meterSrc.SetCriticalAlarm(this.stops != 0);
       }
     }
   }

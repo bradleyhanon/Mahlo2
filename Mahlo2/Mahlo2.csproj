@@ -117,6 +117,9 @@
     <Compile Include="Repository\IDbMfg.cs" />
     <Compile Include="Repository\DbConnectionFactory.cs" />
     <Compile Include="AppSettings\PlcSettings.cs" />
+    <Compile Include="Repository\IProgramState.cs" />
+    <Compile Include="Repository\IProgramStateProvider.cs" />
+    <Compile Include="Repository\ProgramState.cs" />
     <Compile Include="SingleInstance.cs" />
     <Compile Include="Utilities\ConcurrencyInfo.cs" />
     <Compile Include="Utilities\IConcurrencyInfo.cs" />
@@ -146,11 +149,14 @@
     <PackageReference Include="FluentMigrator.Runner">
       <Version>1.6.2</Version>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
+    </PackageReference>
     <PackageReference Include="PropertyChanged.Fody">
-      <Version>2.2.9</Version>
+      <Version>2.5.3</Version>
     </PackageReference>
     <PackageReference Include="SimpleInjector">
-      <Version>4.0.12</Version>
+      <Version>4.1.1</Version>
     </PackageReference>
     <PackageReference Include="System.Reactive">
       <Version>3.1.1</Version>

@@ -11,7 +11,6 @@ namespace Mahlo.Logic
     bool IsRollTooShort { get; set; }
     bool IsSystemDisabled { get; set; }
     bool IsTimeToCheckRollSequence { get; set; }
-    IMeterSrc<Model> MeterSrc { get; set; }
 
     void ClearAll();
   }

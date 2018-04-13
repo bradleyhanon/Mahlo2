@@ -9,6 +9,5 @@ namespace Mahlo.Logic
     IObservable<ICriticalStops<Model>> Changes { get; }
     bool IsMahloCommError { get; set; }
     bool IsPlcCommError { get; set; }
-    IMeterSrc<Model> MeterSrc { get; set; }
   }
 }

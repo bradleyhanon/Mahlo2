@@ -7,12 +7,12 @@ using Mahlo.Models;
 
 namespace Mahlo.Logic
 {
-  interface IMeterLogic<Model>
+  interface IMeterLogic<Model> : IDisposable
   {
     GreigeRoll CurrentGreigeRoll { get; }
     Model CurrentRoll { get; }
-    List<Model> RollMap { get; }
-    List<Model> Rolls { get; }
+    IObservable<Model> RollStarted { get; }
+    IObservable<Model> RollFinished { get; }
 
     void Start();
   }

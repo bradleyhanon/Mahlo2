@@ -13,9 +13,11 @@ namespace Mahlo.Logic
   {
     private Attention attentions;
     private BehaviorSubject<IUserAttentions<Model>> changes;
+    private IMeterSrc<Model> meterSrc;
 
-    public UserAttentions()
+    public UserAttentions(IMeterSrc<Model> meterSrc)
     {
+      this.meterSrc = meterSrc;
       this.changes = new BehaviorSubject<IUserAttentions<Model>>(this);
     }
 
@@ -28,8 +30,6 @@ namespace Mahlo.Logic
       SystemDisabled = 8,
       All = VerifyRollSequence | RollTooLong | RollTooShort | SystemDisabled,
     }
-
-    public IMeterSrc<Model> MeterSrc { get; set; }
 
     public IObservable<IUserAttentions<Model>> Changes => this.changes.AsObservable();
 
@@ -90,7 +90,7 @@ namespace Mahlo.Logic
       if (this.attentions != oldValue)
       {
         this.changes.OnNext(this);
-        this.MeterSrc.SetStatusIndicator(this.attentions != 0);
+        this.meterSrc.SetStatusIndicator(this.attentions != 0);
       }
     }
   }

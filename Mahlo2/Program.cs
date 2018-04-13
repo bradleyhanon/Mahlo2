@@ -37,16 +37,18 @@ namespace Mahlo
         string instanceName = @"Local\{7A97254E-AFC8-4C0C-A6DB-C6DA0BFB463F}";
         using (new SingleInstance(instanceName))
         {
+          if (args.Contains("--migrate"))
+          {
+            //var runner = container.GetInstance<Mahlo.DbMigrations.Runner>();
+            var runner = new Mahlo.DbMigrations.Runner(new DbLocal(new DbConnectionFactory.Factory()));
+            runner.MigrateToLatest();
+            Environment.Exit(0);
+          }
+
           Application.EnableVisualStyles();
           Application.SetCompatibleTextRenderingDefault(false);
           using (var container = InitializeContainer())
           {
-            if (args.Contains("--migrate"))
-            {
-              var runner = container.GetInstance<Mahlo.DbMigrations.Runner>();
-              runner.MigrateToLatest();
-              Environment.Exit(0);
-            }
 
             Application.Run(container.GetInstance<MainForm>());
           }
@@ -70,6 +72,10 @@ namespace Mahlo
     private static Container InitializeContainer()
     {
       var container = new Container();
+
+      // Register IProgramState first so it will be the last disposed
+      container.RegisterSingleton<IProgramState, ProgramState>();
+      container.RegisterSingleton<IProgramStateProvider, DbLocal>();
 
       var registration = Lifestyle.Transient.CreateRegistration<MainForm>(container);
       registration.SuppressDiagnosticWarning(DiagnosticType.DisposableTransientComponent, "Done by system");
