@@ -100,6 +100,7 @@
     <Compile Include="Models\CutRoll.cs" />
     <Compile Include="Models\CutRollDetail.cs" />
     <Compile Include="Models\MahloRoll.cs" />
+    <Compile Include="Models\AS400SewinQueueRoll.cs" />
     <Compile Include="Models\PatternRepeatRoll.cs" />
     <Compile Include="Models\GreigeRoll.cs" />
     <Compile Include="Opc\IBowAndSkewSrc.cs" />

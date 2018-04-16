@@ -10,9 +10,11 @@ using Newtonsoft.Json.Linq;
 
 namespace Mahlo.Repository
 {
-  sealed class ProgramState : IProgramState
+  sealed class ProgramState : DynamicObject, IProgramState
   {
     IProgramStateProvider provider;
+    JObject root;
+
     public ProgramState(IProgramStateProvider provider)
     {
       this.provider = provider;
@@ -20,47 +22,67 @@ namespace Mahlo.Repository
       try
       {
         string text = provider.GetProgramState() ?? "{}";
-        this.Root = JObject.Parse(text);
+        this.root = JObject.Parse(text);
       }
       catch (Exception)
       {
       }
     }
 
-    public dynamic Root { get; }
+    public dynamic CreatePropertyBag()
+    {
+      return new JObject();
+    }
 
     void IDisposable.Dispose()
     {
-      provider.SaveProgramState(Root.ToString());
+      provider.SaveProgramState(root.ToString());
     }
 
-    public class Container : DynamicObject
+    public override IEnumerable<string> GetDynamicMemberNames()
     {
-      private Dictionary<string, object> properties = new Dictionary<string, object>();
-
-      public override bool TryGetMember(GetMemberBinder binder, out object result)
-      {
-        this.properties.TryGetValue(binder.Name, out result);
-        return true;
-      }
-
-      public override bool TrySetMember(SetMemberBinder binder, object value)
-      {
-        this.properties[binder.Name] = value;
-        return true;
-      }
-
-      public override IEnumerable<string> GetDynamicMemberNames()
-      {
-        return this.properties.Keys;
-      }
-
-      //public override bool TryConvert(ConvertBinder binder, out object result)
-      //{
-      //  Convert.ChangeType()
-      //  binder.Type
-      //  return base.TryConvert(binder, out result);
-      //}
+      return this.root.Properties().Select(item => item.Name);
     }
+
+    public override bool TryGetMember(GetMemberBinder binder, out object result)
+    {
+      result = this.root[binder.Name];
+      return true;
+    }
+
+    public override bool TrySetMember(SetMemberBinder binder, object value)
+    {
+      this.root[binder.Name] = JToken.FromObject(value);
+      return true;
+    }
+
+    //public class Container : DynamicObject
+    //{
+    //  private Dictionary<string, object> properties = new Dictionary<string, object>();
+
+    //  public override bool TryGetMember(GetMemberBinder binder, out object result)
+    //  {
+    //    this.properties.TryGetValue(binder.Name, out result);
+    //    return true;
+    //  }
+
+    //  public override bool TrySetMember(SetMemberBinder binder, object value)
+    //  {
+    //    this.properties[binder.Name] = value;
+    //    return true;
+    //  }
+
+    //  public override IEnumerable<string> GetDynamicMemberNames()
+    //  {
+    //    return this.properties.Keys;
+    //  }
+
+    //  //public override bool TryConvert(ConvertBinder binder, out object result)
+    //  //{
+    //  //  Convert.ChangeType()
+    //  //  binder.Type
+    //  //  return base.TryConvert(binder, out result);
+    //  //}
+    //}
   }
 }

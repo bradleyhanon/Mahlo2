@@ -74,6 +74,7 @@ namespace Mahlo.Logic
 
     private void FeetCounterChanged(int feet)
     {
+      this.CurrentRoll.Feet = feet;
     }
 
     private void SeamDetected(bool isSeamDetected)

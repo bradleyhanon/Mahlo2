@@ -30,11 +30,19 @@ namespace Mahlo.Repository
 
     public string ProviderName { get; }
 
-    public IDbConnection GetOpenConnection()
+    public DbConnection GetOpenConnection()
     {
-      IDbConnection connection = this.ProviderFactory.CreateConnection();
+      DbConnection connection = this.ProviderFactory.CreateConnection();
       connection.ConnectionString = this.ConnectionString;
       connection.Open();
+      return connection;
+    }
+
+    public async Task<DbConnection> GetOpenConnectionAsync()
+    {
+      DbConnection connection = this.ProviderFactory.CreateConnection();
+      connection.ConnectionString = this.ConnectionString;
+      await connection.OpenAsync();
       return connection;
     }
 

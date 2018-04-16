@@ -9,33 +9,19 @@ using System.Threading.Tasks;
 using Dapper;
 using Dapper.Contrib;
 using Dapper.Contrib.Extensions;
+using Dapper.FluentColumnMapping;
 using Mahlo.Models;
 
 namespace Mahlo.Repository
 {
   class DbLocal : IDbLocal, IProgramStateProvider
   {
-    //private IDbConnection connection;
-
     public DbLocal(IDbConnectionFactoryFactory factoryFactory)
     {
       this.ConnectionFactory = factoryFactory.Create("DbLocal");
     }
 
     public IDbConnectionFactory ConnectionFactory { get; }
-
-    //private IDbConnection Connection
-    //{
-    //  get
-    //  {
-    //    if (this.connection == null)
-    //    {
-    //      this.connection = ConnectionFactory.GetOpenConnection();
-    //    }
-
-    //    return this.connection;
-    //  }
-    //}
 
     public void AddGreigeRoll(GreigeRoll roll)
     {
@@ -57,7 +43,10 @@ namespace Mahlo.Repository
 
     public void UpdateGreigeRoll(GreigeRoll roll)
     {
-      throw new NotImplementedException();
+      using (var connection = this.GetOpenConnection())
+      {
+        connection.Update(roll);
+      }
     }
 
     public IEnumerable<T> GetRolls<T>() where T : MahloRoll
@@ -80,7 +69,7 @@ namespace Mahlo.Repository
     {
       using (var connection = this.GetOpenConnection())
       {
-        connection.Execute("UPDATE ProgramState SET Value = @Value WHERE Key = 0", new { Value = programState });
+        connection.Execute("UPDATE ProgramState SET Value = @Value WHERE [Key] = 0", new { Value = programState });
       }
     }
 

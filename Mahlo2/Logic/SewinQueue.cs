@@ -50,6 +50,18 @@ namespace Mahlo.Logic
       this.timer.Dispose();
     }
 
+    public GreigeRoll GetNextRoll(int currentRollId)
+    {
+      var result = this.Rolls.First(item => item.RollId > currentRollId);
+      if (result == null)
+      {
+        result = new GreigeRoll();
+        result.RollId = this.nextRollId++;
+      }
+
+      return result;
+    }
+
     public bool RollIsLeader(int rollId)
     {
       var TheRoll = this.Rolls.Single(item => item.RollId == rollId);
@@ -75,10 +87,10 @@ namespace Mahlo.Logic
         while (--index >= this.firstRollId)
         {
           var roll = this.Rolls[index - this.firstRollId];
-          if (roll.G2ROLL != GreigeRoll.CheckRollId)
+          if (roll.RollNo != GreigeRoll.CheckRollId)
           {
-            sBk1 = roll.G2SBK;
-            nWidth1 =  Convert.ToDouble(roll.G2WTF) * 12 + roll.G2WTI; 
+            sBk1 = roll.BackingCode;
+            nWidth1 = roll.RollWidth;
             break;
           }
         };
@@ -91,10 +103,10 @@ namespace Mahlo.Logic
         while (++index < nextRollId)
         {
           var roll = this.Rolls[index - this.firstRollId];
-          if (roll.G2ROLL != GreigeRoll.CheckRollId)
+          if (roll.RollNo != GreigeRoll.CheckRollId)
           {
-            sBk2 = roll.G2SBK;
-            nWidth2 = Convert.ToDouble(roll.G2WTF) * 12 + roll.G2WTI;
+            sBk2 = roll.BackingCode;
+            nWidth2 = roll.RollWidth;
             break;
           }
         };
@@ -110,14 +122,14 @@ namespace Mahlo.Logic
 
 
 
-    private async void RunAutoRefresh()
-    {
-      while (true)
-      {
-        await this.Refresh();
-        await Task.Delay(this.refreshInterval);
-      }
-    }
+    //private async void RunAutoRefresh()
+    //{
+    //  while (true)
+    //  {
+    //    await this.Refresh();
+    //    await Task.Delay(this.refreshInterval);
+    //  }
+    //}
 
     private async Task Refresh()
     {
@@ -132,13 +144,13 @@ namespace Mahlo.Logic
         if (await this.dbMfg.GetIsSewinQueueChanged(this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll))
         {
           var newRolls = (await this.dbMfg.GetCoaterSewinQueue()).ToArray();
-          this.priorFirstRoll = newRolls.FirstOrDefault()?.G2ROLL ?? string.Empty;
-          this.priorLastRoll = newRolls.LastOrDefault()?.G2ROLL ?? string.Empty;
+          this.priorFirstRoll = newRolls.FirstOrDefault()?.RollNo ?? string.Empty;
+          this.priorLastRoll = newRolls.LastOrDefault()?.RollNo ?? string.Empty;
           this.priorQueueSize = newRolls.Count();
 
           foreach (var newRoll in newRolls)
           {
-            var oldRoll = this.Rolls.FirstOrDefault(item => item.G2ROLL == newRoll.G2ROLL);
+            var oldRoll = this.Rolls.FirstOrDefault(item => item.RollNo == newRoll.RollNo);
             if (oldRoll != null)
             {
               newRoll.CopyTo(oldRoll);

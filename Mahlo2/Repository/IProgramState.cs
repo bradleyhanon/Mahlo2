@@ -9,8 +9,8 @@ using Newtonsoft.Json.Linq;
 
 namespace Mahlo.Repository
 {
-  interface IProgramState : IDisposable
+  interface IProgramState : IDynamicMetaObjectProvider, IDisposable
   {
-    dynamic Root { get; }
+    dynamic CreatePropertyBag();
   }
 }

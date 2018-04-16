@@ -20,9 +20,9 @@ namespace Mahlo2Tests
   {
     GreigeRoll[] rolls1 =
     {
-      new GreigeRoll() { G2ROLL = "100" },
-      new GreigeRoll() { G2ROLL = "200" },
-      new GreigeRoll() { G2ROLL = "300" },
+      new GreigeRoll() { RollNo = "100" },
+      new GreigeRoll() { RollNo = "200" },
+      new GreigeRoll() { RollNo = "300" },
     };
 
     IDbLocal dbLocal = Substitute.For<IDbLocal>();

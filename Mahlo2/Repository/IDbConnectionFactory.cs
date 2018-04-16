@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace Mahlo.Repository
 {
@@ -9,6 +10,8 @@ namespace Mahlo.Repository
     string ProviderName { get; }
     DbProviderFactory ProviderFactory { get; }
 
-    IDbConnection GetOpenConnection();
+    DbConnection GetOpenConnection();
+
+    Task<DbConnection> GetOpenConnectionAsync();
   }
 }

@@ -45,6 +45,7 @@
     <Compile Include="Logic\MeterLogicTests.cs" />
     <Compile Include="Logic\UserAttententionsTests.cs" />
     <Compile Include="Mocks\Accessor.cs" />
+    <Compile Include="Mocks\MockMeterSrc.cs" />
     <Compile Include="Mocks\TestSchedulers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\ProgramStateTests.cs" />

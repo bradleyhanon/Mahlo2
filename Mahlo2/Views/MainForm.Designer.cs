@@ -431,59 +431,59 @@
       // 
       // g2ROLLDataGridViewTextBoxColumn
       // 
-      this.g2ROLLDataGridViewTextBoxColumn.DataPropertyName = "G2ROLL";
+      this.g2ROLLDataGridViewTextBoxColumn.DataPropertyName = "RollNo";
       this.g2ROLLDataGridViewTextBoxColumn.HeaderText = "GreigeRoll";
       this.g2ROLLDataGridViewTextBoxColumn.Name = "g2ROLLDataGridViewTextBoxColumn";
       this.g2ROLLDataGridViewTextBoxColumn.Width = 67;
       // 
       // g2STYLDataGridViewTextBoxColumn
       // 
-      this.g2STYLDataGridViewTextBoxColumn.DataPropertyName = "G2STYL";
+      this.g2STYLDataGridViewTextBoxColumn.DataPropertyName = "StyleCode";
       this.g2STYLDataGridViewTextBoxColumn.HeaderText = "Style";
       this.g2STYLDataGridViewTextBoxColumn.Name = "g2STYLDataGridViewTextBoxColumn";
       this.g2STYLDataGridViewTextBoxColumn.Width = 60;
       // 
       // f2SDSCDataGridViewTextBoxColumn
       // 
-      this.f2SDSCDataGridViewTextBoxColumn.DataPropertyName = "F2SDSC";
+      this.f2SDSCDataGridViewTextBoxColumn.DataPropertyName = "StyleName";
       this.f2SDSCDataGridViewTextBoxColumn.HeaderText = "Description";
       this.f2SDSCDataGridViewTextBoxColumn.Name = "f2SDSCDataGridViewTextBoxColumn";
       this.f2SDSCDataGridViewTextBoxColumn.Width = 120;
       // 
       // g2CLRDataGridViewTextBoxColumn
       // 
-      this.g2CLRDataGridViewTextBoxColumn.DataPropertyName = "G2CLR";
+      this.g2CLRDataGridViewTextBoxColumn.DataPropertyName = "ColorCode";
       this.g2CLRDataGridViewTextBoxColumn.HeaderText = "Color";
       this.g2CLRDataGridViewTextBoxColumn.Name = "g2CLRDataGridViewTextBoxColumn";
       this.g2CLRDataGridViewTextBoxColumn.Width = 67;
       // 
       // f2CDSCDataGridViewTextBoxColumn
       // 
-      this.f2CDSCDataGridViewTextBoxColumn.DataPropertyName = "F2CDSC";
+      this.f2CDSCDataGridViewTextBoxColumn.DataPropertyName = "ColorName";
       this.f2CDSCDataGridViewTextBoxColumn.HeaderText = "Description";
       this.f2CDSCDataGridViewTextBoxColumn.Name = "f2CDSCDataGridViewTextBoxColumn";
       this.f2CDSCDataGridViewTextBoxColumn.Width = 120;
       // 
       // g2SBKDataGridViewTextBoxColumn
       // 
-      this.g2SBKDataGridViewTextBoxColumn.DataPropertyName = "G2SBK";
+      this.g2SBKDataGridViewTextBoxColumn.DataPropertyName = "BackingCode";
       this.g2SBKDataGridViewTextBoxColumn.HeaderText = "Backing";
       this.g2SBKDataGridViewTextBoxColumn.Name = "g2SBKDataGridViewTextBoxColumn";
       this.g2SBKDataGridViewTextBoxColumn.Width = 57;
       // 
       // g2RPLNDataGridViewTextBoxColumn
       // 
-      this.g2RPLNDataGridViewTextBoxColumn.DataPropertyName = "G2RPLN";
+      this.g2RPLNDataGridViewTextBoxColumn.DataPropertyName = "PatternRepeatLength";
       this.g2RPLNDataGridViewTextBoxColumn.HeaderText = "Repeat";
       this.g2RPLNDataGridViewTextBoxColumn.Name = "g2RPLNDataGridViewTextBoxColumn";
       this.g2RPLNDataGridViewTextBoxColumn.Width = 50;
       // 
       // g2WTFDataGridViewTextBoxColumn
       // 
-      this.g2WTFDataGridViewTextBoxColumn.DataPropertyName = "G2WTF";
+      this.g2WTFDataGridViewTextBoxColumn.DataPropertyName = "RollWidth";
       this.g2WTFDataGridViewTextBoxColumn.HeaderText = "Width";
       this.g2WTFDataGridViewTextBoxColumn.Name = "g2WTFDataGridViewTextBoxColumn";
-      this.g2WTFDataGridViewTextBoxColumn.Width = 67;
+      this.g2WTFDataGridViewTextBoxColumn.Width = 56;
       // 
       // g2WTIDataGridViewTextBoxColumn
       // 
@@ -491,11 +491,12 @@
       this.g2WTIDataGridViewTextBoxColumn.HeaderText = "Width In";
       this.g2WTIDataGridViewTextBoxColumn.Name = "g2WTIDataGridViewTextBoxColumn";
       this.g2WTIDataGridViewTextBoxColumn.Visible = false;
+      this.g2WTIDataGridViewTextBoxColumn.Width = 56;
       // 
       // grFeetColumn
       // 
       this.grFeetColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-      this.grFeetColumn.DataPropertyName = "G2LTF";
+      this.grFeetColumn.DataPropertyName = "RollLength";
       dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
       this.grFeetColumn.DefaultCellStyle = dataGridViewCellStyle1;
       this.grFeetColumn.HeaderText = "Feet";

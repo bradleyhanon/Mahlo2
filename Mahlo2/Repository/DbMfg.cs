@@ -18,36 +18,12 @@ namespace Mahlo.Repository
   {
     private const int CommandTimeout = 10;
 
-    private IDbConnection connection;
-
-    static DbMfg()
-    {
-      var mappings = new ColumnMappingCollection();
-
-      mappings.RegisterType<GreigeRoll>()
-        .MapProperty(x => x.G2SCH).ToColumn("G2SCH#");
-    }
-
-
     public DbMfg(IDbConnectionFactoryFactory factoryFactory)
     {
       this.ConnectionFactory = factoryFactory.Create("DbMfg");
     }
 
     public IDbConnectionFactory ConnectionFactory { get; }
-
-    private IDbConnection Connection
-    {
-      get
-      {
-        if (this.connection == null)
-        {
-          this.connection = ConnectionFactory.GetOpenConnection();
-        }
-
-        return this.connection;
-      }
-    }
 
     public async Task<bool> GetIsSewinQueueChanged(int rowCount, string firstRollNo, string lastRollNo)
     {
@@ -58,14 +34,21 @@ namespace Mahlo.Repository
       p.Add("first_roll", firstRollNo);
       p.Add("last_roll", lastRollNo);
 
-      await this.Connection.ExecuteAsync("spSewinQueueChanged", p, commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
-      int status = p.Get<int>("status");
-      return status != 0;
+      using (var connection = this.GetOpenConnection())
+      {
+        await connection.ExecuteAsync("spSewinQueueChanged", p, commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
+        int status = p.Get<int>("status");
+        return status != 0;
+      }
     }
 
     public async Task<IEnumerable<GreigeRoll>> GetCoaterSewinQueue()
     {
-      return await this.Connection.QueryAsync<GreigeRoll>("spGetCoaterSewinQueueV2", commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
+      using (var connection = this.GetOpenConnection())
+      {
+        var rolls = await connection.QueryAsync<AS400SewinQueueRoll>("spGetCoaterSewinQueueV2", commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
+        return rolls.Select(roll => roll.ToGreigeRoll());
+      }
     }
 
     public async Task<(string styleName, string colorName)> GetNamesFromLegacyCodes(string styleCode, string colorCode)
@@ -76,9 +59,12 @@ namespace Mahlo.Repository
       p.Add("style_name", string.Empty, DbType.AnsiString, ParameterDirection.Output);
       p.Add("color_name", string.Empty, DbType.AnsiString, ParameterDirection.Output);
 
-      await this.Connection.ExecuteAsync("spGetNamesFromLegacyCodes", commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
-      var result = (p.Get<string>("style_name"), p.Get<string>("color_name"));
-      return result;
+      using (var connection = this.GetOpenConnection())
+      {
+        await connection.ExecuteAsync("spGetNamesFromLegacyCodes", commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
+        var result = (p.Get<string>("style_name"), p.Get<string>("color_name"));
+        return result;
+      }
     }
 
     public async Task SendEmail(string pRecipients, string pSubject, string pBody)
@@ -98,12 +84,20 @@ namespace Mahlo.Repository
 
       try
       {
-        await this.connection.ExecuteAsync("sp_send_cdosysmail", p, commandType: CommandType.StoredProcedure, commandTimeout: 10);
-        p.Get<int>("Result");
+        using (var connection = this.GetOpenConnection())
+        {
+          await connection.ExecuteAsync("sp_send_cdosysmail", p, commandType: CommandType.StoredProcedure, commandTimeout: 10);
+          p.Get<int>("Result");
+        }
       }
       catch
       {
       }
+    }
+
+    private DbConnection GetOpenConnection()
+    {
+      return this.ConnectionFactory.GetOpenConnection();
     }
   }
 }
