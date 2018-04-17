@@ -25,6 +25,7 @@ namespace Mahlo2Tests.Logic
     private IAppInfoBAS appInfo;
     private IUserAttentions<MahloRoll> userAttentions;
     private ICriticalStops<MahloRoll> criticalStops;
+    private IMockState programState;
 
     private MeterLogic<MahloRoll> target;
 
@@ -38,6 +39,9 @@ namespace Mahlo2Tests.Logic
       this.appInfo = Substitute.For<IAppInfoBAS>();
       this.userAttentions = Substitute.For<IUserAttentions<MahloRoll>>();
       this.criticalStops = Substitute.For<ICriticalStops<MahloRoll>>();
+      //this.programState = Substitute.For<IProgramState>();
+      this.programState = Substitute.For<IMockState>();
+      SubstituteExtensions.Returns(this.programState, )
 
       this.sewinQueue.Rolls.Returns(rolls);
 
@@ -54,8 +58,13 @@ namespace Mahlo2Tests.Logic
         RollLength = 100,
       });
 
-      this.target = new MeterLogic<MahloRoll>(this.srcData, this.sewinQueue, this.appInfo, this.userAttentions, this.criticalStops);
+      this.target = new MeterLogic<MahloRoll>(this.srcData, this.sewinQueue, this.appInfo, this.userAttentions, this.criticalStops, this.programState);
       this.target.Start();
+    }
+
+    interface IMockState
+    {
+      dynamic MeterLogic { get; set; }
     }
 
     [Fact]

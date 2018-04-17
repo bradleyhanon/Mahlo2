@@ -15,6 +15,7 @@ namespace Mahlo.Utilities
     IScheduler NewThread { get; }
     IScheduler ThreadPool { get; }
     IScheduler Default { get; }
+    IScheduler WinFormsThread { get; }
     //IScheduler TaskPool { get; } 
   }
 }

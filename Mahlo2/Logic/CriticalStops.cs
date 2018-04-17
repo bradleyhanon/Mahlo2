@@ -12,13 +12,14 @@ namespace Mahlo.Logic
   class CriticalStops<Model> : ICriticalStops<Model>
   {
     private Stop stops;
-    private BehaviorSubject<ICriticalStops<Model>> changes;
+    //private BehaviorSubject<ICriticalStops<Model>> changes;
     private IMeterSrc<Model> meterSrc;
+    private bool isStatusIndicatorSet;
 
     public CriticalStops(IMeterSrc<Model> meterSrc)
     {
       this.meterSrc = meterSrc;
-      this.changes = new BehaviorSubject<ICriticalStops<Model>>(this);
+      //this.changes = new BehaviorSubject<ICriticalStops<Model>>(this);
     }
 
     [Flags]
@@ -28,7 +29,7 @@ namespace Mahlo.Logic
       PLCCommError = 2
     }
 
-    public IObservable<ICriticalStops<Model>> Changes => this.changes.AsObservable();
+    //public IObservable<ICriticalStops<Model>> Changes => this.changes.AsObservable();
 
     public bool Any => this.stops != 0;
 
@@ -49,16 +50,17 @@ namespace Mahlo.Logic
       throw new NotImplementedException();
     }
 
-    private void SetCriticalStops(Stop value, bool off)
+    private void SetCriticalStops(Stop bitMask, bool value)
     {
       var oldStops = this.stops;
-      this.stops = off ? this.stops &= ~value : this.stops |= value;
-      if (this.stops != oldStops)
+      this.stops = value ? this.stops |= bitMask : this.stops &= ~bitMask;
+      if (this.Any != this.isStatusIndicatorSet)
       {
-        this.changes.OnNext(this);
+        this.isStatusIndicatorSet = this.Any;
+        //this.changes.OnNext(this);
 
         //cmdWaitForSeam.Enabled = (nCriticalStops == 0);
-        this.meterSrc.SetCriticalAlarm(this.stops != 0);
+        this.meterSrc.SetCriticalAlarm(this.isStatusIndicatorSet);
       }
     }
   }

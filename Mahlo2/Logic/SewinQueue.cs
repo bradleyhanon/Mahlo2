@@ -17,9 +17,8 @@ namespace Mahlo.Logic
 {
   sealed class SewinQueue : ISewinQueue
   {
-    private TimeSpan refreshInterval = TimeSpan.FromSeconds(10);
     private int firstRollId;
-    private int nextRollId = 1;
+    private int nextRollId;
 
     private IDbLocal dbLocal;
     private IDbMfg dbMfg;
@@ -32,16 +31,22 @@ namespace Mahlo.Logic
 
     IDisposable timer;
 
-    public SewinQueue(IConcurrencyInfo concurrencyInfo, IDbLocal dbLocal, IDbMfg dbMfg)
+    public SewinQueue(ISchedulerProvider schedulerProvider, IDbLocal dbLocal, IDbMfg dbMfg)
     {
       this.dbLocal = dbLocal;
       this.dbMfg = dbMfg;
 
+      this.Rolls.AddRange(this.dbLocal.GetGreigeRolls());
+      this.nextRollId = this.Rolls.LastOrDefault()?.RollId + 1 ?? 1;
+
+      var ignoredResultTask = this.Refresh();
       this.timer = Observable
-        .Interval(TimeSpan.FromSeconds(5), concurrencyInfo.SchedulerProvider.Default)
-        .ObserveOn(concurrencyInfo.SynchronizationContext)
+        .Interval(this.RefreshInterval, schedulerProvider.WinFormsThread)
+        .Do(_ => Console.WriteLine("Timer Triggered!"))
         .Subscribe(async _ => await this.Refresh());
     }
+
+    public TimeSpan RefreshInterval => TimeSpan.FromSeconds(10);
 
     public BindingList<GreigeRoll> Rolls { get; private set; } = new BindingList<GreigeRoll>();
 
@@ -50,13 +55,18 @@ namespace Mahlo.Logic
       this.timer.Dispose();
     }
 
-    public GreigeRoll GetNextRoll(int currentRollId)
+    public GreigeRoll GetRoll(int rollId)
     {
-      var result = this.Rolls.First(item => item.RollId > currentRollId);
+      GreigeRoll result;
+      result = this.Rolls.FirstOrDefault(item => item.RollId >= rollId);
       if (result == null)
       {
-        result = new GreigeRoll();
-        result.RollId = this.nextRollId++;
+        result = new GreigeRoll
+        {
+          RollId = this.nextRollId++
+        };
+
+        this.Rolls.Add(result);
       }
 
       return result;
@@ -64,72 +74,47 @@ namespace Mahlo.Logic
 
     public bool RollIsLeader(int rollId)
     {
-      var TheRoll = this.Rolls.Single(item => item.RollId == rollId);
+      throw new NotImplementedException();
+      //var TheRoll = this.Rolls.Single(item => item.RollId == rollId);
 
-      bool result = false;
-      try
-      {
-        //RollQueue theQueue = new RollQueue();
-        //int bk = -1;
-        string sBk1 = "", sBk2 = "";
-        double nWidth1 = 0, nWidth2 = 0;
+      //bool result = false;
+      //try
+      //{
+      //  string sBk1 = "", sBk2 = "";
+      //  double nWidth1 = 0, nWidth2 = 0;
 
-        //bk = TheRoll.QueueBookmark;
-        // TODO: Something seems wrong: It seems SewinQueue should be cloned instead of SewinQueue.QueueRS
-        //theQueue = (RollQueue)SewinQueue.QueueRS.Clone();
-        //theQueue.QueueRS = SewinQueue.QueueRS.Clone();
+      //  int index = rollId;
+      //  while (--index >= this.firstRollId)
+      //  {
+      //    var roll = this.Rolls[index - this.firstRollId];
+      //    if (roll.RollNo != GreigeRoll.CheckRollId)
+      //    {
+      //      sBk1 = roll.BackingCode;
+      //      nWidth1 = roll.RollWidth;
+      //      break;
+      //    }
+      //  };
 
-        //theQueue.QueueRS.setBookmark(bk);
-        //theQueue.QueueRS.MovePrevious();
+      //  index = rollId;
+      //  while (++index < this.nextRollId)
+      //  {
+      //    var roll = this.Rolls[index - this.firstRollId];
+      //    if (roll.RollNo != GreigeRoll.CheckRollId)
+      //    {
+      //      sBk2 = roll.BackingCode;
+      //      nWidth2 = roll.RollWidth;
+      //      break;
+      //    }
+      //  };
 
-        int index = rollId;
-        //while (!theQueue.QueueRS.BOF)
-        while (--index >= this.firstRollId)
-        {
-          var roll = this.Rolls[index - this.firstRollId];
-          if (roll.RollNo != GreigeRoll.CheckRollId)
-          {
-            sBk1 = roll.BackingCode;
-            nWidth1 = roll.RollWidth;
-            break;
-          }
-        };
+      //  result = (sBk1 == "XL" && sBk2 != "XL") || nWidth1 != nWidth2;
+      //}
+      //catch
+      //{
+      //}
 
-        //theQueue.QueueRS.Bookmark = ReflectionHelper.GetPrimitiveValue<DataRow>(bk);
-        //theQueue.QueueRS.MoveNext();
-
-        index = rollId;
-        //while (!theQueue.QueueRS.EOF)
-        while (++index < nextRollId)
-        {
-          var roll = this.Rolls[index - this.firstRollId];
-          if (roll.RollNo != GreigeRoll.CheckRollId)
-          {
-            sBk2 = roll.BackingCode;
-            nWidth2 = roll.RollWidth;
-            break;
-          }
-        };
-
-        result = (sBk1 == "XL" && sBk2 != "XL") || nWidth1 != nWidth2;
-      }
-      catch
-      {
-      }
-
-      return result;
+      //return result;
     }
-
-
-
-    //private async void RunAutoRefresh()
-    //{
-    //  while (true)
-    //  {
-    //    await this.Refresh();
-    //    await Task.Delay(this.refreshInterval);
-    //  }
-    //}
 
     private async Task Refresh()
     {
@@ -144,6 +129,7 @@ namespace Mahlo.Logic
         if (await this.dbMfg.GetIsSewinQueueChanged(this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll))
         {
           var newRolls = (await this.dbMfg.GetCoaterSewinQueue()).ToArray();
+
           this.priorFirstRoll = newRolls.FirstOrDefault()?.RollNo ?? string.Empty;
           this.priorLastRoll = newRolls.LastOrDefault()?.RollNo ?? string.Empty;
           this.priorQueueSize = newRolls.Count();
@@ -164,7 +150,7 @@ namespace Mahlo.Logic
             }
           }
 
-          this.firstRollId = this.Rolls.Min(item => item.RollId);
+          //this.firstRollId = this.Rolls.Min(item => item.RollId);
         }
       }
       catch (Exception ex)

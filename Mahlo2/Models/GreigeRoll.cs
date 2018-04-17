@@ -13,9 +13,7 @@ namespace Mahlo.Models
 
     [ExplicitKey]
     public int RollId { get; set; }
-    //public string GridImage { get; set; }
     public string RollNo { get; set; }
-    //public string G2SCH { get; set; }
     public string StyleCode { get; set; }
     public string StyleName { get; set; }
     public string ColorCode { get; set; }
@@ -26,8 +24,6 @@ namespace Mahlo.Models
 
     public string DefaultRecipe { get; set; }
     public decimal PatternRepeatLength { get; set; }
-    //public int G2SJUL { get; set; }
-    //public string G2STME { get; set; }
     public string ProductImageURL { get; set; }
 
     public bool IsCheckRoll => this.RollNo == CheckRollId;

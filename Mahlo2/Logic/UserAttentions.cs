@@ -12,13 +12,14 @@ namespace Mahlo.Logic
   class UserAttentions<Model> : IUserAttentions<Model>
   {
     private Attention attentions;
-    private BehaviorSubject<IUserAttentions<Model>> changes;
+    //private BehaviorSubject<IUserAttentions<Model>> changes;
     private IMeterSrc<Model> meterSrc;
+    private bool isStatusIndicatorSet;
 
     public UserAttentions(IMeterSrc<Model> meterSrc)
     {
       this.meterSrc = meterSrc;
-      this.changes = new BehaviorSubject<IUserAttentions<Model>>(this);
+      //this.changes = new BehaviorSubject<IUserAttentions<Model>>(this);
     }
 
     [Flags]
@@ -31,7 +32,7 @@ namespace Mahlo.Logic
       All = VerifyRollSequence | RollTooLong | RollTooShort | SystemDisabled,
     }
 
-    public IObservable<IUserAttentions<Model>> Changes => this.changes.AsObservable();
+    //public IObservable<IUserAttentions<Model>> Changes => this.changes.AsObservable();
 
     public bool IsSystemDisabled
     {
@@ -51,7 +52,7 @@ namespace Mahlo.Logic
       set => this.SetUserAttention(Attention.RollTooShort, value);
     }
 
-    public bool IsTimeToCheckRollSequence
+    public bool VerifyRollSequence
     {
       get => (this.attentions & Attention.VerifyRollSequence) != 0;
       set => this.SetUserAttention(Attention.VerifyRollSequence, value);
@@ -87,10 +88,11 @@ namespace Mahlo.Logic
         }
       }
 
-      if (this.attentions != oldValue)
+      if (this.Any != this.isStatusIndicatorSet)
       {
-        this.changes.OnNext(this);
-        this.meterSrc.SetStatusIndicator(this.attentions != 0);
+        //this.changes.OnNext(this);
+        this.isStatusIndicatorSet = !this.isStatusIndicatorSet;
+        this.meterSrc.SetStatusIndicator(this.isStatusIndicatorSet);
       }
     }
   }
