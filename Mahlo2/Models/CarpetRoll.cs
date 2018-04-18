@@ -9,7 +9,7 @@ using PropertyChanged;
 namespace Mahlo.Models
 {
   [AddINotifyPropertyChangedInterface]
-  public class GreigeRoll
+  public class CarpetRoll : IMahloRoll, IBowAndSkewRoll, IPatternRepeatRoll
   {
     public const string CheckRollId = "CHKROL";
 
@@ -27,12 +27,56 @@ namespace Mahlo.Models
     [DependsOn(nameof(RollWidth))]
     public string RollWidthStr => $"{(int)RollWidth / 12}' {(int)RollWidth % 12}\"";
 
-
     public string DefaultRecipe { get; set; }
     public decimal PatternRepeatLength { get; set; }
     public string ProductImageURL { get; set; }
 
+    public int MalFeet { get; set; }
+    public int BasFeet { get; set; }
+    public int PrsFeet { get; set; }
+    public int MalSpeed { get; set; }
+    public int BasSpeed { get; set; }
+    public int PrsSpeed { get; set; }
+    public double Bow { get; set; }
+    public double Skew { get; set; }
+    public double Elongation { get; set; }
+
     public bool IsCheckRoll => this.RollNo == CheckRollId;
+
+    int IMahloRoll.Feet
+    {
+      get => this.MalFeet;
+      set => this.MalFeet = value;
+    }
+
+    int IBowAndSkewRoll.Feet
+    {
+      get => this.BasFeet;
+      set => this.BasFeet = value;
+    }
+    int IPatternRepeatRoll.Feet
+    {
+      get => this.PrsFeet;
+      set => this.PrsFeet = value;
+    }
+
+    int IMahloRoll.Speed
+    {
+      get => this.MalSpeed;
+      set => this.MalSpeed = value;
+    }
+
+    int IBowAndSkewRoll.Speed
+    {
+      get => this.BasSpeed;
+      set => this.BasSpeed = value;
+    }
+
+    int IPatternRepeatRoll.Speed
+    {
+      get => this.PrsSpeed;
+      set => this.PrsSpeed = value;
+    }
 
     /// <summary>
     /// Copy all but RollId to the destination

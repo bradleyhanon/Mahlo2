@@ -30,7 +30,7 @@ namespace Mahlo.Opc
     private Type priorExceptionType = null;
     private IMahloOpcSettings mahloSettings;
     private IPlcSettings seamSettings;
-    private dynamic programState;
+    private IProgramState programState;
 
     private string seamResetTag;
     private SynchronizationContext synchronizationContext;
@@ -60,8 +60,8 @@ namespace Mahlo.Opc
       this.synchronizationContext = synchronizationContext;
       this.programState = programState;
 
-      dynamic state = programState.GetObject(nameof(MahloOpcClient<Model>), typeof(Model).Name);
-      this.meterOffset = (double?)state.MeterOffset ?? 0.0;
+      var state = programState.GetSubState(nameof(MahloOpcClient<Model>), typeof(Model).Name);
+      this.meterOffset = state.Get<double?>(nameof(meterOffset)) ?? 0.0;
       this.Initialize();
     }
 
@@ -114,8 +114,8 @@ namespace Mahlo.Opc
 
     public void Dispose()
     {
-      dynamic obj = this.programState.GetObject(nameof(MahloOpcClient<Model>), typeof(Model).Name);
-      obj.MeterOffset = this.meterOffset;
+      var obj = this.programState.GetSubState(nameof(MahloOpcClient<Model>), typeof(Model).Name);
+      obj.Set(nameof(meterOffset), this.meterOffset);
     }
 
     public void ResetMeterOffset()

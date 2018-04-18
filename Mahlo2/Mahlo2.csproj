@@ -95,8 +95,12 @@
     <Compile Include="Logic\BowAndSkewLogic.cs" />
     <Compile Include="Logic\UserAttentions.cs" />
     <Compile Include="Models\BowAndSkewRoll.cs" />
+    <Compile Include="Models\CarpetRoll.cs" />
     <Compile Include="Models\CutRoll.cs" />
     <Compile Include="Models\CutRollDetail.cs" />
+    <Compile Include="Models\IBowAndSkewRoll.cs" />
+    <Compile Include="Models\IMahloRoll.cs" />
+    <Compile Include="Models\IPatternRepeatRoll.cs" />
     <Compile Include="Models\MahloRoll.cs" />
     <Compile Include="Models\AS400SewinQueueRoll.cs" />
     <Compile Include="Models\PatternRepeatRoll.cs" />
@@ -171,7 +175,7 @@
     <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="Views\App.config" />
     <None Include="Properties\DataSources\Mahlo.Models.BowAndSkewRoll.datasource" />
     <None Include="Properties\DataSources\Mahlo.Models.FinishedRoll.datasource" />
     <None Include="Properties\DataSources\Mahlo.Models.FinishedRollDetail.datasource" />

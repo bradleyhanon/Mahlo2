@@ -84,48 +84,46 @@ namespace Mahlo.Logic
       return result;
     }
 
-    //public bool RollIsLeader(int rollId)
-    //{
-    //  var TheRoll = this.Rolls.Single(item => item.RollId == rollId);
+    public bool RollIsLeader(int rollId)
+    {
+      var theRoll = this.Rolls.Single(item => item.RollId == rollId);
+      if (!theRoll.IsCheckRoll)
+      {
+        return false;
+      }
 
-    //  bool result = false;
-    //  try
-    //  {
-    //    string sBk1 = "", sBk2 = "";
-    //    double nWidth1 = 0, nWidth2 = 0;
+      var theIndex = this.Rolls.IndexOf(theRoll);
 
-    //    int index = rollId;
-    //    while (--index >= this.firstRollId)
-    //    {
-    //      var roll = this.Rolls[index - this.firstRollId];
-    //      if (roll.RollNo != GreigeRoll.CheckRollId)
-    //      {
-    //        sBk1 = roll.BackingCode;
-    //        nWidth1 = roll.RollWidth;
-    //        break;
-    //      }
-    //    };
+      string bk1 = "", bk2 = "";
+      double width1 = 0, width2 = 0;
 
-    //    index = rollId;
-    //    while (++index < this.nextRollId)
-    //    {
-    //      var roll = this.Rolls[index - this.firstRollId];
-    //      if (roll.RollNo != GreigeRoll.CheckRollId)
-    //      {
-    //        sBk2 = roll.BackingCode;
-    //        nWidth2 = roll.RollWidth;
-    //        break;
-    //      }
-    //    };
+      int index = theIndex;
+      while (--index >= 0)
+      {
+        var roll = this.Rolls[index];
+        if (!roll.IsCheckRoll)
+        {
+          bk1 = roll.BackingCode;
+          width1 = roll.RollWidth;
+          break;
+        }
+      };
 
-    //    result = (sBk1 == "XL" && sBk2 != "XL") || nWidth1 != nWidth2;
-    //  }
-    //  catch
-    //  {
-    //  }
+      index = theIndex;
+      while (++index < this.Rolls.Count)
+      {
+        var roll = this.Rolls[index];
+        if (!roll.IsCheckRoll)
+        {
+          bk2 = roll.BackingCode;
+          width2 = roll.RollWidth;
+          break;
+        }
+      };
 
-    //  return result;
-    //}
+      bool result = (bk1 == "XL" && bk2 != "XL") || width1 != width2;
+      return result;
+    }
 
     private async Task Refresh()
     {
@@ -144,6 +142,9 @@ namespace Mahlo.Logic
           this.priorFirstRoll = newRolls.FirstOrDefault()?.RollNo ?? string.Empty;
           this.priorLastRoll = newRolls.LastOrDefault()?.RollNo ?? string.Empty;
           this.priorQueueSize = newRolls.Count();
+
+          // Skip newRolls that overlap with old rows
+          //var rollsToAdd = newRolls.FindNewItems(this.Rolls, (a, b) => a.RollId == b.RollId);
 
           foreach (var newRoll in newRolls)
           {

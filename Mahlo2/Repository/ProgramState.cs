@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using Mahlo.Models;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Mahlo.Repository
 {
-  sealed class ProgramState : DynamicObject, IProgramState
+  class ProgramState : IProgramState
   {
-    IProgramStateProvider provider;
+    private IProgramStateProvider provider;
     JObject root;
 
     public ProgramState(IProgramStateProvider provider)
     {
       this.provider = provider;
-
       try
       {
         string text = provider.GetProgramState() ?? "{}";
@@ -30,91 +25,50 @@ namespace Mahlo.Repository
       }
     }
 
-    public IDynamicMetaObjectProvider GetObject(params string[] names)
+    private ProgramState(JObject root)
     {
-      dynamic obj = this.root;
+      this.root = root;
+    }
+
+    public void Dispose()
+    {
+      this.provider?.SaveProgramState(root.ToString());
+    }
+
+    public IProgramState GetSubState(params string[] names)
+    {
+      JObject obj = this.root;
       foreach (var name in names)
       {
-        obj[name] = obj[name] ?? JToken.FromObject(new { });
-        obj = obj[name];
+        obj[name] = obj[name] ?? new JObject();
+        obj = (JObject)obj[name];
       }
 
-      return obj;
+      return new ProgramState(obj);
     }
 
-    public void Reset()
-    {
-      this.root.RemoveAll();
-    }
-
-    //public dynamic CreatePropertyBag()
+    //public T GetObject<T>(string name)
+    //  where T : class, new()
     //{
-    //  return new JObject();
+    //  JObject obj = (JObject)this.root[name];
+    //  return obj.ToObject<T>();
     //}
 
-    void IDisposable.Dispose()
+    public T Get<T>(string name)
     {
-      provider.SaveProgramState(root.ToString());
+      var obj = this.root[name];
+      return obj == null ? default(T) : obj.ToObject<T>();
+      //return root.Value<T>();
     }
 
-    public override IEnumerable<string> GetDynamicMemberNames()
+    public void Set<T>(string name, T value)
     {
-      return this.root.Properties().Select(item => item.Name);
+      root[name] = JToken.FromObject(value);
     }
 
-    public override bool TryGetMember(GetMemberBinder binder, out object result)
+    public void RemoveAll()
     {
-      result = this.root[binder.Name];
-      return true;
+      root.RemoveAll();
     }
-
-    public override bool TrySetMember(SetMemberBinder binder, object value)
-    {
-      this.root[binder.Name] = JToken.FromObject(value);
-      return true;
-    }
-
-    public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
-    {
-      string name = (string)indexes[0];
-      result = this.root[name];
-      return true; ;
-    }
-
-    public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
-    {
-      string name = (string)indexes[0];
-      this.root[name] = JToken.FromObject(value);
-      return true;
-    }
-
-    //public class Container : DynamicObject
-    //{
-    //  private Dictionary<string, object> properties = new Dictionary<string, object>();
-
-    //  public override bool TryGetMember(GetMemberBinder binder, out object result)
-    //  {
-    //    this.properties.TryGetValue(binder.Name, out result);
-    //    return true;
-    //  }
-
-    //  public override bool TrySetMember(SetMemberBinder binder, object value)
-    //  {
-    //    this.properties[binder.Name] = value;
-    //    return true;
-    //  }
-
-    //  public override IEnumerable<string> GetDynamicMemberNames()
-    //  {
-    //    return this.properties.Keys;
-    //  }
-
-    //  //public override bool TryConvert(ConvertBinder binder, out object result)
-    //  //{
-    //  //  Convert.ChangeType()
-    //  //  binder.Type
-    //  //  return base.TryConvert(binder, out result);
-    //  //}
-    //}
   }
 }

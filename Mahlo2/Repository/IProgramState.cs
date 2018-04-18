@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using Newtonsoft.Json.Linq;
 
 namespace Mahlo.Repository
 {
-  interface IProgramState : IDynamicMetaObjectProvider, IDisposable
+  interface IProgramState : IDisposable
   {
-    IDynamicMetaObjectProvider GetObject(params string[] names);
-    void Reset();
+    IProgramState GetSubState(params string[] names);
+    T Get<T>(string name);
+    void Set<T>(string name, T value);
+    void RemoveAll();
   }
 }

@@ -29,5 +29,23 @@ namespace Mahlo
         list.Add(item);
       }
     }
+
+    public static IEnumerable<T> FindNewItems<T>(this IEnumerable<T> newItems, IEnumerable<T> oldItems, Func<T, T, bool> predicate)
+    {
+      int newCount = newItems.Count();
+      int oldCount = oldItems.Count();
+
+      for (int j = 0; j < oldCount; j++)
+      {
+        var oldSeq = oldItems.Skip(j);
+        var newSeq = newItems.Take(oldCount - j);
+        if (oldSeq.Equals(newSeq))
+        {
+          return newSeq.Skip(oldCount - j);
+        }
+      }
+
+      return newItems;
+    }
   }
 }

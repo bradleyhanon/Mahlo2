@@ -28,12 +28,16 @@ namespace Mahlo2Tests.Logic
     private dynamic programState;
 
     private MeterLogic<MahloRoll> target;
+    private List<GreigeRoll> greigeRolls;
 
     public MeterLogicTests()
     {
       const int roll1Length = 100;
       const int roll2Length = 200;
       const int roll3Length = 300;
+      const int roll4Length = 400;
+      const int roll5Length = 400;
+
       this.srcData = new MockMeterSrc();
       this.sewinQueue = Substitute.For<ISewinQueue>();
       this.dbMfg = Substitute.For<IDbMfg>();
@@ -67,15 +71,29 @@ namespace Mahlo2Tests.Logic
         RollLength = roll3Length,
       };
 
-      List<GreigeRoll> rolls = new List<GreigeRoll> { roll1, roll2, roll3 };
+      var roll4 = new Mahlo.Models.GreigeRoll()
+      {
+        RollId = 4,
+        RollNo = "12348",
+        RollLength = roll4Length,
+      };
 
-      this.sewinQueue.Rolls.Returns(new BindingList<GreigeRoll>(rolls));
+      var roll5 = new Mahlo.Models.GreigeRoll()
+      {
+        RollId = 5,
+        RollNo = "12349",
+        RollLength = roll5Length,
+      };
+
+      this.greigeRolls = new List<GreigeRoll> { roll1, roll2, roll3, roll4, roll5 };
+
+      this.sewinQueue.Rolls.Returns(new BindingList<GreigeRoll>(greigeRolls));
 
       this.sewinQueue
         .TryGetRoll(Arg.Any<int>(), out GreigeRoll value)
         .Returns(x =>
         {
-          x[1] = rolls[0];
+          x[1] = greigeRolls[0];
           return true;
         });
 
@@ -157,6 +175,15 @@ namespace Mahlo2Tests.Logic
     }
 
     [Fact]
+    public void SeamDetectIsIgnoredIfSystemIsDisabled()
+    {
+      userAttentions.IsSystemDisabled = true;
+      srcData.FeetCounterSubject.OnNext(500);
+      srcData.SeamDetectedSubject.OnNext(true);
+      Assert.Equal(500, target.CurrentRoll.Feet);
+    }
+
+    [Fact]
     public void SeamDetectedResetsRollLength()
     {
       srcData.FeetCounterSubject.OnNext(500);
@@ -229,6 +256,61 @@ namespace Mahlo2Tests.Logic
       oldGreigeRoll.RollId = 1;
       srcData.SeamDetectedSubject.OnNext(true);
       this.sewinQueue.Received(1).TryGetRoll(oldGreigeRoll.RollId + 1, out GreigeRoll newGreigeRoll);
+    }
+
+    [Fact]
+    public void VerifyRollSequeneIsSetWhenConfiguredNumberOfRollAreProcessed()
+    {
+      this.userAttentions.VerifyRollSequence = false;
+      this.appInfo.CheckAfterHowManyRolls = 3;
+      this.appInfo.CheckAfterHowManyStyles = 1000;
+      for (int j = 0; j < this.appInfo.CheckAfterHowManyRolls - 1; j++)
+      {
+        ProduceRoll();
+        Assert.False(this.userAttentions.VerifyRollSequence);
+      }
+
+      ProduceRoll();
+      Assert.True(this.userAttentions.VerifyRollSequence);
+
+      void ProduceRoll()
+      {
+        srcData.FeetCounterSubject.OnNext(this.target.CurrentGreigeRoll.RollLength);
+        srcData.SeamDetectedSubject.OnNext(true);
+        Assert.Equal(0, target.CurrentRoll.Feet);
+      }
+    }
+
+    [Fact]
+    public void VerifyRollSequeneIsSetWhenConfiguredNumberOfStylesAreProcessed()
+    {
+      this.userAttentions.VerifyRollSequence = false;
+      this.appInfo.CheckAfterHowManyStyles = 3;
+      this.appInfo.CheckAfterHowManyRolls = 100;
+      this.greigeRolls[0].StyleCode = "style1";
+      this.greigeRolls[1].StyleCode = "style1";
+      this.greigeRolls[2].StyleCode = "style2";
+      this.greigeRolls[3].StyleCode = "style2";
+      this.greigeRolls[4].StyleCode = "style3";
+      for (int j = 0; j < 4; j++)
+      {
+        this.sewinQueue.TryGetRoll(Arg.Any<int>(), out GreigeRoll outRoll)
+          .Returns(x => { x[1] = this.greigeRolls[j]; return true; });
+        ProduceRoll();
+        Assert.False(this.userAttentions.VerifyRollSequence);
+      }
+
+      this.sewinQueue.TryGetRoll(Arg.Any<int>(), out GreigeRoll anotherRoll)
+          .Returns(x => { x[1] = this.greigeRolls[4]; return true; });
+      ProduceRoll();
+      Assert.True(this.userAttentions.VerifyRollSequence);
+
+      void ProduceRoll()
+      {
+        srcData.FeetCounterSubject.OnNext(this.target.CurrentGreigeRoll.RollLength);
+        srcData.SeamDetectedSubject.OnNext(true);
+        Assert.Equal(0, target.CurrentRoll.Feet);
+      }
     }
   }
 }

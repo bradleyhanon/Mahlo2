@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mahlo.Models;
 using Mahlo.Repository;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NSubstitute;
 using Xunit;
 
@@ -23,24 +21,32 @@ namespace Mahlo2Tests.Repository
       provider = Substitute.For<IProgramStateProvider>();
       provider.GetProgramState().Returns("{}");
     }
-    
+
     [Fact]
-    public void NonExistentValuesReturnNull()
+    public void NonExistentValuesReturnDefault()
     {
-      dynamic state = new ProgramState(this.provider);
-      Assert.Null(state.NotThere);
+      var state = new ProgramState(this.provider);
+      Assert.Null(state.Get<int?>("NotThere"));
+    }
+
+    [Fact]
+    public void SimpleValueWorks()
+    {
+      var state = new ProgramState(this.provider);
+      state.Set("one", 1);
+      Assert.Equal(1, state.Get<int>("one"));
     }
 
     [Fact]
     public void TestGetProperties()
     {
       this.provider.GetProgramState().Returns("{ 'value':5, 'stuff':{ 'name':'smith', 'age':11 }}");
-      dynamic state = new ProgramState(this.provider);
-      int value = state.value;
-      dynamic stuff = state.stuff;
+      var state = new ProgramState(this.provider);
+      int value = state.Get<int>("value");
+      var stuff = state.GetSubState("stuff");
       Assert.Equal(5, value);
-      Assert.Equal("smith", (string)stuff.name);
-      Assert.Equal(11, (int)stuff.age);
+      Assert.Equal("smith", stuff.Get<string>("name"));
+      Assert.Equal(11, stuff.Get<int>("age"));
     }
 
     [Fact]
@@ -48,44 +54,40 @@ namespace Mahlo2Tests.Repository
     {
       const string street = "101 1st Ave";
       const string city = "Chattanooga";
-      dynamic state = new ProgramState(this.provider);
-      state.BigMoney = 10000.55;
-      state.Address = new { Street = street, City = city, Zip=12345 };
-      Assert.Equal(10000.55, (double)state.BigMoney);
-      Assert.Equal(street, (string)state.Address.Street);
-      Assert.Equal(city, (string)state.Address.City);
-      Assert.Equal(12345, (int)state.Address.Zip);
+      var state = new ProgramState(this.provider);
+      state.Set("BigMoney", 10000.55);
+      state.Set("Address", new { Street = street, City = city, Zip = 12345 });
+      Assert.Equal(10000.55, state.Get<double>("BigMoney"));
+      var address = state.GetSubState("Address");
+      Assert.Equal(street, address.Get<string>("Street"));
+      Assert.Equal(city, address.Get<string>("City"));
+      Assert.Equal(12345, address.Get<int>("Zip"));
     }
 
     [Fact]
-    public void PropertiesaAreAvailableByNameInString()
+    public void GettingAnObjectWorks()
     {
-      dynamic state = new ProgramState(this.provider);
-      state["BigMoney"] = 10000;
-      Assert.Equal(10000, (int)state["BigMoney"]);
+      MahloRoll roll = new MahloRoll() { RollId = 5, Feet = 605 };
+      var state = new ProgramState(this.provider);
+      state.Set(nameof(roll), roll);
+
+      MahloRoll roll2 = state.Get<MahloRoll>(nameof(roll));
+      Assert.Equal(5, roll2.RollId);
+      Assert.Equal(605, roll2.Feet);
     }
 
     [Fact]
-    public void GetObjectWorks()
+    public void RemoveAllClearsAll()
     {
-      dynamic state = new ProgramState(this.provider);
-      dynamic obj = state.GetObject("MeterLogic", "Mahlo");
-      obj.value = 5;
-      Assert.Equal(5, (int)state.MeterLogic.Mahlo.value);
+      var state = new ProgramState(this.provider);
+      state.Set(nameof(MahloRoll), new { rollId = 1 });
+      Assert.NotNull(state.Get<MahloRoll>(nameof(MahloRoll)));
+      state.RemoveAll();
+      Assert.Null(state.Get<MahloRoll>(nameof(MahloRoll)));
     }
 
     [Fact]
-    public void ResetClearsAllAndSetsDefaultProperties()
-    {
-      dynamic state = new ProgramState(this.provider);
-      state.MahloRoll = new { rollId = 1 };
-      Assert.NotNull(state.MahloRoll);
-      state.Reset();
-      Assert.Null(state.MahloRoll);
-    }
-
-    [Fact]
-    public void RoundTripValuesArePreservedEvenForDefaultProperties()
+    public void RoundTripValuesArePreserved()
     {
       string savedState = string.Empty;
 
@@ -95,27 +97,65 @@ namespace Mahlo2Tests.Repository
         .Do(x => savedState = (string)x.Args()[0]);
 
       // Set state information and dispose the state object to save.
-      var state1 = new ProgramState(this.provider);
-      dynamic state = state1;
-      state.Age = 55;
-      state.MahloRoll = new { Street = street, City = city, Garbage = false };
-      state.BowAndSkewRoll = new { rollId = 5 };
-      state.PatternRepeatRoll = new { rollId = 4 };
-      ((IDisposable)state1).Dispose();
+      var state = new ProgramState(this.provider);
+      state.Set("Age", 55);
+      state.Set("Address", new { Street = street, City = city, Garbage = false });
+      state.Set(nameof(BowAndSkewRoll), new { RollId = 5 });
+      state.Set(nameof(PatternRepeatRoll), new { RollId = 4 });
+      state.Dispose();
       this.provider
         .Received(1);
 
       // Verify that the state can be reconstituted
       this.provider = Substitute.For<IProgramStateProvider>();
       this.provider.GetProgramState().Returns(savedState);
-      dynamic state2 = new ProgramState(this.provider);
-      Assert.Equal(55, (int)state2.Age);
-      Assert.Equal(street, (string)state2.MahloRoll.Street);
-      Assert.Equal(city, (string)state2.MahloRoll.City);
-      Assert.False((bool)state2.MahloRoll.Garbage);
+      var state2 = new ProgramState(this.provider);
+      Assert.Equal(55, state2.Get<int>("Age"));
+      var address = state2.GetSubState("Address");
+      Assert.Equal(street, address.Get<string>("Street"));
+      Assert.Equal(city, address.Get<string>("City"));
+      Assert.False(address.Get<bool>("Garbage"));
 
-      Assert.Equal(5, (int)state2.BowAndSkewRoll.rollId);
-      Assert.Equal(4, (int)state2.PatternRepeatRoll.rollId);
+      Assert.Equal(5, state2.Get<BowAndSkewRoll>(nameof(BowAndSkewRoll)).RollId);
+      Assert.Equal(4, state2.Get<PatternRepeatRoll>(nameof(PatternRepeatRoll)).RollId);
+    }
+
+    [Fact]
+    public void RoundTripValuesWorkForNestedAnonymousClasses()
+    {
+      string savedState = string.Empty;
+
+      // Save the state string when SaveProgramState(s) called
+      this.provider
+        .When(x => x.SaveProgramState(Arg.Any<string>()))
+        .Do(x => savedState = (string)x.Args()[0]);
+
+      // Set state information and dispose the state object to save.
+      var state = new ProgramState(this.provider);
+      state.Set("Settings", new
+      {
+        Age = 55,
+        MahloRoll = new { Street = street, City = city, Garbage = false },
+        BowAndSkewRoll = new { RollId = 5 },
+        PatternRepeatRoll = new { RollId = 4 },
+      });
+
+      ((IDisposable)state).Dispose();
+      this.provider
+        .Received(1);
+
+      // Verify that the state can be reconstituted
+      this.provider = Substitute.For<IProgramStateProvider>();
+      this.provider.GetProgramState().Returns(savedState);
+      var state2 = new ProgramState(this.provider);
+      var settings = state2.GetSubState("Settings");
+      Assert.Equal(55, settings.Get<int>("Age"));
+      Assert.Equal(street, settings.GetSubState("MahloRoll").Get<string>("Street"));
+      Assert.Equal(city, settings.GetSubState("MahloRoll").Get<string>("City"));
+      Assert.False(settings.GetSubState("MahloRoll").Get<bool>("Garbage"));
+
+      Assert.Equal(5, settings.Get<BowAndSkewRoll>(nameof(BowAndSkewRoll)).RollId);
+      Assert.Equal(4, settings.Get<PatternRepeatRoll>(nameof(PatternRepeatRoll)).RollId);
     }
   }
 }
