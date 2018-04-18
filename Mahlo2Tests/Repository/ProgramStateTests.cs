@@ -58,7 +58,34 @@ namespace Mahlo2Tests.Repository
     }
 
     [Fact]
-    public void TestRoundTrip()
+    public void PropertiesaAreAvailableByNameInString()
+    {
+      dynamic state = new ProgramState(this.provider);
+      state["BigMoney"] = 10000;
+      Assert.Equal(10000, (int)state["BigMoney"]);
+    }
+
+    [Fact]
+    public void GetObjectWorks()
+    {
+      dynamic state = new ProgramState(this.provider);
+      dynamic obj = state.GetObject("MeterLogic", "Mahlo");
+      obj.value = 5;
+      Assert.Equal(5, (int)state.MeterLogic.Mahlo.value);
+    }
+
+    [Fact]
+    public void ResetClearsAllAndSetsDefaultProperties()
+    {
+      dynamic state = new ProgramState(this.provider);
+      state.MahloRoll = new { rollId = 1 };
+      Assert.NotNull(state.MahloRoll);
+      state.Reset();
+      Assert.Null(state.MahloRoll);
+    }
+
+    [Fact]
+    public void RoundTripValuesArePreservedEvenForDefaultProperties()
     {
       string savedState = string.Empty;
 
@@ -71,7 +98,9 @@ namespace Mahlo2Tests.Repository
       var state1 = new ProgramState(this.provider);
       dynamic state = state1;
       state.Age = 55;
-      state.Address = new { Street = street, City = city, Garbage = false };
+      state.MahloRoll = new { Street = street, City = city, Garbage = false };
+      state.BowAndSkewRoll = new { rollId = 5 };
+      state.PatternRepeatRoll = new { rollId = 4 };
       ((IDisposable)state1).Dispose();
       this.provider
         .Received(1);
@@ -81,9 +110,12 @@ namespace Mahlo2Tests.Repository
       this.provider.GetProgramState().Returns(savedState);
       dynamic state2 = new ProgramState(this.provider);
       Assert.Equal(55, (int)state2.Age);
-      Assert.Equal(street, (string)state2.Address.Street);
-      Assert.Equal(city, (string)state2.Address.City);
-      Assert.False((bool)state2.Address.Garbage);
+      Assert.Equal(street, (string)state2.MahloRoll.Street);
+      Assert.Equal(city, (string)state2.MahloRoll.City);
+      Assert.False((bool)state2.MahloRoll.Garbage);
+
+      Assert.Equal(5, (int)state2.BowAndSkewRoll.rollId);
+      Assert.Equal(4, (int)state2.PatternRepeatRoll.rollId);
     }
   }
 }

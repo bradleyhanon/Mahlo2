@@ -37,7 +37,7 @@ namespace Mahlo.AppSettings
 
     public double BowToleranceInInches { get; set; } = 0.5;
     public double SkewToleranceInInches { get; set; } = 0.5;
-    public double SeamDetectableThreshold { get; set; } = 5; // Distance within which seam detects are ignored
+    public int SeamDetectableThreshold { get; set; } = 5; // Distance within which seam detects are ignored
     public int CheckAfterHowManyRolls { get; set; } = 10;
     public int CheckAfterHowManyStyles { get; set; } = 3;
     public string SendEmailAlertsTo { get; set; } = "Calhoun.Mahlo.Alerts";

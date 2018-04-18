@@ -9,7 +9,7 @@ namespace Mahlo.Logic
 {
   interface IMeterLogic<Model> : IDisposable
   {
-    GreigeRoll CurrentGreigeRoll { get; }
+    GreigeRoll CurrentGreigeRoll { get; set; }
     Model CurrentRoll { get; }
     IObservable<Model> RollStarted { get; }
     IObservable<Model> RollFinished { get; }

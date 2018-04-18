@@ -16,7 +16,7 @@ using Xunit;
 
 namespace Mahlo2Tests
 {
-  public class SewinQueueTests : IEqualityComparer<GreigeRoll>
+  public class SewinQueueTests : IEqualityComparer<GreigeRoll>, IDisposable
   {
     private GreigeRoll roll1 = new GreigeRoll() { RollNo = "100" };
     private GreigeRoll roll2 = new GreigeRoll() { RollNo = "200" };
@@ -32,6 +32,11 @@ namespace Mahlo2Tests
 
     public SewinQueueTests()
     {
+    }
+
+    public void Dispose()
+    {
+      this.target?.Dispose();
     }
 
     [Fact]
@@ -118,6 +123,29 @@ namespace Mahlo2Tests
     }
 
     [Fact]
+    public void TryGetRollGetsTheRollWhenItExists()
+    {
+      this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
+      this.dbMfg.GetCoaterSewinQueue().Returns(new[] { roll1, roll2, roll3 });
+      target = new SewinQueue(schedulers, dbLocal, dbMfg);
+
+      var expected = roll2;
+      Assert.True(this.target.TryGetRoll(2, out GreigeRoll actual));
+      Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void IfRollDoesntExistTryGetRollCreatesOne()
+    {
+      this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
+      this.dbMfg.GetCoaterSewinQueue().Returns(new[] { roll1, roll2, roll3 });
+      target = new SewinQueue(schedulers, dbLocal, dbMfg);
+
+      Assert.False(this.target.TryGetRoll(4, out GreigeRoll newRoll));
+      Assert.Equal(4, newRoll.RollId);
+    }
+
+    [Fact]
     public void GetRollGetsTheRollRequested()
     {
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
@@ -168,7 +196,6 @@ namespace Mahlo2Tests
       var roll = this.target.GetRoll(10);
       Assert.Equal(5, roll.RollId);
     }
-
 
     private GreigeRoll Clone(GreigeRoll roll)
     {

@@ -11,13 +11,8 @@ namespace Mahlo.Opc
   {
     string Recipe { get; set; }
 
-    bool OnOff { get; set; }
-    int Status { get; set; }
-    double MeterStamp { get; set; }
-    bool BowValid { get; set; }
-    double BowInPercent { get; set; }
-    bool SkewValid { get; set; }
-    double SkewInPercent { get; set; }
-    int ControllerState { get; set; }
+    IObservable<double> BowChanged { get; }
+    IObservable<double> SkewChanged { get; }
+    IObservable<bool> OnOffChanged { get; }
   }
 }

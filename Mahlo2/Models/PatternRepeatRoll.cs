@@ -8,7 +8,7 @@ namespace Mahlo.Models
 {
   class PatternRepeatRoll : MahloRoll
   {
-    public int Elongation { get; set; }
+    public double Elongation { get; set; }
 
     public override MahloRoll Create()
     {

@@ -14,10 +14,19 @@ namespace Mahlo.Logic
 {
   class BowAndSkewLogic : IBowAndSkewLogic
   {
+    IBowAndSkewSrc bowAndSkewSrc;
     IMeterLogic<BowAndSkewRoll> meterLogic;
-    public BowAndSkewLogic(IMeterLogic<BowAndSkewRoll> meterLogic) 
+
+    public BowAndSkewLogic(IBowAndSkewSrc bowAndSkewSrc, IMeterLogic<BowAndSkewRoll> meterLogic) 
     {
+      this.bowAndSkewSrc = bowAndSkewSrc;
       this.meterLogic = meterLogic;
+      this.bowAndSkewSrc.BowChanged.Subscribe(value => this.CurrentRoll.Bow = value);
+      this.bowAndSkewSrc.SkewChanged.Subscribe(value => this.CurrentRoll.Skew = value);
     }
+
+    public BowAndSkewRoll CurrentRoll => this.meterLogic.CurrentRoll;
+    public GreigeRoll CurrentGreigeRoll => this.meterLogic.CurrentGreigeRoll;
+
   }
 }

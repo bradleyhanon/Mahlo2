@@ -45,11 +45,6 @@ namespace Mahlo.Logic
       set => this.SetCriticalStops(Stop.PLCCommError, value);
     }
 
-    public void Clear()
-    {
-      throw new NotImplementedException();
-    }
-
     private void SetCriticalStops(Stop bitMask, bool value)
     {
       var oldStops = this.stops;

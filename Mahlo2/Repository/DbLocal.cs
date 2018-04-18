@@ -49,11 +49,30 @@ namespace Mahlo.Repository
       }
     }
 
-    public IEnumerable<T> GetRolls<T>() where T : MahloRoll
+    public IEnumerable<T> GetRolls<T>() 
+      where T : MahloRoll
     {
       using (var connection = this.GetOpenConnection())
       {
         return connection.GetAll<T>();
+      }
+    }
+
+    public void SaveRoll<T>(T roll) 
+      where T : MahloRoll
+    {
+      using (var connection = this.GetOpenConnection())
+      {
+        connection.InsertAsync(roll);
+      }
+    }
+
+    public void UpdateRoll<T>(T roll)
+      where T:MahloRoll
+    {
+      using (var connection = this.GetOpenConnection())
+      {
+        connection.Update(roll);
       }
     }
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mahlo.Opc
 {
-  interface IMeterSrc<Model> : INotifyPropertyChanged
+  interface IMeterSrc<Model>
   {
     IObservable<int> FeetCounter { get; }
     IObservable<int> FeetPerMinute { get; }

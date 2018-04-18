@@ -82,14 +82,12 @@
     <Compile Include="Logic\IMeterLogic.cs" />
     <Compile Include="Logic\IModelLogic.cs" />
     <Compile Include="Logic\IPatternRepeatLogic.cs" />
-    <Compile Include="Logic\IRollLengthMonitor.cs" />
     <Compile Include="Logic\ISewinQueue.cs" />
     <Compile Include="Controllers\MahloPatternRepeat.cs" />
     <Compile Include="Logic\IUserAttentions.cs" />
     <Compile Include="Logic\MahloLogic.cs" />
     <Compile Include="Logic\MeterLogic.cs" />
     <Compile Include="Logic\PatternRepeatLogic.cs" />
-    <Compile Include="Logic\RollLengthMonitor.cs" />
     <Compile Include="Logic\SewinQueue.cs" />
     <Compile Include="DbMigrations\M001CreateDatabase.cs" />
     <Compile Include="DbMigrations\Runner.cs" />

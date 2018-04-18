@@ -16,7 +16,7 @@
     bool PrintServerEnabled { get; set; }
     string ProductImageRootFolder { get; set; }
     int QueueRefreshRate { get; set; }
-    double SeamDetectableThreshold { get; set; }
+    int SeamDetectableThreshold { get; set; }
     string SendEmailAlertsTo { get; set; }
     double SkewToleranceInInches { get; set; }
     string SqlServerMachine { get; set; }

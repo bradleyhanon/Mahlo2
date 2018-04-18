@@ -11,6 +11,7 @@ namespace Mahlo.Repository
 {
   interface IProgramState : IDynamicMetaObjectProvider, IDisposable
   {
-    dynamic CreatePropertyBag();
+    IDynamicMetaObjectProvider GetObject(params string[] names);
+    void Reset();
   }
 }

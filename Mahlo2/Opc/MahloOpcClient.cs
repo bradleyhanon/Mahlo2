@@ -13,10 +13,11 @@ using System.Threading;
 using OpcLabs.EasyOpc.DataAccess;
 using OpcLabs.EasyOpc.DataAccess.OperationModel;
 using OpcLabs.EasyOpc.DataAccess.Generic;
+using Mahlo.Repository;
 
 namespace Mahlo.Opc
 {
-  class MahloOpcClient<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc
+  sealed class MahloOpcClient<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc, IDisposable
   {
     private const string MahloServerClass = "mahlo.10AOpcServer.1";
     private const string PlcServerClass = "Kepware.KEPServerEX.V6";
@@ -29,25 +30,40 @@ namespace Mahlo.Opc
     private Type priorExceptionType = null;
     private IMahloOpcSettings mahloSettings;
     private IPlcSettings seamSettings;
+    private dynamic programState;
+
     private string seamResetTag;
     private SynchronizationContext synchronizationContext;
     private string seamAckTag;
     private string seamDetectedTag;
+    private double meterOffset;
 
     private Subject<double> meterCountSubject = new Subject<double>();
     private Subject<double> speedSubject = new Subject<double>();
     private Subject<bool> seamDetectedSubject = new Subject<bool>();
 
-    public MahloOpcClient(EasyDAClient opcClient, IMahloOpcSettings mahloSettings, IPlcSettings seamSettings, SynchronizationContext synchronizationContext)
+    private Subject<bool> onOffSubject = new Subject<bool>();
+    private Subject<double> bowSubject = new Subject<double>();
+    private Subject<double> skewSubject = new Subject<double>();
+    private Subject<double> patterRepeatSubject = new Subject<double>();
+
+    public MahloOpcClient(
+      EasyDAClient opcClient, 
+      IMahloOpcSettings mahloSettings, 
+      IPlcSettings seamSettings,
+      IProgramState programState,
+      SynchronizationContext synchronizationContext)
     {
       this.opcClient = opcClient;
       this.mahloSettings = mahloSettings;
       this.seamSettings = seamSettings;
       this.synchronizationContext = synchronizationContext;
+      this.programState = programState;
+
+      dynamic state = programState.GetObject(nameof(MahloOpcClient<Model>), typeof(Model).Name);
+      this.meterOffset = (double?)state.MeterOffset ?? 0.0;
       this.Initialize();
     }
-
-    public event PropertyChangedEventHandler PropertyChanged;
 
     public string Recipe { get; set; }
     public double MetersCount { get; set; }
@@ -64,32 +80,47 @@ namespace Mahlo.Opc
    
     public IObservable<bool> SeamDetected => this.seamDetectedSubject;
 
+    public IObservable<bool> OnOffChanged => this.onOffSubject;
+
+    public IObservable<double> BowChanged => this.bowSubject;
+
+    public IObservable<double> SkewChanged => this.skewSubject;
+
+    public IObservable<double> PatternRepeatChanged => this.patterRepeatSubject.Select(value => Extensions.MetersToFeet(value) * 12);
+
     //public bool WidthOnOff { get; set; }
     //public int WidthStatus { get; set; }
     //public double WidthMeterStamp { get; set; }
     //public bool WidthValid { get; set; }
     //public double Width { get; set; }
 
-    public bool OnOff { get; set; }
-    public int Status { get; set; }
-    public double MeterStamp { get; set; }
-    public int ControllerState { get; set; }
+    //public bool OnOff { get; set; }
+    //public int Status { get; set; }
+    //public double MeterStamp { get; set; }
+    //public int ControllerState { get; set; }
 
-    public bool SkewValid { get; set; }
-    public double SkewInPercent { get; set; }
-    public bool BowValid { get; set; }
-    public double BowInPercent { get; set; }
+    //public bool SkewValid { get; set; }
+    //public double SkewInPercent { get; set; }
+    //public bool BowValid { get; set; }
+    //public double BowInPercent { get; set; }
 
     //public bool PrsOnOff { get; set; }
     //public int PrsStatus { get; set; }
     //public double PrsMeterStamp { get; set; }
     public bool Valid { get; set; }
     public double ValueInMeter { get; set; }
+
     //public int PrsControllerState { get; set; }
+
+    public void Dispose()
+    {
+      dynamic obj = this.programState.GetObject(nameof(MahloOpcClient<Model>), typeof(Model).Name);
+      obj.MeterOffset = this.meterOffset;
+    }
 
     public void ResetMeterOffset()
     {
-      throw new NotImplementedException();
+      this.meterOffset = 0;
     }
 
     public void ResetSeamDetector()
@@ -157,7 +188,7 @@ namespace Mahlo.Opc
       mahloTags.AddRange(new(string, Action<object>)[]
       {
         ("Current.Version.0.KeyColumn", value => this.Recipe = (string)value),
-        ("Readings.Bridge.0.General.0.MeterCount", value => {this.MetersCount = (double)value; this.meterCountSubject.OnNext((double)value); }),
+        ("Readings.Bridge.0.General.0.MeterCount", value => {this.MetersCount = (double)value; this.meterCountSubject.OnNext((double)value - this.meterOffset); }),
         //("Readings.Bridge.0.General.0.MeterOffset", value => this.MetersOffset = (double)value),
         ("Readings.Bridge.0.General.0.Speed", value => { this.Speed = (double)value; this.speedSubject.OnNext((double)value); }),
       });
@@ -179,13 +210,13 @@ namespace Mahlo.Opc
         this.mahloChannel = mahloSettings.BowAndSkewChannelName;
         mahloTags.AddRange(new(string, Action<object>)[]
         {
-            ("Current.Bridge.0.Calc.1.OnOff", value => this.OnOff = (int)value == 1),
+            ("Current.Bridge.0.Calc.1.OnOff", value => this.onOffSubject.OnNext((int)value == 1)),
             //("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
             //("Readings.Bridge.0.Calc.1.MeterStamp", value => this.MeterStamp = (double)value),
             //("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewValid", value => this.SkewValid = (int)value == 1),
-            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewInPercent", value => this.SkewInPercent = (double)value),
+            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewInPercent", value => this.skewSubject.OnNext((double)value)),
             //("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowValid", value => this.BowValid = (int)value == 1),
-            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowInPercent", value => this.BowInPercent = (double)value),
+            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowInPercent", value => this.bowSubject.OnNext((double)value)),
             //("Readings.Bridge.0.Calc.1.CalcDistortion.0.Contr_State", value => this.ControllerState = (int)value),
         });
       }
@@ -195,11 +226,11 @@ namespace Mahlo.Opc
         this.mahloChannel = mahloSettings.PatternRepeatChannelName;
         mahloTags.AddRange(new(string, Action<object>)[]
         {
-            ("Current.Bridge.0.Calc.1.OnOff", value => this.OnOff = (int)value == 1),
+            ("Current.Bridge.0.Calc.1.OnOff", value => this.onOffSubject.OnNext((int)value == 1)),
             //("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
             //("Readings.Bridge.0.Calc.1.MeterStamp", value => this.MeterStamp = (double)value),
             //("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.Valid", value => this.Valid = (int)value == 1),
-            ("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.ValueInMeter", value => this.ValueInMeter = (double)value),
+            ("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.ValueInMeter", value => this.patterRepeatSubject.OnNext((double)value)),
             //("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.Contr_State", value => this.ControllerState = (int)value),
         });
       }
@@ -251,12 +282,12 @@ namespace Mahlo.Opc
 
     public void SetStatusIndicator(bool value)
     {
-      throw new NotImplementedException();
+      //throw new NotImplementedException();
     }
 
     public void SetCriticalAlarm(bool value)
     {
-      throw new NotImplementedException();
+      //throw new NotImplementedException();
     }
   }
 }

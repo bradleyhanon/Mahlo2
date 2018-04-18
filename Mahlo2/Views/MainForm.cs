@@ -31,7 +31,7 @@ namespace Mahlo.Views
     private void MainForm_Load(object sender, EventArgs e)
     {
       this.carpetProcessor.Start();
-      this.sewinGrid.DataSource = carpetProcessor.sewinQueue.Rolls;
+      this.sewinGrid.DataSource = carpetProcessor.SewinQueue.Rolls;
       //this.mahlo2Grid.DataSource = carpetProcessor.mahloMeter.Rolls;
       //this.bowAndSkewGrid.DataSource = carpetProcessor.bowAndSkewMeter.Rolls;
       //this.patternRepeatGrid.DataSource = carpetProcessor.patternRepeatMeter.Rolls;

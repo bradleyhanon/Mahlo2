@@ -9,27 +9,43 @@ using Mahlo.Opc;
 
 namespace Mahlo2Tests.Mocks
 {
-  class MockMeterSrc : IMahloSrc
+  class MockMeterSrc : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc
   {
     public Subject<int> FeetCounterSubject { get; } = new Subject<int>();
     public Subject<int> FeetPerMinuteSubject { get; } = new Subject<int>();
     public Subject<bool> SeamDetectedSubject { get; } = new Subject<bool>();
+    public Subject<bool> OnOffSubject { get; } = new Subject<bool>();
+    public Subject<double> BowSubject { get; } = new Subject<double>();
+    public Subject<double> SkewSubject { get; } = new Subject<double>();
+    public Subject<double> PatternRepeatSubject { get; } = new Subject<double>();
+
     public IObservable<int> FeetCounter => this.FeetCounterSubject;
 
     public IObservable<int> FeetPerMinute => this.FeetPerMinuteSubject;
 
     public IObservable<bool> SeamDetected => this.SeamDetectedSubject;
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public string Recipe { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+    public IObservable<bool> OnOffChanged => this.OnOffSubject;
+
+    public IObservable<double> BowChanged => this.BowSubject;
+
+    public IObservable<double> SkewChanged => this.SkewSubject;
+
+    public IObservable<double> PatternRepeatChanged => this.PatternRepeatSubject;
+
+    public int ResetMeterOffsetCalled { get; set; }
+    public int ResetSeamDetectorCalled { get; set; }
 
     public void ResetMeterOffset()
     {
-      throw new NotImplementedException();
+      this.ResetMeterOffsetCalled++;
     }
 
     public void ResetSeamDetector()
     {
-      throw new NotImplementedException();
+      this.ResetSeamDetectorCalled++;
     }
 
     public void SetCriticalAlarm(bool value)

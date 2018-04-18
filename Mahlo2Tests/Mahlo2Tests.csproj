@@ -42,15 +42,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Logic\BowAndSkewLogicTests.cs" />
     <Compile Include="Logic\CriticalStopsTests.cs" />
+    <Compile Include="Logic\MahloLogicTests.cs" />
     <Compile Include="Logic\MeterLogicTests.cs" />
+    <Compile Include="Logic\PatternRepeatLogicTests.cs" />
     <Compile Include="Logic\UserAttententionsTests.cs" />
-    <Compile Include="Mocks\Accessor.cs" />
     <Compile Include="Mocks\MockMeterSrc.cs" />
     <Compile Include="Mocks\TestSchedulers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\ProgramStateTests.cs" />
-    <Compile Include="SewinQueueTests.cs" />
+    <Compile Include="Logic\SewinQueueTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Reactive.Testing">

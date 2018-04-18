@@ -97,25 +97,26 @@ namespace Mahlo
       container.RegisterSingleton<IMeterLogic<BowAndSkewRoll>, MeterLogic<BowAndSkewRoll>>();
       container.RegisterSingleton<IMeterLogic<PatternRepeatRoll>, MeterLogic<PatternRepeatRoll>>();
 
-      container.RegisterSingleton<IRollLengthMonitor<MahloRoll>, RollLengthMonitor<MahloRoll>>();
-      container.RegisterSingleton<IRollLengthMonitor<BowAndSkewRoll>, RollLengthMonitor<BowAndSkewRoll>>();
-      container.RegisterSingleton<IRollLengthMonitor<PatternRepeatRoll>, RollLengthMonitor<PatternRepeatRoll>>();
+      //container.RegisterSingleton<IRollLengthMonitor<MahloRoll>, RollLengthMonitor<MahloRoll>>();
+      //container.RegisterSingleton<IRollLengthMonitor<BowAndSkewRoll>, RollLengthMonitor<BowAndSkewRoll>>();
+      //container.RegisterSingleton<IRollLengthMonitor<PatternRepeatRoll>, RollLengthMonitor<PatternRepeatRoll>>();
+
+      container.RegisterSingleton<IMahloSrc, MahloOpcClient<MahloRoll>>();
+      container.RegisterSingleton<IBowAndSkewSrc, MahloOpcClient<BowAndSkewRoll>>();
+      container.RegisterSingleton<IPatternRepeatSrc, MahloOpcClient<PatternRepeatRoll>>();
 
       container.RegisterSingleton<IMeterSrc<MahloRoll>, MahloOpcClient<MahloRoll>>();
       container.RegisterSingleton<IMeterSrc<BowAndSkewRoll>, MahloOpcClient<BowAndSkewRoll>>();
       container.RegisterSingleton<IMeterSrc<PatternRepeatRoll>, MahloOpcClient<PatternRepeatRoll>>();
 
       container.RegisterSingleton<ISchedulerProvider, SchedulerProvider>();
-      container.RegisterSingleton<SynchronizationContext>(WindowsFormsSynchronizationContext.Current);
+      container.RegisterInstance<SynchronizationContext>(WindowsFormsSynchronizationContext.Current);
       container.RegisterSingleton<IConcurrencyInfo, ConcurrencyInfo>();
       container.RegisterSingleton<ISewinQueue, SewinQueue>();
       container.RegisterSingleton<IMahloLogic, MahloLogic>();
       container.RegisterSingleton<IBowAndSkewLogic, BowAndSkewLogic>();
       container.RegisterSingleton<IPatternRepeatLogic, PatternRepeatLogic>();
       container.RegisterSingleton<ICutRollLogic, CutRollLogic>();
-      //container.RegisterSingleton<IBowAndSkewSrc>(() => container.GetInstance<MahloOpcClient>());
-      //container.RegisterSingleton<IPatternRepeatSrc>(() => container.GetInstance<MahloOpcClient>());
-      //container.RegisterSingleton<IMahloSrc>(() => container.GetInstance<MahloOpcClient>());
       container.RegisterSingleton<EasyDAClient>(() => new EasyDAClient());
 
       container.RegisterSingleton<IDbConnectionFactoryFactory, DbConnectionFactory.Factory>();

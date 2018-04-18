@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Mahlo.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -29,10 +30,27 @@ namespace Mahlo.Repository
       }
     }
 
-    public dynamic CreatePropertyBag()
+    public IDynamicMetaObjectProvider GetObject(params string[] names)
     {
-      return new JObject();
+      dynamic obj = this.root;
+      foreach (var name in names)
+      {
+        obj[name] = obj[name] ?? JToken.FromObject(new { });
+        obj = obj[name];
+      }
+
+      return obj;
     }
+
+    public void Reset()
+    {
+      this.root.RemoveAll();
+    }
+
+    //public dynamic CreatePropertyBag()
+    //{
+    //  return new JObject();
+    //}
 
     void IDisposable.Dispose()
     {
@@ -53,6 +71,20 @@ namespace Mahlo.Repository
     public override bool TrySetMember(SetMemberBinder binder, object value)
     {
       this.root[binder.Name] = JToken.FromObject(value);
+      return true;
+    }
+
+    public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
+    {
+      string name = (string)indexes[0];
+      result = this.root[name];
+      return true; ;
+    }
+
+    public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
+    {
+      string name = (string)indexes[0];
+      this.root[name] = JToken.FromObject(value);
       return true;
     }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 using Mahlo;
@@ -19,10 +20,12 @@ namespace Mahlo.Logic
     private ISewinQueue sewinQueue;
     private IMeterSrc<Model> srcData;
     private IAppInfoBAS appInfo;
-    private dynamic programState;
+    private IProgramState programState;
 
-    IDisposable feetCounterSubscription;
-    IDisposable seamDetectedSubscription;
+    private Subject<Model> rollFinishedSubject = new Subject<Model>();
+    private Subject<Model> rollStartedSubject = new Subject<Model>();
+    private IDisposable feetCounterSubscription;
+    private IDisposable seamDetectedSubscription;
 
     public MeterLogic(
       IMeterSrc<Model> srcData, 
@@ -39,18 +42,18 @@ namespace Mahlo.Logic
       this.CriticalStops = criticalStops;
       this.programState = programState;
       this.RestoreState();
-    }
+      this.feetCounterSubscription = srcData.FeetCounter.Subscribe(value => this.FeetCounterChanged(value));
+      this.seamDetectedSubscription = srcData.SeamDetected.Subscribe(value => this.SeamDetected(value));
 
-    private void RestoreState()
-    {
-      dynamic state = this.programState[nameof(MeterLogic<Model>)];
-      //int currentRollId = state[nameof(currentRollId)];
+      this.RollStarted = this.rollStartedSubject;
+      this.RollFinished = this.rollFinishedSubject;
+      //this.CurrentGreigeRoll = 
     }
 
     /// <summary>
     /// Gets the current greige roll.
     /// </summary>
-    public GreigeRoll CurrentGreigeRoll { get; private set; }
+    public GreigeRoll CurrentGreigeRoll { get; set; }
 
     /// <summary>
     /// Get the roll that is currently being processed
@@ -79,13 +82,23 @@ namespace Mahlo.Logic
     /// </summary>
     public void Start()
     {
-      this.feetCounterSubscription = srcData.FeetCounter.Subscribe(value => this.FeetCounterChanged(value));
-      this.seamDetectedSubscription = srcData.SeamDetected.Subscribe(value => this.SeamDetected(value));
+    }
+
+    private void RestoreState()
+    {
+      dynamic state = this.programState.GetObject(nameof(MeterLogic<Model>), nameof(Model));
+      this.CurrentRoll = state?.CurrentRoll ?? new Model();
+      this.sewinQueue.TryGetRoll(this.CurrentRoll.RollId, out GreigeRoll roll);
+      this.CurrentGreigeRoll = roll;
+
+      // On startup, roll sequence should be verified
+      this.UserAttentsions.VerifyRollSequence = true;
     }
 
     private void FeetCounterChanged(int feet)
     {
       this.CurrentRoll.Feet = feet;
+      this.UserAttentsions.IsRollTooLong |= this.CurrentRoll.Feet > this.CurrentGreigeRoll.RollLength * 1.1;
     }
 
     private void SeamDetected(bool isSeamDetected)
@@ -94,6 +107,23 @@ namespace Mahlo.Logic
       {
         return;
       }
+
+      this.srcData.ResetSeamDetector();
+
+      if (this.CurrentRoll.Feet < this.appInfo.SeamDetectableThreshold)
+      {
+        return;
+      }
+
+      this.UserAttentsions.IsRollTooShort |= this.CurrentRoll.Feet < this.CurrentGreigeRoll.RollLength * 0.9;
+      this.rollFinishedSubject.OnNext(this.CurrentRoll);
+      this.srcData.ResetMeterOffset();
+
+      // Start new roll
+      this.CurrentRoll.Feet = 0;
+      this.sewinQueue.TryGetRoll(this.CurrentGreigeRoll.RollId + 1, out GreigeRoll nextGreigeRoll);
+      this.CurrentGreigeRoll = nextGreigeRoll;
+      this.rollStartedSubject.OnNext(this.CurrentRoll);
     }
   }
 }

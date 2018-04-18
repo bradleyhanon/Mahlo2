@@ -72,49 +72,60 @@ namespace Mahlo.Logic
       return result;
     }
 
-    public bool RollIsLeader(int rollId)
+    public bool TryGetRoll(int rollId, out GreigeRoll roll)
     {
-      throw new NotImplementedException();
-      //var TheRoll = this.Rolls.Single(item => item.RollId == rollId);
+      roll = this.Rolls.FirstOrDefault(item => item.RollId == rollId);
+      bool result = roll != null;
+      if (!result)
+      {
+        roll = new GreigeRoll { RollId = rollId };
+      }
 
-      //bool result = false;
-      //try
-      //{
-      //  string sBk1 = "", sBk2 = "";
-      //  double nWidth1 = 0, nWidth2 = 0;
-
-      //  int index = rollId;
-      //  while (--index >= this.firstRollId)
-      //  {
-      //    var roll = this.Rolls[index - this.firstRollId];
-      //    if (roll.RollNo != GreigeRoll.CheckRollId)
-      //    {
-      //      sBk1 = roll.BackingCode;
-      //      nWidth1 = roll.RollWidth;
-      //      break;
-      //    }
-      //  };
-
-      //  index = rollId;
-      //  while (++index < this.nextRollId)
-      //  {
-      //    var roll = this.Rolls[index - this.firstRollId];
-      //    if (roll.RollNo != GreigeRoll.CheckRollId)
-      //    {
-      //      sBk2 = roll.BackingCode;
-      //      nWidth2 = roll.RollWidth;
-      //      break;
-      //    }
-      //  };
-
-      //  result = (sBk1 == "XL" && sBk2 != "XL") || nWidth1 != nWidth2;
-      //}
-      //catch
-      //{
-      //}
-
-      //return result;
+      return result;
     }
+
+    //public bool RollIsLeader(int rollId)
+    //{
+    //  var TheRoll = this.Rolls.Single(item => item.RollId == rollId);
+
+    //  bool result = false;
+    //  try
+    //  {
+    //    string sBk1 = "", sBk2 = "";
+    //    double nWidth1 = 0, nWidth2 = 0;
+
+    //    int index = rollId;
+    //    while (--index >= this.firstRollId)
+    //    {
+    //      var roll = this.Rolls[index - this.firstRollId];
+    //      if (roll.RollNo != GreigeRoll.CheckRollId)
+    //      {
+    //        sBk1 = roll.BackingCode;
+    //        nWidth1 = roll.RollWidth;
+    //        break;
+    //      }
+    //    };
+
+    //    index = rollId;
+    //    while (++index < this.nextRollId)
+    //    {
+    //      var roll = this.Rolls[index - this.firstRollId];
+    //      if (roll.RollNo != GreigeRoll.CheckRollId)
+    //      {
+    //        sBk2 = roll.BackingCode;
+    //        nWidth2 = roll.RollWidth;
+    //        break;
+    //      }
+    //    };
+
+    //    result = (sBk1 == "XL" && sBk2 != "XL") || nWidth1 != nWidth2;
+    //  }
+    //  catch
+    //  {
+    //  }
+
+    //  return result;
+    //}
 
     private async Task Refresh()
     {
