@@ -18,7 +18,7 @@ namespace Mahlo.Models
     int RollLength { get; }
     double RollWidth { get; }
     string DefaultRecipe { get; }
-    decimal PatternRepeatLength { get; }
+    double PatternRepeatLength { get; }
     string ProductImageURL { get; }
 
     int Feet { get; set; }

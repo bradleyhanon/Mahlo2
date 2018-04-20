@@ -41,11 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logic\BowAndSkewLogicTests.cs" />
     <Compile Include="Logic\CriticalStopsTests.cs" />
-    <Compile Include="Logic\MahloLogicTests.cs" />
     <Compile Include="Logic\MeterLogicTests.cs" />
-    <Compile Include="Logic\PatternRepeatLogicTests.cs" />
     <Compile Include="Logic\UserAttententionsTests.cs" />
     <Compile Include="Mocks\MockMeterSrc.cs" />
     <Compile Include="Mocks\TestSchedulers.cs" />

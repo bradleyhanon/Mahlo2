@@ -28,7 +28,7 @@ namespace Mahlo.Models
     public string RollWidthStr => $"{(int)RollWidth / 12}' {(int)RollWidth % 12}\"";
 
     public string DefaultRecipe { get; set; }
-    public decimal PatternRepeatLength { get; set; }
+    public double PatternRepeatLength { get; set; }
     public string ProductImageURL { get; set; }
 
     public int MalFeet { get; set; }
@@ -82,7 +82,7 @@ namespace Mahlo.Models
     /// Copy all but RollId to the destination
     /// </summary>
     /// <param name="dest"></param>
-    public void CopyTo(GreigeRoll dest)
+    public void CopyTo(CarpetRoll dest)
     {
       if (dest == null)
       {

@@ -104,7 +104,6 @@
     <Compile Include="Models\MahloRoll.cs" />
     <Compile Include="Models\AS400SewinQueueRoll.cs" />
     <Compile Include="Models\PatternRepeatRoll.cs" />
-    <Compile Include="Models\GreigeRoll.cs" />
     <Compile Include="Opc\IBowAndSkewSrc.cs" />
     <Compile Include="Opc\IMahloSrc.cs" />
     <Compile Include="Opc\IMeterSrc.cs" />
@@ -133,6 +132,12 @@
     </Compile>
     <Compile Include="Views\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SavedStuff.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\SavedStuff.Designer.cs">
+      <DependentUpon>SavedStuff.cs</DependentUpon>
     </Compile>
     <Compile Include="WinApi.cs" />
   </ItemGroup>
@@ -175,7 +180,8 @@
     <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\App.config" />
+    <None Include="App.config" />
+    <None Include="Properties\DataSources\Mahlo.Models.CarpetRoll.datasource" />
     <None Include="Properties\DataSources\Mahlo.Models.BowAndSkewRoll.datasource" />
     <None Include="Properties\DataSources\Mahlo.Models.FinishedRoll.datasource" />
     <None Include="Properties\DataSources\Mahlo.Models.FinishedRollDetail.datasource" />
@@ -185,6 +191,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\SavedStuff.resx">
+      <DependentUpon>SavedStuff.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

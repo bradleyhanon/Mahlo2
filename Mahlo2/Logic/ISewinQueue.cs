@@ -7,7 +7,7 @@ namespace Mahlo.Logic
 {
   interface ISewinQueue : IDisposable
   {
-    BindingList<GreigeRoll> Rolls { get; }
+    BindingList<CarpetRoll> Rolls { get; }
 
     //bool RollIsLeader(int currentRollId);
 
@@ -16,7 +16,7 @@ namespace Mahlo.Logic
     /// </summary>
     /// <param name="rollId">The RollId of the roll to get.</param>
     /// <returns>The requested roll, if it doesn't exist then the next roll, if it doesn't exist then a new roll.</returns>
-    GreigeRoll GetRoll(int rollId);
+    CarpetRoll GetRoll(int rollId);
 
     /// <summary>
     /// Try to get a roll from the sewin queue
@@ -24,6 +24,6 @@ namespace Mahlo.Logic
     /// <param name="RollId">The Id of the roll to get.</param>
     /// <param name="roll">The roll gotten.</param>
     /// <returns>True if the roll was found, false if a dummy roll was returned.</returns>
-    bool TryGetRoll(int RollId, out GreigeRoll roll);
+    bool TryGetRoll(int RollId, out CarpetRoll roll);
   }
 }

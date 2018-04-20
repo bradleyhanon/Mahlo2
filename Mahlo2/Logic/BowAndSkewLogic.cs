@@ -12,21 +12,25 @@ using Mahlo.Repository;
 
 namespace Mahlo.Logic
 {
-  class BowAndSkewLogic : IBowAndSkewLogic
+  class BowAndSkewLogic : MeterLogic<BowAndSkewRoll>, IBowAndSkewLogic
   {
-    IBowAndSkewSrc bowAndSkewSrc;
-    IMeterLogic<BowAndSkewRoll> meterLogic;
-
-    public BowAndSkewLogic(IBowAndSkewSrc bowAndSkewSrc, IMeterLogic<BowAndSkewRoll> meterLogic) 
+    public BowAndSkewLogic(IBowAndSkewSrc dataSrc, ISewinQueue sewinQueue, IAppInfoBAS appInfo, IUserAttentions<BowAndSkewRoll> userAttentions, ICriticalStops<BowAndSkewRoll> criticalStops, IProgramState programState)
+      : base(dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState)
     {
-      this.bowAndSkewSrc = bowAndSkewSrc;
-      this.meterLogic = meterLogic;
-      this.bowAndSkewSrc.BowChanged.Subscribe(value => this.CurrentRoll.Bow = value);
-      this.bowAndSkewSrc.SkewChanged.Subscribe(value => this.CurrentRoll.Skew = value);
+      dataSrc.BowChanged.Subscribe(value => this.CurrentRoll.Bow = value);
+      dataSrc.SkewChanged.Subscribe(value => this.CurrentRoll.Skew = value);
     }
 
-    public BowAndSkewRoll CurrentRoll => this.meterLogic.CurrentRoll;
-    public GreigeRoll CurrentGreigeRoll => this.meterLogic.CurrentGreigeRoll;
+    public override int Feet
+    {
+      get => this.CurrentRoll.BasFeet;
+      set => this.CurrentRoll.BasFeet = value;
+    }
 
+    public override int Speed
+    {
+      get => this.CurrentRoll.BasSpeed;
+      set => this.CurrentRoll.BasSpeed = value;
+    }
   }
 }

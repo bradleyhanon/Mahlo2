@@ -33,20 +33,20 @@ namespace Mahlo.Models
     /// Copy all but RollId to the destination
     /// </summary>
     /// <param name="dest"></param>
-    public GreigeRoll ToGreigeRoll()
+    public CarpetRoll ToCarpetRoll()
     {
-      GreigeRoll dest = new GreigeRoll
+      CarpetRoll dest = new CarpetRoll
       {
-        RollNo = this.G2ROLL,
-        StyleCode = this.G2STYL,
-        StyleName = this.F2SDSC,
-        ColorCode = this.G2CLR,
-        ColorName = this.F2CDSC,
-        BackingCode = this.G2SBK,
-        PatternRepeatLength = this.G2RPLN,
+        RollNo = this.G2ROLL.Trim(),
+        StyleCode = this.G2STYL.Trim(),
+        StyleName = this.F2SDSC.Trim(),
+        ColorCode = this.G2CLR.Trim(),
+        ColorName = this.F2CDSC.Trim(),
+        BackingCode = this.G2SBK.Trim(),
+        PatternRepeatLength = (double)this.G2RPLN,
 
         RollLength = this.G2LTF,
-        ProductImageURL = this.ProductImageURL,
+        ProductImageURL = this.ProductImageURL?.Trim() ?? string.Empty,
       };
 
       if (double.TryParse(this.G2WTF, out double wtf))

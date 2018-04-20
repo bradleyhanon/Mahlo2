@@ -23,38 +23,29 @@ namespace Mahlo.Repository
 
     public IDbConnectionFactory ConnectionFactory { get; }
 
-    public void AddGreigeRoll(GreigeRoll roll)
+    public void AddCarpetRoll(CarpetRoll roll)
     {
 
     }
 
-    public void DeleteGreigeRoll(GreigeRoll roll)
+    public void DeleteCarpetRoll(CarpetRoll roll)
     {
       throw new NotImplementedException();
     }
 
-    public IEnumerable<GreigeRoll> GetGreigeRolls()
+    public IEnumerable<CarpetRoll> GetCarpetRolls()
     {
       using (var connection = this.GetOpenConnection())
       {
-        return connection.GetAll<GreigeRoll>().OrderBy(item => item.RollId);
+        return connection.GetAll<CarpetRoll>().OrderBy(item => item.RollId);
       }
     }
 
-    public void UpdateGreigeRoll(GreigeRoll roll)
+    public void UpdateCarpetRoll(CarpetRoll roll)
     {
       using (var connection = this.GetOpenConnection())
       {
         connection.Update(roll);
-      }
-    }
-
-    public IEnumerable<T> GetRolls<T>() 
-      where T : MahloRoll
-    {
-      using (var connection = this.GetOpenConnection())
-      {
-        return connection.GetAll<T>();
       }
     }
 

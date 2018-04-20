@@ -36,7 +36,7 @@ namespace Mahlo.Logic
       this.dbLocal = dbLocal;
       this.dbMfg = dbMfg;
 
-      this.Rolls.AddRange(this.dbLocal.GetGreigeRolls());
+      this.Rolls.AddRange(this.dbLocal.GetCarpetRolls());
       this.nextRollId = this.Rolls.LastOrDefault()?.RollId + 1 ?? 1;
 
       var ignoredResultTask = this.Refresh();
@@ -48,20 +48,20 @@ namespace Mahlo.Logic
 
     public TimeSpan RefreshInterval => TimeSpan.FromSeconds(10);
 
-    public BindingList<GreigeRoll> Rolls { get; private set; } = new BindingList<GreigeRoll>();
+    public BindingList<CarpetRoll> Rolls { get; private set; } = new BindingList<CarpetRoll>();
 
     public void Dispose()
     {
       this.timer.Dispose();
     }
 
-    public GreigeRoll GetRoll(int rollId)
+    public CarpetRoll GetRoll(int rollId)
     {
-      GreigeRoll result;
+      CarpetRoll result;
       result = this.Rolls.FirstOrDefault(item => item.RollId >= rollId);
       if (result == null)
       {
-        result = new GreigeRoll
+        result = new CarpetRoll
         {
           RollId = this.nextRollId++
         };
@@ -72,13 +72,13 @@ namespace Mahlo.Logic
       return result;
     }
 
-    public bool TryGetRoll(int rollId, out GreigeRoll roll)
+    public bool TryGetRoll(int rollId, out CarpetRoll roll)
     {
       roll = this.Rolls.FirstOrDefault(item => item.RollId == rollId);
       bool result = roll != null;
       if (!result)
       {
-        roll = new GreigeRoll { RollId = rollId };
+        roll = new CarpetRoll { RollId = rollId };
       }
 
       return result;
@@ -152,13 +152,13 @@ namespace Mahlo.Logic
             if (oldRoll != null)
             {
               newRoll.CopyTo(oldRoll);
-              dbLocal.UpdateGreigeRoll(oldRoll);
+              dbLocal.UpdateCarpetRoll(oldRoll);
             }
             else
             {
               newRoll.RollId = this.nextRollId++;
               this.Rolls.Add(newRoll);
-              dbLocal.AddGreigeRoll(newRoll);
+              dbLocal.AddCarpetRoll(newRoll);
             }
           }
 

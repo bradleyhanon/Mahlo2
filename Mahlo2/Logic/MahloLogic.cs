@@ -10,18 +10,23 @@ using Mahlo.Repository;
 
 namespace Mahlo.Logic
 {
-  class MahloLogic : IMahloLogic
+  class MahloLogic : MeterLogic<MahloRoll>, IMahloLogic
   {
-    IMahloSrc mahloSrc;
-    IMeterLogic<MahloRoll> meterLogic;
-
-    public MahloLogic(IMahloSrc mahloSrc, IMeterLogic<MahloRoll> meterLogic)
+    public MahloLogic(IMeterSrc<MahloRoll> mahloSrc, ISewinQueue sewinQueue, IAppInfoBAS appInfo, IUserAttentions<MahloRoll> userAttentions, ICriticalStops<MahloRoll> criticalStops, IProgramState programState)
+      : base(mahloSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState)
     {
-      this.mahloSrc = mahloSrc;
-      this.meterLogic = meterLogic;
     }
 
-    public MahloRoll CurrentRoll => this.meterLogic.CurrentRoll;
-    public GreigeRoll CurrentGreigeRoll => this.meterLogic.CurrentGreigeRoll;
+    public override int Feet
+    {
+      get => this.CurrentRoll.MalFeet;
+      set => this.CurrentRoll.MalFeet = value;
+    }
+
+    public override int Speed
+    {
+      get => this.CurrentRoll.MalSpeed;
+      set => this.CurrentRoll.MalSpeed = value;
+    }
   }
 }

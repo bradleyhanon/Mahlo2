@@ -5,7 +5,6 @@ namespace Mahlo.Logic
 {
   interface IMahloLogic : IModelLogic
   {
-    MahloRoll CurrentRoll { get; }
-    GreigeRoll CurrentGreigeRoll { get; }
+    CarpetRoll CurrentRoll { get; }
   }
 }

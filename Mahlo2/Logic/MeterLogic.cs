@@ -14,7 +14,7 @@ using Mahlo.Repository;
 
 namespace Mahlo.Logic
 {
-  sealed class MeterLogic<Model> : IMeterLogic<Model>
+  abstract class MeterLogic<Model> : IMeterLogic<Model>
     where Model : MahloRoll, new()
   {
     private ISewinQueue sewinQueue;
@@ -22,8 +22,8 @@ namespace Mahlo.Logic
     private IAppInfoBAS appInfo;
     private IProgramState programState;
 
-    private Subject<Model> rollFinishedSubject = new Subject<Model>();
-    private Subject<Model> rollStartedSubject = new Subject<Model>();
+    private Subject<CarpetRoll> rollFinishedSubject = new Subject<CarpetRoll>();
+    private Subject<CarpetRoll> rollStartedSubject = new Subject<CarpetRoll>();
     private IDisposable feetCounterSubscription;
     private IDisposable seamDetectedSubscription;
 
@@ -53,26 +53,21 @@ namespace Mahlo.Logic
     }
 
     /// <summary>
-    /// Gets the current greige roll.
-    /// </summary>
-    public GreigeRoll CurrentGreigeRoll { get; set; }
-
-    /// <summary>
     /// Get the roll that is currently being processed
     /// </summary>
-    public Model CurrentRoll { get; private set; } = new Model();
-
-    public int CurrentRollId { get; private set; }
+    public CarpetRoll CurrentRoll { get; set; } = new CarpetRoll();
 
     public IUserAttentions<Model> UserAttentsions { get; }
 
     public ICriticalStops<Model> CriticalStops { get; }
 
-    public IObservable<Model> RollStarted { get; }
-    public IObservable<Model> RollFinished { get; }
+    public IObservable<CarpetRoll> RollStarted { get; }
+    public IObservable<CarpetRoll> RollFinished { get; }
 
-    public bool IsMappingValid => !this.CurrentGreigeRoll.IsCheckRoll && !this.UserAttentsions.Any && !this.CriticalStops.Any;
+    public bool IsMappingValid => !this.CurrentRoll.IsCheckRoll && !this.UserAttentsions.Any && !this.CriticalStops.Any;
 
+    public abstract int Feet { get; set; }
+    public abstract int Speed { get; set; }
 
     /// <summary>
     /// Called to start data collection
@@ -86,9 +81,9 @@ namespace Mahlo.Logic
       var state = this.programState.GetSubState(nameof(MeterLogic<Model>), nameof(Model));
       this.rollCheckCount = state.Get<int?>(nameof(rollCheckCount)) ?? 0;
       this.styleCheckCount = state.Get<int?>(nameof(styleCheckCount)) ?? this.styleCheckCount;
-      this.CurrentRoll = state?.Get<Model>(nameof(CurrentRoll)) ?? new Model();
-      this.sewinQueue.TryGetRoll(this.CurrentRoll.RollId, out GreigeRoll roll);
-      this.CurrentGreigeRoll = roll;
+      this.CurrentRoll = state?.Get<CarpetRoll>(nameof(CurrentRoll)) ?? new CarpetRoll();
+      this.sewinQueue.TryGetRoll(this.CurrentRoll.RollId, out CarpetRoll roll);
+      this.CurrentRoll = roll;
 
       // On startup, roll sequence should be verified
       this.UserAttentsions.VerifyRollSequence = true;
@@ -110,8 +105,8 @@ namespace Mahlo.Logic
 
     private void FeetCounterChanged(int feet)
     {
-      this.CurrentRoll.Feet = feet;
-      this.UserAttentsions.IsRollTooLong |= this.CurrentRoll.Feet > this.CurrentGreigeRoll.RollLength * 1.1;
+      this.Feet = feet;
+      this.UserAttentsions.IsRollTooLong |= this.Feet > this.CurrentRoll.RollLength * 1.1;
     }
 
     private void SeamDetected(bool isSeamDetected)
@@ -129,21 +124,21 @@ namespace Mahlo.Logic
         return;
       }
 
-      if (this.CurrentRoll.Feet < this.appInfo.SeamDetectableThreshold)
+      if (this.Feet < this.appInfo.SeamDetectableThreshold)
       {
         // Do not respond to seam if footage is below threshold, could be detecting same seam
         return;
       }
 
-      this.UserAttentsions.IsRollTooShort |= this.CurrentRoll.Feet < this.CurrentGreigeRoll.RollLength * 0.9;
+      this.UserAttentsions.IsRollTooShort |= this.Feet < this.CurrentRoll.RollLength * 0.9;
       this.rollFinishedSubject.OnNext(this.CurrentRoll);
       this.srcData.ResetMeterOffset();
 
       // Start new roll
-      this.CurrentRoll.Feet = 0;
+      this.Feet = 0;
       this.rollCheckCount++;
-      this.sewinQueue.TryGetRoll(this.CurrentGreigeRoll.RollId + 1, out GreigeRoll nextGreigeRoll);
-      if (this.CurrentGreigeRoll.StyleCode != nextGreigeRoll.StyleCode)
+      this.sewinQueue.TryGetRoll(this.CurrentRoll.RollId + 1, out CarpetRoll nextRoll);
+      if (this.CurrentRoll.StyleCode != nextRoll.StyleCode)
       {
         styleCheckCount++;
       }
@@ -154,7 +149,7 @@ namespace Mahlo.Logic
         this.UserAttentsions.VerifyRollSequence = true;
       }
 
-      this.CurrentGreigeRoll = nextGreigeRoll;
+      this.CurrentRoll = nextRoll;
       this.rollStartedSubject.OnNext(this.CurrentRoll);
     }
   }

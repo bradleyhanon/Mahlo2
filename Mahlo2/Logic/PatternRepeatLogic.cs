@@ -10,19 +10,25 @@ using Mahlo.Repository;
 
 namespace Mahlo.Logic
 {
-  class PatternRepeatLogic : IPatternRepeatLogic
+  class PatternRepeatLogic : MeterLogic<PatternRepeatRoll>, IPatternRepeatLogic
   {
-    IMeterLogic<PatternRepeatRoll> meterLogic;
-    private IPatternRepeatSrc dataSrc;
-
-    public PatternRepeatLogic(IPatternRepeatSrc dataSrc, IMeterLogic<PatternRepeatRoll> meterLogic) 
+    //public PatternRepeatLogic(IPatternRepeatSrc dataSrc, IMeterLogic<PatternRepeatRoll> meterLogic) 
+    public PatternRepeatLogic(IPatternRepeatSrc dataSrc, ISewinQueue sewinQueue, IAppInfoBAS appInfo, IUserAttentions<PatternRepeatRoll> userAttentions, ICriticalStops<PatternRepeatRoll> criticalStops, IProgramState programState)
+      : base(dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState)
     {
-      this.dataSrc = dataSrc;
-      this.meterLogic = meterLogic;
-      this.dataSrc.PatternRepeatChanged.Subscribe(value => this.CurrentRoll.Elongation = value);
+      dataSrc.PatternRepeatChanged.Subscribe(value => this.CurrentRoll.Elongation = value);
     }
 
-    public PatternRepeatRoll CurrentRoll => this.meterLogic.CurrentRoll;
-    public GreigeRoll CurrentGreigeRoll => this.meterLogic.CurrentGreigeRoll;
+    public override int Feet
+    {
+      get => this.CurrentRoll.PrsFeet;
+      set => this.CurrentRoll.PrsFeet = value;
+    }
+
+    public override int Speed
+    {
+      get => this.CurrentRoll.PrsSpeed;
+      set => this.CurrentRoll.PrsSpeed = value;
+    }
   }
 }

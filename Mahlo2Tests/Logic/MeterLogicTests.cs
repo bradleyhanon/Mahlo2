@@ -28,7 +28,7 @@ namespace Mahlo2Tests.Logic
     private dynamic programState;
 
     private MeterLogic<MahloRoll> target;
-    private List<GreigeRoll> greigeRolls;
+    private List<CarpetRoll> carpetRolls;
 
     public MeterLogicTests()
     {
@@ -50,56 +50,56 @@ namespace Mahlo2Tests.Logic
       stateProvider.GetProgramState().Returns("{}");
       this.programState = new ProgramState(stateProvider);
 
-      var roll1 = new Mahlo.Models.GreigeRoll()
+      var roll1 = new Mahlo.Models.CarpetRoll()
       {
         RollId = 1,
         RollNo = "12345",
         RollLength = roll1Length,
       };
 
-      var roll2 = new Mahlo.Models.GreigeRoll()
+      var roll2 = new Mahlo.Models.CarpetRoll()
       {
         RollId = 2,
         RollNo = "12346",
         RollLength = roll2Length,
       };
 
-      var roll3 = new Mahlo.Models.GreigeRoll()
+      var roll3 = new Mahlo.Models.CarpetRoll()
       {
         RollId = 3,
         RollNo = "12347",
         RollLength = roll3Length,
       };
 
-      var roll4 = new Mahlo.Models.GreigeRoll()
+      var roll4 = new Mahlo.Models.CarpetRoll()
       {
         RollId = 4,
         RollNo = "12348",
         RollLength = roll4Length,
       };
 
-      var roll5 = new Mahlo.Models.GreigeRoll()
+      var roll5 = new Mahlo.Models.CarpetRoll()
       {
         RollId = 5,
         RollNo = "12349",
         RollLength = roll5Length,
       };
 
-      this.greigeRolls = new List<GreigeRoll> { roll1, roll2, roll3, roll4, roll5 };
+      this.carpetRolls = new List<CarpetRoll> { roll1, roll2, roll3, roll4, roll5 };
 
-      this.sewinQueue.Rolls.Returns(new BindingList<GreigeRoll>(greigeRolls));
+      this.sewinQueue.Rolls.Returns(new BindingList<CarpetRoll>(carpetRolls));
 
       this.sewinQueue
-        .TryGetRoll(Arg.Any<int>(), out GreigeRoll value)
+        .TryGetRoll(Arg.Any<int>(), out CarpetRoll value)
         .Returns(x =>
         {
-          x[1] = greigeRolls[0];
+          x[1] = carpetRolls[0];
           return true;
         });
 
-      this.target = new MeterLogic<MahloRoll>(this.srcData, this.sewinQueue, this.appInfo, this.userAttentions, this.criticalStops, this.programState);
+      this.target = new MahloLogic(this.srcData, this.sewinQueue, this.appInfo, this.userAttentions, this.criticalStops, this.programState);
       Assert.True(this.userAttentions.VerifyRollSequence);
-      Assert.NotNull(this.target.CurrentGreigeRoll);
+      Assert.NotNull(this.target.CurrentRoll);
       this.userAttentions.ClearAll();
       this.target.Start();
     }
@@ -121,9 +121,9 @@ namespace Mahlo2Tests.Logic
       Assert.False(this.target.IsMappingValid);
       this.criticalStops.Any.Returns(false);
 
-      this.target.CurrentGreigeRoll.RollNo = GreigeRoll.CheckRollId;
+      this.target.CurrentRoll.RollNo = CarpetRoll.CheckRollId;
       Assert.False(this.target.IsMappingValid);
-      this.target.CurrentGreigeRoll.RollNo = "SomethingElse";
+      this.target.CurrentRoll.RollNo = "SomethingElse";
       Assert.True(this.target.IsMappingValid);
     }
 
@@ -131,15 +131,15 @@ namespace Mahlo2Tests.Logic
     public void CurrentRollFeetTracksFeetChanges()
     {
       srcData.FeetCounterSubject.OnNext(5);
-      Assert.Equal(5, this.target.CurrentRoll.Feet);
+      Assert.Equal(5, this.target.Feet);
     }
 
     [Fact]
     public void RollTooLongSetsUserAttention()
     {
-      target.CurrentGreigeRoll = this.sewinQueue.Rolls[1];
+      target.CurrentRoll = this.sewinQueue.Rolls[1];
 
-      double maxlength = target.CurrentGreigeRoll.RollLength * 1.1;
+      double maxlength = target.CurrentRoll.RollLength * 1.1;
       srcData.FeetCounterSubject.OnNext((int)maxlength);
       Assert.False(this.userAttentions.IsRollTooLong);
       srcData.FeetCounterSubject.OnNext((int)maxlength + 1);
@@ -149,8 +149,8 @@ namespace Mahlo2Tests.Logic
     [Fact]
     public void RollLengthGreaterThan90PercentOfExpectedRollLengthIsNotTooShort()
     {
-      target.CurrentGreigeRoll = this.sewinQueue.Rolls[1];
-      double minLength = target.CurrentGreigeRoll.RollLength * 0.9;
+      target.CurrentRoll = this.sewinQueue.Rolls[1];
+      double minLength = target.CurrentRoll.RollLength * 0.9;
       srcData.FeetCounterSubject.OnNext((int)minLength);
       srcData.SeamDetectedSubject.OnNext(true);
       Assert.False(this.userAttentions.IsRollTooShort);
@@ -159,8 +159,8 @@ namespace Mahlo2Tests.Logic
     [Fact]
     public void RollLengthLessThan90PercentOfExpectedRollLengthIsTooShort()
     {
-      target.CurrentGreigeRoll = this.sewinQueue.Rolls[1];
-      double minLength = target.CurrentGreigeRoll.RollLength * 0.9;
+      target.CurrentRoll = this.sewinQueue.Rolls[1];
+      double minLength = target.CurrentRoll.RollLength * 0.9;
       srcData.FeetCounterSubject.OnNext((int)minLength - 1);
       srcData.SeamDetectedSubject.OnNext(true);
       Assert.True(this.userAttentions.IsRollTooShort);
@@ -171,7 +171,7 @@ namespace Mahlo2Tests.Logic
     {
       srcData.FeetCounterSubject.OnNext(500);
       srcData.SeamDetectedSubject.OnNext(false);
-      Assert.Equal(500, target.CurrentRoll.Feet);
+      Assert.Equal(500, target.Feet);
     }
 
     [Fact]
@@ -180,7 +180,7 @@ namespace Mahlo2Tests.Logic
       userAttentions.IsSystemDisabled = true;
       srcData.FeetCounterSubject.OnNext(500);
       srcData.SeamDetectedSubject.OnNext(true);
-      Assert.Equal(500, target.CurrentRoll.Feet);
+      Assert.Equal(500, target.Feet);
     }
 
     [Fact]
@@ -188,7 +188,7 @@ namespace Mahlo2Tests.Logic
     {
       srcData.FeetCounterSubject.OnNext(500);
       srcData.SeamDetectedSubject.OnNext(true);
-      Assert.Equal(0, target.CurrentRoll.Feet);
+      Assert.Equal(0, target.Feet);
     }
 
     [Fact]
@@ -210,14 +210,14 @@ namespace Mahlo2Tests.Logic
     {
       bool rollFinishedSeen = false;
       bool rollStartedSeen = false;
-      target.CurrentGreigeRoll = this.sewinQueue.Rolls[0];
+      target.CurrentRoll = this.sewinQueue.Rolls[0];
 
       this.appInfo.SeamDetectableThreshold = 50;
-      this.target.CurrentRoll.Feet = 50;
+      this.target.Feet = 50;
       this.target.RollFinished.Subscribe(roll =>
       {
         Assert.False(rollStartedSeen);
-        Assert.Equal(50, this.target.CurrentRoll.Feet);
+        Assert.Equal(50, this.target.Feet);
         rollFinishedSeen = true;
       });
 
@@ -236,9 +236,9 @@ namespace Mahlo2Tests.Logic
     {
       this.appInfo.SeamDetectableThreshold = 50;
 
-      target.CurrentGreigeRoll = this.sewinQueue.Rolls[0];
+      target.CurrentRoll = this.sewinQueue.Rolls[0];
 
-      this.target.CurrentRoll.Feet = appInfo.SeamDetectableThreshold - 1;
+      this.target.Feet = appInfo.SeamDetectableThreshold - 1;
       this.target.RollFinished.Subscribe(roll => throw new Exception());
 
       target.RollStarted.Subscribe(roll => throw new Exception());
@@ -250,12 +250,12 @@ namespace Mahlo2Tests.Logic
     }
 
     [Fact]
-    public void NextGreigeRollSelectedWhenNewRollStarts()
+    public void NextRollSelectedWhenNewRollStarts()
     {
-      var oldGreigeRoll = this.target.CurrentGreigeRoll;
-      oldGreigeRoll.RollId = 1;
+      var oldRoll = this.target.CurrentRoll;
+      oldRoll.RollId = 1;
       srcData.SeamDetectedSubject.OnNext(true);
-      this.sewinQueue.Received(1).TryGetRoll(oldGreigeRoll.RollId + 1, out GreigeRoll newGreigeRoll);
+      this.sewinQueue.Received(1).TryGetRoll(oldRoll.RollId + 1, out CarpetRoll newRoll);
     }
 
     [Fact]
@@ -275,9 +275,9 @@ namespace Mahlo2Tests.Logic
 
       void ProduceRoll()
       {
-        srcData.FeetCounterSubject.OnNext(this.target.CurrentGreigeRoll.RollLength);
+        srcData.FeetCounterSubject.OnNext(this.target.CurrentRoll.RollLength);
         srcData.SeamDetectedSubject.OnNext(true);
-        Assert.Equal(0, target.CurrentRoll.Feet);
+        Assert.Equal(0, target.Feet);
       }
     }
 
@@ -287,29 +287,29 @@ namespace Mahlo2Tests.Logic
       this.userAttentions.VerifyRollSequence = false;
       this.appInfo.CheckAfterHowManyStyles = 3;
       this.appInfo.CheckAfterHowManyRolls = 100;
-      this.greigeRolls[0].StyleCode = "style1";
-      this.greigeRolls[1].StyleCode = "style1";
-      this.greigeRolls[2].StyleCode = "style2";
-      this.greigeRolls[3].StyleCode = "style2";
-      this.greigeRolls[4].StyleCode = "style3";
+      this.carpetRolls[0].StyleCode = "style1";
+      this.carpetRolls[1].StyleCode = "style1";
+      this.carpetRolls[2].StyleCode = "style2";
+      this.carpetRolls[3].StyleCode = "style2";
+      this.carpetRolls[4].StyleCode = "style3";
       for (int j = 0; j < 4; j++)
       {
-        this.sewinQueue.TryGetRoll(Arg.Any<int>(), out GreigeRoll outRoll)
-          .Returns(x => { x[1] = this.greigeRolls[j]; return true; });
+        this.sewinQueue.TryGetRoll(Arg.Any<int>(), out CarpetRoll outRoll)
+          .Returns(x => { x[1] = this.carpetRolls[j]; return true; });
         ProduceRoll();
         Assert.False(this.userAttentions.VerifyRollSequence);
       }
 
-      this.sewinQueue.TryGetRoll(Arg.Any<int>(), out GreigeRoll anotherRoll)
-          .Returns(x => { x[1] = this.greigeRolls[4]; return true; });
+      this.sewinQueue.TryGetRoll(Arg.Any<int>(), out CarpetRoll anotherRoll)
+          .Returns(x => { x[1] = this.carpetRolls[4]; return true; });
       ProduceRoll();
       Assert.True(this.userAttentions.VerifyRollSequence);
 
       void ProduceRoll()
       {
-        srcData.FeetCounterSubject.OnNext(this.target.CurrentGreigeRoll.RollLength);
+        srcData.FeetCounterSubject.OnNext(this.target.CurrentRoll.RollLength);
         srcData.SeamDetectedSubject.OnNext(true);
-        Assert.Equal(0, target.CurrentRoll.Feet);
+        Assert.Equal(0, target.Feet);
       }
     }
   }

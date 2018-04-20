@@ -19,22 +19,55 @@ namespace Mahlo.Views
     {
       InitializeComponent();
       this.carpetProcessor = carpetProcessor;
-      this.grFeetColumn.HeaderCell.Style.Alignment = 
-        this.mahlo2FeetColumn.HeaderCell.Style.Alignment =
-        this.bowAndSkewFeetColumn.HeaderCell.Style.Alignment =
-        this.bowAndSkewBowColumn.HeaderCell.Style.Alignment =
-        this.bowAndSkewSkewColumn.HeaderCell.Style.Alignment =
-        this.patternRepeatFeetColumn.HeaderCell.Style.Alignment =
-        this.patternRepeatElongationColumn.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+      foreach (DataGridViewColumn column in dataGridView1.Columns)
+      {
+        if (column.DefaultCellStyle.Alignment == DataGridViewContentAlignment.MiddleRight)
+        {
+          column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+        }
+
+        Label[] labels = { label1, label2, label3, label4 };
+
+        int index = 0;
+        int sum = -2;
+        foreach(DataGridViewColumn col in this.dataGridView1.Columns)
+        {
+          sum += col.Width;
+          if (string.IsNullOrWhiteSpace(col.DataPropertyName))
+          {
+            if (index >= labels.Length)
+            {
+              break;
+            }
+
+            labels[index++].Width = sum - col.Width / 2 - 2;
+            sum = col.Width - col.Width / 2 - 2;
+          }
+        }
+
+        label4.Width = sum - 2;
+
+        var qry0 = this.dataGridView1.Columns.Cast<DataGridViewColumn>();
+        var qry1 = qry0.TakeWhile(col => !string.IsNullOrWhiteSpace(col.DataPropertyName));
+        //this.tableLayoutPanel1.Columns. = qry1.Sum(col => col.Width) + 5;
+        //var qry2 = qry0.Skip(qry1.Count() + 1).TakeWhile(col => !string.IsNullOrWhiteSpace(col.DataPropertyName));
+        //var qry3 = qry0.Skip(qry1.Count() + qry2.Count() + 1).TakeWhile(col=>!st)
+        int key = 0;
+        var qry = from col in qry0
+                  group col by key;
+
+      }
+
+
     }
 
     private void MainForm_Load(object sender, EventArgs e)
     {
       this.carpetProcessor.Start();
-      this.sewinGrid.DataSource = carpetProcessor.SewinQueue.Rolls;
-      //this.mahlo2Grid.DataSource = carpetProcessor.mahloMeter.Rolls;
-      //this.bowAndSkewGrid.DataSource = carpetProcessor.bowAndSkewMeter.Rolls;
-      //this.patternRepeatGrid.DataSource = carpetProcessor.patternRepeatMeter.Rolls;
+      this.dataGridView1.DataSource = carpetProcessor.SewinQueue.Rolls;
+      this.mahlo2Source.DataSource = carpetProcessor.MahloLogic.CurrentRoll;
+      this.bowAndSkewSource.DataSource = carpetProcessor.BowAndSkewLogic.CurrentRoll;
+      this.patternRepeatSource.DataSource = carpetProcessor.PatternRepeatLogic.CurrentRoll;
     }
   }
 }

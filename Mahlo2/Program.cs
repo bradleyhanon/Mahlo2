@@ -93,9 +93,13 @@ namespace Mahlo
       container.RegisterSingleton<IUserAttentions<BowAndSkewRoll>, UserAttentions<BowAndSkewRoll>>();
       container.RegisterSingleton<IUserAttentions<PatternRepeatRoll>, UserAttentions<PatternRepeatRoll>>();
 
-      container.RegisterSingleton<IMeterLogic<MahloRoll>, MeterLogic<MahloRoll>>();
-      container.RegisterSingleton<IMeterLogic<BowAndSkewRoll>, MeterLogic<BowAndSkewRoll>>();
-      container.RegisterSingleton<IMeterLogic<PatternRepeatRoll>, MeterLogic<PatternRepeatRoll>>();
+      container.RegisterSingleton<IMahloLogic, MahloLogic>();
+      container.RegisterSingleton<IBowAndSkewLogic, BowAndSkewLogic>();
+      container.RegisterSingleton<IPatternRepeatLogic, PatternRepeatLogic>();
+
+      //container.RegisterSingleton<IMeterLogic<MahloRoll>, MeterLogic<MahloRoll>>();
+      //container.RegisterSingleton<IMeterLogic<BowAndSkewRoll>, MeterLogic<BowAndSkewRoll>>();
+      //container.RegisterSingleton<IMeterLogic<PatternRepeatRoll>, MeterLogic<PatternRepeatRoll>>();
 
       //container.RegisterSingleton<IRollLengthMonitor<MahloRoll>, RollLengthMonitor<MahloRoll>>();
       //container.RegisterSingleton<IRollLengthMonitor<BowAndSkewRoll>, RollLengthMonitor<BowAndSkewRoll>>();
@@ -113,9 +117,6 @@ namespace Mahlo
       container.RegisterInstance<SynchronizationContext>(WindowsFormsSynchronizationContext.Current);
       container.RegisterSingleton<IConcurrencyInfo, ConcurrencyInfo>();
       container.RegisterSingleton<ISewinQueue, SewinQueue>();
-      container.RegisterSingleton<IMahloLogic, MahloLogic>();
-      container.RegisterSingleton<IBowAndSkewLogic, BowAndSkewLogic>();
-      container.RegisterSingleton<IPatternRepeatLogic, PatternRepeatLogic>();
       container.RegisterSingleton<ICutRollLogic, CutRollLogic>();
       container.RegisterSingleton<EasyDAClient>(() => new EasyDAClient());
 

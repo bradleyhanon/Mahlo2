@@ -42,12 +42,12 @@ namespace Mahlo.Repository
       }
     }
 
-    public async Task<IEnumerable<GreigeRoll>> GetCoaterSewinQueue()
+    public async Task<IEnumerable<CarpetRoll>> GetCoaterSewinQueue()
     {
       using (var connection = this.GetOpenConnection())
       {
         var rolls = await connection.QueryAsync<AS400SewinQueueRoll>("spGetCoaterSewinQueueV2", commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
-        return rolls.Select(roll => roll.ToGreigeRoll());
+        return rolls.Select(roll => roll.ToCarpetRoll());
       }
     }
 
