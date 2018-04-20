@@ -25,6 +25,7 @@ namespace Mahlo2Tests.Logic
     private IAppInfoBAS appInfo;
     private IUserAttentions<MahloRoll> userAttentions;
     private ICriticalStops<MahloRoll> criticalStops;
+    private TestSchedulers testSchedulers = new TestSchedulers();
     private dynamic programState;
 
     private MeterLogic<MahloRoll> target;
@@ -97,7 +98,7 @@ namespace Mahlo2Tests.Logic
           return true;
         });
 
-      this.target = new MahloLogic(this.srcData, this.sewinQueue, this.appInfo, this.userAttentions, this.criticalStops, this.programState);
+      this.target = new MahloLogic(this.srcData, this.sewinQueue, this.appInfo, this.userAttentions, this.criticalStops, this.programState, this.testSchedulers);
       Assert.True(this.userAttentions.VerifyRollSequence);
       Assert.NotNull(this.target.CurrentRoll);
       this.userAttentions.ClearAll();

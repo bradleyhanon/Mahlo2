@@ -7,13 +7,21 @@ using Mahlo.AppSettings;
 using Mahlo.Models;
 using Mahlo.Opc;
 using Mahlo.Repository;
+using Mahlo.Utilities;
 
 namespace Mahlo.Logic
 {
   class MahloLogic : MeterLogic<MahloRoll>, IMahloLogic
   {
-    public MahloLogic(IMeterSrc<MahloRoll> mahloSrc, ISewinQueue sewinQueue, IAppInfoBAS appInfo, IUserAttentions<MahloRoll> userAttentions, ICriticalStops<MahloRoll> criticalStops, IProgramState programState)
-      : base(mahloSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState)
+    public MahloLogic(
+      IMeterSrc<MahloRoll> mahloSrc, 
+      ISewinQueue sewinQueue, 
+      IAppInfoBAS appInfo, 
+      IUserAttentions<MahloRoll> userAttentions, 
+      ICriticalStops<MahloRoll> criticalStops, 
+      IProgramState programState,
+      ISchedulerProvider schedulerProvider)
+      : base(mahloSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
     {
     }
 

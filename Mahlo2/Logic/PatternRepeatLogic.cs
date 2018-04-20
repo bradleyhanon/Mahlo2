@@ -7,14 +7,22 @@ using Mahlo.AppSettings;
 using Mahlo.Models;
 using Mahlo.Opc;
 using Mahlo.Repository;
+using Mahlo.Utilities;
 
 namespace Mahlo.Logic
 {
   class PatternRepeatLogic : MeterLogic<PatternRepeatRoll>, IPatternRepeatLogic
   {
     //public PatternRepeatLogic(IPatternRepeatSrc dataSrc, IMeterLogic<PatternRepeatRoll> meterLogic) 
-    public PatternRepeatLogic(IPatternRepeatSrc dataSrc, ISewinQueue sewinQueue, IAppInfoBAS appInfo, IUserAttentions<PatternRepeatRoll> userAttentions, ICriticalStops<PatternRepeatRoll> criticalStops, IProgramState programState)
-      : base(dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState)
+    public PatternRepeatLogic(
+      IPatternRepeatSrc dataSrc, 
+      ISewinQueue sewinQueue, 
+      IAppInfoBAS appInfo, 
+      IUserAttentions<PatternRepeatRoll> userAttentions, 
+      ICriticalStops<PatternRepeatRoll> criticalStops, 
+      IProgramState programState,
+      ISchedulerProvider schedulerProvider)
+      : base(dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
     {
       dataSrc.PatternRepeatChanged.Subscribe(value => this.CurrentRoll.Elongation = value);
     }

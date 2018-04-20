@@ -11,6 +11,7 @@ using Mahlo.AppSettings;
 using Mahlo.Models;
 using Mahlo.Opc;
 using Mahlo.Repository;
+using Mahlo.Utilities;
 
 namespace Mahlo.Logic
 {
@@ -26,6 +27,7 @@ namespace Mahlo.Logic
     private Subject<CarpetRoll> rollStartedSubject = new Subject<CarpetRoll>();
     private IDisposable feetCounterSubscription;
     private IDisposable seamDetectedSubscription;
+    private IDisposable timer;
 
     private int rollCheckCount;
     private int styleCheckCount = 1;
@@ -36,7 +38,8 @@ namespace Mahlo.Logic
       IAppInfoBAS appInfo,
       IUserAttentions<Model> userAttentions, 
       ICriticalStops<Model> criticalStops,
-      IProgramState programState)
+      IProgramState programState,
+      ISchedulerProvider schedulerProvider)
     {
       this.sewinQueue = sewinQueue;
       this.srcData = srcData;
@@ -47,6 +50,10 @@ namespace Mahlo.Logic
       this.RestoreState();
       this.feetCounterSubscription = srcData.FeetCounter.Subscribe(value => this.FeetCounterChanged(value));
       this.seamDetectedSubscription = srcData.SeamDetected.Subscribe(value => this.SeamDetected(value));
+      this.timer = Observable
+        .Interval(TimeSpan.FromSeconds(1), schedulerProvider.WinFormsThread)
+        .Do(_ => Console.WriteLine("Timer Triggered!"))
+        .Subscribe(_ => this.RefreshStatusDisplay());
 
       this.RollStarted = this.rollStartedSubject;
       this.RollFinished = this.rollFinishedSubject;
@@ -64,6 +71,10 @@ namespace Mahlo.Logic
     public IObservable<CarpetRoll> RollStarted { get; }
     public IObservable<CarpetRoll> RollFinished { get; }
 
+    public string MahloStatusMessage { get; private set; }
+    public string PlcStatusMessage { get; private set; }
+    public string LogicStatusMessage { get; private set; }
+
     public bool IsMappingValid => !this.CurrentRoll.IsCheckRoll && !this.UserAttentsions.Any && !this.CriticalStops.Any;
 
     public abstract int Feet { get; set; }
@@ -76,7 +87,12 @@ namespace Mahlo.Logic
     {
     }
 
-    private void RestoreState()
+    public void Dispose()
+    {
+      this.Dispose(true);
+    }
+
+    protected virtual void RestoreState()
     {
       var state = this.programState.GetSubState(nameof(MeterLogic<Model>), nameof(Model));
       this.rollCheckCount = state.Get<int?>(nameof(rollCheckCount)) ?? 0;
@@ -89,7 +105,7 @@ namespace Mahlo.Logic
       this.UserAttentsions.VerifyRollSequence = true;
     }
 
-    public void Dispose()
+    protected virtual void Dispose(bool disposing)
     {
       var state = programState.GetSubState(nameof(MeterLogic<Model>));
       state.Set(typeof(Model).Name, new
@@ -99,6 +115,7 @@ namespace Mahlo.Logic
         this.CurrentRoll,
       });
 
+      this.timer.Dispose();
       this.feetCounterSubscription?.Dispose();
       this.seamDetectedSubscription?.Dispose();
     }
@@ -151,6 +168,16 @@ namespace Mahlo.Logic
 
       this.CurrentRoll = nextRoll;
       this.rollStartedSubject.OnNext(this.CurrentRoll);
+    }
+
+    private void RefreshStatusDisplay()
+    {
+
+      (Color backGround, Color foreGround, string Message) =
+        this.CriticalStops.IsMahloCommError ? (Color.Red, Color.White, "Mahlo is NOT communicating") :
+        (Color.Green, Color.Black, $"Mahlo Recipe: {(string.IsNullOrWhiteSpace(srcData.Recipe) ? "Unknown" : srcData.Recipe)}");
+
+
     }
   }
 }

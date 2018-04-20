@@ -14,6 +14,7 @@ using OpcLabs.EasyOpc.DataAccess;
 using OpcLabs.EasyOpc.DataAccess.OperationModel;
 using OpcLabs.EasyOpc.DataAccess.Generic;
 using Mahlo.Repository;
+using Mahlo.Logic;
 
 namespace Mahlo.Opc
 {
@@ -27,6 +28,7 @@ namespace Mahlo.Opc
     string mahloChannel;
 
     private EasyDAClient opcClient;
+    private ICriticalStops<Model> criticalStops;
     private Type priorExceptionType = null;
     private IMahloOpcSettings mahloSettings;
     private IPlcSettings seamSettings;
@@ -42,19 +44,20 @@ namespace Mahlo.Opc
     private Subject<double> speedSubject = new Subject<double>();
     private Subject<bool> seamDetectedSubject = new Subject<bool>();
 
-    private Subject<bool> onOffSubject = new Subject<bool>();
     private Subject<double> bowSubject = new Subject<double>();
     private Subject<double> skewSubject = new Subject<double>();
     private Subject<double> patterRepeatSubject = new Subject<double>();
 
     public MahloOpcClient(
       EasyDAClient opcClient, 
+      ICriticalStops<Model> criticalStops, 
       IMahloOpcSettings mahloSettings, 
       IPlcSettings seamSettings,
       IProgramState programState,
       SynchronizationContext synchronizationContext)
     {
       this.opcClient = opcClient;
+      this.criticalStops = criticalStops;
       this.mahloSettings = mahloSettings;
       this.seamSettings = seamSettings;
       this.synchronizationContext = synchronizationContext;
@@ -65,6 +68,7 @@ namespace Mahlo.Opc
       this.Initialize();
     }
 
+    public bool IsManualMode { get; set; }
     public string Recipe { get; set; }
     public double MetersCount { get; set; }
     public double MetersOffset { get; set; }
@@ -79,8 +83,6 @@ namespace Mahlo.Opc
       .DistinctUntilChanged();
    
     public IObservable<bool> SeamDetected => this.seamDetectedSubject;
-
-    public IObservable<bool> OnOffChanged => this.onOffSubject;
 
     public IObservable<double> BowChanged => this.bowSubject;
 
@@ -138,23 +140,23 @@ namespace Mahlo.Opc
     /// <param name="serverClass">The name of the OPC server.</param>
     /// <param name="channel">The channel with the OPC server.</param>
     /// <param name="items">The list of items to subscribe to.</param>
-    private void Subscribe(string serverClass, string channel, IEnumerable<(string name, Action<object> action)> items)
+    private void Subscribe(string serverClass, string channel, IEnumerable<(string name, Action<object> action)> items, EasyDAItemChangedEventHandler callback)
     {
       var query = from item in items
                   let tag = $"{channel}.{item.name}"
-                  select new EasyDAItemSubscriptionArguments(string.Empty, serverClass, tag, 250, ItemChangeCallback, item.action);
+                  select new EasyDAItemSubscriptionArguments(string.Empty, serverClass, tag, 250, callback, item.action);
 
       var result = this.opcClient.SubscribeMultipleItems(query.ToArray());
     }
 
     private void MahloSubscribe(string channel, IEnumerable<(string name, Action<object> action)> items)
     {
-      this.Subscribe(MahloServerClass, channel, items);
+      this.Subscribe(MahloServerClass, channel, items, MahloItemChangedCallback);
     }
 
     private void PlcSubscribe(string channel, IEnumerable<(string name, Action<object> action)> items)
     {
-      this.Subscribe(PlcServerClass, channel, items);
+      this.Subscribe(PlcServerClass, channel, items, PlcItemChangedCallback);
     }
 
     //public IObservable<double> CreateMeterCountObservable()
@@ -210,7 +212,7 @@ namespace Mahlo.Opc
         this.mahloChannel = mahloSettings.BowAndSkewChannelName;
         mahloTags.AddRange(new(string, Action<object>)[]
         {
-            ("Current.Bridge.0.Calc.1.OnOff", value => this.onOffSubject.OnNext((int)value == 1)),
+            ("Current.Bridge.0.Calc.1.OnOff", value => this.IsManualMode = (int)value == 0),
             //("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
             //("Readings.Bridge.0.Calc.1.MeterStamp", value => this.MeterStamp = (double)value),
             //("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewValid", value => this.SkewValid = (int)value == 1),
@@ -226,7 +228,7 @@ namespace Mahlo.Opc
         this.mahloChannel = mahloSettings.PatternRepeatChannelName;
         mahloTags.AddRange(new(string, Action<object>)[]
         {
-            ("Current.Bridge.0.Calc.1.OnOff", value => this.onOffSubject.OnNext((int)value == 1)),
+            ("Current.Bridge.0.Calc.1.OnOff", value => this.IsManualMode = (int)value == 0),
             //("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
             //("Readings.Bridge.0.Calc.1.MeterStamp", value => this.MeterStamp = (double)value),
             //("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.Valid", value => this.Valid = (int)value == 1),
@@ -257,15 +259,30 @@ namespace Mahlo.Opc
       this.MahloSubscribe(this.mahloChannel, mahloTags);
     }
 
+    private void MahloItemChangedCallback(object sender, EasyDAItemChangedEventArgs e)
+    {
+      this.criticalStops.IsMahloCommError = e.Exception != null;
+      this.ItemChangeCallback(sender, e);
+    }
+
+    private void PlcItemChangedCallback(object sender, EasyDAItemChangedEventArgs e)
+    {
+      this.criticalStops.IsPlcCommError = e.Exception != null;
+      this.ItemChangeCallback(sender, e);
+    }
+
     private void ItemChangeCallback(object sender, EasyDAItemChangedEventArgs e)
     {
-      if (e.Exception != null && e.Exception.GetType() != priorExceptionType)
+      if (e.Exception != null)
       {
-        // TODO: Implement logging
-        //log.Error(e.Arguments.NodeDescriptor);
-        //log.Error(e.Exception.GetType());
-        //log.Error(e.ErrorMessage);
-        this.priorExceptionType = e.Exception.GetType();
+        if (e.Exception.GetType() != priorExceptionType)
+        {
+          // TODO: Implement logging
+          //log.Error(e.Arguments.NodeDescriptor);
+          //log.Error(e.Exception.GetType());
+          //log.Error(e.ErrorMessage);
+          this.priorExceptionType = e.Exception.GetType();
+        }
       }
 
       if (e.Exception == null && e.Vtq.HasValue)

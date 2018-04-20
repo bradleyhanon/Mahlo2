@@ -14,7 +14,6 @@ namespace Mahlo2Tests.Mocks
     public Subject<int> FeetCounterSubject { get; } = new Subject<int>();
     public Subject<int> FeetPerMinuteSubject { get; } = new Subject<int>();
     public Subject<bool> SeamDetectedSubject { get; } = new Subject<bool>();
-    public Subject<bool> OnOffSubject { get; } = new Subject<bool>();
     public Subject<double> BowSubject { get; } = new Subject<double>();
     public Subject<double> SkewSubject { get; } = new Subject<double>();
     public Subject<double> PatternRepeatSubject { get; } = new Subject<double>();
@@ -25,9 +24,8 @@ namespace Mahlo2Tests.Mocks
 
     public IObservable<bool> SeamDetected => this.SeamDetectedSubject;
 
-    public string Recipe { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-    public IObservable<bool> OnOffChanged => this.OnOffSubject;
+    public string Recipe { get; set; } = string.Empty;
+    public bool IsManualMode { get; set; }
 
     public IObservable<double> BowChanged => this.BowSubject;
 

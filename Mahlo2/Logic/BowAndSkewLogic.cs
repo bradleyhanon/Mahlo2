@@ -9,13 +9,21 @@ using Mahlo.AppSettings;
 using Mahlo.Models;
 using Mahlo.Opc;
 using Mahlo.Repository;
+using Mahlo.Utilities;
 
 namespace Mahlo.Logic
 {
   class BowAndSkewLogic : MeterLogic<BowAndSkewRoll>, IBowAndSkewLogic
   {
-    public BowAndSkewLogic(IBowAndSkewSrc dataSrc, ISewinQueue sewinQueue, IAppInfoBAS appInfo, IUserAttentions<BowAndSkewRoll> userAttentions, ICriticalStops<BowAndSkewRoll> criticalStops, IProgramState programState)
-      : base(dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState)
+    public BowAndSkewLogic(
+      IBowAndSkewSrc dataSrc, 
+      ISewinQueue sewinQueue, 
+      IAppInfoBAS appInfo, 
+      IUserAttentions<BowAndSkewRoll> userAttentions, 
+      ICriticalStops<BowAndSkewRoll> criticalStops, 
+      IProgramState programState, 
+      ISchedulerProvider schedulerProvider)
+      : base(dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
     {
       dataSrc.BowChanged.Subscribe(value => this.CurrentRoll.Bow = value);
       dataSrc.SkewChanged.Subscribe(value => this.CurrentRoll.Skew = value);
