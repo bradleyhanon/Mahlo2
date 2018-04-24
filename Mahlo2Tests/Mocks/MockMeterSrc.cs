@@ -9,7 +9,7 @@ using Mahlo.Opc;
 
 namespace Mahlo2Tests.Mocks
 {
-  class MockMeterSrc : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc
+  class MockMeterSrc<Model> : IMahloSrc<Model>, IBowAndSkewSrc<Model>, IPatternRepeatSrc<Model>
   {
     public Subject<int> FeetCounterSubject { get; } = new Subject<int>();
     public Subject<int> FeetPerMinuteSubject { get; } = new Subject<int>();

@@ -7,7 +7,7 @@ using Mahlo.Models;
 
 namespace Mahlo.Opc
 {
-  interface IMahloSrc : IMeterSrc<MahloRoll>
+  interface IMahloSrc<Model> : IMeterSrc<Model>
   {
   }
 }

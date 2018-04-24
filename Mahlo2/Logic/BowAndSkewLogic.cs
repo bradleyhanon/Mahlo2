@@ -16,7 +16,7 @@ namespace Mahlo.Logic
   class BowAndSkewLogic : MeterLogic<BowAndSkewRoll>, IBowAndSkewLogic
   {
     public BowAndSkewLogic(
-      IBowAndSkewSrc dataSrc, 
+      IBowAndSkewSrc<BowAndSkewRoll> dataSrc, 
       ISewinQueue sewinQueue, 
       IAppInfoBAS appInfo, 
       IUserAttentions<BowAndSkewRoll> userAttentions, 

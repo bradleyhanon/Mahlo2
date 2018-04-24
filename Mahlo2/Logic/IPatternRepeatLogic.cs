@@ -4,6 +4,5 @@ namespace Mahlo.Logic
 {
   interface IPatternRepeatLogic : IModelLogic
   {
-    CarpetRoll CurrentRoll { get; }
   }
 }

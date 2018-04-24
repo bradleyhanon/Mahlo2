@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B1825919-D85B-4E0E-8671-E6851E810CF3}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mahlo</RootNamespace>
     <AssemblyName>Mahlo2</AssemblyName>
@@ -175,6 +175,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Properties\DataSources\Mahlo.Logic.BowAndSkewLogic.datasource" />
+    <None Include="Properties\DataSources\Mahlo.Logic.MahloLogic.datasource" />
+    <None Include="Properties\DataSources\Mahlo.Logic.PatternRepeatLogic.datasource" />
     <None Include="Properties\DataSources\Mahlo.Models.CarpetRoll.datasource" />
     <None Include="Properties\DataSources\Mahlo.Models.BowAndSkewRoll.datasource" />
     <None Include="Properties\DataSources\Mahlo.Models.FinishedRoll.datasource" />

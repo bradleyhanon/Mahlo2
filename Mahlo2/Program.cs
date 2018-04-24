@@ -105,9 +105,9 @@ namespace Mahlo
       //container.RegisterSingleton<IRollLengthMonitor<BowAndSkewRoll>, RollLengthMonitor<BowAndSkewRoll>>();
       //container.RegisterSingleton<IRollLengthMonitor<PatternRepeatRoll>, RollLengthMonitor<PatternRepeatRoll>>();
 
-      container.RegisterSingleton<IMahloSrc, MahloOpcClient<MahloRoll>>();
-      container.RegisterSingleton<IBowAndSkewSrc, MahloOpcClient<BowAndSkewRoll>>();
-      container.RegisterSingleton<IPatternRepeatSrc, MahloOpcClient<PatternRepeatRoll>>();
+      container.RegisterSingleton<IMahloSrc<MahloRoll>, MahloOpcClient<MahloRoll>>();
+      container.RegisterSingleton<IBowAndSkewSrc<BowAndSkewRoll>, MahloOpcClient<BowAndSkewRoll>>();
+      container.RegisterSingleton<IPatternRepeatSrc<PatternRepeatRoll>, MahloOpcClient<PatternRepeatRoll>>();
 
       container.RegisterSingleton<IMeterSrc<MahloRoll>, MahloOpcClient<MahloRoll>>();
       container.RegisterSingleton<IMeterSrc<BowAndSkewRoll>, MahloOpcClient<BowAndSkewRoll>>();

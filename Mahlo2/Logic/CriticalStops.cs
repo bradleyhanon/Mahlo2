@@ -13,14 +13,7 @@ namespace Mahlo.Logic
   {
     private Stop stops;
     //private BehaviorSubject<ICriticalStops<Model>> changes;
-    private IMeterSrc<Model> meterSrc;
     private bool isStatusIndicatorSet;
-
-    public CriticalStops(IMeterSrc<Model> meterSrc)
-    {
-      this.meterSrc = meterSrc;
-      //this.changes = new BehaviorSubject<ICriticalStops<Model>>(this);
-    }
 
     [Flags]
     private enum Stop
@@ -30,6 +23,8 @@ namespace Mahlo.Logic
     }
 
     //public IObservable<ICriticalStops<Model>> Changes => this.changes.AsObservable();
+
+    public IMeterSrc<Model> MeterSrc { get; set; }
 
     public bool Any => this.stops != 0;
 
@@ -55,7 +50,7 @@ namespace Mahlo.Logic
         //this.changes.OnNext(this);
 
         //cmdWaitForSeam.Enabled = (nCriticalStops == 0);
-        this.meterSrc.SetCriticalAlarm(this.isStatusIndicatorSet);
+        this.MeterSrc.SetCriticalAlarm(this.isStatusIndicatorSet);
       }
     }
   }

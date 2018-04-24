@@ -12,10 +12,12 @@ using Mahlo.Models;
 using Mahlo.Opc;
 using Mahlo.Repository;
 using Mahlo.Utilities;
+using PropertyChanged;
 
 namespace Mahlo.Logic
 {
-  abstract class MeterLogic<Model> : IMeterLogic<Model>
+  [AddINotifyPropertyChangedInterface]
+  abstract class MeterLogic<Model> : IMeterLogic<Model>, IModelLogic
     where Model : MahloRoll, new()
   {
     private ISewinQueue sewinQueue;
@@ -25,8 +27,11 @@ namespace Mahlo.Logic
 
     private Subject<CarpetRoll> rollFinishedSubject = new Subject<CarpetRoll>();
     private Subject<CarpetRoll> rollStartedSubject = new Subject<CarpetRoll>();
+    private Subject<CarpetRoll> currentRollChanged = new Subject<CarpetRoll>();
     private IDisposable feetCounterSubscription;
     private IDisposable seamDetectedSubscription;
+    private IDisposable feetPerMinuteSubscription;
+    private IDisposable queueChangedSubscription;
     private IDisposable timer;
 
     private int rollCheckCount;
@@ -50,13 +55,15 @@ namespace Mahlo.Logic
       this.RestoreState();
       this.feetCounterSubscription = srcData.FeetCounter.Subscribe(value => this.FeetCounterChanged(value));
       this.seamDetectedSubscription = srcData.SeamDetected.Subscribe(value => this.SeamDetected(value));
+      this.feetPerMinuteSubscription = srcData.FeetPerMinute.Subscribe(value => this.Speed = value);
+      this.queueChangedSubscription = sewinQueue.QueueChanged.Subscribe(_ => this.SewinQueueChanged());
       this.timer = Observable
         .Interval(TimeSpan.FromSeconds(1), schedulerProvider.WinFormsThread)
-        .Do(_ => Console.WriteLine("Timer Triggered!"))
         .Subscribe(_ => this.RefreshStatusDisplay());
 
       this.RollStarted = this.rollStartedSubject;
       this.RollFinished = this.rollFinishedSubject;
+
     }
 
     /// <summary>
@@ -72,13 +79,26 @@ namespace Mahlo.Logic
     public IObservable<CarpetRoll> RollFinished { get; }
 
     public string MahloStatusMessage { get; private set; }
+    public Color MahloStatusMessageBackColor { get; private set; }
+    [DependsOn(nameof(MahloStatusMessageBackColor))]
+    public Color MahloStatusMessageForeColor => MahloStatusMessageBackColor.ContrastColor();
+
     public string PlcStatusMessage { get; private set; }
-    public string LogicStatusMessage { get; private set; }
+    public Color PlcStatusMessageBackColor { get; private set; }
+    [DependsOn(nameof(PlcStatusMessageBackColor))]
+    public Color PlcStatusMessageForeColor => PlcStatusMessageBackColor.ContrastColor();
+
+    public string MappingStatusMessage { get; private set; }
+    public Color MappingStatusMessageBackColor { get; private set; }
+    [DependsOn(nameof(MappingStatusMessageBackColor))]
+    public Color MappingStatusMessageForeColor => MappingStatusMessageBackColor.ContrastColor();
+
 
     public bool IsMappingValid => !this.CurrentRoll.IsCheckRoll && !this.UserAttentsions.Any && !this.CriticalStops.Any;
 
     public abstract int Feet { get; set; }
     public abstract int Speed { get; set; }
+    public IObservable<CarpetRoll> CurrentRollChanged => this.currentRollChanged;
 
     /// <summary>
     /// Called to start data collection
@@ -118,6 +138,16 @@ namespace Mahlo.Logic
       this.timer.Dispose();
       this.feetCounterSubscription?.Dispose();
       this.seamDetectedSubscription?.Dispose();
+      this.feetPerMinuteSubscription?.Dispose();
+    }
+
+    private void SewinQueueChanged()
+    {
+      if (!this.sewinQueue.Rolls.Contains( this.CurrentRoll))
+      {
+        this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault() ?? this.CurrentRoll;
+        this.currentRollChanged.OnNext(this.CurrentRoll);
+      }
     }
 
     private void FeetCounterChanged(int feet)
@@ -172,12 +202,56 @@ namespace Mahlo.Logic
 
     private void RefreshStatusDisplay()
     {
+      // Mahlo status
+      (Color backColor, string message) =
+        this.CriticalStops.IsMahloCommError ? (Color.Red, "Mahlo is NOT communicating") :
+        this.srcData.IsManualMode ? (Color.Yellow, "Mahlo is in Manual mode") :
+        (Color.Green, $"Mahlo Recipe: {(string.IsNullOrWhiteSpace(srcData.Recipe) ? "Unknown" : srcData.Recipe)}");
+      this.MahloStatusMessage = message;
+      this.MahloStatusMessageBackColor = backColor;
 
-      (Color backGround, Color foreGround, string Message) =
-        this.CriticalStops.IsMahloCommError ? (Color.Red, Color.White, "Mahlo is NOT communicating") :
-        (Color.Green, Color.Black, $"Mahlo Recipe: {(string.IsNullOrWhiteSpace(srcData.Recipe) ? "Unknown" : srcData.Recipe)}");
+      // PLC status
+      (backColor, message) = 
+        this.CriticalStops.IsPlcCommError ? (Color.Red, "PLC is NOT Communicating") :
+        (Color.Green, "PLC is Communicating");
+      this.PlcStatusMessage = message;
+      this.PlcStatusMessageBackColor = backColor;
 
+      // Mapping status
+      (backColor, message) =
+        this.CriticalStops.Any ? (Color.Red, "Mapping is off due to one or more critical problems") :
+        this.UserAttentsions.IsSystemDisabled ? (Color.Yellow, "System is disabled, seams are ignored, press [F3] to arm") :
+        this.UserAttentsions.IsRollTooLong ? (Color.Yellow, "Measured roll length excessively long, verify roll sequence") :
+        this.UserAttentsions.IsRollTooShort ? (Color.Yellow, "Measured roll length excessively short, verify roll sequence") :
+        this.UserAttentsions.VerifyRollSequence ? (Color.Yellow, "Verify roll sequence, press [F3 - Wait for Seam] to arm system") :
+        (Color.Green, "Roll is being mapped");
+      this.MappingStatusMessage = message;
+      this.MappingStatusMessageBackColor = backColor;
+    }
 
+    public void MoveToNextRoll()
+    {
+      int index = this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
+      if (index >= 0 && index < this.sewinQueue.Rolls.Count - 1)
+      {
+        this.CurrentRoll = this.sewinQueue.Rolls[index + 1];
+        this.currentRollChanged.OnNext(this.CurrentRoll);
+      }
+    }
+
+    public void MoveToPriorRoll()
+    {
+      int index = this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
+      if (index > 0)
+      {
+        this.CurrentRoll = this.sewinQueue.Rolls[index - 1];
+        this.currentRollChanged.OnNext(this.CurrentRoll);
+      }
+    }
+
+    public void WaitForSeam()
+    {
+      //throw new NotImplementedException();
     }
   }
 }

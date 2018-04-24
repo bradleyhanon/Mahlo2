@@ -18,7 +18,7 @@ using Mahlo.Logic;
 
 namespace Mahlo.Opc
 {
-  sealed class MahloOpcClient<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc, IDisposable
+  sealed class MahloOpcClient<Model> : IMeterSrc<Model>, IMahloSrc<Model>, IBowAndSkewSrc<Model>, IPatternRepeatSrc<Model>, IDisposable
   {
     private const string MahloServerClass = "mahlo.10AOpcServer.1";
     private const string PlcServerClass = "Kepware.KEPServerEX.V6";
@@ -34,7 +34,6 @@ namespace Mahlo.Opc
     private IPlcSettings seamSettings;
     private IProgramState programState;
 
-    private string seamResetTag;
     private SynchronizationContext synchronizationContext;
     private string seamAckTag;
     private string seamDetectedTag;
@@ -62,6 +61,8 @@ namespace Mahlo.Opc
       this.seamSettings = seamSettings;
       this.synchronizationContext = synchronizationContext;
       this.programState = programState;
+
+      criticalStops.MeterSrc = (IMeterSrc<Model>)this;
 
       var state = programState.GetSubState(nameof(MahloOpcClient<Model>), typeof(Model).Name);
       this.meterOffset = state.Get<double?>(nameof(meterOffset)) ?? 0.0;
@@ -109,8 +110,8 @@ namespace Mahlo.Opc
     //public bool PrsOnOff { get; set; }
     //public int PrsStatus { get; set; }
     //public double PrsMeterStamp { get; set; }
-    public bool Valid { get; set; }
-    public double ValueInMeter { get; set; }
+    //public bool Valid { get; set; }
+    //public double ValueInMeter { get; set; }
 
     //public int PrsControllerState { get; set; }
 
@@ -158,30 +159,6 @@ namespace Mahlo.Opc
     {
       this.Subscribe(PlcServerClass, channel, items, PlcItemChangedCallback);
     }
-
-    //public IObservable<double> CreateMeterCountObservable()
-    //{
-    //  string tag = $"{this.mahloChannel}.{MeterCountTag}";
-    //  var result = DAItemChangedObservable.Create<double>(string.Empty, MahloServerClass, tag, 100)
-    //    .Where(e => e.Exception == null && e.Vtq.HasValue)
-    //    .Select(e => (double)e.Vtq.Value);
-        
-    //  return result;
-    //}
-
-    //public IObservable<bool> CreateSeamDetectObservable()
-    //{
-    //  return CreateObservable<bool>(PlcServerClass, this.seamDetectedTag);
-    //}
-
-    //private IObservable<T> CreateObservable<T>(string serverClass, string tag)
-    //{
-    //  var result = DAItemChangedObservable.Create<double>(string.Empty, serverClass, tag, 100)
-    //    .Where(e => e.Exception == null && e.Vtq.HasValue)
-    //    .Select(e => (T)e.Vtq.Value);
-
-    //  return result;
-    //}
 
     public void Initialize()
     {
@@ -261,13 +238,13 @@ namespace Mahlo.Opc
 
     private void MahloItemChangedCallback(object sender, EasyDAItemChangedEventArgs e)
     {
-      this.criticalStops.IsMahloCommError = e.Exception != null;
+      this.criticalStops.IsMahloCommError = e.Exception != null || !e.Vtq.HasValue;
       this.ItemChangeCallback(sender, e);
     }
 
     private void PlcItemChangedCallback(object sender, EasyDAItemChangedEventArgs e)
     {
-      this.criticalStops.IsPlcCommError = e.Exception != null;
+      this.criticalStops.IsPlcCommError = e.Exception != null || !e.Vtq.HasValue;
       this.ItemChangeCallback(sender, e);
     }
 
@@ -275,6 +252,7 @@ namespace Mahlo.Opc
     {
       if (e.Exception != null)
       {
+        Console.WriteLine(e.Arguments.ItemDescriptor.ItemId);
         if (e.Exception.GetType() != priorExceptionType)
         {
           // TODO: Implement logging

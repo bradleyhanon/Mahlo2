@@ -32,8 +32,8 @@
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -42,6 +42,9 @@
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
       this.dataGridView5 = new System.Windows.Forms.DataGridView();
       this.sapRollDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.lengthDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -49,13 +52,14 @@
       this.maxSkewDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.maxEPEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.dlotDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.cutRollSource = new System.Windows.Forms.BindingSource(this.components);
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.cutRollSrc = new System.Windows.Forms.BindingSource(this.components);
+      this.grpMahlo = new System.Windows.Forms.GroupBox();
       this.label29 = new System.Windows.Forms.Label();
+      this.mahloLogicSrc = new System.Windows.Forms.BindingSource(this.components);
       this.label28 = new System.Windows.Forms.Label();
       this.label22 = new System.Windows.Forms.Label();
       this.textBox13 = new System.Windows.Forms.TextBox();
-      this.mahlo2Source = new System.Windows.Forms.BindingSource(this.components);
+      this.mahloRollSrc = new System.Windows.Forms.BindingSource(this.components);
       this.label17 = new System.Windows.Forms.Label();
       this.textBox5 = new System.Windows.Forms.TextBox();
       this.label18 = new System.Windows.Forms.Label();
@@ -63,24 +67,25 @@
       this.textBox3 = new System.Windows.Forms.TextBox();
       this.textBox2 = new System.Windows.Forms.TextBox();
       this.textBox1 = new System.Windows.Forms.TextBox();
-      this.button3 = new System.Windows.Forms.Button();
-      this.button2 = new System.Windows.Forms.Button();
-      this.button1 = new System.Windows.Forms.Button();
+      this.btnBack2 = new System.Windows.Forms.Button();
+      this.btnFore2 = new System.Windows.Forms.Button();
+      this.btnWaitFormSeam2 = new System.Windows.Forms.Button();
       this.label7 = new System.Windows.Forms.Label();
       this.label9 = new System.Windows.Forms.Label();
       this.label8 = new System.Windows.Forms.Label();
       this.label6 = new System.Windows.Forms.Label();
-      this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.grpBowAndSkew = new System.Windows.Forms.GroupBox();
       this.label30 = new System.Windows.Forms.Label();
+      this.bowAndSkewLogicSrc = new System.Windows.Forms.BindingSource(this.components);
       this.label31 = new System.Windows.Forms.Label();
       this.label32 = new System.Windows.Forms.Label();
       this.textBox6 = new System.Windows.Forms.TextBox();
+      this.bowAndSkewRollSrc = new System.Windows.Forms.BindingSource(this.components);
       this.label10 = new System.Windows.Forms.Label();
-      this.button6 = new System.Windows.Forms.Button();
+      this.btnWaitFormSeam3 = new System.Windows.Forms.Button();
       this.textBox14 = new System.Windows.Forms.TextBox();
       this.label19 = new System.Windows.Forms.Label();
       this.textBox12 = new System.Windows.Forms.TextBox();
-      this.bowAndSkewSource = new System.Windows.Forms.BindingSource(this.components);
       this.label16 = new System.Windows.Forms.Label();
       this.textBox11 = new System.Windows.Forms.TextBox();
       this.label15 = new System.Windows.Forms.Label();
@@ -88,20 +93,21 @@
       this.textBox8 = new System.Windows.Forms.TextBox();
       this.textBox9 = new System.Windows.Forms.TextBox();
       this.textBox10 = new System.Windows.Forms.TextBox();
-      this.button4 = new System.Windows.Forms.Button();
-      this.button5 = new System.Windows.Forms.Button();
+      this.btnBack3 = new System.Windows.Forms.Button();
+      this.btnFore3 = new System.Windows.Forms.Button();
       this.label11 = new System.Windows.Forms.Label();
       this.label12 = new System.Windows.Forms.Label();
       this.label13 = new System.Windows.Forms.Label();
       this.label14 = new System.Windows.Forms.Label();
-      this.groupBox3 = new System.Windows.Forms.GroupBox();
+      this.grpPatternRepeat = new System.Windows.Forms.GroupBox();
       this.label33 = new System.Windows.Forms.Label();
+      this.patternRepeatLogicSrc = new System.Windows.Forms.BindingSource(this.components);
       this.label34 = new System.Windows.Forms.Label();
       this.label35 = new System.Windows.Forms.Label();
       this.textBox15 = new System.Windows.Forms.TextBox();
-      this.patternRepeatSource = new System.Windows.Forms.BindingSource(this.components);
+      this.patternRepeatRollSrc = new System.Windows.Forms.BindingSource(this.components);
       this.label20 = new System.Windows.Forms.Label();
-      this.button9 = new System.Windows.Forms.Button();
+      this.btnWaitFormSeam4 = new System.Windows.Forms.Button();
       this.textBox16 = new System.Windows.Forms.TextBox();
       this.label21 = new System.Windows.Forms.Label();
       this.textBox18 = new System.Windows.Forms.TextBox();
@@ -110,13 +116,13 @@
       this.textBox20 = new System.Windows.Forms.TextBox();
       this.textBox21 = new System.Windows.Forms.TextBox();
       this.textBox22 = new System.Windows.Forms.TextBox();
-      this.button7 = new System.Windows.Forms.Button();
-      this.button8 = new System.Windows.Forms.Button();
+      this.btnBack4 = new System.Windows.Forms.Button();
+      this.btnFore4 = new System.Windows.Forms.Button();
       this.label24 = new System.Windows.Forms.Label();
       this.label25 = new System.Windows.Forms.Label();
       this.label26 = new System.Windows.Forms.Label();
       this.label27 = new System.Windows.Forms.Label();
-      this.groupBox4 = new System.Windows.Forms.GroupBox();
+      this.groupBox5 = new System.Windows.Forms.GroupBox();
       this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
       this.dataGridView1 = new System.Windows.Forms.DataGridView();
       this.rollNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -137,23 +143,26 @@
       this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.prsFeetDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.elongationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.sewinQueueSource = new System.Windows.Forms.BindingSource(this.components);
+      this.sewinQueueSrc = new System.Windows.Forms.BindingSource(this.components);
       this.label4 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.cutRollSource)).BeginInit();
-      this.groupBox1.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.mahlo2Source)).BeginInit();
-      this.groupBox2.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewSource)).BeginInit();
-      this.groupBox3.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatSource)).BeginInit();
-      this.groupBox4.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.cutRollSrc)).BeginInit();
+      this.grpMahlo.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.mahloLogicSrc)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.mahloRollSrc)).BeginInit();
+      this.grpBowAndSkew.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewLogicSrc)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewRollSrc)).BeginInit();
+      this.grpPatternRepeat.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatLogicSrc)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatRollSrc)).BeginInit();
+      this.groupBox5.SuspendLayout();
       this.tableLayoutPanel1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSource)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSrc)).BeginInit();
       this.SuspendLayout();
       // 
       // dataGridView5
@@ -181,7 +190,7 @@
             this.maxSkewDataGridViewTextBoxColumn,
             this.maxEPEDataGridViewTextBoxColumn,
             this.dlotDataGridViewTextBoxColumn});
-      this.dataGridView5.DataSource = this.cutRollSource;
+      this.dataGridView5.DataSource = this.cutRollSrc;
       dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
       dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -194,7 +203,7 @@
       this.dataGridView5.Name = "dataGridView5";
       this.dataGridView5.RowHeadersVisible = false;
       this.dataGridView5.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.dataGridView5.Size = new System.Drawing.Size(390, 228);
+      this.dataGridView5.Size = new System.Drawing.Size(390, 242);
       this.dataGridView5.TabIndex = 4;
       // 
       // sapRollDataGridViewTextBoxColumn
@@ -239,53 +248,63 @@
       this.dlotDataGridViewTextBoxColumn.Name = "dlotDataGridViewTextBoxColumn";
       this.dlotDataGridViewTextBoxColumn.Width = 45;
       // 
-      // cutRollSource
+      // cutRollSrc
       // 
-      this.cutRollSource.DataSource = typeof(Mahlo.Models.CutRoll);
+      this.cutRollSrc.DataSource = typeof(Mahlo.Models.CutRoll);
       // 
-      // groupBox1
+      // grpMahlo
       // 
-      this.groupBox1.Controls.Add(this.label29);
-      this.groupBox1.Controls.Add(this.label28);
-      this.groupBox1.Controls.Add(this.label22);
-      this.groupBox1.Controls.Add(this.textBox13);
-      this.groupBox1.Controls.Add(this.label17);
-      this.groupBox1.Controls.Add(this.textBox5);
-      this.groupBox1.Controls.Add(this.label18);
-      this.groupBox1.Controls.Add(this.textBox4);
-      this.groupBox1.Controls.Add(this.textBox3);
-      this.groupBox1.Controls.Add(this.textBox2);
-      this.groupBox1.Controls.Add(this.textBox1);
-      this.groupBox1.Controls.Add(this.button3);
-      this.groupBox1.Controls.Add(this.button2);
-      this.groupBox1.Controls.Add(this.button1);
-      this.groupBox1.Controls.Add(this.label7);
-      this.groupBox1.Controls.Add(this.label9);
-      this.groupBox1.Controls.Add(this.label8);
-      this.groupBox1.Controls.Add(this.label6);
-      this.groupBox1.Location = new System.Drawing.Point(15, 188);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(251, 253);
-      this.groupBox1.TabIndex = 6;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Mahlo2";
+      this.grpMahlo.Controls.Add(this.label29);
+      this.grpMahlo.Controls.Add(this.label28);
+      this.grpMahlo.Controls.Add(this.label22);
+      this.grpMahlo.Controls.Add(this.textBox13);
+      this.grpMahlo.Controls.Add(this.label17);
+      this.grpMahlo.Controls.Add(this.textBox5);
+      this.grpMahlo.Controls.Add(this.label18);
+      this.grpMahlo.Controls.Add(this.textBox4);
+      this.grpMahlo.Controls.Add(this.textBox3);
+      this.grpMahlo.Controls.Add(this.textBox2);
+      this.grpMahlo.Controls.Add(this.textBox1);
+      this.grpMahlo.Controls.Add(this.btnBack2);
+      this.grpMahlo.Controls.Add(this.btnFore2);
+      this.grpMahlo.Controls.Add(this.btnWaitFormSeam2);
+      this.grpMahlo.Controls.Add(this.label7);
+      this.grpMahlo.Controls.Add(this.label9);
+      this.grpMahlo.Controls.Add(this.label8);
+      this.grpMahlo.Controls.Add(this.label6);
+      this.grpMahlo.Location = new System.Drawing.Point(15, 188);
+      this.grpMahlo.Name = "grpMahlo";
+      this.grpMahlo.Size = new System.Drawing.Size(261, 267);
+      this.grpMahlo.TabIndex = 6;
+      this.grpMahlo.TabStop = false;
+      this.grpMahlo.Text = "Mahlo2";
       // 
       // label29
       // 
       this.label29.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.label29.Location = new System.Drawing.Point(6, 173);
+      this.label29.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahloLogicSrc, "MappingStatusMessage", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label29.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.mahloLogicSrc, "MappingStatusMessageBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label29.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.mahloLogicSrc, "MappingStatusMessageForeColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label29.Location = new System.Drawing.Point(6, 187);
       this.label29.Name = "label29";
-      this.label29.Size = new System.Drawing.Size(236, 23);
+      this.label29.Size = new System.Drawing.Size(249, 23);
       this.label29.TabIndex = 18;
       this.label29.Text = "label29";
       this.label29.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
+      // mahloLogicSrc
+      // 
+      this.mahloLogicSrc.DataSource = typeof(Mahlo.Logic.MahloLogic);
+      // 
       // label28
       // 
       this.label28.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.label28.Location = new System.Drawing.Point(6, 150);
+      this.label28.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahloLogicSrc, "PlcStatusMessage", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label28.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.mahloLogicSrc, "PlcStatusMessageBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label28.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.mahloLogicSrc, "PlcStatusMessageForeColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label28.Location = new System.Drawing.Point(6, 164);
       this.label28.Name = "label28";
-      this.label28.Size = new System.Drawing.Size(236, 23);
+      this.label28.Size = new System.Drawing.Size(249, 23);
       this.label28.TabIndex = 17;
       this.label28.Text = "label28";
       this.label28.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -293,25 +312,29 @@
       // label22
       // 
       this.label22.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.label22.Location = new System.Drawing.Point(6, 127);
+      this.label22.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahloLogicSrc, "MahloStatusMessage", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label22.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.mahloLogicSrc, "MahloStatusMessageBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label22.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.mahloLogicSrc, "MahloStatusMessageForeColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label22.Location = new System.Drawing.Point(6, 141);
       this.label22.Name = "label22";
-      this.label22.Size = new System.Drawing.Size(236, 23);
+      this.label22.Size = new System.Drawing.Size(249, 23);
       this.label22.TabIndex = 16;
       this.label22.Text = "label22";
       this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // textBox13
       // 
-      this.textBox13.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahlo2Source, "MalSpeed", true));
+      this.textBox13.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahloRollSrc, "MalSpeed", true));
       this.textBox13.Location = new System.Drawing.Point(176, 52);
       this.textBox13.Name = "textBox13";
+      this.textBox13.ReadOnly = true;
       this.textBox13.Size = new System.Drawing.Size(69, 20);
       this.textBox13.TabIndex = 15;
       this.textBox13.Text = "123456";
       // 
-      // mahlo2Source
+      // mahloRollSrc
       // 
-      this.mahlo2Source.DataSource = typeof(Mahlo.Models.CarpetRoll);
+      this.mahloRollSrc.DataSource = typeof(Mahlo.Models.CarpetRoll);
       // 
       // label17
       // 
@@ -324,9 +347,10 @@
       // 
       // textBox5
       // 
-      this.textBox5.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahlo2Source, "MalFeet", true));
+      this.textBox5.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahloRollSrc, "MalFeet", true));
       this.textBox5.Location = new System.Drawing.Point(176, 26);
       this.textBox5.Name = "textBox5";
+      this.textBox5.ReadOnly = true;
       this.textBox5.Size = new System.Drawing.Size(69, 20);
       this.textBox5.TabIndex = 13;
       this.textBox5.Text = "123456";
@@ -342,69 +366,76 @@
       // 
       // textBox4
       // 
-      this.textBox4.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahlo2Source, "RollLength", true));
+      this.textBox4.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahloRollSrc, "RollLength", true));
       this.textBox4.Location = new System.Drawing.Point(50, 26);
       this.textBox4.Name = "textBox4";
+      this.textBox4.ReadOnly = true;
       this.textBox4.Size = new System.Drawing.Size(69, 20);
       this.textBox4.TabIndex = 11;
       this.textBox4.Text = "123456";
       // 
       // textBox3
       // 
-      this.textBox3.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahlo2Source, "ColorCode", true));
+      this.textBox3.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahloRollSrc, "ColorCode", true));
       this.textBox3.Location = new System.Drawing.Point(50, 104);
       this.textBox3.Name = "textBox3";
+      this.textBox3.ReadOnly = true;
       this.textBox3.Size = new System.Drawing.Size(69, 20);
       this.textBox3.TabIndex = 10;
       this.textBox3.Text = "123456";
       // 
       // textBox2
       // 
-      this.textBox2.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahlo2Source, "StyleCode", true));
+      this.textBox2.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahloRollSrc, "StyleCode", true));
       this.textBox2.Location = new System.Drawing.Point(50, 78);
       this.textBox2.Name = "textBox2";
+      this.textBox2.ReadOnly = true;
       this.textBox2.Size = new System.Drawing.Size(69, 20);
       this.textBox2.TabIndex = 9;
       this.textBox2.Text = "123456";
       // 
       // textBox1
       // 
-      this.textBox1.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahlo2Source, "RollNo", true));
+      this.textBox1.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.mahloRollSrc, "RollNo", true));
       this.textBox1.Location = new System.Drawing.Point(50, 52);
       this.textBox1.Name = "textBox1";
+      this.textBox1.ReadOnly = true;
       this.textBox1.Size = new System.Drawing.Size(69, 20);
       this.textBox1.TabIndex = 8;
       this.textBox1.Text = "123456";
       // 
-      // button3
+      // btnBack2
       // 
-      this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.button3.Location = new System.Drawing.Point(88, 199);
-      this.button3.Name = "button3";
-      this.button3.Size = new System.Drawing.Size(75, 48);
-      this.button3.TabIndex = 7;
-      this.button3.Text = "Back to Prior Roll";
-      this.button3.UseVisualStyleBackColor = true;
+      this.btnBack2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnBack2.Location = new System.Drawing.Point(93, 213);
+      this.btnBack2.Name = "btnBack2";
+      this.btnBack2.Size = new System.Drawing.Size(75, 48);
+      this.btnBack2.TabIndex = 7;
+      this.btnBack2.Text = "Back to Prior Roll";
+      this.btnBack2.UseVisualStyleBackColor = true;
+      this.btnBack2.Click += new System.EventHandler(this.btnBack_Click);
       // 
-      // button2
+      // btnFore2
       // 
-      this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.button2.Location = new System.Drawing.Point(7, 199);
-      this.button2.Name = "button2";
-      this.button2.Size = new System.Drawing.Size(75, 48);
-      this.button2.TabIndex = 6;
-      this.button2.Text = "Forward to Next Roll";
-      this.button2.UseVisualStyleBackColor = true;
+      this.btnFore2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnFore2.Location = new System.Drawing.Point(12, 213);
+      this.btnFore2.Name = "btnFore2";
+      this.btnFore2.Size = new System.Drawing.Size(75, 48);
+      this.btnFore2.TabIndex = 6;
+      this.btnFore2.Text = "Forward to Next Roll";
+      this.btnFore2.UseVisualStyleBackColor = true;
+      this.btnFore2.Click += new System.EventHandler(this.btnFore_Click);
       // 
-      // button1
+      // btnWaitFormSeam2
       // 
-      this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.button1.Location = new System.Drawing.Point(169, 199);
-      this.button1.Name = "button1";
-      this.button1.Size = new System.Drawing.Size(75, 48);
-      this.button1.TabIndex = 5;
-      this.button1.Text = "Wait for Seam";
-      this.button1.UseVisualStyleBackColor = true;
+      this.btnWaitFormSeam2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnWaitFormSeam2.Location = new System.Drawing.Point(174, 213);
+      this.btnWaitFormSeam2.Name = "btnWaitFormSeam2";
+      this.btnWaitFormSeam2.Size = new System.Drawing.Size(75, 48);
+      this.btnWaitFormSeam2.TabIndex = 5;
+      this.btnWaitFormSeam2.Text = "Wait for Seam";
+      this.btnWaitFormSeam2.UseVisualStyleBackColor = true;
+      this.btnWaitFormSeam2.Click += new System.EventHandler(this.btnWaitForSem_Click);
       // 
       // label7
       // 
@@ -442,53 +473,63 @@
       this.label6.TabIndex = 0;
       this.label6.Text = "Roll #:";
       // 
-      // groupBox2
+      // grpBowAndSkew
       // 
-      this.groupBox2.Controls.Add(this.label30);
-      this.groupBox2.Controls.Add(this.label31);
-      this.groupBox2.Controls.Add(this.label32);
-      this.groupBox2.Controls.Add(this.textBox6);
-      this.groupBox2.Controls.Add(this.label10);
-      this.groupBox2.Controls.Add(this.button6);
-      this.groupBox2.Controls.Add(this.textBox14);
-      this.groupBox2.Controls.Add(this.label19);
-      this.groupBox2.Controls.Add(this.textBox12);
-      this.groupBox2.Controls.Add(this.label16);
-      this.groupBox2.Controls.Add(this.textBox11);
-      this.groupBox2.Controls.Add(this.label15);
-      this.groupBox2.Controls.Add(this.textBox7);
-      this.groupBox2.Controls.Add(this.textBox8);
-      this.groupBox2.Controls.Add(this.textBox9);
-      this.groupBox2.Controls.Add(this.textBox10);
-      this.groupBox2.Controls.Add(this.button4);
-      this.groupBox2.Controls.Add(this.button5);
-      this.groupBox2.Controls.Add(this.label11);
-      this.groupBox2.Controls.Add(this.label12);
-      this.groupBox2.Controls.Add(this.label13);
-      this.groupBox2.Controls.Add(this.label14);
-      this.groupBox2.Location = new System.Drawing.Point(272, 188);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(251, 253);
-      this.groupBox2.TabIndex = 7;
-      this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Bow and Skew";
+      this.grpBowAndSkew.Controls.Add(this.label30);
+      this.grpBowAndSkew.Controls.Add(this.label31);
+      this.grpBowAndSkew.Controls.Add(this.label32);
+      this.grpBowAndSkew.Controls.Add(this.textBox6);
+      this.grpBowAndSkew.Controls.Add(this.label10);
+      this.grpBowAndSkew.Controls.Add(this.btnWaitFormSeam3);
+      this.grpBowAndSkew.Controls.Add(this.textBox14);
+      this.grpBowAndSkew.Controls.Add(this.label19);
+      this.grpBowAndSkew.Controls.Add(this.textBox12);
+      this.grpBowAndSkew.Controls.Add(this.label16);
+      this.grpBowAndSkew.Controls.Add(this.textBox11);
+      this.grpBowAndSkew.Controls.Add(this.label15);
+      this.grpBowAndSkew.Controls.Add(this.textBox7);
+      this.grpBowAndSkew.Controls.Add(this.textBox8);
+      this.grpBowAndSkew.Controls.Add(this.textBox9);
+      this.grpBowAndSkew.Controls.Add(this.textBox10);
+      this.grpBowAndSkew.Controls.Add(this.btnBack3);
+      this.grpBowAndSkew.Controls.Add(this.btnFore3);
+      this.grpBowAndSkew.Controls.Add(this.label11);
+      this.grpBowAndSkew.Controls.Add(this.label12);
+      this.grpBowAndSkew.Controls.Add(this.label13);
+      this.grpBowAndSkew.Controls.Add(this.label14);
+      this.grpBowAndSkew.Location = new System.Drawing.Point(282, 188);
+      this.grpBowAndSkew.Name = "grpBowAndSkew";
+      this.grpBowAndSkew.Size = new System.Drawing.Size(261, 267);
+      this.grpBowAndSkew.TabIndex = 7;
+      this.grpBowAndSkew.TabStop = false;
+      this.grpBowAndSkew.Text = "Bow and Skew";
       // 
       // label30
       // 
       this.label30.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.label30.Location = new System.Drawing.Point(6, 173);
+      this.label30.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewLogicSrc, "MappingStatusMessage", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label30.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.bowAndSkewLogicSrc, "MappingStatusMessageBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label30.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.bowAndSkewLogicSrc, "MappingStatusMessageForeColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label30.Location = new System.Drawing.Point(6, 187);
       this.label30.Name = "label30";
-      this.label30.Size = new System.Drawing.Size(236, 23);
+      this.label30.Size = new System.Drawing.Size(255, 23);
       this.label30.TabIndex = 24;
       this.label30.Text = "label30";
       this.label30.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
+      // bowAndSkewLogicSrc
+      // 
+      this.bowAndSkewLogicSrc.DataSource = typeof(Mahlo.Logic.BowAndSkewLogic);
+      // 
       // label31
       // 
       this.label31.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.label31.Location = new System.Drawing.Point(6, 150);
+      this.label31.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewLogicSrc, "PlcStatusMessage", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label31.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.bowAndSkewLogicSrc, "PlcStatusMessageBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label31.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.bowAndSkewLogicSrc, "PlcStatusMessageForeColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label31.Location = new System.Drawing.Point(6, 164);
       this.label31.Name = "label31";
-      this.label31.Size = new System.Drawing.Size(236, 23);
+      this.label31.Size = new System.Drawing.Size(255, 23);
       this.label31.TabIndex = 23;
       this.label31.Text = "label31";
       this.label31.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -496,20 +537,29 @@
       // label32
       // 
       this.label32.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.label32.Location = new System.Drawing.Point(6, 127);
+      this.label32.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewLogicSrc, "MahloStatusMessage", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label32.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.bowAndSkewLogicSrc, "MahloStatusMessageBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label32.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.bowAndSkewLogicSrc, "MahloStatusMessageForeColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label32.Location = new System.Drawing.Point(6, 141);
       this.label32.Name = "label32";
-      this.label32.Size = new System.Drawing.Size(236, 23);
+      this.label32.Size = new System.Drawing.Size(255, 23);
       this.label32.TabIndex = 22;
       this.label32.Text = "label32";
       this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // textBox6
       // 
+      this.textBox6.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewRollSrc, "BasSpeed", true));
       this.textBox6.Location = new System.Drawing.Point(176, 52);
       this.textBox6.Name = "textBox6";
+      this.textBox6.ReadOnly = true;
       this.textBox6.Size = new System.Drawing.Size(69, 20);
       this.textBox6.TabIndex = 21;
       this.textBox6.Text = "123456";
+      // 
+      // bowAndSkewRollSrc
+      // 
+      this.bowAndSkewRollSrc.DataSource = typeof(Mahlo.Models.CarpetRoll);
       // 
       // label10
       // 
@@ -520,20 +570,23 @@
       this.label10.TabIndex = 20;
       this.label10.Text = "Speed:";
       // 
-      // button6
+      // btnWaitFormSeam3
       // 
-      this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.button6.Location = new System.Drawing.Point(169, 199);
-      this.button6.Name = "button6";
-      this.button6.Size = new System.Drawing.Size(75, 48);
-      this.button6.TabIndex = 5;
-      this.button6.Text = "Wait for Seam";
-      this.button6.UseVisualStyleBackColor = true;
+      this.btnWaitFormSeam3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnWaitFormSeam3.Location = new System.Drawing.Point(174, 213);
+      this.btnWaitFormSeam3.Name = "btnWaitFormSeam3";
+      this.btnWaitFormSeam3.Size = new System.Drawing.Size(75, 48);
+      this.btnWaitFormSeam3.TabIndex = 5;
+      this.btnWaitFormSeam3.Text = "Wait for Seam";
+      this.btnWaitFormSeam3.UseVisualStyleBackColor = true;
+      this.btnWaitFormSeam3.Click += new System.EventHandler(this.btnWaitForSem_Click);
       // 
       // textBox14
       // 
+      this.textBox14.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewRollSrc, "BasFeet", true));
       this.textBox14.Location = new System.Drawing.Point(176, 26);
       this.textBox14.Name = "textBox14";
+      this.textBox14.ReadOnly = true;
       this.textBox14.Size = new System.Drawing.Size(69, 20);
       this.textBox14.TabIndex = 19;
       this.textBox14.Text = "123456";
@@ -549,15 +602,12 @@
       // 
       // textBox12
       // 
-      this.textBox12.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewSource, "Skew", true));
+      this.textBox12.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewRollSrc, "Skew", true));
       this.textBox12.Location = new System.Drawing.Point(176, 104);
       this.textBox12.Name = "textBox12";
+      this.textBox12.ReadOnly = true;
       this.textBox12.Size = new System.Drawing.Size(69, 20);
       this.textBox12.TabIndex = 17;
-      // 
-      // bowAndSkewSource
-      // 
-      this.bowAndSkewSource.DataSource = typeof(Mahlo.Models.CarpetRoll);
       // 
       // label16
       // 
@@ -570,9 +620,10 @@
       // 
       // textBox11
       // 
-      this.textBox11.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewSource, "Bow", true));
+      this.textBox11.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewRollSrc, "Bow", true));
       this.textBox11.Location = new System.Drawing.Point(176, 78);
       this.textBox11.Name = "textBox11";
+      this.textBox11.ReadOnly = true;
       this.textBox11.Size = new System.Drawing.Size(69, 20);
       this.textBox11.TabIndex = 15;
       // 
@@ -587,59 +638,65 @@
       // 
       // textBox7
       // 
-      this.textBox7.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewSource, "RollLength", true));
+      this.textBox7.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewRollSrc, "RollLength", true));
       this.textBox7.Location = new System.Drawing.Point(50, 26);
       this.textBox7.Name = "textBox7";
+      this.textBox7.ReadOnly = true;
       this.textBox7.Size = new System.Drawing.Size(69, 20);
       this.textBox7.TabIndex = 11;
       this.textBox7.Text = "123456";
       // 
       // textBox8
       // 
-      this.textBox8.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewSource, "ColorCode", true));
+      this.textBox8.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewRollSrc, "ColorCode", true));
       this.textBox8.Location = new System.Drawing.Point(50, 104);
       this.textBox8.Name = "textBox8";
+      this.textBox8.ReadOnly = true;
       this.textBox8.Size = new System.Drawing.Size(69, 20);
       this.textBox8.TabIndex = 10;
       this.textBox8.Text = "123456";
       // 
       // textBox9
       // 
-      this.textBox9.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewSource, "StyleCode", true));
+      this.textBox9.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewRollSrc, "StyleCode", true));
       this.textBox9.Location = new System.Drawing.Point(50, 78);
       this.textBox9.Name = "textBox9";
+      this.textBox9.ReadOnly = true;
       this.textBox9.Size = new System.Drawing.Size(69, 20);
       this.textBox9.TabIndex = 9;
       this.textBox9.Text = "123456";
       // 
       // textBox10
       // 
-      this.textBox10.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewSource, "RollNo", true));
+      this.textBox10.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewRollSrc, "RollNo", true));
       this.textBox10.Location = new System.Drawing.Point(50, 52);
       this.textBox10.Name = "textBox10";
+      this.textBox10.ReadOnly = true;
       this.textBox10.Size = new System.Drawing.Size(69, 20);
       this.textBox10.TabIndex = 8;
       this.textBox10.Text = "123456";
       // 
-      // button4
+      // btnBack3
       // 
-      this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.button4.Location = new System.Drawing.Point(88, 199);
-      this.button4.Name = "button4";
-      this.button4.Size = new System.Drawing.Size(75, 48);
-      this.button4.TabIndex = 7;
-      this.button4.Text = "Back to Prior Roll";
-      this.button4.UseVisualStyleBackColor = true;
+      this.btnBack3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnBack3.Location = new System.Drawing.Point(93, 213);
+      this.btnBack3.Name = "btnBack3";
+      this.btnBack3.Size = new System.Drawing.Size(75, 48);
+      this.btnBack3.TabIndex = 7;
+      this.btnBack3.Text = "Back to Prior Roll";
+      this.btnBack3.UseVisualStyleBackColor = true;
+      this.btnBack3.Click += new System.EventHandler(this.btnBack_Click);
       // 
-      // button5
+      // btnFore3
       // 
-      this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.button5.Location = new System.Drawing.Point(7, 199);
-      this.button5.Name = "button5";
-      this.button5.Size = new System.Drawing.Size(75, 48);
-      this.button5.TabIndex = 6;
-      this.button5.Text = "Forward to Next Roll";
-      this.button5.UseVisualStyleBackColor = true;
+      this.btnFore3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnFore3.Location = new System.Drawing.Point(12, 213);
+      this.btnFore3.Name = "btnFore3";
+      this.btnFore3.Size = new System.Drawing.Size(75, 48);
+      this.btnFore3.TabIndex = 6;
+      this.btnFore3.Text = "Forward to Next Roll";
+      this.btnFore3.UseVisualStyleBackColor = true;
+      this.btnFore3.Click += new System.EventHandler(this.btnFore_Click);
       // 
       // label11
       // 
@@ -677,51 +734,61 @@
       this.label14.TabIndex = 0;
       this.label14.Text = "Roll #:";
       // 
-      // groupBox3
+      // grpPatternRepeat
       // 
-      this.groupBox3.Controls.Add(this.label33);
-      this.groupBox3.Controls.Add(this.label34);
-      this.groupBox3.Controls.Add(this.label35);
-      this.groupBox3.Controls.Add(this.textBox15);
-      this.groupBox3.Controls.Add(this.label20);
-      this.groupBox3.Controls.Add(this.button9);
-      this.groupBox3.Controls.Add(this.textBox16);
-      this.groupBox3.Controls.Add(this.label21);
-      this.groupBox3.Controls.Add(this.textBox18);
-      this.groupBox3.Controls.Add(this.label23);
-      this.groupBox3.Controls.Add(this.textBox19);
-      this.groupBox3.Controls.Add(this.textBox20);
-      this.groupBox3.Controls.Add(this.textBox21);
-      this.groupBox3.Controls.Add(this.textBox22);
-      this.groupBox3.Controls.Add(this.button7);
-      this.groupBox3.Controls.Add(this.button8);
-      this.groupBox3.Controls.Add(this.label24);
-      this.groupBox3.Controls.Add(this.label25);
-      this.groupBox3.Controls.Add(this.label26);
-      this.groupBox3.Controls.Add(this.label27);
-      this.groupBox3.Location = new System.Drawing.Point(529, 188);
-      this.groupBox3.Name = "groupBox3";
-      this.groupBox3.Size = new System.Drawing.Size(251, 253);
-      this.groupBox3.TabIndex = 8;
-      this.groupBox3.TabStop = false;
-      this.groupBox3.Text = "Pattern Repeat";
+      this.grpPatternRepeat.Controls.Add(this.label33);
+      this.grpPatternRepeat.Controls.Add(this.label34);
+      this.grpPatternRepeat.Controls.Add(this.label35);
+      this.grpPatternRepeat.Controls.Add(this.textBox15);
+      this.grpPatternRepeat.Controls.Add(this.label20);
+      this.grpPatternRepeat.Controls.Add(this.btnWaitFormSeam4);
+      this.grpPatternRepeat.Controls.Add(this.textBox16);
+      this.grpPatternRepeat.Controls.Add(this.label21);
+      this.grpPatternRepeat.Controls.Add(this.textBox18);
+      this.grpPatternRepeat.Controls.Add(this.label23);
+      this.grpPatternRepeat.Controls.Add(this.textBox19);
+      this.grpPatternRepeat.Controls.Add(this.textBox20);
+      this.grpPatternRepeat.Controls.Add(this.textBox21);
+      this.grpPatternRepeat.Controls.Add(this.textBox22);
+      this.grpPatternRepeat.Controls.Add(this.btnBack4);
+      this.grpPatternRepeat.Controls.Add(this.btnFore4);
+      this.grpPatternRepeat.Controls.Add(this.label24);
+      this.grpPatternRepeat.Controls.Add(this.label25);
+      this.grpPatternRepeat.Controls.Add(this.label26);
+      this.grpPatternRepeat.Controls.Add(this.label27);
+      this.grpPatternRepeat.Location = new System.Drawing.Point(549, 188);
+      this.grpPatternRepeat.Name = "grpPatternRepeat";
+      this.grpPatternRepeat.Size = new System.Drawing.Size(261, 267);
+      this.grpPatternRepeat.TabIndex = 8;
+      this.grpPatternRepeat.TabStop = false;
+      this.grpPatternRepeat.Text = "Pattern Repeat";
       // 
       // label33
       // 
       this.label33.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.label33.Location = new System.Drawing.Point(6, 173);
+      this.label33.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatLogicSrc, "MappingStatusMessage", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label33.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.patternRepeatLogicSrc, "MappingStatusMessageBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label33.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.patternRepeatLogicSrc, "MappingStatusMessageForeColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label33.Location = new System.Drawing.Point(6, 187);
       this.label33.Name = "label33";
-      this.label33.Size = new System.Drawing.Size(236, 23);
+      this.label33.Size = new System.Drawing.Size(249, 23);
       this.label33.TabIndex = 24;
       this.label33.Text = "label33";
       this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
+      // patternRepeatLogicSrc
+      // 
+      this.patternRepeatLogicSrc.DataSource = typeof(Mahlo.Logic.PatternRepeatLogic);
+      // 
       // label34
       // 
       this.label34.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.label34.Location = new System.Drawing.Point(6, 150);
+      this.label34.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatLogicSrc, "PlcStatusMessage", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label34.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.patternRepeatLogicSrc, "PlcStatusMessageBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label34.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.patternRepeatLogicSrc, "PlcStatusMessageForeColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label34.Location = new System.Drawing.Point(6, 164);
       this.label34.Name = "label34";
-      this.label34.Size = new System.Drawing.Size(236, 23);
+      this.label34.Size = new System.Drawing.Size(249, 23);
       this.label34.TabIndex = 23;
       this.label34.Text = "label34";
       this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -729,25 +796,29 @@
       // label35
       // 
       this.label35.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.label35.Location = new System.Drawing.Point(6, 127);
+      this.label35.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatLogicSrc, "MahloStatusMessage", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label35.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.patternRepeatLogicSrc, "MahloStatusMessageBackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label35.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.patternRepeatLogicSrc, "MahloStatusMessageForeColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.label35.Location = new System.Drawing.Point(6, 141);
       this.label35.Name = "label35";
-      this.label35.Size = new System.Drawing.Size(236, 23);
+      this.label35.Size = new System.Drawing.Size(249, 23);
       this.label35.TabIndex = 22;
       this.label35.Text = "label35";
       this.label35.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // textBox15
       // 
-      this.textBox15.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatSource, "PrsSpeed", true));
+      this.textBox15.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "PrsSpeed", true));
       this.textBox15.Location = new System.Drawing.Point(176, 52);
       this.textBox15.Name = "textBox15";
+      this.textBox15.ReadOnly = true;
       this.textBox15.Size = new System.Drawing.Size(69, 20);
       this.textBox15.TabIndex = 21;
       this.textBox15.Text = "123456";
       // 
-      // patternRepeatSource
+      // patternRepeatRollSrc
       // 
-      this.patternRepeatSource.DataSource = typeof(Mahlo.Models.CarpetRoll);
+      this.patternRepeatRollSrc.DataSource = typeof(Mahlo.Models.CarpetRoll);
       // 
       // label20
       // 
@@ -758,21 +829,23 @@
       this.label20.TabIndex = 20;
       this.label20.Text = "Speed:";
       // 
-      // button9
+      // btnWaitFormSeam4
       // 
-      this.button9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.button9.Location = new System.Drawing.Point(169, 199);
-      this.button9.Name = "button9";
-      this.button9.Size = new System.Drawing.Size(75, 48);
-      this.button9.TabIndex = 5;
-      this.button9.Text = "Wait for Seam";
-      this.button9.UseVisualStyleBackColor = true;
+      this.btnWaitFormSeam4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnWaitFormSeam4.Location = new System.Drawing.Point(174, 213);
+      this.btnWaitFormSeam4.Name = "btnWaitFormSeam4";
+      this.btnWaitFormSeam4.Size = new System.Drawing.Size(75, 48);
+      this.btnWaitFormSeam4.TabIndex = 5;
+      this.btnWaitFormSeam4.Text = "Wait for Seam";
+      this.btnWaitFormSeam4.UseVisualStyleBackColor = true;
+      this.btnWaitFormSeam4.Click += new System.EventHandler(this.btnWaitForSem_Click);
       // 
       // textBox16
       // 
-      this.textBox16.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatSource, "PrsFeet", true));
+      this.textBox16.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "PrsFeet", true));
       this.textBox16.Location = new System.Drawing.Point(176, 26);
       this.textBox16.Name = "textBox16";
+      this.textBox16.ReadOnly = true;
       this.textBox16.Size = new System.Drawing.Size(69, 20);
       this.textBox16.TabIndex = 19;
       this.textBox16.Text = "123456";
@@ -788,9 +861,10 @@
       // 
       // textBox18
       // 
-      this.textBox18.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatSource, "Elongation", true));
+      this.textBox18.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "Elongation", true));
       this.textBox18.Location = new System.Drawing.Point(176, 78);
       this.textBox18.Name = "textBox18";
+      this.textBox18.ReadOnly = true;
       this.textBox18.Size = new System.Drawing.Size(69, 20);
       this.textBox18.TabIndex = 15;
       // 
@@ -805,59 +879,65 @@
       // 
       // textBox19
       // 
-      this.textBox19.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatSource, "RollLength", true));
+      this.textBox19.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "RollLength", true));
       this.textBox19.Location = new System.Drawing.Point(50, 26);
       this.textBox19.Name = "textBox19";
+      this.textBox19.ReadOnly = true;
       this.textBox19.Size = new System.Drawing.Size(69, 20);
       this.textBox19.TabIndex = 11;
       this.textBox19.Text = "123456";
       // 
       // textBox20
       // 
-      this.textBox20.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatSource, "ColorCode", true));
+      this.textBox20.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "ColorCode", true));
       this.textBox20.Location = new System.Drawing.Point(50, 104);
       this.textBox20.Name = "textBox20";
+      this.textBox20.ReadOnly = true;
       this.textBox20.Size = new System.Drawing.Size(69, 20);
       this.textBox20.TabIndex = 10;
       this.textBox20.Text = "123456";
       // 
       // textBox21
       // 
-      this.textBox21.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatSource, "StyleCode", true));
+      this.textBox21.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "StyleCode", true));
       this.textBox21.Location = new System.Drawing.Point(50, 78);
       this.textBox21.Name = "textBox21";
+      this.textBox21.ReadOnly = true;
       this.textBox21.Size = new System.Drawing.Size(69, 20);
       this.textBox21.TabIndex = 9;
       this.textBox21.Text = "123456";
       // 
       // textBox22
       // 
-      this.textBox22.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatSource, "RollNo", true));
+      this.textBox22.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "RollNo", true));
       this.textBox22.Location = new System.Drawing.Point(50, 52);
       this.textBox22.Name = "textBox22";
+      this.textBox22.ReadOnly = true;
       this.textBox22.Size = new System.Drawing.Size(69, 20);
       this.textBox22.TabIndex = 8;
       this.textBox22.Text = "123456";
       // 
-      // button7
+      // btnBack4
       // 
-      this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.button7.Location = new System.Drawing.Point(88, 199);
-      this.button7.Name = "button7";
-      this.button7.Size = new System.Drawing.Size(75, 48);
-      this.button7.TabIndex = 7;
-      this.button7.Text = "Back to Prior Roll";
-      this.button7.UseVisualStyleBackColor = true;
+      this.btnBack4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnBack4.Location = new System.Drawing.Point(93, 213);
+      this.btnBack4.Name = "btnBack4";
+      this.btnBack4.Size = new System.Drawing.Size(75, 48);
+      this.btnBack4.TabIndex = 7;
+      this.btnBack4.Text = "Back to Prior Roll";
+      this.btnBack4.UseVisualStyleBackColor = true;
+      this.btnBack4.Click += new System.EventHandler(this.btnBack_Click);
       // 
-      // button8
+      // btnFore4
       // 
-      this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.button8.Location = new System.Drawing.Point(7, 199);
-      this.button8.Name = "button8";
-      this.button8.Size = new System.Drawing.Size(75, 48);
-      this.button8.TabIndex = 6;
-      this.button8.Text = "Forward to Next Roll";
-      this.button8.UseVisualStyleBackColor = true;
+      this.btnFore4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnFore4.Location = new System.Drawing.Point(12, 213);
+      this.btnFore4.Name = "btnFore4";
+      this.btnFore4.Size = new System.Drawing.Size(75, 48);
+      this.btnFore4.TabIndex = 6;
+      this.btnFore4.Text = "Forward to Next Roll";
+      this.btnFore4.UseVisualStyleBackColor = true;
+      this.btnFore4.Click += new System.EventHandler(this.btnFore_Click);
       // 
       // label24
       // 
@@ -895,15 +975,15 @@
       this.label27.TabIndex = 0;
       this.label27.Text = "Roll #:";
       // 
-      // groupBox4
+      // groupBox5
       // 
-      this.groupBox4.Controls.Add(this.dataGridView5);
-      this.groupBox4.Location = new System.Drawing.Point(786, 188);
-      this.groupBox4.Name = "groupBox4";
-      this.groupBox4.Size = new System.Drawing.Size(408, 253);
-      this.groupBox4.TabIndex = 9;
-      this.groupBox4.TabStop = false;
-      this.groupBox4.Text = "Cut Rolls";
+      this.groupBox5.Controls.Add(this.dataGridView5);
+      this.groupBox5.Location = new System.Drawing.Point(816, 188);
+      this.groupBox5.Name = "groupBox5";
+      this.groupBox5.Size = new System.Drawing.Size(408, 267);
+      this.groupBox5.TabIndex = 9;
+      this.groupBox5.TabStop = false;
+      this.groupBox5.Text = "Cut Rolls";
       // 
       // tableLayoutPanel1
       // 
@@ -923,7 +1003,7 @@
       this.tableLayoutPanel1.RowCount = 2;
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-      this.tableLayoutPanel1.Size = new System.Drawing.Size(1240, 170);
+      this.tableLayoutPanel1.Size = new System.Drawing.Size(1212, 170);
       this.tableLayoutPanel1.TabIndex = 10;
       // 
       // dataGridView1
@@ -964,29 +1044,32 @@
             this.prsFeetDataGridViewTextBoxColumn,
             this.elongationDataGridViewTextBoxColumn});
       this.tableLayoutPanel1.SetColumnSpan(this.dataGridView1, 5);
-      this.dataGridView1.DataSource = this.sewinQueueSource;
-      dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-      dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
-      dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
-      dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-      dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle12;
+      this.dataGridView1.DataSource = this.sewinQueueSrc;
+      dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+      dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle15;
+      this.dataGridView1.EnableHeadersVisualStyles = false;
       this.dataGridView1.Location = new System.Drawing.Point(3, 26);
       this.dataGridView1.Name = "dataGridView1";
       this.dataGridView1.ReadOnly = true;
-      dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-      dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
-      dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
-      dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-      dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-      this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle13;
+      dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+      dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control;
+      dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
+      dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+      this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle16;
       this.dataGridView1.RowHeadersVisible = false;
-      this.dataGridView1.Size = new System.Drawing.Size(1234, 141);
+      this.dataGridView1.Size = new System.Drawing.Size(1206, 141);
       this.dataGridView1.TabIndex = 22;
+      this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
+      this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
       // 
       // rollNoDataGridViewTextBoxColumn
       // 
@@ -1062,7 +1145,7 @@
       dataGridViewCellStyle5.Format = "N3";
       dataGridViewCellStyle5.NullValue = null;
       this.PatternRepeatLength.DefaultCellStyle = dataGridViewCellStyle5;
-      this.PatternRepeatLength.HeaderText = "PRL";
+      this.PatternRepeatLength.HeaderText = "Repeat Length";
       this.PatternRepeatLength.Name = "PatternRepeatLength";
       this.PatternRepeatLength.ReadOnly = true;
       this.PatternRepeatLength.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
@@ -1070,16 +1153,19 @@
       // 
       // Column1
       // 
+      dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.AppWorkspace;
+      this.Column1.DefaultCellStyle = dataGridViewCellStyle6;
       this.Column1.HeaderText = "Column1";
       this.Column1.Name = "Column1";
       this.Column1.ReadOnly = true;
+      this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.Column1.Width = 8;
       // 
       // malFeetDataGridViewTextBoxColumn
       // 
       this.malFeetDataGridViewTextBoxColumn.DataPropertyName = "MalFeet";
-      dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.malFeetDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
+      dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.malFeetDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
       this.malFeetDataGridViewTextBoxColumn.HeaderText = "Feet";
       this.malFeetDataGridViewTextBoxColumn.Name = "malFeetDataGridViewTextBoxColumn";
       this.malFeetDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1088,16 +1174,19 @@
       // 
       // Column2
       // 
+      dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.AppWorkspace;
+      this.Column2.DefaultCellStyle = dataGridViewCellStyle8;
       this.Column2.HeaderText = "Column2";
       this.Column2.Name = "Column2";
       this.Column2.ReadOnly = true;
+      this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.Column2.Width = 8;
       // 
       // basFeetDataGridViewTextBoxColumn
       // 
       this.basFeetDataGridViewTextBoxColumn.DataPropertyName = "BasFeet";
-      dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.basFeetDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
+      dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.basFeetDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle9;
       this.basFeetDataGridViewTextBoxColumn.HeaderText = "Feet";
       this.basFeetDataGridViewTextBoxColumn.Name = "basFeetDataGridViewTextBoxColumn";
       this.basFeetDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1107,8 +1196,8 @@
       // bowDataGridViewTextBoxColumn
       // 
       this.bowDataGridViewTextBoxColumn.DataPropertyName = "Bow";
-      dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.bowDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle8;
+      dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.bowDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle10;
       this.bowDataGridViewTextBoxColumn.HeaderText = "Bow";
       this.bowDataGridViewTextBoxColumn.Name = "bowDataGridViewTextBoxColumn";
       this.bowDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1118,8 +1207,8 @@
       // skewDataGridViewTextBoxColumn
       // 
       this.skewDataGridViewTextBoxColumn.DataPropertyName = "Skew";
-      dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.skewDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle9;
+      dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.skewDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle11;
       this.skewDataGridViewTextBoxColumn.HeaderText = "Skew";
       this.skewDataGridViewTextBoxColumn.Name = "skewDataGridViewTextBoxColumn";
       this.skewDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1128,16 +1217,19 @@
       // 
       // Column3
       // 
+      dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.AppWorkspace;
+      this.Column3.DefaultCellStyle = dataGridViewCellStyle12;
       this.Column3.HeaderText = "Column3";
       this.Column3.Name = "Column3";
       this.Column3.ReadOnly = true;
+      this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.Column3.Width = 8;
       // 
       // prsFeetDataGridViewTextBoxColumn
       // 
       this.prsFeetDataGridViewTextBoxColumn.DataPropertyName = "PrsFeet";
-      dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.prsFeetDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle10;
+      dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.prsFeetDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle13;
       this.prsFeetDataGridViewTextBoxColumn.HeaderText = "Feet";
       this.prsFeetDataGridViewTextBoxColumn.Name = "prsFeetDataGridViewTextBoxColumn";
       this.prsFeetDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1147,17 +1239,17 @@
       // elongationDataGridViewTextBoxColumn
       // 
       this.elongationDataGridViewTextBoxColumn.DataPropertyName = "Elongation";
-      dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.elongationDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle11;
+      dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.elongationDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle14;
       this.elongationDataGridViewTextBoxColumn.HeaderText = "Elongation";
       this.elongationDataGridViewTextBoxColumn.Name = "elongationDataGridViewTextBoxColumn";
       this.elongationDataGridViewTextBoxColumn.ReadOnly = true;
       this.elongationDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.elongationDataGridViewTextBoxColumn.Width = 67;
       // 
-      // sewinQueueSource
+      // sewinQueueSrc
       // 
-      this.sewinQueueSource.DataSource = typeof(Mahlo.Models.CarpetRoll);
+      this.sewinQueueSrc.DataSource = typeof(Mahlo.Models.CarpetRoll);
       // 
       // label4
       // 
@@ -1207,42 +1299,45 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1264, 540);
+      this.ClientSize = new System.Drawing.Size(1239, 468);
       this.Controls.Add(this.tableLayoutPanel1);
-      this.Controls.Add(this.groupBox4);
-      this.Controls.Add(this.groupBox3);
-      this.Controls.Add(this.groupBox2);
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.groupBox5);
+      this.Controls.Add(this.grpPatternRepeat);
+      this.Controls.Add(this.grpBowAndSkew);
+      this.Controls.Add(this.grpMahlo);
       this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.MaximizeBox = false;
       this.Name = "MainForm";
       this.Text = "MainForm";
       this.Load += new System.EventHandler(this.MainForm_Load);
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.cutRollSource)).EndInit();
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.mahlo2Source)).EndInit();
-      this.groupBox2.ResumeLayout(false);
-      this.groupBox2.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewSource)).EndInit();
-      this.groupBox3.ResumeLayout(false);
-      this.groupBox3.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatSource)).EndInit();
-      this.groupBox4.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.cutRollSrc)).EndInit();
+      this.grpMahlo.ResumeLayout(false);
+      this.grpMahlo.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.mahloLogicSrc)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.mahloRollSrc)).EndInit();
+      this.grpBowAndSkew.ResumeLayout(false);
+      this.grpBowAndSkew.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewLogicSrc)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewRollSrc)).EndInit();
+      this.grpPatternRepeat.ResumeLayout(false);
+      this.grpPatternRepeat.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatLogicSrc)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatRollSrc)).EndInit();
+      this.groupBox5.ResumeLayout(false);
       this.tableLayoutPanel1.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSource)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSrc)).EndInit();
       this.ResumeLayout(false);
 
     }
 
     #endregion
-    private System.Windows.Forms.BindingSource sewinQueueSource;
-    private System.Windows.Forms.BindingSource mahlo2Source;
-    private System.Windows.Forms.BindingSource bowAndSkewSource;
-    private System.Windows.Forms.BindingSource patternRepeatSource;
-    private System.Windows.Forms.BindingSource cutRollSource;
+    private System.Windows.Forms.BindingSource sewinQueueSrc;
+    private System.Windows.Forms.BindingSource mahloRollSrc;
+    private System.Windows.Forms.BindingSource bowAndSkewRollSrc;
+    private System.Windows.Forms.BindingSource patternRepeatRollSrc;
+    private System.Windows.Forms.BindingSource cutRollSrc;
     private System.Windows.Forms.DataGridView dataGridView5;
     private System.Windows.Forms.DataGridViewTextBoxColumn sapRollDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn lengthDataGridViewTextBoxColumn1;
@@ -1250,28 +1345,28 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn maxSkewDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn maxEPEDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn dlotDataGridViewTextBoxColumn;
-    private System.Windows.Forms.GroupBox groupBox1;
+    private System.Windows.Forms.GroupBox grpMahlo;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.Label label9;
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Label label7;
-    private System.Windows.Forms.Button button3;
-    private System.Windows.Forms.Button button2;
-    private System.Windows.Forms.Button button1;
+    private System.Windows.Forms.Button btnBack2;
+    private System.Windows.Forms.Button btnFore2;
+    private System.Windows.Forms.Button btnWaitFormSeam2;
     private System.Windows.Forms.TextBox textBox5;
     private System.Windows.Forms.Label label18;
     private System.Windows.Forms.TextBox textBox4;
     private System.Windows.Forms.TextBox textBox3;
     private System.Windows.Forms.TextBox textBox2;
     private System.Windows.Forms.TextBox textBox1;
-    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.GroupBox grpBowAndSkew;
     private System.Windows.Forms.TextBox textBox7;
     private System.Windows.Forms.TextBox textBox8;
     private System.Windows.Forms.TextBox textBox9;
     private System.Windows.Forms.TextBox textBox10;
-    private System.Windows.Forms.Button button4;
-    private System.Windows.Forms.Button button5;
-    private System.Windows.Forms.Button button6;
+    private System.Windows.Forms.Button btnBack3;
+    private System.Windows.Forms.Button btnFore3;
+    private System.Windows.Forms.Button btnWaitFormSeam3;
     private System.Windows.Forms.Label label11;
     private System.Windows.Forms.Label label12;
     private System.Windows.Forms.Label label13;
@@ -1287,7 +1382,7 @@
     private System.Windows.Forms.Label label16;
     private System.Windows.Forms.TextBox textBox11;
     private System.Windows.Forms.Label label15;
-    private System.Windows.Forms.GroupBox groupBox3;
+    private System.Windows.Forms.GroupBox grpPatternRepeat;
     private System.Windows.Forms.TextBox textBox15;
     private System.Windows.Forms.Label label20;
     private System.Windows.Forms.TextBox textBox16;
@@ -1298,9 +1393,9 @@
     private System.Windows.Forms.TextBox textBox20;
     private System.Windows.Forms.TextBox textBox21;
     private System.Windows.Forms.TextBox textBox22;
-    private System.Windows.Forms.Button button7;
-    private System.Windows.Forms.Button button8;
-    private System.Windows.Forms.Button button9;
+    private System.Windows.Forms.Button btnBack4;
+    private System.Windows.Forms.Button btnFore4;
+    private System.Windows.Forms.Button btnWaitFormSeam4;
     private System.Windows.Forms.Label label24;
     private System.Windows.Forms.Label label25;
     private System.Windows.Forms.Label label26;
@@ -1313,13 +1408,16 @@
     private System.Windows.Forms.Label label33;
     private System.Windows.Forms.Label label34;
     private System.Windows.Forms.Label label35;
-    private System.Windows.Forms.GroupBox groupBox4;
+    private System.Windows.Forms.GroupBox groupBox5;
     private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.DataGridView dataGridView1;
+    private System.Windows.Forms.BindingSource mahloLogicSrc;
+    private System.Windows.Forms.BindingSource bowAndSkewLogicSrc;
+    private System.Windows.Forms.BindingSource patternRepeatLogicSrc;
     private System.Windows.Forms.DataGridViewTextBoxColumn rollNoDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn styleCodeDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn styleNameDataGridViewTextBoxColumn;

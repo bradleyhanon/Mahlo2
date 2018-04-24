@@ -9,10 +9,5 @@ namespace Mahlo.Logic
 {
   interface IMeterLogic<Model> : IDisposable
   {
-    CarpetRoll CurrentRoll { get; }
-    IObservable<CarpetRoll> RollStarted { get; }
-    IObservable<CarpetRoll> RollFinished { get; }
-
-    void Start();
   }
 }

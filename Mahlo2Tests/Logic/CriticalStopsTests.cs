@@ -19,7 +19,11 @@ namespace Mahlo2Tests.Logic
     public CriticalStopsTests()
     {
       this.meterSrc = Substitute.For<IMeterSrc<MahloRoll>>();
-      this.target = new CriticalStops<MahloRoll>(this.meterSrc);
+      this.target = new CriticalStops<MahloRoll>
+      {
+        MeterSrc = meterSrc
+      };
+
       Assert.False(target.Any);
     }
 

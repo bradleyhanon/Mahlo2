@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace Mahlo.Logic
 {
   sealed class SewinQueue : ISewinQueue
   {
+    private Subject<object> queueChanged = new Subject<object>();
     private int firstRollId;
     private int nextRollId;
 
@@ -42,13 +44,14 @@ namespace Mahlo.Logic
       var ignoredResultTask = this.Refresh();
       this.timer = Observable
         .Interval(this.RefreshInterval, schedulerProvider.WinFormsThread)
-        .Do(_ => Console.WriteLine("Timer Triggered!"))
         .Subscribe(async _ => await this.Refresh());
     }
 
     public TimeSpan RefreshInterval => TimeSpan.FromSeconds(10);
 
     public BindingList<CarpetRoll> Rolls { get; private set; } = new BindingList<CarpetRoll>();
+
+    public IObservable<object> QueueChanged => this.queueChanged;
 
     public void Dispose()
     {
@@ -169,6 +172,8 @@ namespace Mahlo.Logic
       {
 
       }
+
+      this.queueChanged.OnNext(this);
 
       this.isRefreshBusy = false;
     }

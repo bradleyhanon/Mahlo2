@@ -15,7 +15,7 @@ namespace Mahlo.Logic
   {
     //public PatternRepeatLogic(IPatternRepeatSrc dataSrc, IMeterLogic<PatternRepeatRoll> meterLogic) 
     public PatternRepeatLogic(
-      IPatternRepeatSrc dataSrc, 
+      IPatternRepeatSrc<PatternRepeatRoll> dataSrc, 
       ISewinQueue sewinQueue, 
       IAppInfoBAS appInfo, 
       IUserAttentions<PatternRepeatRoll> userAttentions, 

@@ -7,6 +7,7 @@ namespace Mahlo.Logic
 {
   interface ISewinQueue : IDisposable
   {
+    IObservable<object> QueueChanged { get; }
     BindingList<CarpetRoll> Rolls { get; }
 
     //bool RollIsLeader(int currentRollId);

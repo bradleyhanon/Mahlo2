@@ -7,7 +7,7 @@ using Mahlo.Models;
 
 namespace Mahlo.Opc
 {
-  interface IPatternRepeatSrc : IMeterSrc<PatternRepeatRoll>
+  interface IPatternRepeatSrc<Model> : IMeterSrc<Model>
   {
     IObservable<double> PatternRepeatChanged { get; }
   }

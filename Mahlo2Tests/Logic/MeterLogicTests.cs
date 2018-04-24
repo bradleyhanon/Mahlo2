@@ -18,7 +18,7 @@ namespace Mahlo2Tests.Logic
 {
   public sealed class MeterLogicTests : IDisposable
   {
-    private MockMeterSrc srcData;
+    private MockMeterSrc<MahloRoll> srcData;
     private ISewinQueue sewinQueue;
     private IDbMfg dbMfg;
     private IDbLocal dbLocal;
@@ -39,7 +39,7 @@ namespace Mahlo2Tests.Logic
       const int roll4Length = 400;
       const int roll5Length = 400;
 
-      this.srcData = new MockMeterSrc();
+      this.srcData = new MockMeterSrc<MahloRoll>();
       this.sewinQueue = Substitute.For<ISewinQueue>();
       this.dbMfg = Substitute.For<IDbMfg>();
       this.dbLocal = Substitute.For<IDbLocal>();
@@ -108,6 +108,14 @@ namespace Mahlo2Tests.Logic
     public void Dispose()
     {
       this.target.Dispose();
+    }
+
+    [Fact]
+    public void SpeedUpdatesWhenItChanges()
+    {
+      this.srcData.FeetPerMinuteSubject.OnNext(503);
+      Assert.Equal(503, target.CurrentRoll.MalSpeed);
+      Assert.Equal(503, target.Speed);
     }
 
     [Fact]
