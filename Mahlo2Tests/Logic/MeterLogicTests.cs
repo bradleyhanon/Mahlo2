@@ -208,6 +208,24 @@ namespace Mahlo2Tests.Logic
     }
 
     [Fact]
+    public void MeterResetsAfterNewRollSelected()
+    {
+      this.sewinQueue
+        .TryGetRoll(Arg.Any<int>(), out CarpetRoll value)
+        .Returns(x =>
+        {
+          x[1] = carpetRolls[1];
+          return true;
+        });
+
+      this.carpetRolls[0].MalFeet = 500;
+      srcData.SeamDetectedSubject.OnNext(true);
+      srcData.FeetCounterSubject.OnNext(1);
+      Assert.Equal(1, srcData.ResetMeterOffsetCalled);
+      Assert.Equal(500, carpetRolls[0].MalFeet);
+    }
+
+    [Fact]
     public void SeamDetectedIsAcknowledged()
     {
       srcData.SeamDetectedSubject.OnNext(true);

@@ -31,7 +31,7 @@ namespace Mahlo.Opc
     private ICriticalStops<Model> criticalStops;
     private Type priorExceptionType = null;
     private IMahloOpcSettings mahloSettings;
-    private IPlcSettings seamSettings;
+    //private IPlcSettings seamSettings;
     private IProgramState programState;
 
     private SynchronizationContext synchronizationContext;
@@ -51,14 +51,14 @@ namespace Mahlo.Opc
       EasyDAClient opcClient, 
       ICriticalStops<Model> criticalStops, 
       IMahloOpcSettings mahloSettings, 
-      IPlcSettings seamSettings,
+      //IPlcSettings seamSettings,
       IProgramState programState,
       SynchronizationContext synchronizationContext)
     {
       this.opcClient = opcClient;
       this.criticalStops = criticalStops;
       this.mahloSettings = mahloSettings;
-      this.seamSettings = seamSettings;
+      //this.seamSettings = seamSettings;
       this.synchronizationContext = synchronizationContext;
       this.programState = programState;
 
@@ -72,15 +72,15 @@ namespace Mahlo.Opc
     public bool IsManualMode { get; set; }
     public string Recipe { get; set; }
     public double MetersCount { get; set; }
-    public double MetersOffset { get; set; }
-    public double Speed { get; set; }
+    //public double MetersOffset { get; set; }
+    //public double Speed { get; set; }
 
     public IObservable<int> FeetCounter => this.meterCountSubject
       .Select(meters => (int)Extensions.MetersToFeet(meters))
       .DistinctUntilChanged();
 
     public IObservable<int> FeetPerMinute => this.speedSubject
-      .Select(speed => (int)Extensions.MetersToFeet(speed))
+      .Select(speed => (int)(Extensions.MetersToFeet(speed) * 60))
       .DistinctUntilChanged();
    
     public IObservable<bool> SeamDetected => this.seamDetectedSubject;
@@ -89,7 +89,8 @@ namespace Mahlo.Opc
 
     public IObservable<double> SkewChanged => this.skewSubject;
 
-    public IObservable<double> PatternRepeatChanged => this.patterRepeatSubject.Select(value => Extensions.MetersToFeet(value) * 12);
+    public IObservable<double> PatternRepeatChanged => this.patterRepeatSubject
+      .Select(value => Extensions.MetersToFeet(value) * 12);
 
     //public bool WidthOnOff { get; set; }
     //public int WidthStatus { get; set; }
@@ -123,7 +124,7 @@ namespace Mahlo.Opc
 
     public void ResetMeterOffset()
     {
-      this.meterOffset = 0;
+      this.meterOffset = this.MetersCount;
     }
 
     public void ResetSeamDetector()
@@ -169,7 +170,7 @@ namespace Mahlo.Opc
         ("Current.Version.0.KeyColumn", value => this.Recipe = (string)value),
         ("Readings.Bridge.0.General.0.MeterCount", value => {this.MetersCount = (double)value; this.meterCountSubject.OnNext((double)value - this.meterOffset); }),
         //("Readings.Bridge.0.General.0.MeterOffset", value => this.MetersOffset = (double)value),
-        ("Readings.Bridge.0.General.0.Speed", value => { this.Speed = (double)value; this.speedSubject.OnNext((double)value); }),
+        ("Readings.Bridge.0.General.0.Speed", value => { this.speedSubject.OnNext((double)value); }),
       });
 
       //case IWidthSrc widthSrc:
@@ -225,11 +226,11 @@ namespace Mahlo.Opc
           throw new ArgumentException();
       }
 
-      this.seamAckTag = $"MahloSeam.Mahlo{seamDetectorId}SeamAck";
-      this.seamDetectedTag = $"MahloSeam.Mahlo{seamDetectorId}SeamDetected";
+      this.seamAckTag = $"MahloSeam.MahloPLC.Mahlo{seamDetectorId}SeamAck";
+      this.seamDetectedTag = $"MahloSeam.MahloPLC.Mahlo{seamDetectorId}SeamDetected";
       var plcTags = new List<(string, Action<object>)>()
       {
-        ($"Mahlo{seamDetectorId}SeamDetected", value => this.seamDetectedSubject.OnNext((bool)value)),
+        ($"MahloPLC.Mahlo{seamDetectorId}SeamDetected", value => this.seamDetectedSubject.OnNext((bool)value)),
       };
 
       this.PlcSubscribe("MahloSeam", plcTags);

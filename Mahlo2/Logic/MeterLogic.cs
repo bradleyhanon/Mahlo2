@@ -27,7 +27,6 @@ namespace Mahlo.Logic
 
     private Subject<CarpetRoll> rollFinishedSubject = new Subject<CarpetRoll>();
     private Subject<CarpetRoll> rollStartedSubject = new Subject<CarpetRoll>();
-    private Subject<CarpetRoll> currentRollChanged = new Subject<CarpetRoll>();
     private IDisposable feetCounterSubscription;
     private IDisposable seamDetectedSubscription;
     private IDisposable feetPerMinuteSubscription;
@@ -63,7 +62,6 @@ namespace Mahlo.Logic
 
       this.RollStarted = this.rollStartedSubject;
       this.RollFinished = this.rollFinishedSubject;
-
     }
 
     /// <summary>
@@ -98,7 +96,6 @@ namespace Mahlo.Logic
 
     public abstract int Feet { get; set; }
     public abstract int Speed { get; set; }
-    public IObservable<CarpetRoll> CurrentRollChanged => this.currentRollChanged;
 
     /// <summary>
     /// Called to start data collection
@@ -146,7 +143,6 @@ namespace Mahlo.Logic
       if (!this.sewinQueue.Rolls.Contains( this.CurrentRoll))
       {
         this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault() ?? this.CurrentRoll;
-        this.currentRollChanged.OnNext(this.CurrentRoll);
       }
     }
 
@@ -179,12 +175,11 @@ namespace Mahlo.Logic
 
       this.UserAttentsions.IsRollTooShort |= this.Feet < this.CurrentRoll.RollLength * 0.9;
       this.rollFinishedSubject.OnNext(this.CurrentRoll);
-      this.srcData.ResetMeterOffset();
 
       // Start new roll
-      this.Feet = 0;
       this.rollCheckCount++;
       this.sewinQueue.TryGetRoll(this.CurrentRoll.RollId + 1, out CarpetRoll nextRoll);
+
       if (this.CurrentRoll.StyleCode != nextRoll.StyleCode)
       {
         styleCheckCount++;
@@ -197,6 +192,9 @@ namespace Mahlo.Logic
       }
 
       this.CurrentRoll = nextRoll;
+      this.Feet = 0;
+      this.srcData.ResetMeterOffset();
+
       this.rollStartedSubject.OnNext(this.CurrentRoll);
     }
 
@@ -223,7 +221,7 @@ namespace Mahlo.Logic
         this.UserAttentsions.IsSystemDisabled ? (Color.Yellow, "System is disabled, seams are ignored, press [F3] to arm") :
         this.UserAttentsions.IsRollTooLong ? (Color.Yellow, "Measured roll length excessively long, verify roll sequence") :
         this.UserAttentsions.IsRollTooShort ? (Color.Yellow, "Measured roll length excessively short, verify roll sequence") :
-        this.UserAttentsions.VerifyRollSequence ? (Color.Yellow, "Verify roll sequence, press [F3 - Wait for Seam] to arm system") :
+        this.UserAttentsions.VerifyRollSequence ? (Color.Yellow, "Verify roll sequence, click \"Wait for Seam\" to arm system") :
         (Color.Green, "Roll is being mapped");
       this.MappingStatusMessage = message;
       this.MappingStatusMessageBackColor = backColor;
@@ -235,7 +233,6 @@ namespace Mahlo.Logic
       if (index >= 0 && index < this.sewinQueue.Rolls.Count - 1)
       {
         this.CurrentRoll = this.sewinQueue.Rolls[index + 1];
-        this.currentRollChanged.OnNext(this.CurrentRoll);
       }
     }
 
@@ -245,7 +242,6 @@ namespace Mahlo.Logic
       if (index > 0)
       {
         this.CurrentRoll = this.sewinQueue.Rolls[index - 1];
-        this.currentRollChanged.OnNext(this.CurrentRoll);
       }
     }
 

@@ -83,8 +83,6 @@ namespace Mahlo
       // This call sets the WindowsFormsSynchronizationContext.Current
       using (new Control()) { } ;
 
-      //container.RegisterSingleton<MainForm>(new MainForm());
-
       container.RegisterSingleton<ICriticalStops<MahloRoll>, CriticalStops<MahloRoll>>();
       container.RegisterSingleton<ICriticalStops<BowAndSkewRoll>, CriticalStops<BowAndSkewRoll>>();
       container.RegisterSingleton<ICriticalStops<PatternRepeatRoll>, CriticalStops<PatternRepeatRoll>>();
@@ -124,9 +122,9 @@ namespace Mahlo
       container.RegisterSingleton<IDbMfg, DbMfg>();
       container.RegisterSingleton<IDbLocal, DbLocal>();
       container.RegisterSingleton<IAppInfoBAS, AppInfoBAS>();
-      container.RegisterSingleton<IOpcSettings, OpcSettings>();
+      //container.RegisterSingleton<IOpcSettings, OpcSettings>();
       container.RegisterSingleton<IMahloOpcSettings, MahloOpcSettings>();
-      container.RegisterSingleton<IPlcSettings, PlcSettings>();
+      //container.RegisterSingleton<IPlcSettings, PlcSettings>();
       container.RegisterSingleton<CarpetProcessor>();
 
       container.Verify();

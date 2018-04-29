@@ -117,66 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="cutRollSrc.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>603, 17</value>
-  </metadata>
-  <metadata name="mahloLogicSrc.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>152, 45</value>
-  </metadata>
-  <metadata name="mahloRollSrc.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>152, 17</value>
-  </metadata>
-  <metadata name="bowAndSkewLogicSrc.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>276, 41</value>
-  </metadata>
-  <metadata name="bowAndSkewRollSrc.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>275, 17</value>
-  </metadata>
-  <metadata name="patternRepeatLogicSrc.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>435, 44</value>
-  </metadata>
-  <metadata name="patternRepeatRollSrc.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>437, 17</value>
-  </metadata>
-  <metadata name="PatternRepeatLength.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="Column1.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="Column2.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="Column3.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="sewinQueueSrc.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>36</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="nextArrow" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        AAABAAIAICAQAAAAAADoAgAAJgAAABAQEAAAAAAAKAEAAA4DAAAoAAAAIAAAAEAAAAABAAQAAAAAAIAC
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAgAAAAICAAIAAAACAAIAAgIAAAICAgADAwMAAAAD/AAD/
-        AAAA//8A/wAAAP8A/wD//wAA////AIiIiIgLu7uweIiIiIiIiIiIiIiIC7u7AHiIiIiIiIiIiIiIiAu7
-        u7B4iIiIiIiIiIiIiIgLuwAAeIiIiIiIiIiIiIiIC7u7sHiIiIiIiIiIiIiIiAu7uwB4iIiIiIiIiIiI
-        iIgLu7uweIiIiIiIiIiIiIiIC7uwAHiIiIiIiIiIiIiIiAu7u7B4iIiIiIiIiIiIiIgLu7sAeIiIiIiI
-        iIiIiIiIC7u7sHiIiIiIiIiIiIiIiAu7AAB4iIiIiIiIiIiIiIgLu7uweIiIiIiIiIiIiIiIC7u7AHiI
-        iIiIiIiId3d3dwMzMzB3d3d3d3d3dwAAAAAAAAAAAAAAAAAAAAALu7u7u7u7u7u7u7u7u7u7C7u7u7u7
-        u7u7u7u7u7u7uwu7u7u7u7u7u7u7u7u7u7sLu7u7u7u7u7u7u7u7u7u7C7u7u7u7u7sLu7u7C7u7uwu7
-        C7sLuwu7C7sLuwu7C7sLCwsLCwsLCwsLCwsLCwsLAAAAAAAAAAAAAAAAAAAAAIiIiIgLu7uweIiIiIiI
-        iIiIiIiIC7u7AHiIiIiIiIiIiIiIiAu7u7B4iIiIiIiIiIiIiIgLu7AAeIiIiIiIiIiIiIiIC7u7sHiI
-        iIiIiIiIiIiIiAu7uwB4iIiIiIiIiIiIiIgLu7uweIiIiIiIiIiIiIiIAAAAAHiIiIiIiIiIAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAoAAAAEAAAACAAAAABAAQAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAgAAAAICAAIAA
-        AACAAIAAgIAAAICAgADAwMAAAAD/AAD/AAAA//8A/wAAAP8A/wD//wAA////AIiAu7B4iIiIiICwAHiI
-        iIiIgLuweIiIiIiAuwB4iIiIiIC7sHiIiIiIgLAAeIiIiHdwu7B3d3d3AAAAAAAAAAALu7u7u7u7uwsL
-        uwu7C7sLCwsLCwsLCwsAAAAAAAAAAIiAu7B4iIiIiICwAHiIiIiIgLuweIiIiIiAAAB4iIiIAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAAG9JREFUOE+djAEOgCAMxPYS/++LfA56hiZzgsM1IZcArc049q3F059yvNAuuNOm
+        8FGLrC0FtERKAWRtKaAlUgoga0sBLZE0oA/xIGtH77co/KWXZvuQhQ9kkZcMK5GpDF+RVIZRZFmGGOnX
+        /1iTzU5/IBgeMAEV6gAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="priorArrow" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAAHpJREFUOE+djQEOwCAIA33J/r8X7TluJV5iCIrsEoJCW1rGc199POtg/hWCqX/M
+        /yO8uRSyMtO3IZmZHoZo6Evz2RTtjWipwqzud2aEaEknxO+XSMBFoRl/E2QgpBNSCuCi0Iy/CTIQ0gkp
+        BXDR15DsiYyqsc6pmVt7AfT5DWiqZQQOAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="stopSign" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAAQ5JREFUWEfVjQEOgzAMA/n/pzfIbNqaBKWlnbYTlhLsxttf8Nq/EeH5M/Ror3Bm
+        DD02KpzrQ488Fc7m0MezhPP36KPZQo2PhlcJdS0aWi3UflDzW0K9Ta2peP9IlI/e0NuFepuuj2bsJMii
+        3qYwdDKykyCLepvC0EUks5Mgi3qbrqGD+r/6mZ0EWdTbVEKHaiIvs5Mgi3qbSoiq8f5ndg/mdqHepsY4
+        VaP/MjuhJ0K9TW7AREZ2Qk+EepuKQWbshJ4I9TYVg8zYCT0R6m1qTcXzvH/kLlsJ9Ta5gdVC/Qc1Vwu1
+        LRpaJdT5aHi2UHOPPpolnM+hj58KZ/vQI6PCuTH0WK9w5hl6NCs8/2W27Q3j9RlKZWoCEQAAAABJRU5E
+        rkJggg==
 </value>
   </data>
 </root>

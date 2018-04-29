@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -38,57 +39,55 @@ namespace Mahlo.Views
       this.carpetProcessor = carpetProcessor;
 
       this.MahloPropertyChangedSubscription = 
-        this.carpetProcessor.MahloLogic.CurrentRollChanged.Subscribe(roll =>
-        {
-          this.mahloRollSrc.DataSource = roll;
-          this.dataGridView1.Invalidate();
-        });
+        Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+        h => ((INotifyPropertyChanged)this.carpetProcessor.MahloLogic).PropertyChanged += h,
+        h => ((INotifyPropertyChanged)this.carpetProcessor.MahloLogic).PropertyChanged -= h)
+        .Where(args => args.EventArgs.PropertyName == nameof(this.carpetProcessor.MahloLogic.CurrentRoll))
+        .Subscribe(args => this.mahloRollSrc.DataSource = this.carpetProcessor.MahloLogic.CurrentRoll);
 
-      this.BowAndSkewPropertyChangedSubscription =
-        this.carpetProcessor.BowAndSkewLogic.CurrentRollChanged.Subscribe(roll =>
-        {
-          this.bowAndSkewRollSrc.DataSource = roll;
-          this.dataGridView1.Invalidate();
-        });
+      BowAndSkewPropertyChangedSubscription =
+        Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+        h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged += h,
+        h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged -= h)
+        .Where(args => args.EventArgs.PropertyName == nameof(this.carpetProcessor.BowAndSkewLogic.CurrentRoll))
+        .Subscribe(args => this.bowAndSkewRollSrc.DataSource = this.carpetProcessor.BowAndSkewLogic.CurrentRoll);
 
-      this.PatternRepeatPropertyChangedSubscription =
-        this.carpetProcessor.PatternRepeatLogic.CurrentRollChanged.Subscribe(roll => 
-        {
-          this.patternRepeatRollSrc.DataSource = roll;
-          this.dataGridView1.Invalidate();
-        });
+      PatternRepeatPropertyChangedSubscription =
+        Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+        h => ((INotifyPropertyChanged)this.carpetProcessor.PatternRepeatLogic).PropertyChanged += h,
+        h => ((INotifyPropertyChanged)this.carpetProcessor.PatternRepeatLogic).PropertyChanged -= h)
+        .Where(args => args.EventArgs.PropertyName == nameof(this.carpetProcessor.PatternRepeatLogic.CurrentRoll))
+        .Subscribe(args => this.patternRepeatRollSrc.DataSource = this.carpetProcessor.PatternRepeatLogic.CurrentRoll);
 
-      // Line up the headings above the grid
+      // Make column heading alignment match column data alignment
       foreach (DataGridViewColumn column in dataGridView1.Columns)
       {
-        if (column.DefaultCellStyle.Alignment == DataGridViewContentAlignment.MiddleRight)
-        {
-          column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
-        }
+        column.HeaderCell.Style.Alignment = column.DefaultCellStyle.Alignment;
+      }
 
-        Label[] labels = { label1, label2, label3, label4 };
-
-        int index = 0;
-        int sum = -2;
-        foreach (DataGridViewColumn col in this.dataGridView1.Columns)
-        {
-          sum += col.Width;
-          if (string.IsNullOrWhiteSpace(col.DataPropertyName))
-          {
-            col.HeaderCell.Style.BackColor = SystemColors.AppWorkspace;
-            if (index >= labels.Length)
-            {
-              break;
-            }
-
-            labels[index++].Width = sum - col.Width / 2 - 2;
-            sum = col.Width - col.Width / 2 - 2;
-          }
-        }
-
-        label4.Width = sum - 2;
+      foreach (DataGridViewColumn column in dataGridView5.Columns)
+      {
+        column.HeaderCell.Style.Alignment = column.DefaultCellStyle.Alignment;
       }
     }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing)
+      {
+        this.MahloPropertyChangedSubscription.Dispose();
+        this.BowAndSkewPropertyChangedSubscription.Dispose();
+        this.PatternRepeatPropertyChangedSubscription.Dispose();
+        this.components?.Dispose();
+      }
+
+      base.Dispose(disposing);
+    }
+
 
     private void MainForm_Load(object sender, EventArgs e)
     {

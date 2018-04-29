@@ -138,6 +138,7 @@ namespace Mahlo.Logic
       this.isRefreshBusy = true;
       try
       {
+        await this.dbMfg.GetCutRollFromHost();
         if (await this.dbMfg.GetIsSewinQueueChanged(this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll))
         {
           var newRolls = (await this.dbMfg.GetCoaterSewinQueue()).ToArray();

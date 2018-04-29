@@ -12,7 +12,6 @@ namespace Mahlo.Logic
     CarpetRoll CurrentRoll { get; }
     IObservable<CarpetRoll> RollStarted { get; }
     IObservable<CarpetRoll> RollFinished { get; }
-    IObservable<CarpetRoll> CurrentRollChanged { get; }
 
     void MoveToNextRoll();
     void MoveToPriorRoll();

@@ -34,6 +34,9 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>MahloBowAndSkew.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpcLabs.BaseLib, Version=5.34.345.1, Culture=neutral, PublicKeyToken=6faddca41dacb409, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -67,9 +70,7 @@
     <Compile Include="AppSettings\AppInfoBAS.cs" />
     <Compile Include="AppSettings\IAppInfoBAS.cs" />
     <Compile Include="AppSettings\IMahloOpcSettings.cs" />
-    <Compile Include="AppSettings\IOpcSettings.cs" />
     <Compile Include="AppSettings\MahloOpcSettings.cs" />
-    <Compile Include="AppSettings\OpcSettings.cs" />
     <Compile Include="Controllers\MahloBowAndSkew.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Logic\CarpetProcessor.cs" />
@@ -91,9 +92,9 @@
     <Compile Include="Logic\SewinQueue.cs" />
     <Compile Include="DbMigrations\M001CreateDatabase.cs" />
     <Compile Include="DbMigrations\Runner.cs" />
-    <Compile Include="AppSettings\IPlcSettings.cs" />
     <Compile Include="Logic\BowAndSkewLogic.cs" />
     <Compile Include="Logic\UserAttentions.cs" />
+    <Compile Include="Models\AS400FinishedRoll.cs" />
     <Compile Include="Models\BowAndSkewRoll.cs" />
     <Compile Include="Models\CarpetRoll.cs" />
     <Compile Include="Models\CutRoll.cs" />
@@ -112,16 +113,25 @@
     <Compile Include="Opc\MahloOpcClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Repository\DbLocal.cs" />
     <Compile Include="Repository\DbMfg.cs" />
     <Compile Include="Repository\IDbConnectionFactory.cs" />
     <Compile Include="Repository\IDbLocal.cs" />
     <Compile Include="Repository\IDbMfg.cs" />
     <Compile Include="Repository\DbConnectionFactory.cs" />
-    <Compile Include="AppSettings\PlcSettings.cs" />
     <Compile Include="Repository\IProgramState.cs" />
     <Compile Include="Repository\IProgramStateProvider.cs" />
     <Compile Include="Repository\ProgramState.cs" />
+    <Compile Include="Resources\Resource1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
     <Compile Include="SingleInstance.cs" />
     <Compile Include="Utilities\ConcurrencyInfo.cs" />
     <Compile Include="Utilities\IConcurrencyInfo.cs" />
@@ -172,6 +182,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
+    <Content Include="MahloBowAndSkew.ico" />
+    <Content Include="Resources\MahloBowAndSkew.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -186,6 +198,14 @@
     <None Include="Properties\DataSources\Mahlo.Models.PatternRepeatRoll.datasource" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Resource1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

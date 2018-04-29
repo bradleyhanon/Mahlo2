@@ -17,7 +17,5 @@ namespace Mahlo.AppSettings
     public string Mahlo2ChannelName { get; set; } = "Simulator"; // = "BowAndSkew2";
     public string BowAndSkewChannelName { get; set; } = "Simulator"; // = "BowAndSkew3";
     public string PatternRepeatChannelName { get; set; } = "Simulator"; // = "PatternRepeat4";
-
-    public string ServerUri { get; set; } = "opc.tcp://127.0.0.1:843";
   }
 }
