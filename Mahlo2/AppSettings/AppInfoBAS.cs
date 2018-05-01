@@ -18,6 +18,7 @@ namespace Mahlo.AppSettings
       this.Initialize();
     }
 
+    public string MapperUrl { get; set; } = "http://+:80/mahlo/";
     public int MainFormBackgroundColor { get; set; } = 0xECF2F2;
     public string DDEServername { get; set; } = "BowAndSkew";
     public bool AutoCloseMahloDDEServer { get; set; } = false;

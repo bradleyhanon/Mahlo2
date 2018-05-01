@@ -37,7 +37,7 @@ namespace Mahlo.Repository
     {
       using (var connection = this.GetOpenConnection())
       {
-        return connection.GetAll<CarpetRoll>().OrderBy(item => item.RollId);
+        return connection.GetAll<CarpetRoll>().OrderBy(item => item.Id);
       }
     }
 

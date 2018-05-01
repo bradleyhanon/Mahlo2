@@ -2,6 +2,7 @@
 {
   public interface IAppInfoBAS
   {
+    string MapperUrl { get; set; }
     bool ArchiveRollMaps { get; set; }
     bool AutoCloseMahloDDEServer { get; set; }
     double BowToleranceInInches { get; set; }

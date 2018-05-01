@@ -67,12 +67,12 @@ namespace Mahlo2Tests.Repository
     [Fact]
     public void GettingAnObjectWorks()
     {
-      MahloRoll roll = new MahloRoll() { RollId = 5, Feet = 605 };
+      MahloRoll roll = new MahloRoll() { Id = 5, Feet = 605 };
       var state = new ProgramState(this.provider);
       state.Set(nameof(roll), roll);
 
       MahloRoll roll2 = state.Get<MahloRoll>(nameof(roll));
-      Assert.Equal(5, roll2.RollId);
+      Assert.Equal(5, roll2.Id);
       Assert.Equal(605, roll2.Feet);
     }
 
@@ -116,8 +116,8 @@ namespace Mahlo2Tests.Repository
       Assert.Equal(city, address.Get<string>("City"));
       Assert.False(address.Get<bool>("Garbage"));
 
-      Assert.Equal(5, state2.Get<BowAndSkewRoll>(nameof(BowAndSkewRoll)).RollId);
-      Assert.Equal(4, state2.Get<PatternRepeatRoll>(nameof(PatternRepeatRoll)).RollId);
+      Assert.Equal(5, state2.Get<BowAndSkewRoll>(nameof(BowAndSkewRoll)).Id);
+      Assert.Equal(4, state2.Get<PatternRepeatRoll>(nameof(PatternRepeatRoll)).Id);
     }
 
     [Fact]
@@ -154,8 +154,8 @@ namespace Mahlo2Tests.Repository
       Assert.Equal(city, settings.GetSubState("MahloRoll").Get<string>("City"));
       Assert.False(settings.GetSubState("MahloRoll").Get<bool>("Garbage"));
 
-      Assert.Equal(5, settings.Get<BowAndSkewRoll>(nameof(BowAndSkewRoll)).RollId);
-      Assert.Equal(4, settings.Get<PatternRepeatRoll>(nameof(PatternRepeatRoll)).RollId);
+      Assert.Equal(5, settings.Get<BowAndSkewRoll>(nameof(BowAndSkewRoll)).Id);
+      Assert.Equal(4, settings.Get<PatternRepeatRoll>(nameof(PatternRepeatRoll)).Id);
     }
   }
 }

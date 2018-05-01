@@ -115,7 +115,7 @@ namespace Mahlo.Logic
       this.rollCheckCount = state.Get<int?>(nameof(rollCheckCount)) ?? 0;
       this.styleCheckCount = state.Get<int?>(nameof(styleCheckCount)) ?? this.styleCheckCount;
       this.CurrentRoll = state?.Get<CarpetRoll>(nameof(CurrentRoll)) ?? new CarpetRoll();
-      this.sewinQueue.TryGetRoll(this.CurrentRoll.RollId, out CarpetRoll roll);
+      this.sewinQueue.TryGetRoll(this.CurrentRoll.Id, out CarpetRoll roll);
       this.CurrentRoll = roll;
 
       // On startup, roll sequence should be verified
@@ -178,7 +178,7 @@ namespace Mahlo.Logic
 
       // Start new roll
       this.rollCheckCount++;
-      this.sewinQueue.TryGetRoll(this.CurrentRoll.RollId + 1, out CarpetRoll nextRoll);
+      this.sewinQueue.TryGetRoll(this.CurrentRoll.Id + 1, out CarpetRoll nextRoll);
 
       if (this.CurrentRoll.StyleCode != nextRoll.StyleCode)
       {

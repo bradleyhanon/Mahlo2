@@ -15,6 +15,7 @@ using OpcLabs.EasyOpc.DataAccess.OperationModel;
 using OpcLabs.EasyOpc.DataAccess.Generic;
 using Mahlo.Repository;
 using Mahlo.Logic;
+using Serilog;
 
 namespace Mahlo.Opc
 {
@@ -33,6 +34,7 @@ namespace Mahlo.Opc
     private IMahloOpcSettings mahloSettings;
     //private IPlcSettings seamSettings;
     private IProgramState programState;
+    private ILogger log;
 
     private SynchronizationContext synchronizationContext;
     private string seamAckTag;
@@ -53,7 +55,8 @@ namespace Mahlo.Opc
       IMahloOpcSettings mahloSettings, 
       //IPlcSettings seamSettings,
       IProgramState programState,
-      SynchronizationContext synchronizationContext)
+      SynchronizationContext synchronizationContext,
+      ILogger logger)
     {
       this.opcClient = opcClient;
       this.criticalStops = criticalStops;
@@ -61,6 +64,7 @@ namespace Mahlo.Opc
       //this.seamSettings = seamSettings;
       this.synchronizationContext = synchronizationContext;
       this.programState = programState;
+      this.log = logger;
 
       criticalStops.MeterSrc = (IMeterSrc<Model>)this;
 
@@ -253,14 +257,18 @@ namespace Mahlo.Opc
     {
       if (e.Exception != null)
       {
-        Console.WriteLine(e.Arguments.ItemDescriptor.ItemId);
         if (e.Exception.GetType() != priorExceptionType)
         {
+          log.Debug(e.Exception, e.Arguments.ItemDescriptor.ItemId);
           // TODO: Implement logging
           //log.Error(e.Arguments.NodeDescriptor);
           //log.Error(e.Exception.GetType());
           //log.Error(e.ErrorMessage);
           this.priorExceptionType = e.Exception.GetType();
+        }
+        else
+        {
+          log.Debug(e.Arguments.ItemDescriptor.ItemId);
         }
       }
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dapper.Contrib.Extensions;
 using PropertyChanged;
 
 namespace Mahlo.Models
@@ -11,8 +10,7 @@ namespace Mahlo.Models
   [AddINotifyPropertyChangedInterface]
   class MahloRoll
   {
-    [ExplicitKey]
-    public int RollId { get; set; }
+    public int Id { get; set; }
 
     public int Feet { get; set; }
 

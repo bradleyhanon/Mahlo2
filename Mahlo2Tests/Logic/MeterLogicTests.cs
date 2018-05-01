@@ -53,35 +53,35 @@ namespace Mahlo2Tests.Logic
 
       var roll1 = new Mahlo.Models.CarpetRoll()
       {
-        RollId = 1,
+        Id = 1,
         RollNo = "12345",
         RollLength = roll1Length,
       };
 
       var roll2 = new Mahlo.Models.CarpetRoll()
       {
-        RollId = 2,
+        Id = 2,
         RollNo = "12346",
         RollLength = roll2Length,
       };
 
       var roll3 = new Mahlo.Models.CarpetRoll()
       {
-        RollId = 3,
+        Id = 3,
         RollNo = "12347",
         RollLength = roll3Length,
       };
 
       var roll4 = new Mahlo.Models.CarpetRoll()
       {
-        RollId = 4,
+        Id = 4,
         RollNo = "12348",
         RollLength = roll4Length,
       };
 
       var roll5 = new Mahlo.Models.CarpetRoll()
       {
-        RollId = 5,
+        Id = 5,
         RollNo = "12349",
         RollLength = roll5Length,
       };
@@ -280,9 +280,9 @@ namespace Mahlo2Tests.Logic
     public void NextRollSelectedWhenNewRollStarts()
     {
       var oldRoll = this.target.CurrentRoll;
-      oldRoll.RollId = 1;
+      oldRoll.Id = 1;
       srcData.SeamDetectedSubject.OnNext(true);
-      this.sewinQueue.Received(1).TryGetRoll(oldRoll.RollId + 1, out CarpetRoll newRoll);
+      this.sewinQueue.Received(1).TryGetRoll(oldRoll.Id + 1, out CarpetRoll newRoll);
     }
 
     [Fact]

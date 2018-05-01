@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dapper.Contrib.Extensions;
 using PropertyChanged;
 
 namespace Mahlo.Models
@@ -13,8 +12,7 @@ namespace Mahlo.Models
   {
     public const string CheckRollId = "CHKROL";
 
-    [ExplicitKey]
-    public int RollId { get; set; }
+    public int Id { get; set; }
     public string RollNo { get; set; }
     public string StyleCode { get; set; }
     public string StyleName { get; set; }

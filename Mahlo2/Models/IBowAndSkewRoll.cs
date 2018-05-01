@@ -8,7 +8,7 @@ namespace Mahlo.Models
 {
   interface IBowAndSkewRoll
   {
-    int RollId { get; }
+    int Id { get; }
     string RollNo { get; }
     string StyleCode { get; }
     string StyleName { get; }

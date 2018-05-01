@@ -1,5 +1,3 @@
 /.vs/*
-/Mahlo2/bin/*
-/Mahlo2/obj/*
-/Mahlo2Tests/bin/*
-/Mahlo2Tests/obj/*
+*/bin/*
+*/obj/*

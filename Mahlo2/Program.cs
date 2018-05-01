@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration.Install;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reflection;
+using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mahlo.AppSettings;
+using Mahlo.Ipc;
+using Mahlo.Logging;
 using Mahlo.Logic;
 using Mahlo.Models;
 using Mahlo.Opc;
@@ -17,6 +21,7 @@ using Mahlo.Utilities;
 using Mahlo.Views;
 using OpcLabs.EasyOpc;
 using OpcLabs.EasyOpc.DataAccess;
+using Serilog;
 using SimpleInjector;
 using SimpleInjector.Diagnostics;
 
@@ -24,33 +29,61 @@ namespace Mahlo
 {
   class Program
   {
-    //private static Container container;
+    private static Service service;
+
+    public static Container Container { get; private set; }
 
     [STAThread]
     private static void Main(string[] args)
-    {
-      int[] x = { 1, 2, 3, 4 };
-      
+    {      
       AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
       try
       {
         string instanceName = @"Local\{7A97254E-AFC8-4C0C-A6DB-C6DA0BFB463F}";
         using (new SingleInstance(instanceName))
         {
-          if (args.Contains("--migrate"))
+          Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .WriteTo.EventLog("MahloMapper", manageEventSource: true, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information)
+            //.ReadFrom.AppSettings()
+            .CreateLogger();
+
+          if (Environment.UserInteractive)
           {
-            //var runner = container.GetInstance<Mahlo.DbMigrations.Runner>();
-            var runner = new Mahlo.DbMigrations.Runner(new DbLocal(new DbConnectionFactory.Factory()));
-            runner.MigrateToLatest();
-            Environment.Exit(0);
+            if (args.Contains("--migrate"))
+            {
+              //var runner = container.GetInstance<Mahlo.DbMigrations.Runner>();
+              var runner = new Mahlo.DbMigrations.Runner(new DbLocal(new DbConnectionFactory.Factory()));
+              runner.MigrateToLatest();
+              Environment.Exit(0);
+            }
+
+            if (args.Contains("--install"))
+            {
+              ManagedInstallerClass.InstallHelper(new string[] { Assembly.GetExecutingAssembly().Location });
+              Environment.Exit(0);
+            }
+
+            if (args.Contains("--uninstall"))
+            {
+              ManagedInstallerClass.InstallHelper(new string[] { "/u", Assembly.GetExecutingAssembly().Location });
+              Environment.Exit(0);
+            }
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            using (var container = InitializeContainer())
+            {
+              Log.Logger.Information("Applicaiton started");
+              Application.Run(container.GetInstance<MainForm>());
+              Log.Logger.Information("Application stopped");
+            }
           }
-
-          Application.EnableVisualStyles();
-          Application.SetCompatibleTextRenderingDefault(false);
-          using (var container = InitializeContainer())
+          else
           {
-
-            Application.Run(container.GetInstance<MainForm>());
+            service = new Service();
+            ServiceBase.Run(service);
           }
         }
       }
@@ -69,9 +102,13 @@ namespace Mahlo
       Environment.Exit(1);
     }
 
-    private static Container InitializeContainer()
+    public static Container InitializeContainer()
     {
       var container = new Container();
+      Program.Container = container;
+
+      container.Options.DependencyInjectionBehavior =
+        new SerilogContextualLoggerInjectionBehavior(container.Options);
 
       // Register IProgramState first so it will be the last disposed
       container.RegisterSingleton<IProgramState, ProgramState>();
@@ -126,6 +163,8 @@ namespace Mahlo
       container.RegisterSingleton<IMahloOpcSettings, MahloOpcSettings>();
       //container.RegisterSingleton<IPlcSettings, PlcSettings>();
       container.RegisterSingleton<CarpetProcessor>();
+      container.RegisterSingleton<IMahloServer, MahloServer>();
+      //container.Register<MahloHub>(() => new MahloHub());
 
       container.Verify();
       return container;

@@ -39,7 +39,7 @@ namespace Mahlo.Logic
       this.dbMfg = dbMfg;
 
       this.Rolls.AddRange(this.dbLocal.GetCarpetRolls());
-      this.nextRollId = this.Rolls.LastOrDefault()?.RollId + 1 ?? 1;
+      this.nextRollId = this.Rolls.LastOrDefault()?.Id + 1 ?? 1;
 
       var ignoredResultTask = this.Refresh();
       this.timer = Observable
@@ -61,12 +61,12 @@ namespace Mahlo.Logic
     public CarpetRoll GetRoll(int rollId)
     {
       CarpetRoll result;
-      result = this.Rolls.FirstOrDefault(item => item.RollId >= rollId);
+      result = this.Rolls.FirstOrDefault(item => item.Id >= rollId);
       if (result == null)
       {
         result = new CarpetRoll
         {
-          RollId = this.nextRollId++
+          Id = this.nextRollId++
         };
 
         this.Rolls.Add(result);
@@ -77,11 +77,11 @@ namespace Mahlo.Logic
 
     public bool TryGetRoll(int rollId, out CarpetRoll roll)
     {
-      roll = this.Rolls.FirstOrDefault(item => item.RollId == rollId);
+      roll = this.Rolls.FirstOrDefault(item => item.Id == rollId);
       bool result = roll != null;
       if (!result)
       {
-        roll = new CarpetRoll { RollId = rollId };
+        roll = new CarpetRoll { Id = rollId };
       }
 
       return result;
@@ -89,7 +89,7 @@ namespace Mahlo.Logic
 
     public bool RollIsLeader(int rollId)
     {
-      var theRoll = this.Rolls.Single(item => item.RollId == rollId);
+      var theRoll = this.Rolls.Single(item => item.Id == rollId);
       if (!theRoll.IsCheckRoll)
       {
         return false;
@@ -160,7 +160,7 @@ namespace Mahlo.Logic
             }
             else
             {
-              newRoll.RollId = this.nextRollId++;
+              newRoll.Id = this.nextRollId++;
               this.Rolls.Add(newRoll);
               dbLocal.AddCarpetRoll(newRoll);
             }

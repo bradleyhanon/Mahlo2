@@ -95,7 +95,7 @@ namespace Mahlo2Tests
 
       for (int j = 0; j < this.target.Rolls.Count; j++)
       {
-        Assert.Equal(j + 1, this.target.Rolls[j].RollId);
+        Assert.Equal(j + 1, this.target.Rolls[j].Id);
       }
     }
 
@@ -142,7 +142,7 @@ namespace Mahlo2Tests
       target = new SewinQueue(schedulers, dbLocal, dbMfg);
 
       Assert.False(this.target.TryGetRoll(4, out CarpetRoll newRoll));
-      Assert.Equal(4, newRoll.RollId);
+      Assert.Equal(4, newRoll.Id);
     }
 
     [Fact]
@@ -177,7 +177,7 @@ namespace Mahlo2Tests
       target = new SewinQueue(schedulers, dbLocal, dbMfg);
 
       var roll = this.target.GetRoll(10);
-      Assert.Equal(4, roll.RollId);
+      Assert.Equal(4, roll.Id);
       Assert.Contains(roll, target.Rolls);
     }
 
@@ -185,16 +185,16 @@ namespace Mahlo2Tests
     public void ConstructorReadsRollsFromDatabaseAndSetsNextRollId()
     {
       CarpetRoll[] dbRolls = new[] { roll2, roll3, roll4 };
-      roll2.RollId = 2;
-      roll3.RollId = 3;
-      roll4.RollId = 4;
+      roll2.Id = 2;
+      roll3.Id = 3;
+      roll4.Id = 4;
 
       this.dbLocal.GetCarpetRolls().Returns(dbRolls);
       target = new SewinQueue(schedulers, dbLocal, dbMfg);
       Assert.True(dbRolls.SequenceEqual(target.Rolls));
 
       var roll = this.target.GetRoll(10);
-      Assert.Equal(5, roll.RollId);
+      Assert.Equal(5, roll.Id);
     }
 
     private CarpetRoll Clone(CarpetRoll roll)

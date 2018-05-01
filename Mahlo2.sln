@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mahlo2", "Mahlo2\Mahlo2.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mahlo2Tests", "Mahlo2Tests\Mahlo2Tests.csproj", "{EFACEF8E-1FA2-4FDE-96F3-AAF6979D682A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapperClient", "MapperClient\MapperClient.csproj", "{CCE59E36-BF3A-4570-9A5D-F81F70E7A03E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapperClientTests", "MapperClientTests\MapperClientTests.csproj", "{8482AD7B-82C3-4B3E-9837-408E498EE95B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{EFACEF8E-1FA2-4FDE-96F3-AAF6979D682A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFACEF8E-1FA2-4FDE-96F3-AAF6979D682A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFACEF8E-1FA2-4FDE-96F3-AAF6979D682A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCE59E36-BF3A-4570-9A5D-F81F70E7A03E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCE59E36-BF3A-4570-9A5D-F81F70E7A03E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCE59E36-BF3A-4570-9A5D-F81F70E7A03E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCE59E36-BF3A-4570-9A5D-F81F70E7A03E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8482AD7B-82C3-4B3E-9837-408E498EE95B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8482AD7B-82C3-4B3E-9837-408E498EE95B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8482AD7B-82C3-4B3E-9837-408E498EE95B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8482AD7B-82C3-4B3E-9837-408E498EE95B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
