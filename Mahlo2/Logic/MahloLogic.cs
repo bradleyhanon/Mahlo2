@@ -8,9 +8,11 @@ using Mahlo.Models;
 using Mahlo.Opc;
 using Mahlo.Repository;
 using Mahlo.Utilities;
+using Newtonsoft.Json;
 
 namespace Mahlo.Logic
 {
+  [JsonObject]
   class MahloLogic : MeterLogic<MahloRoll>, IMahloLogic
   {
     public MahloLogic(

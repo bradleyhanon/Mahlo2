@@ -8,9 +8,11 @@ using Mahlo.Models;
 using Mahlo.Opc;
 using Mahlo.Repository;
 using Mahlo.Utilities;
+using Newtonsoft.Json;
 
 namespace Mahlo.Logic
 {
+  [JsonObject]
   class PatternRepeatLogic : MeterLogic<PatternRepeatRoll>, IPatternRepeatLogic
   {
     //public PatternRepeatLogic(IPatternRepeatSrc dataSrc, IMeterLogic<PatternRepeatRoll> meterLogic) 

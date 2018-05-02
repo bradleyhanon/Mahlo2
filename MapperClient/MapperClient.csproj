@@ -92,10 +92,15 @@
     </Compile>
     <Compile Include="AppSettings\AppInfo.cs" />
     <Compile Include="AppSettings\IAppInfo.cs" />
-    <Compile Include="Ipc\Server.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Ipc\MahloClient.cs" />
+    <Compile Include="Logic\BowAndSkewLogic.cs" />
     <Compile Include="Logic\CarpetProcessor.cs" />
     <Compile Include="Logic\ICarpetProcessor.cs" />
     <Compile Include="Logic\ISewinQueue.cs" />
+    <Compile Include="Logic\MahloLogic.cs" />
+    <Compile Include="Logic\ModelLogic.cs" />
+    <Compile Include="Logic\PatternRepeatLogic.cs" />
     <Compile Include="Logic\SewinQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -118,6 +123,12 @@
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Properties\DataSources\Mahlo.Logic.IBowAndSkewLogic.datasource" />
+    <None Include="Properties\DataSources\Mahlo.Logic.IMahloLogic.datasource" />
+    <None Include="Properties\DataSources\Mahlo.Logic.IPatternRepeatLogic.datasource" />
+    <None Include="Properties\DataSources\MapperClient.Logic.BowAndSkewLogic.datasource" />
+    <None Include="Properties\DataSources\MapperClient.Logic.MahloLogic.datasource" />
+    <None Include="Properties\DataSources\MapperClient.Logic.PatternRepeatLogic.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

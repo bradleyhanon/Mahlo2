@@ -9,19 +9,31 @@ namespace MapperClient.Logic
 {
   class CarpetProcessor : ICarpetProcessor
   {
-    IBowAndSkewLogic ICarpetProcessor.BowAndSkewLogic => throw new NotImplementedException();
+    public IBowAndSkewLogic BowAndSkewLogic { get; private set; }
 
-    ICutRollLogic ICarpetProcessor.CutRollLogic => throw new NotImplementedException();
+    public ICutRollLogic CutRollLogic { get; private set; }
 
-    IMahloLogic ICarpetProcessor.MahloLogic => throw new NotImplementedException();
+    public IMahloLogic MahloLogic { get; private set; }
 
-    IPatternRepeatLogic ICarpetProcessor.PatternRepeatLogic => throw new NotImplementedException();
+    public IPatternRepeatLogic PatternRepeatLogic { get; private set; }
 
-    ISewinQueue ICarpetProcessor.SewinQueue => throw new NotImplementedException();
+    public ISewinQueue SewinQueue { get; private set; }
 
-    void ICarpetProcessor.Start()
+    public CarpetProcessor(
+      ISewinQueue sewinQueue,
+      IMahloLogic mahloLogic,
+      IBowAndSkewLogic bowAndSkewLogic, 
+      IPatternRepeatLogic patternRepeatLogic)
     {
-      throw new NotImplementedException();
+      this.SewinQueue = sewinQueue;
+      this.MahloLogic = mahloLogic;
+      this.BowAndSkewLogic = bowAndSkewLogic;
+      this.PatternRepeatLogic = patternRepeatLogic;
+    }
+
+    public void Start()
+    {
+      
     }
   }
 }

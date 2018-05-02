@@ -13,7 +13,7 @@ namespace MapperClient.AppSettings
       this.Initialize();
     }
 
-    public string ServerUrl { get; set; }
+    public string ServerUrl { get; set; } = "http://127.0.0.1/mahlo";
 
   }
 }

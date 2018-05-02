@@ -21,20 +21,20 @@
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
@@ -103,8 +103,20 @@
       this.label26 = new System.Windows.Forms.Label();
       this.label27 = new System.Windows.Forms.Label();
       this.groupBox5 = new System.Windows.Forms.GroupBox();
+      this.textBox17 = new System.Windows.Forms.TextBox();
+      this.textBox23 = new System.Windows.Forms.TextBox();
+      this.textBox24 = new System.Windows.Forms.TextBox();
+      this.textBox25 = new System.Windows.Forms.TextBox();
+      this.label36 = new System.Windows.Forms.Label();
+      this.label37 = new System.Windows.Forms.Label();
+      this.label38 = new System.Windows.Forms.Label();
+      this.label39 = new System.Windows.Forms.Label();
       this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
       this.dataGridView1 = new System.Windows.Forms.DataGridView();
+      this.PatternRepeatLength = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.label4 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
@@ -117,37 +129,25 @@
       this.maxEPEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.dlotDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.cutRollSrc = new System.Windows.Forms.BindingSource(this.components);
-      this.sewinQueueSrc = new System.Windows.Forms.BindingSource(this.components);
-      this.patternRepeatLogicSrc = new System.Windows.Forms.BindingSource(this.components);
-      this.patternRepeatRollSrc = new System.Windows.Forms.BindingSource(this.components);
-      this.bowAndSkewLogicSrc = new System.Windows.Forms.BindingSource(this.components);
-      this.bowAndSkewRollSrc = new System.Windows.Forms.BindingSource(this.components);
-      this.mahloLogicSrc = new System.Windows.Forms.BindingSource(this.components);
-      this.mahloRollSrc = new System.Windows.Forms.BindingSource(this.components);
-      this.textBox17 = new System.Windows.Forms.TextBox();
-      this.textBox23 = new System.Windows.Forms.TextBox();
-      this.textBox24 = new System.Windows.Forms.TextBox();
-      this.textBox25 = new System.Windows.Forms.TextBox();
-      this.label36 = new System.Windows.Forms.Label();
-      this.label37 = new System.Windows.Forms.Label();
-      this.label38 = new System.Windows.Forms.Label();
-      this.label39 = new System.Windows.Forms.Label();
       this.rollNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.styleCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colorCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.backingCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.rollLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.rollWidthStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.PatternRepeatLength = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.malFeetDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.basFeetDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.bowDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.skewDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.prsFeetDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.elongationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.sewinQueueSrc = new System.Windows.Forms.BindingSource(this.components);
+      this.patternRepeatRollSrc = new System.Windows.Forms.BindingSource(this.components);
+      this.patternRepeatLogicSrc = new System.Windows.Forms.BindingSource(this.components);
+      this.bowAndSkewLogicSrc = new System.Windows.Forms.BindingSource(this.components);
+      this.bowAndSkewRollSrc = new System.Windows.Forms.BindingSource(this.components);
+      this.mahloLogicSrc = new System.Windows.Forms.BindingSource(this.components);
+      this.mahloRollSrc = new System.Windows.Forms.BindingSource(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
       this.grpMahlo.SuspendLayout();
       this.grpBowAndSkew.SuspendLayout();
@@ -157,8 +157,8 @@
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.cutRollSrc)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSrc)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatLogicSrc)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.patternRepeatRollSrc)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatLogicSrc)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewLogicSrc)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewRollSrc)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.mahloLogicSrc)).BeginInit();
@@ -927,6 +927,82 @@
       this.groupBox5.TabStop = false;
       this.groupBox5.Text = "Finished Roll";
       // 
+      // textBox17
+      // 
+      this.textBox17.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "RollLength", true));
+      this.textBox17.Location = new System.Drawing.Point(50, 23);
+      this.textBox17.Name = "textBox17";
+      this.textBox17.ReadOnly = true;
+      this.textBox17.Size = new System.Drawing.Size(69, 20);
+      this.textBox17.TabIndex = 19;
+      this.textBox17.Text = "123456";
+      // 
+      // textBox23
+      // 
+      this.textBox23.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "ColorCode", true));
+      this.textBox23.Location = new System.Drawing.Point(50, 101);
+      this.textBox23.Name = "textBox23";
+      this.textBox23.ReadOnly = true;
+      this.textBox23.Size = new System.Drawing.Size(69, 20);
+      this.textBox23.TabIndex = 18;
+      this.textBox23.Text = "123456";
+      // 
+      // textBox24
+      // 
+      this.textBox24.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "StyleCode", true));
+      this.textBox24.Location = new System.Drawing.Point(50, 75);
+      this.textBox24.Name = "textBox24";
+      this.textBox24.ReadOnly = true;
+      this.textBox24.Size = new System.Drawing.Size(69, 20);
+      this.textBox24.TabIndex = 17;
+      this.textBox24.Text = "123456";
+      // 
+      // textBox25
+      // 
+      this.textBox25.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "RollNo", true));
+      this.textBox25.Location = new System.Drawing.Point(50, 49);
+      this.textBox25.Name = "textBox25";
+      this.textBox25.ReadOnly = true;
+      this.textBox25.Size = new System.Drawing.Size(69, 20);
+      this.textBox25.TabIndex = 16;
+      this.textBox25.Text = "123456";
+      // 
+      // label36
+      // 
+      this.label36.AutoSize = true;
+      this.label36.Location = new System.Drawing.Point(6, 26);
+      this.label36.Name = "label36";
+      this.label36.Size = new System.Drawing.Size(43, 13);
+      this.label36.TabIndex = 15;
+      this.label36.Text = "Length:";
+      // 
+      // label37
+      // 
+      this.label37.AutoSize = true;
+      this.label37.Location = new System.Drawing.Point(6, 104);
+      this.label37.Name = "label37";
+      this.label37.Size = new System.Drawing.Size(34, 13);
+      this.label37.TabIndex = 14;
+      this.label37.Text = "Color:";
+      // 
+      // label38
+      // 
+      this.label38.AutoSize = true;
+      this.label38.Location = new System.Drawing.Point(6, 78);
+      this.label38.Name = "label38";
+      this.label38.Size = new System.Drawing.Size(33, 13);
+      this.label38.TabIndex = 13;
+      this.label38.Text = "Style:";
+      // 
+      // label39
+      // 
+      this.label39.AutoSize = true;
+      this.label39.Location = new System.Drawing.Point(6, 52);
+      this.label39.Name = "label39";
+      this.label39.Size = new System.Drawing.Size(38, 13);
+      this.label39.TabIndex = 12;
+      this.label39.Text = "Roll #:";
+      // 
       // tableLayoutPanel1
       // 
       this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1013,6 +1089,49 @@
       this.dataGridView1.TabIndex = 22;
       this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
       this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
+      // 
+      // PatternRepeatLength
+      // 
+      this.PatternRepeatLength.DataPropertyName = "PatternRepeatLength";
+      dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle10.Format = "N3";
+      dataGridViewCellStyle10.NullValue = null;
+      this.PatternRepeatLength.DefaultCellStyle = dataGridViewCellStyle10;
+      this.PatternRepeatLength.HeaderText = "Repeat Length";
+      this.PatternRepeatLength.Name = "PatternRepeatLength";
+      this.PatternRepeatLength.ReadOnly = true;
+      this.PatternRepeatLength.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.PatternRepeatLength.Width = 56;
+      // 
+      // Column1
+      // 
+      dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.AppWorkspace;
+      this.Column1.DefaultCellStyle = dataGridViewCellStyle11;
+      this.Column1.HeaderText = "Column1";
+      this.Column1.Name = "Column1";
+      this.Column1.ReadOnly = true;
+      this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.Column1.Width = 8;
+      // 
+      // Column2
+      // 
+      dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.AppWorkspace;
+      this.Column2.DefaultCellStyle = dataGridViewCellStyle13;
+      this.Column2.HeaderText = "Column2";
+      this.Column2.Name = "Column2";
+      this.Column2.ReadOnly = true;
+      this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.Column2.Width = 8;
+      // 
+      // Column3
+      // 
+      dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.AppWorkspace;
+      this.Column3.DefaultCellStyle = dataGridViewCellStyle17;
+      this.Column3.HeaderText = "Column3";
+      this.Column3.Name = "Column3";
+      this.Column3.ReadOnly = true;
+      this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.Column3.Width = 8;
       // 
       // label4
       // 
@@ -1137,110 +1256,6 @@
       // 
       this.cutRollSrc.DataSource = typeof(Mahlo.Models.CutRoll);
       // 
-      // sewinQueueSrc
-      // 
-      this.sewinQueueSrc.DataSource = typeof(Mahlo.Models.CarpetRoll);
-      // 
-      // patternRepeatLogicSrc
-      // 
-      this.patternRepeatLogicSrc.DataSource = typeof(Mahlo.Logic.IPatternRepeatLogic);
-      // 
-      // patternRepeatRollSrc
-      // 
-      this.patternRepeatRollSrc.DataSource = typeof(Mahlo.Models.CarpetRoll);
-      // 
-      // bowAndSkewLogicSrc
-      // 
-      this.bowAndSkewLogicSrc.DataSource = typeof(Mahlo.Logic.IBowAndSkewLogic);
-      // 
-      // bowAndSkewRollSrc
-      // 
-      this.bowAndSkewRollSrc.DataSource = typeof(Mahlo.Models.CarpetRoll);
-      // 
-      // mahloLogicSrc
-      // 
-      this.mahloLogicSrc.DataSource = typeof(Mahlo.Logic.IMahloLogic);
-      // 
-      // mahloRollSrc
-      // 
-      this.mahloRollSrc.DataSource = typeof(Mahlo.Models.CarpetRoll);
-      // 
-      // textBox17
-      // 
-      this.textBox17.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "RollLength", true));
-      this.textBox17.Location = new System.Drawing.Point(50, 23);
-      this.textBox17.Name = "textBox17";
-      this.textBox17.ReadOnly = true;
-      this.textBox17.Size = new System.Drawing.Size(69, 20);
-      this.textBox17.TabIndex = 19;
-      this.textBox17.Text = "123456";
-      // 
-      // textBox23
-      // 
-      this.textBox23.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "ColorCode", true));
-      this.textBox23.Location = new System.Drawing.Point(50, 101);
-      this.textBox23.Name = "textBox23";
-      this.textBox23.ReadOnly = true;
-      this.textBox23.Size = new System.Drawing.Size(69, 20);
-      this.textBox23.TabIndex = 18;
-      this.textBox23.Text = "123456";
-      // 
-      // textBox24
-      // 
-      this.textBox24.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "StyleCode", true));
-      this.textBox24.Location = new System.Drawing.Point(50, 75);
-      this.textBox24.Name = "textBox24";
-      this.textBox24.ReadOnly = true;
-      this.textBox24.Size = new System.Drawing.Size(69, 20);
-      this.textBox24.TabIndex = 17;
-      this.textBox24.Text = "123456";
-      // 
-      // textBox25
-      // 
-      this.textBox25.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "RollNo", true));
-      this.textBox25.Location = new System.Drawing.Point(50, 49);
-      this.textBox25.Name = "textBox25";
-      this.textBox25.ReadOnly = true;
-      this.textBox25.Size = new System.Drawing.Size(69, 20);
-      this.textBox25.TabIndex = 16;
-      this.textBox25.Text = "123456";
-      // 
-      // label36
-      // 
-      this.label36.AutoSize = true;
-      this.label36.Location = new System.Drawing.Point(6, 26);
-      this.label36.Name = "label36";
-      this.label36.Size = new System.Drawing.Size(43, 13);
-      this.label36.TabIndex = 15;
-      this.label36.Text = "Length:";
-      // 
-      // label37
-      // 
-      this.label37.AutoSize = true;
-      this.label37.Location = new System.Drawing.Point(6, 104);
-      this.label37.Name = "label37";
-      this.label37.Size = new System.Drawing.Size(34, 13);
-      this.label37.TabIndex = 14;
-      this.label37.Text = "Color:";
-      // 
-      // label38
-      // 
-      this.label38.AutoSize = true;
-      this.label38.Location = new System.Drawing.Point(6, 78);
-      this.label38.Name = "label38";
-      this.label38.Size = new System.Drawing.Size(33, 13);
-      this.label38.TabIndex = 13;
-      this.label38.Text = "Style:";
-      // 
-      // label39
-      // 
-      this.label39.AutoSize = true;
-      this.label39.Location = new System.Drawing.Point(6, 52);
-      this.label39.Name = "label39";
-      this.label39.Size = new System.Drawing.Size(38, 13);
-      this.label39.TabIndex = 12;
-      this.label39.Text = "Roll #:";
-      // 
       // rollNoDataGridViewTextBoxColumn
       // 
       this.rollNoDataGridViewTextBoxColumn.DataPropertyName = "RollNo";
@@ -1294,29 +1309,6 @@
       this.rollWidthStrDataGridViewTextBoxColumn.ReadOnly = true;
       this.rollWidthStrDataGridViewTextBoxColumn.Width = 56;
       // 
-      // PatternRepeatLength
-      // 
-      this.PatternRepeatLength.DataPropertyName = "PatternRepeatLength";
-      dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      dataGridViewCellStyle10.Format = "N3";
-      dataGridViewCellStyle10.NullValue = null;
-      this.PatternRepeatLength.DefaultCellStyle = dataGridViewCellStyle10;
-      this.PatternRepeatLength.HeaderText = "Repeat Length";
-      this.PatternRepeatLength.Name = "PatternRepeatLength";
-      this.PatternRepeatLength.ReadOnly = true;
-      this.PatternRepeatLength.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.PatternRepeatLength.Width = 56;
-      // 
-      // Column1
-      // 
-      dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.AppWorkspace;
-      this.Column1.DefaultCellStyle = dataGridViewCellStyle11;
-      this.Column1.HeaderText = "Column1";
-      this.Column1.Name = "Column1";
-      this.Column1.ReadOnly = true;
-      this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.Column1.Width = 8;
-      // 
       // malFeetDataGridViewTextBoxColumn
       // 
       this.malFeetDataGridViewTextBoxColumn.DataPropertyName = "MalFeet";
@@ -1327,16 +1319,6 @@
       this.malFeetDataGridViewTextBoxColumn.ReadOnly = true;
       this.malFeetDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.malFeetDataGridViewTextBoxColumn.Width = 56;
-      // 
-      // Column2
-      // 
-      dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.AppWorkspace;
-      this.Column2.DefaultCellStyle = dataGridViewCellStyle13;
-      this.Column2.HeaderText = "Column2";
-      this.Column2.Name = "Column2";
-      this.Column2.ReadOnly = true;
-      this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.Column2.Width = 8;
       // 
       // basFeetDataGridViewTextBoxColumn
       // 
@@ -1371,16 +1353,6 @@
       this.skewDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.skewDataGridViewTextBoxColumn.Width = 67;
       // 
-      // Column3
-      // 
-      dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.AppWorkspace;
-      this.Column3.DefaultCellStyle = dataGridViewCellStyle17;
-      this.Column3.HeaderText = "Column3";
-      this.Column3.Name = "Column3";
-      this.Column3.ReadOnly = true;
-      this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.Column3.Width = 8;
-      // 
       // prsFeetDataGridViewTextBoxColumn
       // 
       this.prsFeetDataGridViewTextBoxColumn.DataPropertyName = "PrsFeet";
@@ -1404,6 +1376,34 @@
       this.elongationDataGridViewTextBoxColumn.ReadOnly = true;
       this.elongationDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.elongationDataGridViewTextBoxColumn.Width = 67;
+      // 
+      // sewinQueueSrc
+      // 
+      this.sewinQueueSrc.DataSource = typeof(Mahlo.Models.CarpetRoll);
+      // 
+      // patternRepeatRollSrc
+      // 
+      this.patternRepeatRollSrc.DataSource = typeof(Mahlo.Models.CarpetRoll);
+      // 
+      // patternRepeatLogicSrc
+      // 
+      this.patternRepeatLogicSrc.DataSource = typeof(MapperClient.Logic.PatternRepeatLogic);
+      // 
+      // bowAndSkewLogicSrc
+      // 
+      this.bowAndSkewLogicSrc.DataSource = typeof(MapperClient.Logic.BowAndSkewLogic);
+      // 
+      // bowAndSkewRollSrc
+      // 
+      this.bowAndSkewRollSrc.DataSource = typeof(Mahlo.Models.CarpetRoll);
+      // 
+      // mahloLogicSrc
+      // 
+      this.mahloLogicSrc.DataSource = typeof(MapperClient.Logic.MahloLogic);
+      // 
+      // mahloRollSrc
+      // 
+      this.mahloRollSrc.DataSource = typeof(Mahlo.Models.CarpetRoll);
       // 
       // MainForm
       // 
@@ -1436,8 +1436,8 @@
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.cutRollSrc)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSrc)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatLogicSrc)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.patternRepeatRollSrc)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.patternRepeatLogicSrc)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewLogicSrc)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.bowAndSkewRollSrc)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.mahloLogicSrc)).EndInit();

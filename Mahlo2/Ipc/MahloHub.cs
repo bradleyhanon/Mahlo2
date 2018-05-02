@@ -11,16 +11,17 @@ namespace Mahlo.Ipc
 {
   public class MahloHub : Hub
   {
-    CarpetProcessor mapper;
+    IMahloServer mahloServer;
 
     public MahloHub()
     {
-      this.mapper = Program.Container.GetInstance<CarpetProcessor>();
+      this.mahloServer = Program.Container.GetInstance<MahloServer>();
     }
 
-    public IEnumerable<CarpetRoll> GetSewinQueue()
+    public override Task OnConnected()
     {
-      return this.mapper.SewinQueue.Rolls;
+      this.mahloServer.RefreshAll();
+      return base.OnConnected();
     }
   }
 }

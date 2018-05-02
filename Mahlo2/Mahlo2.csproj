@@ -147,6 +147,7 @@
       <DependentUpon>Service.cs</DependentUpon>
     </Compile>
     <Compile Include="SingleInstance.cs" />
+    <Compile Include="Utilities\AsyncPump.cs" />
     <Compile Include="Utilities\ConcurrencyInfo.cs" />
     <Compile Include="Utilities\IConcurrencyInfo.cs" />
     <Compile Include="Utilities\ISchedulerProvider.cs" />

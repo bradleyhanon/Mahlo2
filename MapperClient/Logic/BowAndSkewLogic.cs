@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mahlo.Logic;
 
-namespace Mahlo.Ipc
+namespace MapperClient.Logic
 {
-  interface IMahloServer
+  class BowAndSkewLogic : ModelLogic, IBowAndSkewLogic
   {
-    void RefreshAll();
   }
 }

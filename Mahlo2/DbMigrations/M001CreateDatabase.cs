@@ -14,7 +14,7 @@ namespace Mahlo.DbMigrations
     public override void Up()
     {
       const string strCarpetRolls = "CarpetRolls";
-      const string strRollId = "RollId";
+      const string strId = "Id";
       const string strFeet = "Feet";
       const string strCutId = "CutId";
       const string strBow = "Bow";
@@ -31,7 +31,7 @@ namespace Mahlo.DbMigrations
         .Row(new { Key = 0, Value = "{}" });
 
       this.Create.Table(strCarpetRolls)
-        .WithColumn(strRollId).AsInt32().PrimaryKey()
+        .WithColumn(strId).AsInt32().PrimaryKey()
         .WithColumn("RollNo").AsAnsiString(10).NotNullable().Indexed("IX_G2ROLL").Unique()
         .WithColumn("StyleCode").AsAnsiString(5).NotNullable()
         .WithColumn("StyleName").AsAnsiString(40).NotNullable()
@@ -51,37 +51,37 @@ namespace Mahlo.DbMigrations
         .WithColumn("Elongation").AsDouble().NotNullable();
 
       //this.Create.Table("MahloRolls")
-      //  .WithColumn(strRollId).AsInt32().PrimaryKey()
+      //  .WithColumn(strId).AsInt32().PrimaryKey()
       //  .WithColumn(strFeet).AsInt32();
 
       //this.Create.Table("BowAndSkewRolls")
-      //  .WithColumn(strRollId).AsInt32().PrimaryKey().ForeignKey(strCarpetRolls, strRollId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
+      //  .WithColumn(strId).AsInt32().PrimaryKey().ForeignKey(strCarpetRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
       //  .WithColumn(strFeet).AsInt32().NotNullable()
       //  .WithColumn(strBow).AsDouble().NotNullable()
       //  .WithColumn(strSkew).AsDouble().NotNullable();
 
       //this.Create.Table("BowAndSkewMaps")
-      //  .WithColumn(strRollId).AsInt32().NotNullable().ForeignKey(strCarpetRolls, strRollId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
+      //  .WithColumn(strId).AsInt32().NotNullable().ForeignKey(strCarpetRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
       //  .WithColumn(strFeet).AsInt32().NotNullable()
       //  .WithColumn(strBow).AsDouble().NotNullable()
       //  .WithColumn(strSkew).AsDouble().NotNullable();
 
-      //this.Create.PrimaryKey().OnTable("BowAndSkewMaps").Columns(strRollId, strFeet);
+      //this.Create.PrimaryKey().OnTable("BowAndSkewMaps").Columns(strId, strFeet);
 
       //this.Create.Table("PatternRepeatRolls")
-      //  .WithColumn(strRollId).AsInt32().PrimaryKey().ForeignKey(strCarpetRolls, strRollId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
+      //  .WithColumn(strId).AsInt32().PrimaryKey().ForeignKey(strCarpetRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
       //  .WithColumn(strFeet).AsInt32()
       //  .WithColumn(strElongation).AsDouble();
 
       //this.Create.Table("PatternRepeatMaps")
-      //  .WithColumn(strRollId).AsInt32().NotNullable().ForeignKey(strCarpetRolls, strRollId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
+      //  .WithColumn(strId).AsInt32().NotNullable().ForeignKey(strCarpetRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
       //  .WithColumn(strFeet).AsInt32().NotNullable()
       //  .WithColumn(strElongation).AsDouble();
 
-      //this.Create.PrimaryKey().OnTable("PatternRepeatMaps").Columns(strRollId, strFeet);
+      //this.Create.PrimaryKey().OnTable("PatternRepeatMaps").Columns(strId, strFeet);
 
       this.Create.Table("CutRolls")
-        .WithColumn(strRollId).AsInt32().ForeignKey(strCarpetRolls, strRollId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
+        .WithColumn(strId).AsInt32().ForeignKey(strCarpetRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
         .WithColumn(strCutId).AsInt32()
         .WithColumn("SapRoll").AsAnsiString().NotNullable()
         .WithColumn(strFeet).AsInt32()
@@ -89,21 +89,21 @@ namespace Mahlo.DbMigrations
         .WithColumn(strSkew).AsDouble()
         .WithColumn(strElongation).AsDouble();
 
-      this.Create.PrimaryKey().OnTable("CutRolls").Columns(strRollId, strCutId);
+      this.Create.PrimaryKey().OnTable("CutRolls").Columns(strId, strCutId);
 
       this.Create.Table("CutRollMaps")
-        .WithColumn(strRollId).AsInt32().NotNullable()
+        .WithColumn(strId).AsInt32().NotNullable()
         .WithColumn(strCutId).AsInt32().NotNullable()
         .WithColumn(strFeet).AsInt32().NotNullable()
         .WithColumn(strBow).AsDouble().NotNullable()
         .WithColumn(strSkew).AsDouble().NotNullable()
         .WithColumn(strElongation).AsDouble().NotNullable();
 
-      this.Create.PrimaryKey().OnTable("CutRollMaps").Columns(strRollId, strCutId, strFeet);
+      this.Create.PrimaryKey().OnTable("CutRollMaps").Columns(strId, strCutId, strFeet);
 
       this.Create.ForeignKey()
-        .FromTable("CutRollMaps").ForeignColumns(strRollId, strCutId)
-        .ToTable("CutRolls").PrimaryColumns(strRollId, strCutId)
+        .FromTable("CutRollMaps").ForeignColumns(strId, strCutId)
+        .ToTable("CutRolls").PrimaryColumns(strId, strCutId)
         .OnDeleteOrUpdate(System.Data.Rule.Cascade);
     }
 

@@ -12,10 +12,12 @@ using Mahlo.Models;
 using Mahlo.Opc;
 using Mahlo.Repository;
 using Mahlo.Utilities;
+using Newtonsoft.Json;
 using PropertyChanged;
 
 namespace Mahlo.Logic
 {
+  [JsonObject]
   [AddINotifyPropertyChangedInterface]
   abstract class MeterLogic<Model> : IMeterLogic<Model>, IModelLogic
     where Model : MahloRoll, new()
@@ -65,9 +67,19 @@ namespace Mahlo.Logic
     }
 
     /// <summary>
+    /// Gets or sets a value indicating whether this object has been changed
+    /// It is set by PropertyChangedFody and reset by Ipc.MahloServer
+    /// </summary>
+    public bool IsChanged { get; set; }
+
+    /// <summary>
     /// Get the roll that is currently being processed
     /// </summary>
     public CarpetRoll CurrentRoll { get; set; } = new CarpetRoll();
+
+    [JsonProperty]
+    [DependsOn(nameof(CurrentRoll))]
+    public string CurrentRollNo => this.CurrentRoll.RollNo;
 
     public IUserAttentions<Model> UserAttentsions { get; }
 
@@ -81,12 +93,16 @@ namespace Mahlo.Logic
     [DependsOn(nameof(MahloStatusMessageBackColor))]
     public Color MahloStatusMessageForeColor => MahloStatusMessageBackColor.ContrastColor();
 
+    [JsonProperty]
     public string PlcStatusMessage { get; private set; }
+    [JsonProperty]
     public Color PlcStatusMessageBackColor { get; private set; }
     [DependsOn(nameof(PlcStatusMessageBackColor))]
     public Color PlcStatusMessageForeColor => PlcStatusMessageBackColor.ContrastColor();
 
+    [JsonProperty]
     public string MappingStatusMessage { get; private set; }
+    [JsonProperty]
     public Color MappingStatusMessageBackColor { get; private set; }
     [DependsOn(nameof(MappingStatusMessageBackColor))]
     public Color MappingStatusMessageForeColor => MappingStatusMessageBackColor.ContrastColor();
@@ -94,7 +110,9 @@ namespace Mahlo.Logic
 
     public bool IsMappingValid => !this.CurrentRoll.IsCheckRoll && !this.UserAttentsions.Any && !this.CriticalStops.Any;
 
+    [JsonProperty]
     public abstract int Feet { get; set; }
+    [JsonProperty]
     public abstract int Speed { get; set; }
 
     /// <summary>

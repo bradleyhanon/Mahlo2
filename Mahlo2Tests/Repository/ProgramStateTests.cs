@@ -100,8 +100,8 @@ namespace Mahlo2Tests.Repository
       var state = new ProgramState(this.provider);
       state.Set("Age", 55);
       state.Set("Address", new { Street = street, City = city, Garbage = false });
-      state.Set(nameof(BowAndSkewRoll), new { RollId = 5 });
-      state.Set(nameof(PatternRepeatRoll), new { RollId = 4 });
+      state.Set(nameof(BowAndSkewRoll), new { Id = 5 });
+      state.Set(nameof(PatternRepeatRoll), new { Id = 4 });
       state.Dispose();
       this.provider
         .Received(1);
@@ -136,8 +136,8 @@ namespace Mahlo2Tests.Repository
       {
         Age = 55,
         MahloRoll = new { Street = street, City = city, Garbage = false },
-        BowAndSkewRoll = new { RollId = 5 },
-        PatternRepeatRoll = new { RollId = 4 },
+        BowAndSkewRoll = new { Id = 5 },
+        PatternRepeatRoll = new { Id = 4 },
       });
 
       ((IDisposable)state).Dispose();
