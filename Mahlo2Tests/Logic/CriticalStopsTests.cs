@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mahlo.Logic;
@@ -13,16 +15,23 @@ namespace Mahlo2Tests.Logic
 { 
   public class CriticalStopsTests
   {
-    private IMeterSrc<MahloRoll> meterSrc;
+    bool anyChanged;
+    int anyChangesToTrue;
+    int anyChangesToFalse;
+
     private CriticalStops<MahloRoll> target;
+    IDisposable subscription;
 
     public CriticalStopsTests()
     {
-      this.meterSrc = Substitute.For<IMeterSrc<MahloRoll>>();
-      this.target = new CriticalStops<MahloRoll>
-      {
-        MeterSrc = meterSrc
-      };
+      this.target = new CriticalStops<MahloRoll>();
+
+      this.subscription =
+      Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+        h => ((INotifyPropertyChanged)this.target).PropertyChanged += h,
+        h => ((INotifyPropertyChanged)this.target).PropertyChanged -= h)
+        .Where(arg => arg.EventArgs.PropertyName == nameof(UserAttentions<MahloRoll>.Any))
+        .Subscribe(_ => anyChanged = (this.target.Any ? ++this.anyChangesToTrue : ++this.anyChangesToFalse) != 0);
 
       Assert.False(target.Any);
     }
@@ -33,13 +42,12 @@ namespace Mahlo2Tests.Logic
       this.target.IsMahloCommError = true;
       Assert.True(this.target.IsMahloCommError);
       Assert.True(this.target.Any);
-      this.meterSrc.Received(1).SetCriticalAlarm(true);
+      Assert.Equal(1, this.anyChangesToTrue);
 
-      this.meterSrc.ClearReceivedCalls();
       this.target.IsMahloCommError = false;
       Assert.False(this.target.IsMahloCommError);
       Assert.False(this.target.Any);
-      this.meterSrc.Received(1).SetCriticalAlarm(false);
+      Assert.Equal(1, this.anyChangesToFalse);
     }
 
     [Fact]
@@ -48,13 +56,12 @@ namespace Mahlo2Tests.Logic
       this.target.IsPlcCommError = true;
       Assert.True(this.target.IsPlcCommError);
       Assert.True(this.target.Any);
-      this.meterSrc.Received(1).SetCriticalAlarm(true);
+      Assert.Equal(1, this.anyChangesToTrue);
 
-      this.meterSrc.ClearReceivedCalls();
       this.target.IsPlcCommError = false;
       Assert.False(this.target.IsPlcCommError);
       Assert.False(this.target.Any);
-      this.meterSrc.Received(1).SetCriticalAlarm(false);
+      Assert.Equal(1, this.anyChangesToFalse);
     }
 
     [Fact]
@@ -63,17 +70,16 @@ namespace Mahlo2Tests.Logic
       this.target.IsPlcCommError = true;
       this.target.IsMahloCommError = true;
       Assert.True(this.target.IsPlcCommError);
-      this.meterSrc.Received(1).SetCriticalAlarm(true);
+      Assert.Equal(1, this.anyChangesToTrue);
       Assert.True(this.target.IsMahloCommError);
-      this.meterSrc.Received(1).SetCriticalAlarm(true);
 
-      this.meterSrc.ClearReceivedCalls();
+      this.anyChanged = false;
       this.target.IsPlcCommError = false;
       Assert.True(this.target.Any);
-      this.meterSrc.DidNotReceive().SetCriticalAlarm(Arg.Any<bool>());
+      Assert.False(this.anyChanged);
       this.target.IsMahloCommError = false;
       Assert.False(this.target.Any);
-      this.meterSrc.Received(1).SetCriticalAlarm(false);
+      Assert.Equal(1, this.anyChangesToFalse);
     }
   }
 }

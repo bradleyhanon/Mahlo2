@@ -16,7 +16,7 @@ namespace Mahlo
 {
   partial class Service : ServiceBase
   {
-    private ManualResetEvent terminateEvent = new ManualResetEvent(false);
+    private SingleThreadSynchronizationContext syncContext;
     private Thread serviceThread;
     private bool isStopping;
     private ILogger log;
@@ -29,7 +29,7 @@ namespace Mahlo
     protected override void OnStart(string[] args)
     {
       this.isStopping = false;
-      this.terminateEvent.Reset();
+      this.syncContext = new SingleThreadSynchronizationContext();
       this.serviceThread = new Thread(this.ThreadProc);
       this.serviceThread.Start(args);
     }
@@ -39,7 +39,7 @@ namespace Mahlo
       if (!this.isStopping)
       {
         this.isStopping = true;
-        this.terminateEvent.Set();
+        this.syncContext.Complete();
         this.serviceThread.Join();
       }
     }
@@ -48,16 +48,17 @@ namespace Mahlo
     {
       try
       {
-        using (var container = Program.InitializeContainer())
+        SynchronizationContext.SetSynchronizationContext(syncContext);
+        using (var container = Program.InitializeContainer(syncContext))
         {
           this.log = container.GetInstance<ILogger>();
-          var mapper = container.GetInstance<CarpetProcessor>();
+          var mapper = container.GetInstance<ICarpetProcessor>();
           mapper.Start();
-        }
 
-        log.Information("Service started");
-        this.terminateEvent.WaitOne();
-        log.Information("Service stopped");
+          log.Information("Service started");
+          syncContext.RunOnCurrentThread();
+          log.Information("Service stopped");
+        }
       }
       catch (Exception ex)
       {

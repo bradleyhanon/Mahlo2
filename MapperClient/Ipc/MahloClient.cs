@@ -21,14 +21,26 @@ namespace MapperClient.Ipc
     private IHubProxy proxy;
     private IAppInfo appInfo;
     private ISewinQueue sewinQueue;
+    private IMahloLogic mahloLogic;
+    private IBowAndSkewLogic bowAndSkewLogic;
+    private IPatternRepeatLogic patternRepeatLogic;
     private SynchronizationContext context;
 
     private bool isStarting;
 
-    public MahloClient(ISewinQueue sewinQueue, IAppInfo appInfo, SynchronizationContext context)
+    public MahloClient(
+      ISewinQueue sewinQueue,
+      IMahloLogic mahloLogic,
+      IBowAndSkewLogic bowAndSkewLogic,
+      IPatternRepeatLogic patternRepeatLogic,
+      IAppInfo appInfo,
+      SynchronizationContext context)
     {
       this.appInfo = appInfo;
       this.sewinQueue = sewinQueue;
+      this.mahloLogic = mahloLogic;
+      this.bowAndSkewLogic = bowAndSkewLogic;
+      this.patternRepeatLogic = patternRepeatLogic;
       this.context = context;
     }
 
@@ -45,6 +57,28 @@ namespace MapperClient.Ipc
           this.context.Post(_ =>
             this.sewinQueue.UpdateSewinQueue(arg.ToObject<CarpetRoll[]>()), null);
         });
+
+        this.proxy.On("UpdateMahloLogic", arg =>
+        {
+          JToken token = arg;
+          token.Populate(this.mahloLogic);
+          this.mahloLogic.RefreshStatusDisplay();
+        });
+
+        this.proxy.On("UpdateBowAndSkewLogic", arg =>
+        {
+          JToken token = arg;
+          token.Populate(this.bowAndSkewLogic);
+          this.bowAndSkewLogic.RefreshStatusDisplay();
+        });
+
+        this.proxy.On("UpdatePatternRepeatLogic", arg =>
+        {
+          JToken token = arg;
+          token.Populate(this.patternRepeatLogic);
+          this.patternRepeatLogic.RefreshStatusDisplay();
+        });
+
         //{
         //  JArray array = arg;
         //  IEnumerable<CarpetRoll> rolls = array.ToObject<CarpetRoll[]>();

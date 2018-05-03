@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace MapperClient
 {
@@ -22,6 +24,20 @@ namespace MapperClient
         d = 255; // dark colors - white font
 
       return Color.FromArgb(d, d, d);
+    }
+
+    public static void Populate<T>(this JToken value, T target) 
+      where T:class
+    {
+      using (var sr = value.CreateReader())
+      {
+        JsonSerializerSettings settings = new JsonSerializerSettings
+        {
+         
+        };
+
+        JsonSerializer.CreateDefault().Populate(sr, target);
+      }
     }
   }
 }

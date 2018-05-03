@@ -9,5 +9,9 @@ namespace MapperClient.Logic
 {
   class PatternRepeatLogic : ModelLogic, IPatternRepeatLogic
   {
+    public PatternRepeatLogic(ISewinQueue sewinQueue)
+      : base(sewinQueue)
+    {
+    }
   }
 }

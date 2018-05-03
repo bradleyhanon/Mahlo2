@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mahlo.Logic;
@@ -11,7 +13,7 @@ using Xunit;
 
 namespace Mahlo2Tests.Logic
 {
-  public class UserAttententionsTests
+  public class UserAttententionsTests : IDisposable
   {
     //VerifyRollSequence = 1,
     //  RollTooLong = 2,
@@ -19,14 +21,29 @@ namespace Mahlo2Tests.Logic
     //  SystemDisabled = 8,
     //  All = VerifyRollSequence | RollTooLong | RollTooShort | SystemDisabled,
 
-    IMeterSrc<MahloRoll> meterSrc;
+    bool anyChanged;
+    int anyChangesToTrue;
+    int anyChangesToFalse;
     UserAttentions<MahloRoll> target;
+    IDisposable subscription;
 
     public UserAttententionsTests()
     {
-      meterSrc = Substitute.For<IMeterSrc<MahloRoll>>();
-      target = new UserAttentions<MahloRoll>(this.meterSrc);
+      target = new UserAttentions<MahloRoll>();
+
+      this.subscription =
+        Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+          h => ((INotifyPropertyChanged)this.target).PropertyChanged += h,
+          h => ((INotifyPropertyChanged)this.target).PropertyChanged -= h)
+          .Where(arg => arg.EventArgs.PropertyName == nameof(UserAttentions<MahloRoll>.Any))
+          .Subscribe(_ => anyChanged = (this.target.Any ? ++this.anyChangesToTrue : ++this.anyChangesToFalse) != 0);
+
       Assert.False(target.Any);
+    }
+
+    public void Dispose()
+    {
+      this.subscription.Dispose();
     }
 
     [Fact]
@@ -34,11 +51,11 @@ namespace Mahlo2Tests.Logic
     {
       target.VerifyRollSequence = true;
       Assert.True(target.VerifyRollSequence);
-      meterSrc.Received(1).SetStatusIndicator(true);
+      Assert.Equal(1, this.anyChangesToTrue);
 
       target.VerifyRollSequence = false;
       Assert.False(target.VerifyRollSequence);
-      meterSrc.Received(1).SetStatusIndicator(false);
+      Assert.Equal(1, this.anyChangesToFalse);
     }
 
     [Fact]
@@ -47,13 +64,13 @@ namespace Mahlo2Tests.Logic
       target.IsRollTooLong = true;
       Assert.True(target.IsRollTooLong);
       Assert.True(target.VerifyRollSequence);
-      meterSrc.Received(1).SetStatusIndicator(true);
+      Assert.Equal(1, this.anyChangesToTrue);
 
-      meterSrc.ClearReceivedCalls();
+      this.anyChanged = false;
       target.IsRollTooLong = false;
       Assert.False(target.IsRollTooLong);
       Assert.True(target.VerifyRollSequence);
-      meterSrc.DidNotReceive().SetStatusIndicator(Arg.Any<bool>());
+      Assert.False(anyChanged);
     }
 
     [Fact]
@@ -62,13 +79,13 @@ namespace Mahlo2Tests.Logic
       target.IsRollTooShort = true;
       Assert.True(target.IsRollTooShort);
       Assert.True(target.VerifyRollSequence);
-      meterSrc.Received(1).SetStatusIndicator(true);
+      Assert.Equal(1, this.anyChangesToTrue);
 
-      meterSrc.ClearReceivedCalls();
+      this.anyChanged = false;
       target.IsRollTooShort = false;
       Assert.False(target.IsRollTooShort);
       Assert.True(target.VerifyRollSequence);
-      meterSrc.DidNotReceive().SetStatusIndicator(Arg.Any<bool>());
+      Assert.False(this.anyChanged);
     }
 
     [Fact]
@@ -77,13 +94,13 @@ namespace Mahlo2Tests.Logic
       target.IsSystemDisabled = true;
       Assert.True(target.IsSystemDisabled);
       Assert.True(target.VerifyRollSequence);
-      meterSrc.Received(1).SetStatusIndicator(true);
+      Assert.Equal(1, this.anyChangesToTrue);
 
-      meterSrc.ClearReceivedCalls();
+      this.anyChanged = false;
       target.IsSystemDisabled = false;
       Assert.False(target.IsSystemDisabled);
       Assert.True(target.VerifyRollSequence);
-      meterSrc.DidNotReceive().SetStatusIndicator(Arg.Any<bool>());
+      Assert.False(this.anyChanged);
     }
 
     [Fact]
@@ -93,7 +110,7 @@ namespace Mahlo2Tests.Logic
       target.IsRollTooLong = true;
       Assert.True(target.IsRollTooLong);
       Assert.False(target.IsRollTooShort);
-      meterSrc.Received(1).SetStatusIndicator(true);
+      Assert.Equal(1, this.anyChangesToTrue);
     }
 
     [Fact]
@@ -103,7 +120,7 @@ namespace Mahlo2Tests.Logic
       target.IsRollTooShort = true;
       Assert.True(target.IsRollTooShort);
       Assert.False(target.IsRollTooLong);
-      meterSrc.Received(1).SetStatusIndicator(true);
+      Assert.Equal(1, this.anyChangesToTrue);
     }
 
     [Fact]
@@ -113,12 +130,11 @@ namespace Mahlo2Tests.Logic
         target.IsRollTooShort =
         target.IsSystemDisabled = true;
       Assert.True(target.Any);
-      meterSrc.Received(1).SetStatusIndicator(true);
+      Assert.Equal(1, this.anyChangesToTrue);
 
-      meterSrc.ClearReceivedCalls();
       target.ClearAll();
       Assert.False(target.Any);
-      meterSrc.Received(1).SetStatusIndicator(false);
+      Assert.Equal(1, this.anyChangesToFalse);
     }
   }
 }

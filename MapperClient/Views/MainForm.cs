@@ -16,6 +16,10 @@ namespace MapperClient.Views
 {
   partial class MainForm : Form
   {
+    // Greenish
+    private readonly Color GoodBackColor = Color.FromArgb(198, 239, 206);
+    private readonly Color GoodForeColor = Color.FromArgb(0, 97, 0);
+
     // Yellowish
     private readonly Color ActiveBackColor = Color.FromArgb(255, 235, 156);
     private readonly Color ActiveForeColor = Color.FromArgb(156, 87, 0);

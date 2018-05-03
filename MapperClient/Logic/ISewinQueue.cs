@@ -10,6 +10,8 @@ namespace MapperClient.Logic
 {
   interface ISewinQueue
   {
+    event EventHandler Changed;
+
     BindingList<CarpetRoll> Rolls { get; }
 
     void UpdateSewinQueue(IEnumerable<CarpetRoll> rolls);

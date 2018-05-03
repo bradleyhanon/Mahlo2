@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 
 namespace Mahlo.Logic
 {
-  [JsonObject]
   class MahloLogic : MeterLogic<MahloRoll>, IMahloLogic
   {
     public MahloLogic(

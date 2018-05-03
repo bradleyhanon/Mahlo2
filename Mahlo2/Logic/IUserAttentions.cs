@@ -1,17 +1,19 @@
 ﻿using System;
-using Mahlo.Opc;
 
 namespace Mahlo.Logic
 {
-  interface IUserAttentions<Model>
+  
+  interface IUserAttentions
   {
     bool Any { get; }
-    //IObservable<IUserAttentions<Model>> Changes { get; }
     bool IsRollTooLong { get; set; }
     bool IsRollTooShort { get; set; }
     bool IsSystemDisabled { get; set; }
     bool VerifyRollSequence { get; set; }
+  }
 
+  interface IUserAttentions<Model> : IUserAttentions
+  {
     void ClearAll();
   }
 }

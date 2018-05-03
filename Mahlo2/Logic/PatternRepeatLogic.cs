@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 
 namespace Mahlo.Logic
 {
-  [JsonObject]
   class PatternRepeatLogic : MeterLogic<PatternRepeatRoll>, IPatternRepeatLogic
   {
     //public PatternRepeatLogic(IPatternRepeatSrc dataSrc, IMeterLogic<PatternRepeatRoll> meterLogic) 

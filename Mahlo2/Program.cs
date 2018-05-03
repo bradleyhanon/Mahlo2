@@ -18,7 +18,6 @@ using Mahlo.Models;
 using Mahlo.Opc;
 using Mahlo.Repository;
 using Mahlo.Utilities;
-using Mahlo.Views;
 using OpcLabs.EasyOpc;
 using OpcLabs.EasyOpc.DataAccess;
 using Serilog;
@@ -71,12 +70,20 @@ namespace Mahlo
               Environment.Exit(0);
             }
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            using (var container = InitializeContainer())
+            SingleThreadSynchronizationContext syncContext = new SingleThreadSynchronizationContext();
+            SynchronizationContext.SetSynchronizationContext(syncContext);
+            using (var consoleCtrl = new ConsoleCtrl())
+            using (var container = InitializeContainer(syncContext))
             {
+              consoleCtrl.ControlEvent += (sender, e) =>
+              {
+                syncContext.Complete();
+                e.Result = true;
+              };
+
               Log.Logger.Information("Applicaiton started");
-              Application.Run(container.GetInstance<MainForm>());
+              container.GetInstance<ICarpetProcessor>().Start();
+              syncContext.RunOnCurrentThread();
               Log.Logger.Information("Application stopped");
             }
           }
@@ -102,7 +109,7 @@ namespace Mahlo
       Environment.Exit(1);
     }
 
-    public static Container InitializeContainer()
+    public static Container InitializeContainer(SynchronizationContext syncContext)
     {
       var container = new Container();
       Program.Container = container;
@@ -113,12 +120,6 @@ namespace Mahlo
       // Register IProgramState first so it will be the last disposed
       container.RegisterSingleton<IProgramState, ProgramState>();
       container.RegisterSingleton<IProgramStateProvider, DbLocal>();
-
-      var registration = Lifestyle.Transient.CreateRegistration<MainForm>(container);
-      registration.SuppressDiagnosticWarning(DiagnosticType.DisposableTransientComponent, "Done by system");
-
-      // This call sets the WindowsFormsSynchronizationContext.Current
-      using (new Control()) { } ;
 
       container.RegisterSingleton<ICriticalStops<MahloRoll>, CriticalStops<MahloRoll>>();
       container.RegisterSingleton<ICriticalStops<BowAndSkewRoll>, CriticalStops<BowAndSkewRoll>>();
@@ -132,14 +133,6 @@ namespace Mahlo
       container.RegisterSingleton<IBowAndSkewLogic, BowAndSkewLogic>();
       container.RegisterSingleton<IPatternRepeatLogic, PatternRepeatLogic>();
 
-      //container.RegisterSingleton<IMeterLogic<MahloRoll>, MeterLogic<MahloRoll>>();
-      //container.RegisterSingleton<IMeterLogic<BowAndSkewRoll>, MeterLogic<BowAndSkewRoll>>();
-      //container.RegisterSingleton<IMeterLogic<PatternRepeatRoll>, MeterLogic<PatternRepeatRoll>>();
-
-      //container.RegisterSingleton<IRollLengthMonitor<MahloRoll>, RollLengthMonitor<MahloRoll>>();
-      //container.RegisterSingleton<IRollLengthMonitor<BowAndSkewRoll>, RollLengthMonitor<BowAndSkewRoll>>();
-      //container.RegisterSingleton<IRollLengthMonitor<PatternRepeatRoll>, RollLengthMonitor<PatternRepeatRoll>>();
-
       container.RegisterSingleton<IMahloSrc<MahloRoll>, MahloOpcClient<MahloRoll>>();
       container.RegisterSingleton<IBowAndSkewSrc<BowAndSkewRoll>, MahloOpcClient<BowAndSkewRoll>>();
       container.RegisterSingleton<IPatternRepeatSrc<PatternRepeatRoll>, MahloOpcClient<PatternRepeatRoll>>();
@@ -149,7 +142,7 @@ namespace Mahlo
       container.RegisterSingleton<IMeterSrc<PatternRepeatRoll>, MahloOpcClient<PatternRepeatRoll>>();
 
       container.RegisterSingleton<ISchedulerProvider, SchedulerProvider>();
-      container.RegisterInstance<SynchronizationContext>(WindowsFormsSynchronizationContext.Current);
+      container.RegisterInstance<SynchronizationContext>(syncContext);
       container.RegisterSingleton<IConcurrencyInfo, ConcurrencyInfo>();
       container.RegisterSingleton<ISewinQueue, SewinQueue>();
       container.RegisterSingleton<ICutRollLogic, CutRollLogic>();
@@ -159,12 +152,9 @@ namespace Mahlo
       container.RegisterSingleton<IDbMfg, DbMfg>();
       container.RegisterSingleton<IDbLocal, DbLocal>();
       container.RegisterSingleton<IAppInfoBAS, AppInfoBAS>();
-      //container.RegisterSingleton<IOpcSettings, OpcSettings>();
       container.RegisterSingleton<IMahloOpcSettings, MahloOpcSettings>();
-      //container.RegisterSingleton<IPlcSettings, PlcSettings>();
-      container.RegisterSingleton<CarpetProcessor>();
+      container.RegisterSingleton<ICarpetProcessor, CarpetProcessor>();
       container.RegisterSingleton<IMahloServer, MahloServer>();
-      //container.Register<MahloHub>(() => new MahloHub());
 
       container.Verify();
       return container;

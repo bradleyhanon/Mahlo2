@@ -7,11 +7,10 @@ using Mahlo.Logic;
 
 namespace MapperClient.Logic
 {
-  class BowAndSkewLogic : ModelLogic, IBowAndSkewLogic
+  class CriticalStops : ICriticalStops
   {
-    public BowAndSkewLogic(ISewinQueue sewinQueue)
-      : base(sewinQueue)
-    {
-    }
+    public bool Any { get; set; }
+    public bool IsMahloCommError { get; set; }
+    public bool IsPlcCommError { get; set; }
   }
 }

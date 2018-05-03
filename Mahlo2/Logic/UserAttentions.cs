@@ -5,22 +5,14 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
-using Mahlo.Opc;
+using PropertyChanged;
 
 namespace Mahlo.Logic
 {
+  [AddINotifyPropertyChangedInterface]
   class UserAttentions<Model> : IUserAttentions<Model>
   {
     private Attention attentions;
-    //private BehaviorSubject<IUserAttentions<Model>> changes;
-    private IMeterSrc<Model> meterSrc;
-    private bool isStatusIndicatorSet;
-
-    public UserAttentions(IMeterSrc<Model> meterSrc)
-    {
-      this.meterSrc = meterSrc;
-      //this.changes = new BehaviorSubject<IUserAttentions<Model>>(this);
-    }
 
     [Flags]
     private enum Attention
@@ -58,7 +50,7 @@ namespace Mahlo.Logic
       set => this.SetUserAttention(Attention.VerifyRollSequence, value);
     }
 
-    public bool Any => this.attentions != 0;
+    public bool Any { get; private set; }
 
     public void ClearAll()
     {
@@ -88,12 +80,7 @@ namespace Mahlo.Logic
         }
       }
 
-      if (this.Any != this.isStatusIndicatorSet)
-      {
-        //this.changes.OnNext(this);
-        this.isStatusIndicatorSet = !this.isStatusIndicatorSet;
-        this.meterSrc.SetStatusIndicator(this.isStatusIndicatorSet);
-      }
+      this.Any = this.attentions != 0;
     }
   }
 }

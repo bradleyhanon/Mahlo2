@@ -10,6 +10,8 @@ namespace MapperClient.Logic
 {
   class SewinQueue : ISewinQueue
   {
+    public event EventHandler Changed;
+
     public BindingList<CarpetRoll> Rolls { get; } = new BindingList<CarpetRoll>();
 
     public void UpdateSewinQueue(IEnumerable<CarpetRoll> newRolls)
@@ -60,6 +62,8 @@ namespace MapperClient.Logic
           this.Rolls.RemoveAt(srcNdx);
         }
       }
+
+      this.Changed?.Invoke(this, EventArgs.Empty);
     }
 
     private class ListItem

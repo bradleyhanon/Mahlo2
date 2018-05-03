@@ -5,15 +5,14 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
-using Mahlo.Opc;
+using PropertyChanged;
 
 namespace Mahlo.Logic
 {
+  [AddINotifyPropertyChangedInterface]
   class CriticalStops<Model> : ICriticalStops<Model>
   {
     private Stop stops;
-    //private BehaviorSubject<ICriticalStops<Model>> changes;
-    private bool isStatusIndicatorSet;
 
     [Flags]
     private enum Stop
@@ -22,11 +21,7 @@ namespace Mahlo.Logic
       PLCCommError = 2
     }
 
-    //public IObservable<ICriticalStops<Model>> Changes => this.changes.AsObservable();
-
-    public IMeterSrc<Model> MeterSrc { get; set; }
-
-    public bool Any => this.stops != 0;
+    public bool Any { get; private set; }
 
     public bool IsMahloCommError
     {
@@ -44,14 +39,7 @@ namespace Mahlo.Logic
     {
       var oldStops = this.stops;
       this.stops = value ? this.stops |= bitMask : this.stops &= ~bitMask;
-      if (this.Any != this.isStatusIndicatorSet)
-      {
-        this.isStatusIndicatorSet = this.Any;
-        //this.changes.OnNext(this);
-
-        //cmdWaitForSeam.Enabled = (nCriticalStops == 0);
-        this.MeterSrc.SetCriticalAlarm(this.isStatusIndicatorSet);
-      }
+      this.Any = this.stops != 0;
     }
   }
 }

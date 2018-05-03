@@ -17,7 +17,6 @@ using PropertyChanged;
 
 namespace Mahlo.Logic
 {
-  [JsonObject]
   [AddINotifyPropertyChangedInterface]
   abstract class MeterLogic<Model> : IMeterLogic<Model>, IModelLogic
     where Model : MahloRoll, new()
@@ -50,7 +49,7 @@ namespace Mahlo.Logic
       this.sewinQueue = sewinQueue;
       this.srcData = srcData;
       this.appInfo = appInfo;
-      this.UserAttentsions = userAttentions;
+      this.UserAttentions = userAttentions;
       this.CriticalStops = criticalStops;
       this.programState = programState;
       this.RestoreState();
@@ -60,7 +59,11 @@ namespace Mahlo.Logic
       this.queueChangedSubscription = sewinQueue.QueueChanged.Subscribe(_ => this.SewinQueueChanged());
       this.timer = Observable
         .Interval(TimeSpan.FromSeconds(1), schedulerProvider.WinFormsThread)
-        .Subscribe(_ => this.RefreshStatusDisplay());
+        .Subscribe(_ =>
+        {
+          this.Recipe = this.srcData.Recipe;
+          this.IsManualMode = this.srcData.IsManualMode;
+        });
 
       this.RollStarted = this.rollStartedSubject;
       this.RollFinished = this.rollFinishedSubject;
@@ -81,39 +84,27 @@ namespace Mahlo.Logic
     [DependsOn(nameof(CurrentRoll))]
     public string CurrentRollNo => this.CurrentRoll.RollNo;
 
-    public IUserAttentions<Model> UserAttentsions { get; }
+    [JsonProperty]
+    public IUserAttentions<Model> UserAttentions { get; }
 
+    [JsonProperty]
     public ICriticalStops<Model> CriticalStops { get; }
 
     public IObservable<CarpetRoll> RollStarted { get; }
     public IObservable<CarpetRoll> RollFinished { get; }
 
-    public string MahloStatusMessage { get; private set; }
-    public Color MahloStatusMessageBackColor { get; private set; }
-    [DependsOn(nameof(MahloStatusMessageBackColor))]
-    public Color MahloStatusMessageForeColor => MahloStatusMessageBackColor.ContrastColor();
-
-    [JsonProperty]
-    public string PlcStatusMessage { get; private set; }
-    [JsonProperty]
-    public Color PlcStatusMessageBackColor { get; private set; }
-    [DependsOn(nameof(PlcStatusMessageBackColor))]
-    public Color PlcStatusMessageForeColor => PlcStatusMessageBackColor.ContrastColor();
-
-    [JsonProperty]
-    public string MappingStatusMessage { get; private set; }
-    [JsonProperty]
-    public Color MappingStatusMessageBackColor { get; private set; }
-    [DependsOn(nameof(MappingStatusMessageBackColor))]
-    public Color MappingStatusMessageForeColor => MappingStatusMessageBackColor.ContrastColor();
-
-
-    public bool IsMappingValid => !this.CurrentRoll.IsCheckRoll && !this.UserAttentsions.Any && !this.CriticalStops.Any;
+    public bool IsMappingValid => !this.CurrentRoll.IsCheckRoll && !this.UserAttentions.Any && !this.CriticalStops.Any;
 
     [JsonProperty]
     public abstract int Feet { get; set; }
     [JsonProperty]
     public abstract int Speed { get; set; }
+
+    [JsonProperty]
+    public bool IsManualMode { get; set; }
+
+    [JsonProperty]
+    public string Recipe { get; set; }
 
     /// <summary>
     /// Called to start data collection
@@ -137,7 +128,7 @@ namespace Mahlo.Logic
       this.CurrentRoll = roll;
 
       // On startup, roll sequence should be verified
-      this.UserAttentsions.VerifyRollSequence = true;
+      this.UserAttentions.VerifyRollSequence = true;
     }
 
     protected virtual void Dispose(bool disposing)
@@ -167,7 +158,7 @@ namespace Mahlo.Logic
     private void FeetCounterChanged(int feet)
     {
       this.Feet = feet;
-      this.UserAttentsions.IsRollTooLong |= this.Feet > this.CurrentRoll.RollLength * 1.1;
+      this.UserAttentions.IsRollTooLong |= this.Feet > this.CurrentRoll.RollLength * 1.1;
     }
 
     private void SeamDetected(bool isSeamDetected)
@@ -179,7 +170,7 @@ namespace Mahlo.Logic
 
       this.srcData.ResetSeamDetector();
 
-      if (this.UserAttentsions.IsSystemDisabled)
+      if (this.UserAttentions.IsSystemDisabled)
       {
         // Do not respond to seam detection if system is disabled
         return;
@@ -191,7 +182,7 @@ namespace Mahlo.Logic
         return;
       }
 
-      this.UserAttentsions.IsRollTooShort |= this.Feet < this.CurrentRoll.RollLength * 0.9;
+      this.UserAttentions.IsRollTooShort |= this.Feet < this.CurrentRoll.RollLength * 0.9;
       this.rollFinishedSubject.OnNext(this.CurrentRoll);
 
       // Start new roll
@@ -206,7 +197,7 @@ namespace Mahlo.Logic
       if (this.rollCheckCount >= this.appInfo.CheckAfterHowManyRolls || 
         this.styleCheckCount >= this.appInfo.CheckAfterHowManyStyles)
       {
-        this.UserAttentsions.VerifyRollSequence = true;
+        this.UserAttentions.VerifyRollSequence = true;
       }
 
       this.CurrentRoll = nextRoll;
@@ -216,33 +207,9 @@ namespace Mahlo.Logic
       this.rollStartedSubject.OnNext(this.CurrentRoll);
     }
 
-    private void RefreshStatusDisplay()
+    public void RefreshStatusDisplay()
     {
-      // Mahlo status
-      (Color backColor, string message) =
-        this.CriticalStops.IsMahloCommError ? (Color.Red, "Mahlo is NOT communicating") :
-        this.srcData.IsManualMode ? (Color.Yellow, "Mahlo is in Manual mode") :
-        (Color.Green, $"Mahlo Recipe: {(string.IsNullOrWhiteSpace(srcData.Recipe) ? "Unknown" : srcData.Recipe)}");
-      this.MahloStatusMessage = message;
-      this.MahloStatusMessageBackColor = backColor;
-
-      // PLC status
-      (backColor, message) = 
-        this.CriticalStops.IsPlcCommError ? (Color.Red, "PLC is NOT Communicating") :
-        (Color.Green, "PLC is Communicating");
-      this.PlcStatusMessage = message;
-      this.PlcStatusMessageBackColor = backColor;
-
-      // Mapping status
-      (backColor, message) =
-        this.CriticalStops.Any ? (Color.Red, "Mapping is off due to one or more critical problems") :
-        this.UserAttentsions.IsSystemDisabled ? (Color.Yellow, "System is disabled, seams are ignored, press [F3] to arm") :
-        this.UserAttentsions.IsRollTooLong ? (Color.Yellow, "Measured roll length excessively long, verify roll sequence") :
-        this.UserAttentsions.IsRollTooShort ? (Color.Yellow, "Measured roll length excessively short, verify roll sequence") :
-        this.UserAttentsions.VerifyRollSequence ? (Color.Yellow, "Verify roll sequence, click \"Wait for Seam\" to arm system") :
-        (Color.Green, "Roll is being mapped");
-      this.MappingStatusMessage = message;
-      this.MappingStatusMessageBackColor = backColor;
+      throw new NotImplementedException();
     }
 
     public void MoveToNextRoll()

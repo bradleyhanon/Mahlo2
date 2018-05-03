@@ -14,7 +14,6 @@ using Newtonsoft.Json;
 
 namespace Mahlo.Logic
 {
-  [JsonObject]
   class BowAndSkewLogic : MeterLogic<BowAndSkewRoll>, IBowAndSkewLogic
   {
     public BowAndSkewLogic(

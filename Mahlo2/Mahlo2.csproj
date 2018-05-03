@@ -73,7 +73,6 @@
     <Compile Include="AppSettings\IAppInfoBAS.cs" />
     <Compile Include="AppSettings\IMahloOpcSettings.cs" />
     <Compile Include="AppSettings\MahloOpcSettings.cs" />
-    <Compile Include="Controllers\MahloBowAndSkew.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Ipc\IMahloServer.cs" />
     <Compile Include="Ipc\MahloServer.cs" />
@@ -91,7 +90,6 @@
     <Compile Include="Logic\IModelLogic.cs" />
     <Compile Include="Logic\IPatternRepeatLogic.cs" />
     <Compile Include="Logic\ISewinQueue.cs" />
-    <Compile Include="Controllers\MahloPatternRepeat.cs" />
     <Compile Include="Logic\IUserAttentions.cs" />
     <Compile Include="Logic\MahloLogic.cs" />
     <Compile Include="Logic\MeterLogic.cs" />
@@ -149,15 +147,12 @@
     <Compile Include="SingleInstance.cs" />
     <Compile Include="Utilities\AsyncPump.cs" />
     <Compile Include="Utilities\ConcurrencyInfo.cs" />
+    <Compile Include="Utilities\ConsoleControl.cs" />
+    <Compile Include="Utilities\ConsoleEventArgs.cs" />
     <Compile Include="Utilities\IConcurrencyInfo.cs" />
     <Compile Include="Utilities\ISchedulerProvider.cs" />
     <Compile Include="Utilities\SchedulerProvider.cs" />
-    <Compile Include="Views\MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Utilities\SingleThreadSynchronizationContext.cs" />
     <Compile Include="WinApi.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -241,9 +236,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Service.resx">
       <DependentUpon>Service.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

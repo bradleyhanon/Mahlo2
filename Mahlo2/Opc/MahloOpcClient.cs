@@ -29,6 +29,7 @@ namespace Mahlo.Opc
     string mahloChannel;
 
     private EasyDAClient opcClient;
+    private IUserAttentions<Model> userAttentions;
     private ICriticalStops<Model> criticalStops;
     private Type priorExceptionType = null;
     private IMahloOpcSettings mahloSettings;
@@ -49,8 +50,12 @@ namespace Mahlo.Opc
     private Subject<double> skewSubject = new Subject<double>();
     private Subject<double> patterRepeatSubject = new Subject<double>();
 
+    private IDisposable criticalAlarmsSubscription;
+    private IDisposable userAttentionsSubscription;
+
     public MahloOpcClient(
       EasyDAClient opcClient, 
+      IUserAttentions<Model> userAttentions,
       ICriticalStops<Model> criticalStops, 
       IMahloOpcSettings mahloSettings, 
       //IPlcSettings seamSettings,
@@ -59,6 +64,7 @@ namespace Mahlo.Opc
       ILogger logger)
     {
       this.opcClient = opcClient;
+      this.userAttentions = userAttentions;
       this.criticalStops = criticalStops;
       this.mahloSettings = mahloSettings;
       //this.seamSettings = seamSettings;
@@ -66,7 +72,19 @@ namespace Mahlo.Opc
       this.programState = programState;
       this.log = logger;
 
-      criticalStops.MeterSrc = (IMeterSrc<Model>)this;
+      this.criticalAlarmsSubscription =
+        Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+          h => ((INotifyPropertyChanged)this.criticalStops).PropertyChanged += h,
+          h => ((INotifyPropertyChanged)this.criticalStops).PropertyChanged -= h)
+          .Where(args => args.EventArgs.PropertyName == nameof(CriticalStops<Model>.Any))
+          .Subscribe(_ => this.SetCriticalAlarm(this.criticalStops.Any));
+
+      this.userAttentionsSubscription =
+        Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+          h => ((INotifyPropertyChanged)this.userAttentions).PropertyChanged += h,
+          h => ((INotifyPropertyChanged)this.userAttentions).PropertyChanged -= h)
+          .Where(args => args.EventArgs.PropertyName == nameof(UserAttentions<Model>.Any))
+          .Subscribe(_ => this.SetStatusIndicator(this.userAttentions.Any));
 
       var state = programState.GetSubState(nameof(MahloOpcClient<Model>), typeof(Model).Name);
       this.meterOffset = state.Get<double?>(nameof(meterOffset)) ?? 0.0;

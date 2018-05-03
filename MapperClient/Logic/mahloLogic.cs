@@ -9,5 +9,9 @@ namespace MapperClient.Logic
 {
   class MahloLogic : ModelLogic, IMahloLogic
   {
+    public MahloLogic(ISewinQueue sewinQueue)
+      : base(sewinQueue)
+    {
+    }
   }
 }
