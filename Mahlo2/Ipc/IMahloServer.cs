@@ -8,6 +8,6 @@ namespace Mahlo.Ipc
 {
   interface IMahloServer
   {
-    void RefreshAll();
+    void RefreshAll(string connectionId);
   }
 }

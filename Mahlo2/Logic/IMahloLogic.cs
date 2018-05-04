@@ -4,8 +4,7 @@ using Newtonsoft.Json;
 
 namespace Mahlo.Logic
 {
-  [JsonObject(MemberSerialization.OptIn)]
-  interface IMahloLogic : IModelLogic
+    interface IMahloLogic : IMeterLogic<MahloRoll>
   {
   }
 }

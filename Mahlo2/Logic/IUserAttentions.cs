@@ -10,10 +10,10 @@ namespace Mahlo.Logic
     bool IsRollTooShort { get; set; }
     bool IsSystemDisabled { get; set; }
     bool VerifyRollSequence { get; set; }
+    void ClearAll();
   }
 
   interface IUserAttentions<Model> : IUserAttentions
   {
-    void ClearAll();
   }
 }

@@ -21,10 +21,42 @@ namespace Mahlo.Ipc
       this.syncContext = Program.Container.GetInstance<SynchronizationContext>();
     }
 
-    public override Task OnConnected()
+    public void RefreshAll()
     {
-      this.syncContext.Post(_ => this.mahloServer.RefreshAll(), null);
-      return base.OnConnected();
+      this.mahloServer.RefreshAll(this.Context.ConnectionId);
+    }
+
+    public void MoveToPriorRoll(string name)
+    {
+      this.syncContext.Post(_ => this.GetMeterLogicInstance(name).MoveToPriorRoll(), null);
+    }
+
+    public void MoveToNextRoll(string name)
+    {
+      this.syncContext.Post(_ => this.GetMeterLogicInstance(name).MoveToNextRoll(), null);
+    }
+
+    public void WaitForSeam(string name)
+    {
+      this.syncContext.Post(_ => this.GetMeterLogicInstance(name).WaitForSeam(), null);
+    }
+
+    private IMeterLogic GetMeterLogicInstance(string name)
+    {
+      switch (name)
+      {
+        case nameof(IMahloLogic):
+          return Program.Container.GetInstance<IMahloLogic>();
+
+        case nameof(IBowAndSkewLogic):
+          return Program.Container.GetInstance<IBowAndSkewLogic>();
+
+        case nameof(IPatternRepeatLogic):
+          return Program.Container.GetInstance<IPatternRepeatLogic>();
+
+        default:
+          throw new InvalidOperationException($"MahloHub.GetMeterLogicInstance(\"{name}\")");
+      }
     }
   }
 }

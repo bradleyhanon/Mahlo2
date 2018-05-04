@@ -18,7 +18,7 @@ using PropertyChanged;
 namespace Mahlo.Logic
 {
   [AddINotifyPropertyChangedInterface]
-  abstract class MeterLogic<Model> : IMeterLogic<Model>, IModelLogic
+  abstract class MeterLogic<Model> : IMeterLogic<Model>, IDisposable
     where Model : MahloRoll, new()
   {
     private ISewinQueue sewinQueue;
@@ -85,10 +85,10 @@ namespace Mahlo.Logic
     public string CurrentRollNo => this.CurrentRoll.RollNo;
 
     [JsonProperty]
-    public IUserAttentions<Model> UserAttentions { get; }
+    public IUserAttentions UserAttentions { get; set; }
 
     [JsonProperty]
-    public ICriticalStops<Model> CriticalStops { get; }
+    public ICriticalStops CriticalStops { get; set; }
 
     public IObservable<CarpetRoll> RollStarted { get; }
     public IObservable<CarpetRoll> RollFinished { get; }

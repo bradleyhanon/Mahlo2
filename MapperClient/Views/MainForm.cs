@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mahlo.Logic;
 using Mahlo.Models;
+using MapperClient.Ipc;
 using MapperClient.Logic;
 
 namespace MapperClient.Views
@@ -36,33 +37,47 @@ namespace MapperClient.Views
     private IDisposable BowAndSkewPropertyChangedSubscription;
     private IDisposable PatternRepeatPropertyChangedSubscription;
 
-    ICarpetProcessor carpetProcessor;
+    private ICarpetProcessor carpetProcessor;
+    private IMahloClient mahloClient;
 
-    public MainForm(ICarpetProcessor carpetProcessor)
+    public MainForm(ICarpetProcessor carpetProcessor, IMahloClient mahloClient)
     {
       InitializeComponent();
       this.carpetProcessor = carpetProcessor;
+      this.mahloClient = mahloClient;
 
-      this.MahloPropertyChangedSubscription = 
+      this.MahloPropertyChangedSubscription =
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
         h => ((INotifyPropertyChanged)this.carpetProcessor.MahloLogic).PropertyChanged += h,
         h => ((INotifyPropertyChanged)this.carpetProcessor.MahloLogic).PropertyChanged -= h)
         .Where(args => args.EventArgs.PropertyName == nameof(this.carpetProcessor.MahloLogic.CurrentRoll))
-        .Subscribe(args => this.mahloRollSrc.DataSource = this.carpetProcessor.MahloLogic.CurrentRoll);
+        .Subscribe(args =>
+        {
+          this.mahloRollSrc.DataSource = this.carpetProcessor.MahloLogic.CurrentRoll;
+          this.dataGridView1.Invalidate();
+        });
 
       BowAndSkewPropertyChangedSubscription =
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
         h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged += h,
         h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged -= h)
         .Where(args => args.EventArgs.PropertyName == nameof(this.carpetProcessor.BowAndSkewLogic.CurrentRoll))
-        .Subscribe(args => this.bowAndSkewRollSrc.DataSource = this.carpetProcessor.BowAndSkewLogic.CurrentRoll);
+        .Subscribe(args =>
+        {
+          this.bowAndSkewRollSrc.DataSource = this.carpetProcessor.BowAndSkewLogic.CurrentRoll;
+          this.dataGridView1.Invalidate();
+        });
 
       PatternRepeatPropertyChangedSubscription =
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
         h => ((INotifyPropertyChanged)this.carpetProcessor.PatternRepeatLogic).PropertyChanged += h,
         h => ((INotifyPropertyChanged)this.carpetProcessor.PatternRepeatLogic).PropertyChanged -= h)
         .Where(args => args.EventArgs.PropertyName == nameof(this.carpetProcessor.PatternRepeatLogic.CurrentRoll))
-        .Subscribe(args => this.patternRepeatRollSrc.DataSource = this.carpetProcessor.PatternRepeatLogic.CurrentRoll);
+        .Subscribe(args =>
+        {
+          this.patternRepeatRollSrc.DataSource = this.carpetProcessor.PatternRepeatLogic.CurrentRoll;
+          this.dataGridView1.Invalidate();
+        });
 
       // Make column heading alignment match column data alignment
       foreach (DataGridViewColumn column in dataGridView1.Columns)
@@ -106,9 +121,9 @@ namespace MapperClient.Views
       this.bowAndSkewLogicSrc.DataSource = carpetProcessor.BowAndSkewLogic;
       this.patternRepeatLogicSrc.DataSource = carpetProcessor.PatternRepeatLogic;
 
-      this.grpMahlo.Tag = this.carpetProcessor.MahloLogic;
-      this.grpBowAndSkew.Tag = this.carpetProcessor.BowAndSkewLogic;
-      this.grpPatternRepeat.Tag = this.carpetProcessor.PatternRepeatLogic;
+      this.grpMahlo.Tag = nameof(IMahloLogic);
+      this.grpBowAndSkew.Tag = nameof(IBowAndSkewLogic);
+      this.grpPatternRepeat.Tag = nameof(IPatternRepeatLogic);
     }
 
     private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -142,25 +157,29 @@ namespace MapperClient.Views
       }
     }
 
-    private void btnFore_Click(object sender, EventArgs e)
+    private void BtnFore_Click(object sender, EventArgs e)
     {
-      var btn = (Button)sender;
-      var logic = (IModelLogic)btn.Parent.Tag;
-      logic.MoveToNextRoll();
+      this.ExecuteButtonCmd(sender, MahloClient.MoveToNextRollCommand);
     }
 
-    private void btnBack_Click(object sender, EventArgs e)
+    private void BtnBack_Click(object sender, EventArgs e)
     {
-      var btn = (Button)sender;
-      var logic = (IModelLogic)btn.Parent.Tag;
-      logic.MoveToPriorRoll();
+      this.ExecuteButtonCmd(sender, MahloClient.MoveToPriorRollCommand);
     }
 
-    private void btnWaitForSem_Click(object sender, EventArgs e)
+    private void BtnWaitForSeam_Click(object sender, EventArgs e)
     {
-      var btn = (Button)sender;
-      var logic = (IModelLogic)btn.Parent.Tag;
-      logic.WaitForSeam();
+      this.ExecuteButtonCmd(sender, MahloClient.WaitForSeamCommand);
+    }
+
+    private async void ExecuteButtonCmd(object sender, string command)
+    {
+      Button button = (Button)sender;
+      string name = (string)button.Parent.Tag;
+      var buttons = button.Parent.Controls.OfType<Button>();
+      buttons.ForEach(item => item.Enabled = false);
+      await this.mahloClient.Call(command, name);
+      buttons.ForEach(item => item.Enabled = true);
     }
   }
 }

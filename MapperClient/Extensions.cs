@@ -26,6 +26,14 @@ namespace MapperClient
       return Color.FromArgb(d, d, d);
     }
 
+    public static void ForEach<T>(this IEnumerable<T> items, Action<T> action)
+    {
+      foreach(var item in items)
+      {
+        action(item);
+      }
+    }
+
     public static void Populate<T>(this JToken value, T target) 
       where T:class
     {

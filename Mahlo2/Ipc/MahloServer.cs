@@ -37,12 +37,12 @@ namespace Mahlo.Ipc
       this.patternRepeatLogic = patternRepeatLogic;
 
       this.timer = Observable
-        .Interval(TimeSpan.FromMilliseconds(250), schedulerProvider.WinFormsThread)
+        .Interval(TimeSpan.FromMilliseconds(1000), schedulerProvider.WinFormsThread)
         .Subscribe(_ =>
         {
-          this.UpdateMahloLogic(false);
-          this.UpdateBowAndSkewLogic(false);
-          this.UpdatePatternRepeatLogic(false);
+          this.UpdateMahloLogic();
+          this.UpdateBowAndSkewLogic();
+          this.UpdatePatternRepeatLogic();
         });
 
       sewinQueue.QueueChanged.Subscribe(_ => UpdateSewinQueue());
@@ -60,39 +60,43 @@ namespace Mahlo.Ipc
       this.Clients.All.UpdateSewinQueue(this.sewinQueue.Rolls.ToArray());
     }
 
-    public void UpdateMahloLogic(bool always)
+    public void UpdateMahloLogic()
     {
-      if (this.mahloLogic.IsChanged || always)
+      if (this.mahloLogic.IsChanged)
       {
+        log.Debug("UpdateMahloLogic()");
         this.mahloLogic.IsChanged = false;
         this.Clients.All.UpdateMahloLogic(this.mahloLogic);
       }
     }
 
-    public void UpdateBowAndSkewLogic(bool always)
+    public void UpdateBowAndSkewLogic()
     {
-      if (this.bowAndSkewLogic.IsChanged || always)
+      if (this.bowAndSkewLogic.IsChanged)
       {
+        log.Debug("UpdateBowAndSkewLogic()");
         this.bowAndSkewLogic.IsChanged = false;
         this.Clients.All.UpdateBowAndSkewLogic(this.bowAndSkewLogic);
       }
     }
 
-    public void UpdatePatternRepeatLogic(bool always)
+    public void UpdatePatternRepeatLogic()
     {
-      if (this.patternRepeatLogic.IsChanged || always)
+      if (this.patternRepeatLogic.IsChanged)
       {
+        log.Debug("UpdatePatternRepeatLogic()");
         this.patternRepeatLogic.IsChanged = false;
         this.Clients.All.UpdatePatternRepeatLogic(this.patternRepeatLogic);
       }
     }
 
-    public void RefreshAll()
+    public void RefreshAll(string connectionId)
     {
-      this.UpdateSewinQueue();
-      this.UpdateMahloLogic(true);
-      this.UpdateBowAndSkewLogic(true);
-      this.UpdatePatternRepeatLogic(true);
+      var client = this.Clients.Client(connectionId);
+      client.UpdateSewinQueue(this.sewinQueue.Rolls.ToArray());
+      client.UpdateMahloLogic(this.mahloLogic);
+      client.UpdateBowAndSkewLogic(this.bowAndSkewLogic);
+      client.UpdatePatternRepeatLogic(this.patternRepeatLogic);
     }
   }
 }

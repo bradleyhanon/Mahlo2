@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mahlo.Logic;
+using Mahlo.Models;
 using MapperClient.AppSettings;
 using MapperClient.Ipc;
 using MapperClient.Logic;
@@ -26,7 +27,7 @@ namespace MapperClient
       Application.SetCompatibleTextRenderingDefault(false);
       using (var container = InitializeContainer())
       {
-        container.GetInstance<MahloClient>().Start();
+        var notUsed = container.GetInstance<MahloClient>().Start();
         Application.Run(container.GetInstance<MainForm>());
       }
     }
@@ -42,6 +43,7 @@ namespace MapperClient
       var registration = Lifestyle.Transient.CreateRegistration<MainForm>(container);
       registration.SuppressDiagnosticWarning(DiagnosticType.DisposableTransientComponent, "Done by system");
 
+      container.RegisterSingleton<IMahloClient, MahloClient>();
       container.RegisterSingleton<ISewinQueue, SewinQueue>();
       container.RegisterSingleton<IMahloLogic, MahloLogic>();
       container.RegisterSingleton<IBowAndSkewLogic, BowAndSkewLogic>();

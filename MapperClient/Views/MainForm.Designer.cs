@@ -388,7 +388,7 @@
       this.btnFore2.TabIndex = 6;
       this.btnFore2.Text = "Forward to Next Roll";
       this.btnFore2.UseVisualStyleBackColor = true;
-      this.btnFore2.Click += new System.EventHandler(this.btnFore_Click);
+      this.btnFore2.Click += new System.EventHandler(this.BtnFore_Click);
       // 
       // textBox4
       // 
@@ -439,7 +439,7 @@
       this.btnBack2.TabIndex = 7;
       this.btnBack2.Text = "Back to Prior Roll";
       this.btnBack2.UseVisualStyleBackColor = true;
-      this.btnBack2.Click += new System.EventHandler(this.btnBack_Click);
+      this.btnBack2.Click += new System.EventHandler(this.BtnBack_Click);
       // 
       // btnWaitFormSeam2
       // 
@@ -450,7 +450,7 @@
       this.btnWaitFormSeam2.TabIndex = 5;
       this.btnWaitFormSeam2.Text = "Wait for Seam";
       this.btnWaitFormSeam2.UseVisualStyleBackColor = true;
-      this.btnWaitFormSeam2.Click += new System.EventHandler(this.btnWaitForSem_Click);
+      this.btnWaitFormSeam2.Click += new System.EventHandler(this.BtnWaitForSeam_Click);
       // 
       // label7
       // 
@@ -595,7 +595,7 @@
       this.btnWaitFormSeam3.TabIndex = 5;
       this.btnWaitFormSeam3.Text = "Wait for Seam";
       this.btnWaitFormSeam3.UseVisualStyleBackColor = true;
-      this.btnWaitFormSeam3.Click += new System.EventHandler(this.btnWaitForSem_Click);
+      this.btnWaitFormSeam3.Click += new System.EventHandler(this.BtnWaitForSeam_Click);
       // 
       // textBox14
       // 
@@ -616,7 +616,7 @@
       this.btnBack3.TabIndex = 7;
       this.btnBack3.Text = "Back to Prior Roll";
       this.btnBack3.UseVisualStyleBackColor = true;
-      this.btnBack3.Click += new System.EventHandler(this.btnBack_Click);
+      this.btnBack3.Click += new System.EventHandler(this.BtnBack_Click);
       // 
       // label19
       // 
@@ -712,7 +712,7 @@
       this.btnFore3.TabIndex = 6;
       this.btnFore3.Text = "Forward to Next Roll";
       this.btnFore3.UseVisualStyleBackColor = true;
-      this.btnFore3.Click += new System.EventHandler(this.btnFore_Click);
+      this.btnFore3.Click += new System.EventHandler(this.BtnFore_Click);
       // 
       // label11
       // 
@@ -855,7 +855,7 @@
       this.btnWaitFormSeam4.TabIndex = 5;
       this.btnWaitFormSeam4.Text = "Wait for Seam";
       this.btnWaitFormSeam4.UseVisualStyleBackColor = true;
-      this.btnWaitFormSeam4.Click += new System.EventHandler(this.btnWaitForSem_Click);
+      this.btnWaitFormSeam4.Click += new System.EventHandler(this.BtnWaitForSeam_Click);
       // 
       // textBox16
       // 
@@ -876,7 +876,7 @@
       this.btnBack4.TabIndex = 7;
       this.btnBack4.Text = "Back to Prior Roll";
       this.btnBack4.UseVisualStyleBackColor = true;
-      this.btnBack4.Click += new System.EventHandler(this.btnBack_Click);
+      this.btnBack4.Click += new System.EventHandler(this.BtnBack_Click);
       // 
       // label21
       // 
@@ -954,7 +954,7 @@
       this.btnFore4.TabIndex = 6;
       this.btnFore4.Text = "Forward to Next Roll";
       this.btnFore4.UseVisualStyleBackColor = true;
-      this.btnFore4.Click += new System.EventHandler(this.btnFore_Click);
+      this.btnFore4.Click += new System.EventHandler(this.BtnFore_Click);
       // 
       // label24
       // 

@@ -12,13 +12,13 @@ using PropertyChanged;
 namespace MapperClient.Logic
 {
   [AddINotifyPropertyChangedInterface]
-  abstract class ModelLogic : IModelLogic
+  abstract class MeterLogic<Model> : IMeterLogic<Model>
   {
     private ISewinQueue sewinQueue;
     private string currentRollNo = string.Empty;
     private IDisposable SewinQueueChangedSubscription;
 
-    public ModelLogic(ISewinQueue sewinQueue)
+    public MeterLogic(ISewinQueue sewinQueue)
     {
       this.sewinQueue = sewinQueue;
       this.SewinQueueChangedSubscription =
@@ -47,9 +47,9 @@ namespace MapperClient.Logic
 
     public string Recipe { get; set; }
 
-    public IUserAttentions UserAttentions { get; set; } = new UserAttentions();
+    public IUserAttentions UserAttentions { get; } = new UserAttentions<Model>();
 
-    public ICriticalStops CriticalStops { get; set; } = new CriticalStops();
+    public ICriticalStops CriticalStops { get; } = new CriticalStops<Model>();
 
 
     public IObservable<CarpetRoll> RollStarted => throw new NotImplementedException();
@@ -70,6 +70,9 @@ namespace MapperClient.Logic
     public Color MappingStatusMessageBackColor { get; set; }
     [DependsOn(nameof(MappingStatusMessageBackColor))]
     public Color MappingStatusMessageForeColor => MappingStatusMessageBackColor.ContrastColor();
+
+    public abstract int Feet { get; set; }
+    public abstract int Speed { get; set; }
 
     public void RefreshStatusDisplay()
     {
