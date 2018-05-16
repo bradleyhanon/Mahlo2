@@ -77,6 +77,7 @@
     <Compile Include="Ipc\IMahloServer.cs" />
     <Compile Include="Ipc\MahloServer.cs" />
     <Compile Include="Ipc\MahloHub.cs" />
+    <Compile Include="Ipc\RecipeApplyToEnum.cs" />
     <Compile Include="Ipc\Startup.cs" />
     <Compile Include="Logic\CarpetProcessor.cs" />
     <Compile Include="Logic\CriticalStops.cs" />
@@ -87,7 +88,6 @@
     <Compile Include="Logic\ICutRollLogic.cs" />
     <Compile Include="Logic\IMahloLogic.cs" />
     <Compile Include="Logic\IMeterLogic.cs" />
-    <Compile Include="Logic\IModelLogic.cs" />
     <Compile Include="Logic\IPatternRepeatLogic.cs" />
     <Compile Include="Logic\ISewinQueue.cs" />
     <Compile Include="Logic\IUserAttentions.cs" />

@@ -28,7 +28,7 @@ namespace MapperClient
       using (var container = InitializeContainer())
       {
         var notUsed = container.GetInstance<MahloClient>().Start();
-        Application.Run(container.GetInstance<MainForm>());
+        Application.Run(container.GetInstance<FormBowAndSkew>());
       }
     }
 

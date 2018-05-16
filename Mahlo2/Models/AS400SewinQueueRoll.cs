@@ -38,12 +38,14 @@ namespace Mahlo.Models
       CarpetRoll dest = new CarpetRoll
       {
         RollNo = this.G2ROLL.Trim(),
+        OrderNo = this.G2SCH.Trim(),
         StyleCode = this.G2STYL.Trim(),
         StyleName = this.F2SDSC.Trim(),
         ColorCode = this.G2CLR.Trim(),
         ColorName = this.F2CDSC.Trim(),
         BackingCode = this.G2SBK.Trim(),
         PatternRepeatLength = (double)this.G2RPLN,
+        DefaultRecipe = this.DefaultRecipe,
 
         RollLength = this.G2LTF,
         ProductImageURL = this.ProductImageURL?.Trim() ?? string.Empty,

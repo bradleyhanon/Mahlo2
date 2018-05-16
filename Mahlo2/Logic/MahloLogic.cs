@@ -37,5 +37,11 @@ namespace Mahlo.Logic
       get => this.CurrentRoll.MalSpeed;
       set => this.CurrentRoll.MalSpeed = value;
     }
+
+    public override bool IsMapValid
+    {
+      get => this.CurrentRoll.MalMapValid;
+      set => this.CurrentRoll.MalMapValid = value;
+    }
   }
 }

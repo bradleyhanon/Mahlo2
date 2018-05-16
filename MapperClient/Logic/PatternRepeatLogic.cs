@@ -26,5 +26,11 @@ namespace MapperClient.Logic
       get => this.CurrentRoll.PrsSpeed;
       set => throw new NotImplementedException();
     }
+
+    public override bool IsMapValid
+    {
+      get => this.CurrentRoll.PrsMapValid;
+      set => throw new NotImplementedException();
+    }
   }
 }

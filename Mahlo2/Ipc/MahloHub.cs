@@ -40,6 +40,10 @@ namespace Mahlo.Ipc
     {
       this.syncContext.Post(_ => this.GetMeterLogicInstance(name).WaitForSeam(), null);
     }
+    public void BasSetRecipe(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo)
+    {
+
+    }
 
     private IMeterLogic GetMeterLogicInstance(string name)
     {

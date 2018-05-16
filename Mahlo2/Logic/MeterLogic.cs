@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Mahlo;
 using Mahlo.AppSettings;
 using Mahlo.Models;
@@ -33,6 +35,8 @@ namespace Mahlo.Logic
     private IDisposable feetPerMinuteSubscription;
     private IDisposable queueChangedSubscription;
     private IDisposable timer;
+    private IDisposable userAttentionsChangedSubscription;
+    private IDisposable critialErrorsChangedSubscription;
 
     private int rollCheckCount;
     private int styleCheckCount = 1;
@@ -67,6 +71,20 @@ namespace Mahlo.Logic
 
       this.RollStarted = this.rollStartedSubject;
       this.RollFinished = this.rollFinishedSubject;
+
+      this.userAttentionsChangedSubscription = Observable
+        .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+          h => ((INotifyPropertyChanged)this.UserAttentions).PropertyChanged += h,
+          h => ((INotifyPropertyChanged)this.UserAttentions).PropertyChanged -= h)
+        .Subscribe(_ => this.IsMapValid &= this.UserAttentions.Any);
+
+      this.critialErrorsChangedSubscription = Observable
+        .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+          h => ((INotifyPropertyChanged)this.CriticalStops).PropertyChanged += h,
+          h => ((INotifyPropertyChanged)this.CriticalStops).PropertyChanged -= h)
+        .Subscribe(_ => this.IsMapValid &= this.CriticalStops.Any);
+
+      Application.Idle += Application_Idle;
     }
 
     /// <summary>
@@ -80,32 +98,37 @@ namespace Mahlo.Logic
     /// </summary>
     public CarpetRoll CurrentRoll { get; set; } = new CarpetRoll();
 
-    [JsonProperty]
     [DependsOn(nameof(CurrentRoll))]
     public string CurrentRollNo => this.CurrentRoll.RollNo;
 
-    [JsonProperty]
     public IUserAttentions UserAttentions { get; set; }
 
-    [JsonProperty]
     public ICriticalStops CriticalStops { get; set; }
 
     public IObservable<CarpetRoll> RollStarted { get; }
     public IObservable<CarpetRoll> RollFinished { get; }
 
-    public bool IsMappingValid => !this.CurrentRoll.IsCheckRoll && !this.UserAttentions.Any && !this.CriticalStops.Any;
-
-    [JsonProperty]
     public abstract int Feet { get; set; }
-    [JsonProperty]
     public abstract int Speed { get; set; }
+    public abstract bool IsMapValid { get; set; }
 
-    [JsonProperty]
     public bool IsManualMode { get; set; }
 
-    [JsonProperty]
     public string Recipe { get; set; }
 
+    public int PreviousRollLength { get; set; }
+
+    public int RollChangesUntilCheckRequired
+    {
+      get => Math.Max(0, this.appInfo.CheckAfterHowManyRolls - this.rollCheckCount);
+      set => throw new NotImplementedException();
+    }
+
+    public int StyleChangesUntilCheckRequired
+    {
+      get => Math.Max(0, this.appInfo.CheckAfterHowManyStyles - this.styleCheckCount);
+      set => throw new NotImplementedException();
+    }
     /// <summary>
     /// Called to start data collection
     /// </summary>
@@ -116,6 +139,11 @@ namespace Mahlo.Logic
     public void Dispose()
     {
       this.Dispose(true);
+    }
+
+    public bool GetIsMappingValid()
+    {
+      return !this.CurrentRoll.IsCheckRoll && !this.UserAttentions.Any && !this.CriticalStops.Any;
     }
 
     protected virtual void RestoreState()
@@ -133,6 +161,7 @@ namespace Mahlo.Logic
 
     protected virtual void Dispose(bool disposing)
     {
+      // Save program state
       var state = programState.GetSubState(nameof(MeterLogic<Model>));
       state.Set(typeof(Model).Name, new
       {
@@ -141,10 +170,18 @@ namespace Mahlo.Logic
         this.CurrentRoll,
       });
 
-      this.timer.Dispose();
       this.feetCounterSubscription?.Dispose();
       this.seamDetectedSubscription?.Dispose();
       this.feetPerMinuteSubscription?.Dispose();
+      this.queueChangedSubscription?.Dispose();
+      this.timer.Dispose();
+      this.userAttentionsChangedSubscription?.Dispose();
+      this.critialErrorsChangedSubscription?.Dispose();
+    }
+
+    private void Application_Idle(object sender, EventArgs e)
+    {
+      
     }
 
     private void SewinQueueChanged()
@@ -201,7 +238,9 @@ namespace Mahlo.Logic
       }
 
       this.CurrentRoll = nextRoll;
+
       this.Feet = 0;
+      this.IsMapValid = this.GetIsMappingValid();
       this.srcData.ResetMeterOffset();
 
       this.rollStartedSubject.OnNext(this.CurrentRoll);

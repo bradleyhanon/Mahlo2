@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Mahlo.Logic
 {
-    interface IMahloLogic : IMeterLogic<MahloRoll>
+  interface IMahloLogic : IMeterLogic<MahloRoll>
   {
   }
 }

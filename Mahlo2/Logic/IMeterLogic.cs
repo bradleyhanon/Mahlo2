@@ -32,6 +32,12 @@ namespace Mahlo.Logic
     int Feet { get; set; }
     [JsonIgnore]
     int Speed { get; set; }
+    [JsonIgnore]
+    bool IsMapValid { get; set; }
+
+    int PreviousRollLength { get; set; }
+    int RollChangesUntilCheckRequired { get; set; }
+    int StyleChangesUntilCheckRequired { get; set; }
 
     void RefreshStatusDisplay();
     void MoveToNextRoll();

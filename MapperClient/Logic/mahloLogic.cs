@@ -25,5 +25,11 @@ namespace MapperClient.Logic
       get => this.CurrentRoll.MalSpeed;
       set => throw new NotImplementedException();
     }
+
+    public override bool IsMapValid
+    {
+      get => this.CurrentRoll.MalMapValid;
+      set => throw new NotImplementedException();
+    }
   }
 }

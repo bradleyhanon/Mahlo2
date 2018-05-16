@@ -124,6 +124,8 @@ namespace MapperClient.Views
       this.grpMahlo.Tag = nameof(IMahloLogic);
       this.grpBowAndSkew.Tag = nameof(IBowAndSkewLogic);
       this.grpPatternRepeat.Tag = nameof(IPatternRepeatLogic);
+
+      this.dataGridView1.ClearSelection();
     }
 
     private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -180,6 +182,12 @@ namespace MapperClient.Views
       buttons.ForEach(item => item.Enabled = false);
       await this.mahloClient.Call(command, name);
       buttons.ForEach(item => item.Enabled = true);
+    }
+
+    private void DataGridView1_SelectionChanged(object sender, EventArgs e)
+    {
+      // Prevent selection
+      this.dataGridView1.ClearSelection();
     }
   }
 }

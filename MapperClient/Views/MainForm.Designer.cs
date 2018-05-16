@@ -382,6 +382,7 @@
       // btnFore2
       // 
       this.btnFore2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnFore2.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.mahloLogicSrc, "CanMoveForward", true));
       this.btnFore2.Location = new System.Drawing.Point(93, 213);
       this.btnFore2.Name = "btnFore2";
       this.btnFore2.Size = new System.Drawing.Size(75, 48);
@@ -433,6 +434,7 @@
       // btnBack2
       // 
       this.btnBack2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnBack2.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.mahloLogicSrc, "CanMoveBackward", true));
       this.btnBack2.Location = new System.Drawing.Point(12, 213);
       this.btnBack2.Name = "btnBack2";
       this.btnBack2.Size = new System.Drawing.Size(75, 48);
@@ -610,6 +612,7 @@
       // btnBack3
       // 
       this.btnBack3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnBack3.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bowAndSkewLogicSrc, "CanMoveBackward", true));
       this.btnBack3.Location = new System.Drawing.Point(12, 213);
       this.btnBack3.Name = "btnBack3";
       this.btnBack3.Size = new System.Drawing.Size(75, 48);
@@ -706,6 +709,7 @@
       // btnFore3
       // 
       this.btnFore3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnFore3.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bowAndSkewLogicSrc, "CanMoveForward", true));
       this.btnFore3.Location = new System.Drawing.Point(93, 213);
       this.btnFore3.Name = "btnFore3";
       this.btnFore3.Size = new System.Drawing.Size(75, 48);
@@ -870,6 +874,7 @@
       // btnBack4
       // 
       this.btnBack4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnBack4.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.patternRepeatLogicSrc, "CanMoveBackward", true));
       this.btnBack4.Location = new System.Drawing.Point(12, 213);
       this.btnBack4.Name = "btnBack4";
       this.btnBack4.Size = new System.Drawing.Size(75, 48);
@@ -948,6 +953,7 @@
       // btnFore4
       // 
       this.btnFore4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnFore4.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.patternRepeatLogicSrc, "CanMoveForward", true));
       this.btnFore4.Location = new System.Drawing.Point(93, 213);
       this.btnFore4.Name = "btnFore4";
       this.btnFore4.Size = new System.Drawing.Size(75, 48);
@@ -1169,10 +1175,12 @@
       dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
       this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle21;
       this.dataGridView1.RowHeadersVisible = false;
+      this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
       this.dataGridView1.Size = new System.Drawing.Size(838, 194);
       this.dataGridView1.TabIndex = 22;
       this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
       this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
+      this.dataGridView1.SelectionChanged += new System.EventHandler(this.DataGridView1_SelectionChanged);
       // 
       // rollNoDataGridViewTextBoxColumn
       // 

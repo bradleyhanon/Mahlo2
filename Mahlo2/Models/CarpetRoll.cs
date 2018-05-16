@@ -7,36 +7,64 @@ using PropertyChanged;
 
 namespace Mahlo.Models
 {
+  public enum CarpetRollTypeEnum
+  {
+    Greige,
+    Finished,
+    Leader,
+    CheckRoll
+  }
+
   [AddINotifyPropertyChangedInterface]
   public class CarpetRoll : IMahloRoll, IBowAndSkewRoll, IPatternRepeatRoll
   {
     public const string CheckRollId = "CHKROL";
 
     public int Id { get; set; }
-    public string RollNo { get; set; }
-    public string StyleCode { get; set; }
-    public string StyleName { get; set; }
-    public string ColorCode { get; set; }
-    public string ColorName { get; set; }
-    public string BackingCode { get; set; }
+    public string RollNo { get; set; } = string.Empty;
+    public string OrderNo { get; set; } = string.Empty;
+    public string StyleCode { get; set; } = string.Empty;
+    public string StyleName { get; set; } = string.Empty;
+    public string ColorCode { get; set; } = string.Empty;
+    public string ColorName { get; set; } = string.Empty;
+    public string BackingCode { get; set; } = string.Empty;
     public int RollLength { get; set; }
     public double RollWidth { get; set; }
 
     [DependsOn(nameof(RollWidth))]
-    public string RollWidthStr => $"{(int)RollWidth / 12}' {(int)RollWidth % 12}\"";
+    public string RollWidthStr
+    {
+      get
+      {
+        int feet = (int)RollWidth / 12;
+        int inches = (int)RollWidth % 12;
+        //return inches == 0 ? $"{feet} ft" : $"{feet}' {inches}\"";
+        return $"{feet}' {inches}\"";
+      }
+    }
 
-    public string DefaultRecipe { get; set; }
+    public string DefaultRecipe { get; set; } = string.Empty;
     public double PatternRepeatLength { get; set; }
     public string ProductImageURL { get; set; }
 
     public int MalFeet { get; set; }
-    public int BasFeet { get; set; }
-    public int PrsFeet { get; set; }
     public int MalSpeed { get; set; }
+    public bool MalMapValid { get; set; }
+
+    public int BasFeet { get; set; }
     public int BasSpeed { get; set; }
+    public bool BasMapValid { get; set; }
+
+    public int PrsFeet { get; set; }
     public int PrsSpeed { get; set; }
+    public bool PrsMapValid { get; set; }
+
     public double Bow { get; set; }
     public double Skew { get; set; }
+
+    public double BowInches => this.Bow * this.RollWidth;
+    public double SkewInches => this.Skew * this.RollWidth;
+
     public double Elongation { get; set; }
 
     public bool IsCheckRoll => this.RollNo == CheckRollId;

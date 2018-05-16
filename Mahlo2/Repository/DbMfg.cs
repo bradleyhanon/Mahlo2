@@ -18,6 +18,19 @@ namespace Mahlo.Repository
   {
     private const int CommandTimeout = 10;
 
+    static DbMfg()
+    {
+      // Create a new mapping collection
+      var mappings = new ColumnMappingCollection();
+
+      // Defining the mappings between each property/column for a type
+      mappings.RegisterType<AS400SewinQueueRoll>()
+              .MapProperty(x => x.G2SCH).ToColumn("G2SCH#");
+
+      // Tell Dapper to use our custom mappings
+      mappings.RegisterWithDapper();
+    }
+
     public DbMfg(IDbConnectionFactoryFactory factoryFactory)
     {
       this.ConnectionFactory = factoryFactory.Create("DbMfg");
@@ -44,9 +57,13 @@ namespace Mahlo.Repository
 
     public async Task<IEnumerable<CarpetRoll>> GetCoaterSewinQueue()
     {
+      var p = new DynamicParameters();
+      p.Add("Application", "BowAndSkew");
+
       using (var connection = this.GetOpenConnection())
       {
-        var rolls = await connection.QueryAsync<AS400SewinQueueRoll>("spGetCoaterSewinQueueV2", commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
+        //var rolls = await connection.QueryAsync<AS400SewinQueueRoll>("spGetCoaterSewinQueueV2", commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
+        var rolls = await connection.QueryAsync<AS400SewinQueueRoll>("spGetSewinQueue", p, commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
         return rolls.Select(roll => roll.ToCarpetRoll());
       }
     }
@@ -97,6 +114,26 @@ namespace Mahlo.Repository
         await connection.ExecuteAsync("spGetNamesFromLegacyCodes", commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
         var result = (p.Get<string>("style_name"), p.Get<string>("color_name"));
         return result;
+      }
+    }
+
+    public async Task BasUpdateDefaultRecipe(string styleCode, string rollNo, string recipeName)
+    {
+      var p = new DynamicParameters();
+      p.Add("Application", "BowAndSkew");
+      p.Add("StyleCode", styleCode);
+      p.Add("RollNumber", rollNo);
+      p.Add("RecipeName", recipeName);
+
+      try
+      {
+        using (var connection = this.GetOpenConnection())
+        {
+          await connection.ExecuteAsync("spUpdateCoaterMahloDefaultRecipe", p, commandType: CommandType.StoredProcedure, commandTimeout: 5);
+        }
+      }
+      catch
+      {
       }
     }
 

@@ -12,11 +12,12 @@ using PropertyChanged;
 namespace MapperClient.Logic
 {
   [AddINotifyPropertyChangedInterface]
-  abstract class MeterLogic<Model> : IMeterLogic<Model>
+  abstract class MeterLogic<Model> : IMeterLogic
   {
     private ISewinQueue sewinQueue;
     private string currentRollNo = string.Empty;
     private IDisposable SewinQueueChangedSubscription;
+    private CarpetRoll currentRoll = new CarpetRoll();
 
     public MeterLogic(ISewinQueue sewinQueue)
     {
@@ -32,16 +33,32 @@ namespace MapperClient.Logic
     }
 
     public bool IsChanged { get; set; }
-    public CarpetRoll CurrentRoll { get; set; } = new CarpetRoll();
+    public CarpetRoll CurrentRoll
+    {
+      get => currentRoll;
+      set
+      {
+        this.currentRoll = value;
+        this.CurrentRollType = this.sewinQueue.DetermineRollType(this.currentRoll);
+        this.NextRoll = this.sewinQueue.Rolls.SkipWhile(roll => roll != this.CurrentRoll).Skip(1).FirstOrDefault();
+        this.NextRollType = this.NextRoll == null ? (CarpetRollTypeEnum?)null : this.sewinQueue.DetermineRollType(this.NextRoll);
+      }
+    }
+
+    public CarpetRoll NextRoll { get; set; } = new CarpetRoll();
+
     public string CurrentRollNo
     {
       get => this.currentRollNo;
       set
       {
         this.currentRollNo = value;
-        this.CurrentRoll = sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == value) ?? new CarpetRoll();
+        this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == value) ?? new CarpetRoll();
       }
     }
+
+    public CarpetRollTypeEnum CurrentRollType { get; set; }
+    public CarpetRollTypeEnum? NextRollType { get; set; }
 
     public bool IsManualMode { get; set; }
 
@@ -71,8 +88,22 @@ namespace MapperClient.Logic
     [DependsOn(nameof(MappingStatusMessageBackColor))]
     public Color MappingStatusMessageForeColor => MappingStatusMessageBackColor.ContrastColor();
 
+    public string RollMappedText => this.IsMapValid ? "Yes" : "No";
+    public Color RollMappedBackColor => this.IsMapValid ? Color.Green : Color.Red;
+    public Color RollMappedForeColor => this.RollMappedBackColor.ContrastColor();
+
     public abstract int Feet { get; set; }
     public abstract int Speed { get; set; }
+    public abstract bool IsMapValid { get; set; }
+
+    public int PreviousRollLength { get; set; }
+    public int RollChangesUntilCheckRequired { get; set; }
+    public int StyleChangesUntilCheckRequired { get; set; }
+
+    [DependsOn(nameof(CurrentRoll))]
+    public bool CanMoveBackward => this.sewinQueue.Rolls.Contains(this.currentRoll) && this.currentRoll != this.sewinQueue.Rolls.FirstOrDefault();
+    [DependsOn(nameof(CurrentRoll))]
+    public bool CanMoveForward => this.sewinQueue.Rolls.Contains(this.currentRoll) && this.currentRoll != this.sewinQueue.Rolls.LastOrDefault();
 
     public void RefreshStatusDisplay()
     {

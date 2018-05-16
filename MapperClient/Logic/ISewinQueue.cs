@@ -15,5 +15,6 @@ namespace MapperClient.Logic
     BindingList<CarpetRoll> Rolls { get; }
 
     void UpdateSewinQueue(IEnumerable<CarpetRoll> rolls);
+    CarpetRollTypeEnum DetermineRollType(CarpetRoll roll);
   }
 }

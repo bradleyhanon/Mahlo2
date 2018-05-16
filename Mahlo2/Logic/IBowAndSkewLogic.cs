@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Mahlo.Logic
 {
-    interface IBowAndSkewLogic : IMeterLogic<BowAndSkewRoll>
+  interface IBowAndSkewLogic : IMeterLogic<BowAndSkewRoll>
   {
   }
 }

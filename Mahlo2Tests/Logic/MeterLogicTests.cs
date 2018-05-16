@@ -121,19 +121,19 @@ namespace Mahlo2Tests.Logic
     [Fact]
     public void IsMappingValidPasses()
     {
-      Assert.True(target.IsMappingValid);
+      Assert.True(target.GetIsMappingValid());
       this.userAttentions.Any.Returns(true);
-      Assert.False(target.IsMappingValid);
+      Assert.False(target.GetIsMappingValid());
       this.userAttentions.Any.Returns(false);
 
       this.criticalStops.Any.Returns(true);
-      Assert.False(this.target.IsMappingValid);
+      Assert.False(this.target.GetIsMappingValid());
       this.criticalStops.Any.Returns(false);
 
       this.target.CurrentRoll.RollNo = CarpetRoll.CheckRollId;
-      Assert.False(this.target.IsMappingValid);
+      Assert.False(this.target.GetIsMappingValid());
       this.target.CurrentRoll.RollNo = "SomethingElse";
-      Assert.True(this.target.IsMappingValid);
+      Assert.True(this.target.GetIsMappingValid());
     }
 
     [Fact]

@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Mahlo.Ipc;
 using Mahlo.Logic;
 using Mahlo.Models;
 using MapperClient.AppSettings;
 using MapperClient.Logic;
+using MapperClient.Views;
 using Microsoft.AspNet.SignalR.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -114,6 +116,11 @@ namespace MapperClient.Ipc
 
         this.isStarting = false;
       }
+    }
+
+    public async void BasSetRecipe(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo)
+    {
+      await this.Call(nameof(BasSetRecipe), rollNo, styleCode, recipeName, applyTo);
     }
 
     private void HubConnection_StateChanged(StateChange obj)

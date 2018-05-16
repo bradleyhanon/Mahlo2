@@ -311,5 +311,16 @@ namespace Mahlo.Opc
     {
       //throw new NotImplementedException();
     }
+
+    public void SetAutoMode(bool value)
+    {
+      var datvq = new DAVtq(value ? 1 : 0);
+      //this.opcClient.WriteItem(string.Empty, MahloServerClass, $"{this.mahloChannel}.Current.Bridge.0.Calc.1.OnOff", datvq);
+    }
+
+    public void SetRecipe(string recipeName)
+    {
+      //this.opcClient.WriteItemValue(string.Empty, MahloServerClass, $"{this.mahloChannel}.ApplyRecipe", recipeName);
+    }
   }
 }

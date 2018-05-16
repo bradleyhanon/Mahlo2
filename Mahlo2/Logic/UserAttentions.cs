@@ -24,8 +24,6 @@ namespace Mahlo.Logic
       All = VerifyRollSequence | RollTooLong | RollTooShort | SystemDisabled,
     }
 
-    //public IObservable<IUserAttentions<Model>> Changes => this.changes.AsObservable();
-
     public bool IsSystemDisabled
     {
       get => (this.attentions & Attention.SystemDisabled) != 0;

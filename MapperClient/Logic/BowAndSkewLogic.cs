@@ -20,9 +20,16 @@ namespace MapperClient.Logic
       get => this.CurrentRoll.BasFeet;
       set => throw new NotImplementedException();
     }
+
     public override int Speed
     {
       get => this.CurrentRoll.BasSpeed;
+      set => throw new NotImplementedException();
+    }
+
+    public override bool IsMapValid
+    {
+      get => this.CurrentRoll.BasMapValid;
       set => throw new NotImplementedException();
     }
   }
