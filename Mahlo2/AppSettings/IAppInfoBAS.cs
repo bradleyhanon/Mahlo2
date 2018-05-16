@@ -5,6 +5,7 @@
     string MapperUrl { get; set; }
     bool ArchiveRollMaps { get; set; }
     bool AutoCloseMahloDDEServer { get; set; }
+    bool AutoSetRecipe { get; set; }
     double BowToleranceInInches { get; set; }
     int CheckAfterHowManyRolls { get; set; }
     int CheckAfterHowManyStyles { get; set; }

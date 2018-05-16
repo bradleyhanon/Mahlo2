@@ -33,7 +33,6 @@ namespace MapperClient.Views
           h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged -= h)
         .Where(args => 
           args.EventArgs.PropertyName == nameof(this.carpetProcessor.BowAndSkewLogic.CurrentRoll))
-          //args.EventArgs.PropertyName == nameof(this.carpetProcessor.BowAndSkewLogic.NextRoll))
         .Subscribe(args =>
         {
           this.srcCurrentRoll.DataSource = this.carpetProcessor.BowAndSkewLogic.CurrentRoll;

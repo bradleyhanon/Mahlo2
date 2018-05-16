@@ -35,7 +35,6 @@
       this.radPatternDetection = new System.Windows.Forms.RadioButton();
       this.radLineDetection = new System.Windows.Forms.RadioButton();
       this.lblStyleCode = new System.Windows.Forms.Label();
-      this.srcSelectedRoll = new System.Windows.Forms.BindingSource(this.components);
       this.lblRollNumber = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
@@ -44,9 +43,10 @@
       this.grpApplyTo = new System.Windows.Forms.GroupBox();
       this.radApplyToStyle = new System.Windows.Forms.RadioButton();
       this.radApplyToRoll = new System.Windows.Forms.RadioButton();
+      this.srcSelectedRoll = new System.Windows.Forms.BindingSource(this.components);
       this.grpSelectRecipe.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.srcSelectedRoll)).BeginInit();
       this.grpApplyTo.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.srcSelectedRoll)).BeginInit();
       this.SuspendLayout();
       // 
       // grpSelectRecipe
@@ -109,10 +109,6 @@
       this.lblStyleCode.TabIndex = 9;
       this.lblStyleCode.UseMnemonic = false;
       // 
-      // srcSelectedRoll
-      // 
-      this.srcSelectedRoll.DataSource = typeof(Mahlo.Models.CarpetRoll);
-      // 
       // lblRollNumber
       // 
       this.lblRollNumber.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcSelectedRoll, "RollNo", true));
@@ -155,6 +151,7 @@
       // btnCancel
       // 
       this.btnCancel.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
       this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
       this.btnCancel.ImageIndex = 1;
       this.btnCancel.Location = new System.Drawing.Point(506, 221);
@@ -195,10 +192,16 @@
       this.radApplyToRoll.TabIndex = 1;
       this.radApplyToRoll.Text = "Apply only to this Roll";
       // 
+      // srcSelectedRoll
+      // 
+      this.srcSelectedRoll.DataSource = typeof(Mahlo.Models.CarpetRoll);
+      // 
       // FormSetRecipe
       // 
+      this.AcceptButton = this.btnSave;
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.CancelButton = this.btnCancel;
       this.ClientSize = new System.Drawing.Size(640, 271);
       this.Controls.Add(this.grpSelectRecipe);
       this.Controls.Add(this.lblStyleCode);
@@ -212,8 +215,8 @@
       this.Name = "FormSetRecipe";
       this.Text = "Set Recipe";
       this.grpSelectRecipe.ResumeLayout(false);
-      ((System.ComponentModel.ISupportInitialize)(this.srcSelectedRoll)).EndInit();
       this.grpApplyTo.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.srcSelectedRoll)).EndInit();
       this.ResumeLayout(false);
 
     }

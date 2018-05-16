@@ -128,6 +128,12 @@
     <Compile Include="Views\FormBowAndSkew.Designer.cs">
       <DependentUpon>FormBowAndSkew.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\FormCoaterSchedule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormCoaterSchedule.Designer.cs">
+      <DependentUpon>FormCoaterSchedule.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\FormSetRecipe.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,6 +157,9 @@
     </Compile>
     <EmbeddedResource Include="Views\FormBowAndSkew.resx">
       <DependentUpon>FormBowAndSkew.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormCoaterSchedule.resx">
+      <DependentUpon>FormCoaterSchedule.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FormSetRecipe.resx">
       <DependentUpon>FormSetRecipe.cs</DependentUpon>
@@ -183,6 +192,9 @@
     <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Dapper.Contrib">
+      <Version>1.50.4</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNet.SignalR.Client">
       <Version>2.2.3</Version>
     </PackageReference>

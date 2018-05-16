@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Mahlo.Logic;
 using Mahlo.Models;
+using Mahlo.Opc;
+using Mahlo.Repository;
 using Microsoft.AspNet.SignalR;
 
 namespace Mahlo.Ipc
@@ -40,9 +42,77 @@ namespace Mahlo.Ipc
     {
       this.syncContext.Post(_ => this.GetMeterLogicInstance(name).WaitForSeam(), null);
     }
-    public void BasSetRecipe(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo)
+    public Task<(string message, string caption)> BasSetRecipe(string rollNo, string styleCode, string recipeName, bool isManualMode, RecipeApplyToEnum applyTo)
     {
+      var tcs = new TaskCompletionSource<(string message, string caption)>();
 
+      this.syncContext.Post(async _ =>
+      {
+        IBowAndSkewLogic bas = Program.Container.GetInstance<IBowAndSkewLogic>();
+        ISewinQueue sewinQueue = Program.Container.GetInstance<ISewinQueue>();
+        bool shouldApply = false;
+        if (applyTo == RecipeApplyToEnum.Roll)
+        {
+          if (rollNo == bas.CurrentRoll.RollNo)
+          {
+            shouldApply = true;
+          }
+          else
+          {
+            // Make sure the selected roll isn't already passed.
+            var selectedRoll = sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == rollNo);
+            if ((selectedRoll?.Id ?? 0) < bas.CurrentRoll.Id)
+            {
+              tcs.SetResult(($"Roll #{rollNo} is no longer the current roll. The recipe has not been changed.", "Not allowed!"));
+              return;
+            }
+          }
+        }
+        else
+        {
+          shouldApply = styleCode == bas.CurrentRoll.StyleCode;
+          rollNo = string.Empty;
+        }
+
+        if (shouldApply)
+        {
+          await this.BasApplyRecipe(recipeName, isManualMode);
+        }
+
+        // Save settings to the database
+        var dbMfg = Program.Container.GetInstance<IDbMfg>();
+        await dbMfg.BasUpdateDefaultRecipe(styleCode, rollNo, recipeName);
+        await sewinQueue.Refresh();
+        tcs.SetResult((string.Empty, string.Empty));
+      }, null);
+
+      return tcs.Task;
+    }
+
+    public Task BasApplyRecipe(string recipeName, bool isManualMode)
+    {
+      TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
+      this.syncContext.Post(_ =>
+      {
+        var bas = Program.Container.GetInstance<IBowAndSkewLogic>();
+        var meterSrc = Program.Container.GetInstance<IMeterSrc<BowAndSkewRoll>>();
+        if (isManualMode)
+        {
+          if (bas.IsManualMode)
+          {
+            meterSrc.SetAutoMode(false);
+          }
+          else
+          {
+            meterSrc.SetRecipe(recipeName);
+            meterSrc.SetAutoMode(true);
+          }
+        }
+
+        tcs.SetResult(null);
+      }, null);
+
+      return tcs.Task;
     }
 
     private IMeterLogic GetMeterLogicInstance(string name)

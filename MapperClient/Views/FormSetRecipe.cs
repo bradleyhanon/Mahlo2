@@ -63,11 +63,16 @@ namespace MapperClient.Views
       }
     }
 
-    private void BtnSave_Click(object sender, EventArgs e)
+    private async void BtnSave_Click(object sender, EventArgs e)
     {
       string recipeName = this.recipeMap.FirstOrDefault(item => item.button.Checked).name;
       var applyTo = this.applyToMap.FirstOrDefault(item => item.button.Checked).applyTo;
-      this.mahloClient.BasSetRecipe(this.selectedRoll.RollNo, this.selectedRoll.StyleCode, recipeName, applyTo);
+      (string message, string caption) = await this.mahloClient.BasSetRecipe(this.selectedRoll.RollNo, this.selectedRoll.StyleCode, recipeName, applyTo);
+      if (message != string.Empty)
+      {
+        MessageBox.Show(this, message, caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+      }
+
       this.Close();
     }
 

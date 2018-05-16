@@ -22,6 +22,7 @@ namespace Mahlo.AppSettings
     public int MainFormBackgroundColor { get; set; } = 0xECF2F2;
     public string DDEServername { get; set; } = "BowAndSkew";
     public bool AutoCloseMahloDDEServer { get; set; } = false;
+    public bool AutoSetRecipe { get; set; } = false;
     public bool PrintServerEnabled { get; set; } = false;
     public bool ArchiveRollMaps { get; set; } = false;
     public string InstallFolder { get; set; } = Application.StartupPath;

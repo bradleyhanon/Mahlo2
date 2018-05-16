@@ -91,7 +91,7 @@ namespace Mahlo.Opc
       this.Initialize();
     }
 
-    public bool IsManualMode { get; set; }
+    public bool IsAutoMode { get; set; }
     public string Recipe { get; set; }
     public double MetersCount { get; set; }
     //public double MetersOffset { get; set; }
@@ -212,7 +212,7 @@ namespace Mahlo.Opc
         this.mahloChannel = mahloSettings.BowAndSkewChannelName;
         mahloTags.AddRange(new(string, Action<object>)[]
         {
-            ("Current.Bridge.0.Calc.1.OnOff", value => this.IsManualMode = (int)value == 0),
+            ("Current.Bridge.0.Calc.1.OnOff", value => this.IsAutoMode = (int)value != 0),
             //("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
             //("Readings.Bridge.0.Calc.1.MeterStamp", value => this.MeterStamp = (double)value),
             //("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewValid", value => this.SkewValid = (int)value == 1),
@@ -228,7 +228,7 @@ namespace Mahlo.Opc
         this.mahloChannel = mahloSettings.PatternRepeatChannelName;
         mahloTags.AddRange(new(string, Action<object>)[]
         {
-            ("Current.Bridge.0.Calc.1.OnOff", value => this.IsManualMode = (int)value == 0),
+            ("Current.Bridge.0.Calc.1.OnOff", value => this.IsAutoMode = (int)value != 0),
             //("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
             //("Readings.Bridge.0.Calc.1.MeterStamp", value => this.MeterStamp = (double)value),
             //("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.Valid", value => this.Valid = (int)value == 1),
@@ -314,13 +314,19 @@ namespace Mahlo.Opc
 
     public void SetAutoMode(bool value)
     {
-      var datvq = new DAVtq(value ? 1 : 0);
-      //this.opcClient.WriteItem(string.Empty, MahloServerClass, $"{this.mahloChannel}.Current.Bridge.0.Calc.1.OnOff", datvq);
+      if (value != this.IsAutoMode)
+      {
+        var datvq = new DAVtq(value ? 1 : 0);
+        //this.opcClient.WriteItem(string.Empty, MahloServerClass, $"{this.mahloChannel}.Current.Bridge.0.Calc.1.OnOff", datvq);
+      }
     }
 
     public void SetRecipe(string recipeName)
     {
-      //this.opcClient.WriteItemValue(string.Empty, MahloServerClass, $"{this.mahloChannel}.ApplyRecipe", recipeName);
+      if (recipeName != this.Recipe)
+      {
+        //this.opcClient.WriteItemValue(string.Empty, MahloServerClass, $"{this.mahloChannel}.ApplyRecipe", recipeName);
+      }
     }
   }
 }

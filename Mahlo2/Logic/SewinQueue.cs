@@ -41,10 +41,10 @@ namespace Mahlo.Logic
       this.Rolls.AddRange(this.dbLocal.GetCarpetRolls());
       this.nextRollId = this.Rolls.LastOrDefault()?.Id + 1 ?? 1;
 
-      var ignoredResultTask = this.Refresh();
+      var ignoredResultTask = this.RefreshIfChanged();
       this.timer = Observable
         .Interval(this.RefreshInterval, schedulerProvider.WinFormsThread)
-        .Subscribe(async _ => await this.Refresh());
+        .Subscribe(async _ => await this.RefreshIfChanged());
     }
 
     public TimeSpan RefreshInterval => TimeSpan.FromSeconds(10);
@@ -128,7 +128,44 @@ namespace Mahlo.Logic
       return result;
     }
 
-    private async Task Refresh()
+    public async Task Refresh()
+    {
+      try
+      {
+        var newRolls = (await this.dbMfg.GetCoaterSewinQueue()).ToArray();
+
+        this.priorFirstRoll = newRolls.FirstOrDefault()?.RollNo ?? string.Empty;
+        this.priorLastRoll = newRolls.LastOrDefault()?.RollNo ?? string.Empty;
+        this.priorQueueSize = newRolls.Count();
+
+        // Skip newRolls that overlap with old rows
+        //var rollsToAdd = newRolls.FindNewItems(this.Rolls, (a, b) => a.RollId == b.RollId);
+
+        foreach (var newRoll in newRolls)
+        {
+          var oldRoll = this.Rolls.FirstOrDefault(item => item.RollNo == newRoll.RollNo);
+          if (oldRoll != null)
+          {
+            newRoll.CopyTo(oldRoll);
+            dbLocal.UpdateCarpetRoll(oldRoll);
+          }
+          else
+          {
+            newRoll.Id = this.nextRollId++;
+            this.Rolls.Add(newRoll);
+            dbLocal.AddCarpetRoll(newRoll);
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+
+      }
+
+      this.queueChanged.OnNext(this);
+    }
+
+    private async Task RefreshIfChanged()
     {
       if (this.isRefreshBusy)
       {
@@ -141,30 +178,7 @@ namespace Mahlo.Logic
         await this.dbMfg.GetCutRollFromHost();
         if (await this.dbMfg.GetIsSewinQueueChanged(this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll))
         {
-          var newRolls = (await this.dbMfg.GetCoaterSewinQueue()).ToArray();
-
-          this.priorFirstRoll = newRolls.FirstOrDefault()?.RollNo ?? string.Empty;
-          this.priorLastRoll = newRolls.LastOrDefault()?.RollNo ?? string.Empty;
-          this.priorQueueSize = newRolls.Count();
-
-          // Skip newRolls that overlap with old rows
-          //var rollsToAdd = newRolls.FindNewItems(this.Rolls, (a, b) => a.RollId == b.RollId);
-
-          foreach (var newRoll in newRolls)
-          {
-            var oldRoll = this.Rolls.FirstOrDefault(item => item.RollNo == newRoll.RollNo);
-            if (oldRoll != null)
-            {
-              newRoll.CopyTo(oldRoll);
-              dbLocal.UpdateCarpetRoll(oldRoll);
-            }
-            else
-            {
-              newRoll.Id = this.nextRollId++;
-              this.Rolls.Add(newRoll);
-              dbLocal.AddCarpetRoll(newRoll);
-            }
-          }
+          await Refresh();
 
           //this.firstRollId = this.Rolls.Min(item => item.RollId);
         }
@@ -173,8 +187,6 @@ namespace Mahlo.Logic
       {
 
       }
-
-      this.queueChanged.OnNext(this);
 
       this.isRefreshBusy = false;
     }

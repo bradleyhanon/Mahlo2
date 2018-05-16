@@ -25,7 +25,7 @@ namespace Mahlo2Tests.Mocks
     public IObservable<bool> SeamDetected => this.SeamDetectedSubject;
 
     public string Recipe { get; set; } = string.Empty;
-    public bool IsManualMode { get; set; }
+    public bool IsAutoMode { get; set; }
 
     public IObservable<double> BowChanged => this.BowSubject;
 
@@ -46,7 +46,17 @@ namespace Mahlo2Tests.Mocks
       this.ResetSeamDetectorCalled++;
     }
 
+    public void SetAutoMode(bool value)
+    {
+      throw new NotImplementedException();
+    }
+
     public void SetCriticalAlarm(bool value)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void SetRecipe(string recipeName)
     {
       throw new NotImplementedException();
     }

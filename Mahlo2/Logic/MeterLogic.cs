@@ -66,7 +66,7 @@ namespace Mahlo.Logic
         .Subscribe(_ =>
         {
           this.Recipe = this.srcData.Recipe;
-          this.IsManualMode = this.srcData.IsManualMode;
+          this.IsManualMode = this.srcData.IsAutoMode;
         });
 
       this.RollStarted = this.rollStartedSubject;

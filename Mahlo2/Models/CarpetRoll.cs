@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper.Contrib.Extensions;
 using PropertyChanged;
 
 namespace Mahlo.Models
@@ -32,6 +33,7 @@ namespace Mahlo.Models
     public double RollWidth { get; set; }
 
     [DependsOn(nameof(RollWidth))]
+    [Computed]
     public string RollWidthStr
     {
       get
@@ -62,11 +64,17 @@ namespace Mahlo.Models
     public double Bow { get; set; }
     public double Skew { get; set; }
 
+    [DependsOn(nameof(Bow))]
+    [Computed]
     public double BowInches => this.Bow * this.RollWidth;
+    [DependsOn(nameof(Skew))]
+    [Computed]
     public double SkewInches => this.Skew * this.RollWidth;
 
     public double Elongation { get; set; }
 
+    [DependsOn(nameof(RollNo))]
+    [Computed]
     public bool IsCheckRoll => this.RollNo == CheckRollId;
 
     int IMahloRoll.Feet
@@ -117,6 +125,7 @@ namespace Mahlo.Models
 
       //dest.GridImage = this.GridImage;
       dest.RollNo = this.RollNo;
+      dest.OrderNo = this.OrderNo;
       dest.StyleCode = this.StyleCode;
       dest.StyleName = this.StyleName;
       dest.ColorCode = this.ColorCode;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Mahlo.Models;
 
 namespace Mahlo.Logic
@@ -10,6 +11,7 @@ namespace Mahlo.Logic
     IObservable<object> QueueChanged { get; }
     BindingList<CarpetRoll> Rolls { get; }
 
+    Task Refresh();
     //bool RollIsLeader(int currentRollId);
 
     /// <summary>

@@ -27,6 +27,14 @@ namespace Mahlo.Repository
       mappings.RegisterType<AS400SewinQueueRoll>()
               .MapProperty(x => x.G2SCH).ToColumn("G2SCH#");
 
+      mappings.RegisterType<CoaterScheduleRoll>()
+        .MapProperty(x => x.SeqNo).ToColumn("Seq #")
+        .MapProperty(x => x.SchedNo).ToColumn("Sched #")
+        .MapProperty(x => x.CutLength).ToColumn("Cut Length")
+        .MapProperty(x => x.Sewnin).ToColumn("Sewn-in")
+        .MapProperty(x => x.FaceWt).ToColumn("Face Wt")
+        .MapProperty(x => x.OrigSeq).ToColumn("Orig Seq");
+
       // Tell Dapper to use our custom mappings
       mappings.RegisterWithDapper();
     }
@@ -134,6 +142,18 @@ namespace Mahlo.Repository
       }
       catch
       {
+      }
+    }
+
+    public async Task<IEnumerable<CoaterScheduleRoll>> GetCoaterSchedule(int minSequence, int maxSequence)
+    {
+      var p = new DynamicParameters();
+      p.Add("MinSequence", minSequence);
+      p.Add("MaxSequence", maxSequence);
+
+      using (var connection = this.GetOpenConnection())
+      {
+        return await connection.QueryAsync<CoaterScheduleRoll>("spGetCoaterSchedule", p, commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
       }
     }
 

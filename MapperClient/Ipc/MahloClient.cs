@@ -118,9 +118,10 @@ namespace MapperClient.Ipc
       }
     }
 
-    public async void BasSetRecipe(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo)
+    public async Task<(string message, string caption)> BasSetRecipe(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo)
     {
-      await this.Call(nameof(BasSetRecipe), rollNo, styleCode, recipeName, applyTo);
+      bool isManualMode = recipeName == FormSetRecipe.ManualModeRecipeName;
+      return await this.Call<(string, string)>(nameof(BasSetRecipe), rollNo, styleCode, recipeName, isManualMode, applyTo);
     }
 
     private void HubConnection_StateChanged(StateChange obj)
@@ -170,27 +171,36 @@ namespace MapperClient.Ipc
     /// <param name="method">The name of the method.</param>
     /// <param name="args">The arguments.</param>
     /// <returns>A task that represents when invocation returned.</returns>
-    public async Task Call(string method, params object[] args)
+    public Task Call(string method, params object[] args)
+    {
+      return this.Call<object>(method, args);
+    }
+
+    public async Task<T> Call<T>(string method, params object[] args)
     {
       Console.Clear();
       StringBuilder builder = new StringBuilder();
       builder.Append(method);
       builder.Append('(');
+      var separator = "";
       foreach (var arg in args)
       {
+        builder.Append(separator);
         builder.Append(arg.ToString());
+        separator = ",";
       }
 
       builder.Append(");");
 
       Console.WriteLine(builder.ToString());
 
+      T result = default(T);
       for (; ; )
       {
         try
         {
           await ConnectedCheck();
-          await hubProxy.Invoke(method, args);
+          result = await hubProxy.Invoke<T>(method, args);
           break;
         }
         catch (Exception ex)
@@ -202,6 +212,8 @@ namespace MapperClient.Ipc
           }
         }
       }
+
+      return result;
     }
   }
 }

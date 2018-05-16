@@ -10,7 +10,7 @@ namespace Mahlo.Opc
   interface IMeterSrc<Model>
   {
     string Recipe { get; set; }
-    bool IsManualMode { get; set; }
+    bool IsAutoMode { get; set; }
 
     IObservable<int> FeetCounter { get; }
     IObservable<int> FeetPerMinute { get; }
