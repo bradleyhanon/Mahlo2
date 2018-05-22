@@ -118,10 +118,15 @@ namespace MapperClient.Ipc
       }
     }
 
-    public async Task<(string message, string caption)> BasSetRecipe(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo)
+    public Task<(string message, string caption)> BasSetRecipe(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo)
     {
       bool isManualMode = recipeName == FormSetRecipe.ManualModeRecipeName;
-      return await this.Call<(string, string)>(nameof(BasSetRecipe), rollNo, styleCode, recipeName, isManualMode, applyTo);
+      return this.Call<(string, string)>(nameof(BasSetRecipe), rollNo, styleCode, recipeName, isManualMode, applyTo);
+    }
+
+    public Task<IEnumerable<CoaterScheduleRoll>> GetCoaterSchedule(int minSequence, int maxSequence)
+    {
+      return this.Call<IEnumerable<CoaterScheduleRoll>>(nameof(GetCoaterSchedule), minSequence, maxSequence);
     }
 
     private void HubConnection_StateChanged(StateChange obj)
@@ -203,7 +208,7 @@ namespace MapperClient.Ipc
           result = await hubProxy.Invoke<T>(method, args);
           break;
         }
-        catch (Exception ex)
+        catch (Exception ex) when (this.state != ConnectionState.Connected)
         {
           SetConnectionError(ex);
           if (!RetryCheck(method, ex))

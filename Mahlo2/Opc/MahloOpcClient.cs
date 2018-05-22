@@ -220,6 +220,7 @@ namespace Mahlo.Opc
             //("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowValid", value => this.BowValid = (int)value == 1),
             ("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowInPercent", value => this.bowSubject.OnNext((double)value)),
             //("Readings.Bridge.0.Calc.1.CalcDistortion.0.Contr_State", value => this.ControllerState = (int)value),
+            ("Readings.Bridge.0.Calc.0.CalcWidth.0.ValueInMeter", value => this.ValueInMeter = (double)value),
         });
       }
       else if (typeof(Model) == typeof(PatternRepeatRoll))
@@ -241,7 +242,14 @@ namespace Mahlo.Opc
         seamDetectorId = 1;
         this.mahloChannel = mahloSettings.Mahlo2ChannelName;
 
-        // Tags are already added
+        mahloTags.Clear();
+        mahloTags.AddRange(new(string, Action<object>)[]
+        {
+          //("Current.Version.0.KeyColumn", value => this.Recipe = (string)value),
+          ("Readings.MeterCounter.0.Value", value => {this.MetersCount = (double)value; this.meterCountSubject.OnNext((double)value - this.meterOffset); }),
+          //("Readings.Bridge.0.General.0.MeterOffset", value => this.MetersOffset = (double)value),
+          //("Readings.Bridge.0.General.0.Speed", value => { this.speedSubject.OnNext((double)value); }),
+        });
       }
       else
       {

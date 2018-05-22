@@ -15,11 +15,13 @@ namespace Mahlo.Ipc
   public class MahloHub : Hub
   {
     IMahloServer mahloServer;
+    IDbMfg dbMfg;
     SynchronizationContext syncContext;
 
     public MahloHub()
     {
       this.mahloServer = Program.Container.GetInstance<MahloServer>();
+      this.dbMfg = Program.Container.GetInstance<DbMfg>();
       this.syncContext = Program.Container.GetInstance<SynchronizationContext>();
     }
 
@@ -48,42 +50,48 @@ namespace Mahlo.Ipc
 
       this.syncContext.Post(async _ =>
       {
-        IBowAndSkewLogic bas = Program.Container.GetInstance<IBowAndSkewLogic>();
-        ISewinQueue sewinQueue = Program.Container.GetInstance<ISewinQueue>();
-        bool shouldApply = false;
-        if (applyTo == RecipeApplyToEnum.Roll)
+        try
         {
-          if (rollNo == bas.CurrentRoll.RollNo)
+          IBowAndSkewLogic bas = Program.Container.GetInstance<IBowAndSkewLogic>();
+          ISewinQueue sewinQueue = Program.Container.GetInstance<ISewinQueue>();
+          bool shouldApply = false;
+          if (applyTo == RecipeApplyToEnum.Roll)
           {
-            shouldApply = true;
+            if (rollNo == bas.CurrentRoll.RollNo)
+            {
+              shouldApply = true;
+            }
+            else
+            {
+              // Make sure the selected roll isn't already passed.
+              var selectedRoll = sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == rollNo);
+              if ((selectedRoll?.Id ?? 0) < bas.CurrentRoll.Id)
+              {
+                tcs.SetResult(($"Roll #{rollNo} is no longer the current roll. The recipe has not been changed.", "Not allowed!"));
+                return;
+              }
+            }
           }
           else
           {
-            // Make sure the selected roll isn't already passed.
-            var selectedRoll = sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == rollNo);
-            if ((selectedRoll?.Id ?? 0) < bas.CurrentRoll.Id)
-            {
-              tcs.SetResult(($"Roll #{rollNo} is no longer the current roll. The recipe has not been changed.", "Not allowed!"));
-              return;
-            }
+            shouldApply = styleCode == bas.CurrentRoll.StyleCode;
+            rollNo = string.Empty;
           }
-        }
-        else
-        {
-          shouldApply = styleCode == bas.CurrentRoll.StyleCode;
-          rollNo = string.Empty;
-        }
 
-        if (shouldApply)
-        {
-          await this.BasApplyRecipe(recipeName, isManualMode);
-        }
+          if (shouldApply)
+          {
+            await this.BasApplyRecipe(recipeName, isManualMode);
+          }
 
-        // Save settings to the database
-        var dbMfg = Program.Container.GetInstance<IDbMfg>();
-        await dbMfg.BasUpdateDefaultRecipe(styleCode, rollNo, recipeName);
-        await sewinQueue.Refresh();
-        tcs.SetResult((string.Empty, string.Empty));
+          // Save settings to the database
+          await this.dbMfg.BasUpdateDefaultRecipe(styleCode, rollNo, recipeName);
+          await sewinQueue.Refresh();
+          tcs.SetResult((string.Empty, string.Empty));
+        }
+        catch (Exception ex)
+        {
+          tcs.SetException(ex);
+        }
       }, null);
 
       return tcs.Task;
@@ -94,22 +102,48 @@ namespace Mahlo.Ipc
       TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
       this.syncContext.Post(_ =>
       {
-        var bas = Program.Container.GetInstance<IBowAndSkewLogic>();
-        var meterSrc = Program.Container.GetInstance<IMeterSrc<BowAndSkewRoll>>();
-        if (isManualMode)
+        try
         {
-          if (bas.IsManualMode)
+          var bas = Program.Container.GetInstance<IBowAndSkewLogic>();
+          var meterSrc = Program.Container.GetInstance<IMeterSrc<BowAndSkewRoll>>();
+          if (isManualMode)
           {
-            meterSrc.SetAutoMode(false);
+            if (bas.IsManualMode)
+            {
+              meterSrc.SetAutoMode(false);
+            }
+            else
+            {
+              meterSrc.SetRecipe(recipeName);
+              meterSrc.SetAutoMode(true);
+            }
           }
-          else
-          {
-            meterSrc.SetRecipe(recipeName);
-            meterSrc.SetAutoMode(true);
-          }
-        }
 
-        tcs.SetResult(null);
+          tcs.SetResult(null);
+        }
+        catch (Exception ex)
+        {
+          tcs.SetException(ex);
+        }
+      }, null);
+
+      return tcs.Task;
+    }
+
+    public Task<IEnumerable<CoaterScheduleRoll>> GetCoaterSchedule(int minSequence, int maxSequence)
+    {
+      var tcs = new TaskCompletionSource<IEnumerable<CoaterScheduleRoll>>();
+      this.syncContext.Post(async _ =>
+      {
+        try
+        {
+          var result = await this.dbMfg.GetCoaterSchedule(minSequence, maxSequence);
+          tcs.SetResult(result);
+        }
+        catch (Exception ex)
+        {
+          tcs.SetException(ex);
+        }
       }, null);
 
       return tcs.Task;

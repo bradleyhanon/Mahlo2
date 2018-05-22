@@ -101,5 +101,13 @@ namespace MapperClient.Views
         }
       }
     }
+
+    private void BtnViewCoaterSchedule_Click(object sender, EventArgs e)
+    {
+      using (var form = new FormCoaterSchedule(this.mahloClient))
+      {
+        form.ShowDialog();
+      }
+    }
   }
 }

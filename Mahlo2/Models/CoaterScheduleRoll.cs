@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mahlo.Models
 {
-  class CoaterScheduleRoll
+  public class CoaterScheduleRoll
   {
     public int SeqNo { get; set; }
     public int SchedNo { get; set; }

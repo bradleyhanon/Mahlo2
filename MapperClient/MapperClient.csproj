@@ -81,6 +81,9 @@
     <Compile Include="..\Mahlo2\Models\CarpetRoll.cs">
       <Link>Models\CarpetRoll.cs</Link>
     </Compile>
+    <Compile Include="..\Mahlo2\Models\CoaterScheduleRoll.cs">
+      <Link>Models\CoaterScheduleRoll.cs</Link>
+    </Compile>
     <Compile Include="..\Mahlo2\Models\CutRoll.cs">
       <Link>Models\CutRoll.cs</Link>
     </Compile>
@@ -168,6 +171,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Properties\DataSources\Mahlo.Models.CoaterScheduleRoll.datasource" />
     <None Include="Properties\DataSources\MapperClient.Logic.IBowAndSkewLogic.datasource" />
     <None Include="Properties\DataSources\Mahlo.Logic.IMahloLogic.datasource" />
     <None Include="Properties\DataSources\Mahlo.Logic.IPatternRepeatLogic.datasource" />
