@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MahloService.AppSettings;
+using MahloService.Settings;
 using MahloService.Ipc;
 using MahloService.Models;
 
@@ -11,7 +11,7 @@ namespace MahloService.Logic
 {
   class CarpetProcessor : ICarpetProcessor
   {
-    private IAppInfoBAS appInfo;
+    private IServiceSettings appInfo;
 
     public CarpetProcessor(
       ISewinQueue sewinQueue,
@@ -19,7 +19,7 @@ namespace MahloService.Logic
       IBowAndSkewLogic bowAndSkewLogic,
       IPatternRepeatLogic patternRepeatLogic,
       ICutRollLogic cutRollLogic,
-      IAppInfoBAS appInfo)
+      IServiceSettings appInfo)
     {
       this.SewinQueue = sewinQueue;
       this.MahloLogic = mahloLogic;
@@ -39,7 +39,7 @@ namespace MahloService.Logic
 
     public void Start()
     {
-      Startup.Start(appInfo.MapperUrl);
+      Startup.Start(appInfo.ServiceUrl);
       //this.mahloLogic.Start();
       //this.bowAndSkewLogic.Start();
       //this.patternRepeatLogic.Start();

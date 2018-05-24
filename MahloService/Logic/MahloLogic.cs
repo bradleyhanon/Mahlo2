@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MahloService.AppSettings;
+using MahloService.Settings;
 using MahloService.Models;
 using MahloService.Opc;
 using MahloService.Repository;
@@ -17,7 +17,7 @@ namespace MahloService.Logic
     public MahloLogic(
       IMeterSrc<MahloRoll> mahloSrc, 
       ISewinQueue sewinQueue, 
-      IAppInfoBAS appInfo, 
+      IServiceSettings appInfo, 
       IUserAttentions<MahloRoll> userAttentions, 
       ICriticalStops<MahloRoll> criticalStops, 
       IProgramState programState,

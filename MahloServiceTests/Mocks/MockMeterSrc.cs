@@ -17,12 +17,14 @@ namespace MahloServiceTests.Mocks
     public Subject<double> BowSubject { get; } = new Subject<double>();
     public Subject<double> SkewSubject { get; } = new Subject<double>();
     public Subject<double> PatternRepeatSubject { get; } = new Subject<double>();
+    public Subject<double> WidthSubject { get; } = new Subject<double>();
 
     public IObservable<int> FeetCounter => this.FeetCounterSubject;
 
     public IObservable<int> FeetPerMinute => this.FeetPerMinuteSubject;
 
     public IObservable<bool> SeamDetected => this.SeamDetectedSubject;
+    public IObservable<double> WidthChanged => this.WidthSubject;
 
     public string Recipe { get; set; } = string.Empty;
     public bool IsAutoMode { get; set; }

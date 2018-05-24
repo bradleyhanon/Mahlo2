@@ -32,8 +32,11 @@ namespace MahloService.Ipc
 
     public void Configuration(IAppBuilder app)
     {
+      var hubConfiguration = new HubConfiguration();
+      hubConfiguration.EnableDetailedErrors = true;
+
       app.UseCors(CorsOptions.AllowAll);
-      app.MapSignalR();
+      app.MapSignalR(hubConfiguration);
     }
   }
 }

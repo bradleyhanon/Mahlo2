@@ -14,6 +14,7 @@ namespace MahloService.Opc
 
     IObservable<int> FeetCounter { get; }
     IObservable<int> FeetPerMinute { get; }
+    IObservable<double> WidthChanged { get; }
     IObservable<bool> SeamDetected { get; }
 
     void ResetMeterOffset();

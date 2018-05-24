@@ -14,6 +14,7 @@ using MahloClient.Views;
 using Microsoft.AspNet.SignalR.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using MahloService.Settings;
 
 namespace MahloClient.Ipc
 {
@@ -25,11 +26,8 @@ namespace MahloClient.Ipc
 
     private HubConnection hubConnection;
     private IHubProxy hubProxy;
-    private IAppInfo appInfo;
+    private IClientSettings appInfo;
     private ISewinQueue sewinQueue;
-    private IMahloLogic mahloLogic;
-    private IBowAndSkewLogic bowAndSkewLogic;
-    private IPatternRepeatLogic patternRepeatLogic;
     private SynchronizationContext context;
 
     private bool isStarting;
@@ -38,19 +36,15 @@ namespace MahloClient.Ipc
 
     public MahloIpcClient(
       ISewinQueue sewinQueue,
-      IMahloLogic mahloLogic,
-      IBowAndSkewLogic bowAndSkewLogic,
-      IPatternRepeatLogic patternRepeatLogic,
-      IAppInfo appInfo,
+      IClientSettings appInfo,
       SynchronizationContext context)
     {
       this.appInfo = appInfo;
       this.sewinQueue = sewinQueue;
-      this.mahloLogic = mahloLogic;
-      this.bowAndSkewLogic = bowAndSkewLogic;
-      this.patternRepeatLogic = patternRepeatLogic;
       this.context = context;
     }
+
+    public event Action<(string name, JObject jObject)> MeterLogicUpdated;
 
     public async Task Start()
     {
@@ -58,7 +52,7 @@ namespace MahloClient.Ipc
       {
         this.isStarting = true;
 
-        this.hubConnection = new HubConnection(appInfo.ServerUrl);
+        this.hubConnection = new HubConnection(appInfo.ServiceUrl);
         this.hubConnection.StateChanged += HubConnection_StateChanged;
         //this.hubConnection.TraceLevel = TraceLevels.All;
         //this.hubConnection.TraceWriter = Console.Out;
@@ -69,33 +63,33 @@ namespace MahloClient.Ipc
             this.sewinQueue.UpdateSewinQueue(arg.ToObject<CarpetRoll[]>()), null);
         });
 
-        this.hubProxy.On("UpdateMahloLogic", arg => this.context.Post(_ =>
-        {
-          JToken token = arg;
-          token.Populate(this.mahloLogic);
-          this.mahloLogic.RefreshStatusDisplay();
-          Console.WriteLine($"UpdateMahloLogic - {arg}");
-        }, null));
-
-        this.hubProxy.On("UpdateBowAndSkewLogic", arg => this.context.Post(_ =>
-        {
-          JToken token = arg;
-          token.Populate(this.bowAndSkewLogic);
-          this.bowAndSkewLogic.RefreshStatusDisplay();
-        }, null));
-
-        this.hubProxy.On("UpdatePatternRepeatLogic", arg => this.context.Post(_ =>
-        {
-          JToken token = arg;
-          token.Populate(this.patternRepeatLogic);
-          this.patternRepeatLogic.RefreshStatusDisplay();
-        }, null));
-
+        //this.hubProxy.On("UpdateMahloLogic", arg => this.context.Post(_ =>
         //{
-        //  JArray array = arg;
-        //  IEnumerable<CarpetRoll> rolls = array.ToObject<CarpetRoll[]>();
-        //  this.sewinQueue.UpdateSewinQueue(rolls);
-        //});
+        //  JToken token = arg;
+        //  token.Populate(this.mahloLogic);
+        //  this.mahloLogic.RefreshStatusDisplay();
+        //  Console.WriteLine($"UpdateMahloLogic - {arg}");
+        //}, null));
+
+        //this.hubProxy.On("UpdateBowAndSkewLogic", arg => this.context.Post(_ =>
+        //{
+        //  JToken token = arg;
+        //  token.Populate(this.bowAndSkewLogic);
+        //  this.bowAndSkewLogic.RefreshStatusDisplay();
+        //}, null));
+
+        //this.hubProxy.On("UpdatePatternRepeatLogic", arg => this.context.Post(_ =>
+        //{
+        //  JToken token = arg;
+        //  token.Populate(this.patternRepeatLogic);
+        //  this.patternRepeatLogic.RefreshStatusDisplay();
+        //}, null));
+
+        this.hubProxy.On<string, JObject>("UpdateMeterLogic", (name, arg) => this.context.Post(_ =>
+        {
+          this.MeterLogicUpdated?.Invoke((name, arg));
+        }, null));
+
 
         do
         {
@@ -106,7 +100,7 @@ namespace MahloClient.Ipc
           }
           catch (Exception ex)
           {
-            var dr = MessageBox.Show("Unable to connect to MahloMapper service", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+            var dr = MessageBox.Show("Unable to connect to Mahlo service", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
             if (dr == DialogResult.Cancel)
             {
               Environment.Exit(1);
@@ -127,6 +121,12 @@ namespace MahloClient.Ipc
     public Task<IEnumerable<CoaterScheduleRoll>> GetCoaterSchedule(int minSequence, int maxSequence)
     {
       return this.Call<IEnumerable<CoaterScheduleRoll>>(nameof(GetCoaterSchedule), minSequence, maxSequence);
+    }
+
+    public async Task GetServiceSettings(IServiceSettings serviceSettings)
+    {
+      JObject obj = await this.Call<JObject>(nameof(GetServiceSettings));
+      obj.Populate(serviceSettings);
     }
 
     private void HubConnection_StateChanged(StateChange obj)

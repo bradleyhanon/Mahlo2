@@ -10,6 +10,7 @@
     <AssemblyName>MahloClient</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <LangVersion>7.1</LangVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -53,6 +54,9 @@
     </Compile>
     <Compile Include="..\MahloService\Logic\CriticalStops.cs">
       <Link>ServerLogic\CriticalStops.cs</Link>
+    </Compile>
+    <Compile Include="..\MahloService\Logic\IBowAndSkewLogic.cs">
+      <Link>ServerLogic\IBowAndSkewLogic.cs</Link>
     </Compile>
     <Compile Include="..\MahloService\Logic\ICriticalStops.cs">
       <Link>ServerLogic\ICriticalStops.cs</Link>
@@ -108,17 +112,23 @@
     <Compile Include="..\MahloService\Models\PatternRepeatRoll.cs">
       <Link>Models\PatternRepeatRoll.cs</Link>
     </Compile>
-    <Compile Include="AppSettings\AppInfo.cs" />
-    <Compile Include="AppSettings\IAppInfo.cs" />
+    <Compile Include="..\MahloService\Settings\IServiceSettings.cs">
+      <Link>Settings\IServiceSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\MahloService\Settings\ServiceSettings.cs">
+      <Link>Settings\ServiceSettings.cs</Link>
+    </Compile>
+    <Compile Include="Settings\ClientSettings.cs" />
+    <Compile Include="Settings\IClientSettings.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Ipc\IMahloIpcClient.cs" />
     <Compile Include="Ipc\MahloIpcClient.cs" />
     <Compile Include="Logic\BowAndSkewLogic.cs" />
     <Compile Include="Logic\CarpetProcessor.cs" />
-    <Compile Include="Logic\IBowAndSkewLogic.cs" />
     <Compile Include="Logic\ICarpetProcessor.cs" />
     <Compile Include="Logic\IMeterLogicEx.cs" />
     <Compile Include="Logic\ISewinQueue.cs" />
+    <Compile Include="Logic\IStatusBarInfo.cs" />
     <Compile Include="Logic\MahloLogic.cs" />
     <Compile Include="Logic\MeterLogic.cs" />
     <Compile Include="Logic\PatternRepeatLogic.cs" />
@@ -137,6 +147,12 @@
     <Compile Include="Views\FormCoaterSchedule.Designer.cs">
       <DependentUpon>FormCoaterSchedule.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\FormMahlo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormMahlo.Designer.cs">
+      <DependentUpon>FormMahlo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\FormSetRecipe.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,6 +164,9 @@
     </Compile>
     <Compile Include="Views\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MyStatusBar.cs">
+      <SubType>Component</SubType>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -164,6 +183,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FormCoaterSchedule.resx">
       <DependentUpon>FormCoaterSchedule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormMahlo.resx">
+      <DependentUpon>FormMahlo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FormSetRecipe.resx">
       <DependentUpon>FormSetRecipe.cs</DependentUpon>

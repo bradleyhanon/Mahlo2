@@ -14,32 +14,28 @@ using MahloService.Logic;
 
 namespace MahloClient.Views
 {
-  partial class FormBowAndSkew : Form
+  partial class FormMahlo : Form
   {
-    private IBowAndSkewLogic logic;
-    private ISewinQueue sewinQueue;
+    private ICarpetProcessor carpetProcessor;
     private IMahloIpcClient mahloClient;
 
-    private IDisposable BowAndSkewPropertyChangedSubscription;
+    private IDisposable MahloPropertyChangedSubscription;
 
-
-    public FormBowAndSkew(IBowAndSkewLogic logic, ISewinQueue sewinQueue, IMahloIpcClient mahloClient)
+    public FormMahlo(ICarpetProcessor carpetProcessor, IMahloIpcClient mahloClient)
     {
       InitializeComponent();
-      this.statusBar1.StatusBarInfo = (IStatusBarInfo)logic;
-      this.logic = logic;
-      this.sewinQueue = sewinQueue;
+      this.carpetProcessor = carpetProcessor;
       this.mahloClient = mahloClient;
 
-      BowAndSkewPropertyChangedSubscription =
+      MahloPropertyChangedSubscription =
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-          h => ((INotifyPropertyChanged)this.logic).PropertyChanged += h,
-          h => ((INotifyPropertyChanged)this.logic).PropertyChanged -= h)
-        .Where(args => 
-          args.EventArgs.PropertyName == nameof(this.logic.CurrentRoll))
+          h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged += h,
+          h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged -= h)
+        .Where(args =>
+          args.EventArgs.PropertyName == nameof(this.carpetProcessor.BowAndSkewLogic.CurrentRoll))
         .Subscribe(args =>
         {
-          this.srcCurrentRoll.DataSource = this.logic.CurrentRoll;
+          this.srcCurrentRoll.DataSource = this.carpetProcessor.BowAndSkewLogic.CurrentRoll;
           this.DataGridView1_SelectionChanged(this.dataGridView1, EventArgs.Empty);
         });
 
@@ -53,9 +49,9 @@ namespace MahloClient.Views
     protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
-      this.srcGrid.DataSource = this.sewinQueue.Rolls;
-      this.srcCurrentRoll.DataSource = this.logic.CurrentRoll;
-      this.srcLogic.DataSource = this.logic;
+      this.srcGrid.DataSource = this.carpetProcessor.SewinQueue.Rolls;
+      this.srcCurrentRoll.DataSource = this.carpetProcessor.MahloLogic.CurrentRoll;
+      this.srcLogic.DataSource = this.carpetProcessor.MahloLogic;
     }
 
     /// <summary>
@@ -67,7 +63,7 @@ namespace MahloClient.Views
       if (disposing)
       {
         this.components?.Dispose();
-        this.BowAndSkewPropertyChangedSubscription?.Dispose();
+        this.MahloPropertyChangedSubscription?.Dispose();
       }
 
       base.Dispose(disposing);
@@ -78,7 +74,7 @@ namespace MahloClient.Views
       var dr = MessageBox.Show("You have requested to move back to the previous roll in the queue.  This will cancel mapping that may be in progress.\n\nAre you sure you want to do this?", "Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
       if (dr == DialogResult.Yes)
       {
-        this.mahloClient.Call(Ipc.MahloIpcClient.MoveToPriorRollCommand, nameof(IBowAndSkewLogic));
+        this.mahloClient.Call(Ipc.MahloIpcClient.MoveToPriorRollCommand, nameof(IMahloLogic));
       }
     }
 
@@ -87,18 +83,13 @@ namespace MahloClient.Views
       var dr = MessageBox.Show("You have requested to move ahead to the next roll in the queue.  This will cancel mapping that may be in progress.\n\nAre you sure you want to do this?", "Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
       if (dr == DialogResult.Yes)
       {
-        this.mahloClient.Call(Ipc.MahloIpcClient.MoveToNextRollCommand, nameof(IBowAndSkewLogic));
+        this.mahloClient.Call(Ipc.MahloIpcClient.MoveToNextRollCommand, nameof(IMahloLogic));
       }
-    }
-
-    private void BtnDisableSystem_Click(object sender, EventArgs e)
-    {
-
     }
 
     private void DataGridView1_SelectionChanged(object sender, EventArgs e)
     {
-      int index = this.sewinQueue.Rolls.IndexOf(this.logic.CurrentRoll);
+      int index = this.carpetProcessor.SewinQueue.Rolls.IndexOf(this.carpetProcessor.BowAndSkewLogic.CurrentRoll);
       if (index < 0)
       {
         this.dataGridView1.ClearSelection();
@@ -109,29 +100,12 @@ namespace MahloClient.Views
       }
     }
 
-    private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-    {
-      if (e.ColumnIndex == colDefaultRecipe.Index && e.RowIndex >= 0)
-      {
-        var selectedRoll = this.sewinQueue.Rolls[e.RowIndex];
-        using (var form = new FormSetRecipe(this.mahloClient, this.logic.CurrentRoll, selectedRoll))
-        {
-          form.ShowDialog();
-        }
-      }
-    }
-
     private void BtnViewCoaterSchedule_Click(object sender, EventArgs e)
     {
       using (var form = new FormCoaterSchedule(this.mahloClient))
       {
         form.ShowDialog();
       }
-    }
-
-    private void btnWaitForSeam_Click(object sender, EventArgs e)
-    {
-
     }
   }
 }

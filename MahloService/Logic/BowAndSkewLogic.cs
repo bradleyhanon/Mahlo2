@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MahloService.AppSettings;
+using MahloService.Settings;
 using MahloService.Models;
 using MahloService.Opc;
 using MahloService.Repository;
@@ -19,7 +19,7 @@ namespace MahloService.Logic
     public BowAndSkewLogic(
       IBowAndSkewSrc<BowAndSkewRoll> dataSrc, 
       ISewinQueue sewinQueue, 
-      IAppInfoBAS appInfo, 
+      IServiceSettings appInfo, 
       IUserAttentions<BowAndSkewRoll> userAttentions, 
       ICriticalStops<BowAndSkewRoll> criticalStops, 
       IProgramState programState, 

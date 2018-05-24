@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace MahloClient.AppSettings
 {
-  interface IAppInfo
+  interface IClientSettings
   {
-    string ServerUrl { get; }
+    string ServiceUrl { get; }
   }
 }

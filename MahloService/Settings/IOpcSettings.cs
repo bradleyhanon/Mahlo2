@@ -1,6 +1,6 @@
-﻿namespace MahloService.AppSettings
+﻿namespace MahloService.Settings
 {
-  interface IMahloOpcSettings
+  interface IOpcSettings
   {
     string Mahlo2ChannelName { get; set; }
     string BowAndSkewChannelName { get; set; }

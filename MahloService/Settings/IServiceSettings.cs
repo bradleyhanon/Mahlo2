@@ -1,12 +1,11 @@
-﻿namespace MahloService.AppSettings
+﻿namespace MahloService.Settings
 {
-  public interface IAppInfoBAS
+  public interface IServiceSettings
   {
-    string MapperUrl { get; set; }
+    string ServiceUrl { get; set; }
     //bool ArchiveRollMaps { get; set; }
     //bool AutoCloseMahloDDEServer { get; set; }
     bool AutoSetRecipe { get; set; }
-    //double BowToleranceInInches { get; set; }
     int CheckAfterHowManyRolls { get; set; }
     int CheckAfterHowManyStyles { get; set; }
     //string DampeningAction { get; set; }
@@ -20,7 +19,8 @@
     //int QueueRefreshRate { get; set; }
     int SeamDetectableThreshold { get; set; }
     //string SendEmailAlertsTo { get; set; }
-    //double SkewToleranceInInches { get; set; }
+    double BowToleranceInInches { get; set; }
+    double SkewToleranceInInches { get; set; }
     //string SqlServerMachine { get; set; }
   }
 }

@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MahloService.AppSettings;
+using MahloService.Settings;
 using MahloService.Ipc;
 using MahloService.Logging;
 using MahloService.Logic;
@@ -151,8 +151,8 @@ namespace MahloService
       container.RegisterSingleton<IDbConnectionFactoryFactory, DbConnectionFactory.Factory>();
       container.RegisterSingleton<IDbMfg, DbMfg>();
       container.RegisterSingleton<IDbLocal, DbLocal>();
-      container.RegisterSingleton<IAppInfoBAS, AppInfoBAS>();
-      container.RegisterSingleton<IMahloOpcSettings, MahloOpcSettings>();
+      container.RegisterSingleton<IServiceSettings, ServiceSettings>();
+      container.RegisterSingleton<IOpcSettings, OpcSettings>();
       container.RegisterSingleton<ICarpetProcessor, CarpetProcessor>();
       container.RegisterSingleton<IMahloServer, MahloServer>();
 

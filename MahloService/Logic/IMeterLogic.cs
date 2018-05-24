@@ -28,12 +28,15 @@ namespace MahloService.Logic
     IUserAttentions UserAttentions { get; }
     ICriticalStops CriticalStops { get; }
 
+    bool IsSeamDetected { get; set; }
+
     [JsonIgnore]
     int Feet { get; set; }
     [JsonIgnore]
     int Speed { get; set; }
     [JsonIgnore]
     bool IsMapValid { get; set; }
+    double MeasuredWidth { get; set; }
 
     int PreviousRollLength { get; set; }
     int RollChangesUntilCheckRequired { get; set; }

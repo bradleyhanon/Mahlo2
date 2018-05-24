@@ -41,7 +41,7 @@ namespace MahloClient.Views
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, "Alert!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        MessageBox.Show($"Unable to get schedule.\n\n{ex.Message}", "Alert!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
       }
 
       this.ShowMessage(string.Empty);

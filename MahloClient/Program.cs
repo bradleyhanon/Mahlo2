@@ -12,6 +12,9 @@ using MahloClient.Logic;
 using MahloClient.Views;
 using SimpleInjector;
 using SimpleInjector.Diagnostics;
+using MahloService.Settings;
+using System.Reactive.Linq;
+using System.Reactive;
 
 namespace MahloClient
 {
@@ -21,15 +24,36 @@ namespace MahloClient
     /// The main entry point for the application.
     /// </summary>
     [STAThread]
-    static void Main()
+    static void Main(string[] args)
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      using (var container = InitializeContainer())
+      try
       {
-        var notUsed = container.GetInstance<MahloIpcClient>().Start();
-        Application.Run(container.GetInstance<FormBowAndSkew>());
+        using (var container = InitializeContainer())
+        {
+          Application.Idle += FirstIdle;
+          Application.Run(container.GetInstance<FormBowAndSkew>());
+
+          async void FirstIdle(object sender, EventArgs e)
+          {
+            // We need to start the client after the form is run so the event loop is estalished.
+            var serviceSettings = container.GetInstance<IServiceSettings>();
+            MahloIpcClient mahloIpcClient = container.GetInstance<MahloIpcClient>();
+            await mahloIpcClient.Start();
+            await mahloIpcClient.GetServiceSettings(serviceSettings);
+            Application.Idle -= FirstIdle;
+          };
+        }
       }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.ToString(), "Program failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private static void Application_Idle(object sender, EventArgs e)
+    {
     }
 
     private static Container InitializeContainer()
@@ -38,7 +62,7 @@ namespace MahloClient
       using (new Control()) { };
 
       Container container = new Container();
-      container.RegisterSingleton<IAppInfo, AppInfo>();
+      container.RegisterSingleton<IClientSettings, ClientSettings>();
 
       var registration = Lifestyle.Transient.CreateRegistration<MainForm>(container);
       registration.SuppressDiagnosticWarning(DiagnosticType.DisposableTransientComponent, "Done by system");
@@ -48,6 +72,7 @@ namespace MahloClient
       container.RegisterSingleton<IMahloLogic, MahloLogic>();
       container.RegisterSingleton<IBowAndSkewLogic, BowAndSkewLogic>();
       container.RegisterSingleton<IPatternRepeatLogic, PatternRepeatLogic>();
+      container.RegisterSingleton<IServiceSettings, ServiceSettings>();
       container.RegisterInstance<SynchronizationContext>(WindowsFormsSynchronizationContext.Current);
 
       container.RegisterSingleton<ICarpetProcessor, CarpetProcessor>();

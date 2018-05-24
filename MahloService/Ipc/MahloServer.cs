@@ -40,9 +40,12 @@ namespace MahloService.Ipc
         .Interval(TimeSpan.FromMilliseconds(1000), schedulerProvider.WinFormsThread)
         .Subscribe(_ =>
         {
-          this.UpdateMahloLogic();
-          this.UpdateBowAndSkewLogic();
-          this.UpdatePatternRepeatLogic();
+          //this.UpdateMahloLogic();
+          //this.UpdateBowAndSkewLogic();
+          //this.UpdatePatternRepeatLogic();
+          this.UpdateMeterLogic(this.mahloLogic);
+          this.UpdateMeterLogic(this.bowAndSkewLogic);
+          this.UpdateMeterLogic(this.patternRepeatLogic);
         });
 
       sewinQueue.QueueChanged.Subscribe(_ => UpdateSewinQueue());
@@ -60,33 +63,44 @@ namespace MahloService.Ipc
       this.Clients.All.UpdateSewinQueue(this.sewinQueue.Rolls.ToArray());
     }
 
-    public void UpdateMahloLogic()
-    {
-      if (this.mahloLogic.IsChanged)
-      {
-        log.Debug("UpdateMahloLogic()");
-        this.mahloLogic.IsChanged = false;
-        this.Clients.All.UpdateMahloLogic(this.mahloLogic);
-      }
-    }
+    //public void UpdateMahloLogic()
+    //{
+    //  if (this.mahloLogic.IsChanged)
+    //  {
+    //    log.Debug("UpdateMahloLogic()");
+    //    this.mahloLogic.IsChanged = false;
+    //    this.Clients.All.UpdateMahloLogic(this.mahloLogic);
+    //  }
+    //}
 
-    public void UpdateBowAndSkewLogic()
-    {
-      if (this.bowAndSkewLogic.IsChanged)
-      {
-        log.Debug("UpdateBowAndSkewLogic()");
-        this.bowAndSkewLogic.IsChanged = false;
-        this.Clients.All.UpdateBowAndSkewLogic(this.bowAndSkewLogic);
-      }
-    }
+    //public void UpdateBowAndSkewLogic()
+    //{
+    //  if (this.bowAndSkewLogic.IsChanged)
+    //  {
+    //    log.Debug("UpdateBowAndSkewLogic()");
+    //    this.bowAndSkewLogic.IsChanged = false;
+    //    this.Clients.All.UpdateBowAndSkewLogic(this.bowAndSkewLogic);
+    //  }
+    //}
 
-    public void UpdatePatternRepeatLogic()
+    //public void UpdatePatternRepeatLogic()
+    //{
+    //  if (this.patternRepeatLogic.IsChanged)
+    //  {
+    //    log.Debug("UpdatePatternRepeatLogic()");
+    //    this.patternRepeatLogic.IsChanged = false;
+    //    this.Clients.All.UpdatePatternRepeatLogic(this.patternRepeatLogic);
+    //  }
+    //}
+
+    public void UpdateMeterLogic<Model>(IMeterLogic<Model> meterLogic)
     {
-      if (this.patternRepeatLogic.IsChanged)
+      if (meterLogic.IsChanged)
       {
-        log.Debug("UpdatePatternRepeatLogic()");
-        this.patternRepeatLogic.IsChanged = false;
-        this.Clients.All.UpdatePatternRepeatLogic(this.patternRepeatLogic);
+        string name = typeof(Model).Name;
+        log.Debug($"UpdateMeterLogic<{name}>");
+        meterLogic.IsChanged = false;
+        this.Clients.All.UpdateMeterLogic(name, meterLogic);
       }
     }
 
@@ -94,9 +108,9 @@ namespace MahloService.Ipc
     {
       var client = this.Clients.Client(connectionId);
       client.UpdateSewinQueue(this.sewinQueue.Rolls.ToArray());
-      client.UpdateMahloLogic(this.mahloLogic);
-      client.UpdateBowAndSkewLogic(this.bowAndSkewLogic);
-      client.UpdatePatternRepeatLogic(this.patternRepeatLogic);
+      client.UpdateMeterLogic<IMahloLogic>(this.mahloLogic);
+      client.UpdateMeterLogic<IBowAndSkewLogic>(this.bowAndSkewLogic);
+      client.UpdateMeterLogic<IPatternRepeatLogic>(this.patternRepeatLogic);
     }
   }
 }

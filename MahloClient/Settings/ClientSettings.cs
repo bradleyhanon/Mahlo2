@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace MahloClient.AppSettings
 {
-  public class AppInfo : Westwind.Utilities.Configuration.AppConfiguration, IAppInfo
+  public class ClientSettings : Westwind.Utilities.Configuration.AppConfiguration, IClientSettings
   {
-    public AppInfo()
+    public ClientSettings()
     {
       this.Initialize();
     }
 
-    public string ServerUrl { get; set; } = "http://127.0.0.1/mahlo";
+    public string ServiceUrl { get; set; } = "http://127.0.0.1/mahlo";
 
   }
 }

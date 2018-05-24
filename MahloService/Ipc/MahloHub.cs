@@ -8,6 +8,7 @@ using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Opc;
 using MahloService.Repository;
+using MahloService.Settings;
 using Microsoft.AspNet.SignalR;
 
 namespace MahloService.Ipc
@@ -165,6 +166,11 @@ namespace MahloService.Ipc
         default:
           throw new InvalidOperationException($"MahloHub.GetMeterLogicInstance(\"{name}\")");
       }
+    }
+
+    public IServiceSettings GetServiceSettings()
+    {
+      return Program.Container.GetInstance<IServiceSettings>();
     }
   }
 }

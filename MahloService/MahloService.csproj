@@ -69,10 +69,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppSettings\AppInfoBAS.cs" />
-    <Compile Include="AppSettings\IAppInfoBAS.cs" />
-    <Compile Include="AppSettings\IMahloOpcSettings.cs" />
-    <Compile Include="AppSettings\MahloOpcSettings.cs" />
+    <Compile Include="Settings\ServiceSettings.cs" />
+    <Compile Include="Settings\IServiceSettings.cs" />
+    <Compile Include="Settings\IOpcSettings.cs" />
+    <Compile Include="Settings\OpcSettings.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Ipc\IMahloServer.cs" />
     <Compile Include="Ipc\MahloServer.cs" />

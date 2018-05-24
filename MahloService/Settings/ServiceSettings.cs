@@ -5,20 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MahloService.AppSettings
+namespace MahloService.Settings
 {
-  public class AppInfoBAS : Westwind.Utilities.Configuration.AppConfiguration, IAppInfoBAS
+  public class ServiceSettings : Westwind.Utilities.Configuration.AppConfiguration, IServiceSettings
   {
     public const double DEFAULT_METERS_PER_PIXEL = 0.00109d;
 
     //private double metersPerPixelFactor = DEFAULT_METERS_PER_PIXEL;
 
-    public AppInfoBAS()
+    public ServiceSettings()
     {
       this.Initialize();
     }
 
-    public string MapperUrl { get; set; } = "http://+:80/mahlo/";
+    public string ServiceUrl { get; set; } = "http://+:80/mahlo/";
     //public int MainFormBackgroundColor { get; set; } = 0xECF2F2;
     //public string DDEServername { get; set; } = "BowAndSkew";
     //public bool AutoCloseMahloDDEServer { get; set; } = false;
@@ -37,8 +37,8 @@ namespace MahloService.AppSettings
     //  set => this.metersPerPixelFactor = Math.Max(value, DEFAULT_METERS_PER_PIXEL);
     //}
 
-    //public double BowToleranceInInches { get; set; } = 0.5;
-    //public double SkewToleranceInInches { get; set; } = 0.5;
+    public double BowToleranceInInches { get; set; } = 0.5;
+    public double SkewToleranceInInches { get; set; } = 0.5;
     public int SeamDetectableThreshold { get; set; } = 5; // Distance within which seam detects are ignored
     public int CheckAfterHowManyRolls { get; set; } = 10;
     public int CheckAfterHowManyStyles { get; set; } = 3;

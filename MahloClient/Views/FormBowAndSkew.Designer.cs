@@ -7,19 +7,6 @@
     /// </summary>
     private System.ComponentModel.IContainer components = null;
 
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && (components != null))
-      {
-        components.Dispose();
-      }
-      base.Dispose(disposing);
-    }
-
     #region Windows Form Designer generated code
 
     /// <summary>
@@ -102,7 +89,7 @@
       this.colDefaultRecipe = new System.Windows.Forms.DataGridViewButtonColumn();
       this.patternRepeatLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.srcGrid = new System.Windows.Forms.BindingSource(this.components);
-      this.statusBar1 = new System.Windows.Forms.StatusBar();
+      this.statusBar1 = new MahloClient.Views.MyStatusBar();
       this.pnlMessage = new System.Windows.Forms.StatusBarPanel();
       this.pnlIndicator = new System.Windows.Forms.StatusBarPanel();
       this.pnlUserAttention = new System.Windows.Forms.StatusBarPanel();
@@ -557,7 +544,7 @@
       // 
       this.lblMeasuredWidth.BackColor = System.Drawing.Color.Gainsboro;
       this.lblMeasuredWidth.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.lblMeasuredWidth.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcCurrentRoll, "RollWidthStr", true));
+      this.lblMeasuredWidth.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "MeasuredWidth", true));
       this.lblMeasuredWidth.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblMeasuredWidth.ForeColor = System.Drawing.Color.Black;
       this.lblMeasuredWidth.Location = new System.Drawing.Point(384, 34);
@@ -1040,6 +1027,7 @@
       // 
       this.btnSetRecipe.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.btnSetRecipe.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnSetRecipe.Enabled = false;
       this.btnSetRecipe.ForeColor = System.Drawing.Color.Black;
       this.btnSetRecipe.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
       this.btnSetRecipe.ImageIndex = 6;
@@ -1085,6 +1073,7 @@
       this.btnWaitForSeam.Text = "Wait for Seam";
       this.btnWaitForSeam.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
       this.btnWaitForSeam.UseVisualStyleBackColor = false;
+      this.btnWaitForSeam.Click += new System.EventHandler(this.btnWaitForSeam_Click);
       // 
       // btnGoToNextRoll
       // 
@@ -1136,11 +1125,11 @@
       this.Controls.Add(this.btnWaitForSeam);
       this.Controls.Add(this.btnGoToNextRoll);
       this.Controls.Add(this.btnGoToPreviousRoll);
-      this.Controls.Add(this.statusBar1);
       this.Controls.Add(this.dataGridView1);
       this.Controls.Add(this.grpMappingInfo);
       this.Controls.Add(this.grpCurrentRoll);
       this.Controls.Add(this.grpNextRoll);
+      this.Controls.Add(this.statusBar1);
       this.Name = "FormBowAndSkew";
       this.Text = "Bow and Skew Mapper";
       this.grpNextRoll.ResumeLayout(false);
@@ -1221,7 +1210,7 @@
     private System.Windows.Forms.Label label21;
     private System.Windows.Forms.Label lblRecipeName;
     private System.Windows.Forms.DataGridView dataGridView1;
-    private System.Windows.Forms.StatusBar statusBar1;
+    private MyStatusBar statusBar1;
     private System.Windows.Forms.StatusBarPanel pnlMessage;
     private System.Windows.Forms.StatusBarPanel pnlIndicator;
     private System.Windows.Forms.StatusBarPanel pnlUserAttention;

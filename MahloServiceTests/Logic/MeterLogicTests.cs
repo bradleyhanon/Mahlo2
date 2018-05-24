@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MahloService.AppSettings;
+using MahloService.Settings;
 using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Opc;
@@ -22,7 +22,7 @@ namespace MahloServiceTests.Logic
     private ISewinQueue sewinQueue;
     private IDbMfg dbMfg;
     private IDbLocal dbLocal;
-    private IAppInfoBAS appInfo;
+    private IServiceSettings appInfo;
     private IUserAttentions<MahloRoll> userAttentions;
     private ICriticalStops<MahloRoll> criticalStops;
     private TestSchedulers testSchedulers = new TestSchedulers();
@@ -43,7 +43,7 @@ namespace MahloServiceTests.Logic
       this.sewinQueue = Substitute.For<ISewinQueue>();
       this.dbMfg = Substitute.For<IDbMfg>();
       this.dbLocal = Substitute.For<IDbLocal>();
-      this.appInfo = Substitute.For<IAppInfoBAS>();
+      this.appInfo = Substitute.For<IServiceSettings>();
       this.userAttentions = Substitute.For<IUserAttentions<MahloRoll>>();
       this.criticalStops = Substitute.For<ICriticalStops<MahloRoll>>();
 

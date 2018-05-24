@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MahloService;
-using MahloService.AppSettings;
+using MahloService.Settings;
 using MahloService.Models;
 using MahloService.Opc;
 using MahloService.Repository;
@@ -25,7 +25,7 @@ namespace MahloService.Logic
   {
     private ISewinQueue sewinQueue;
     private IMeterSrc<Model> srcData;
-    private IAppInfoBAS appInfo;
+    private IServiceSettings appInfo;
     private IProgramState programState;
 
     private Subject<CarpetRoll> rollFinishedSubject = new Subject<CarpetRoll>();
@@ -37,6 +37,7 @@ namespace MahloService.Logic
     private IDisposable timer;
     private IDisposable userAttentionsChangedSubscription;
     private IDisposable critialErrorsChangedSubscription;
+    private IDisposable widthSubscription;
 
     private int rollCheckCount;
     private int styleCheckCount = 1;
@@ -44,7 +45,7 @@ namespace MahloService.Logic
     public MeterLogic(
       IMeterSrc<Model> srcData, 
       ISewinQueue sewinQueue,
-      IAppInfoBAS appInfo,
+      IServiceSettings appInfo,
       IUserAttentions<Model> userAttentions, 
       ICriticalStops<Model> criticalStops,
       IProgramState programState,
@@ -60,6 +61,7 @@ namespace MahloService.Logic
       this.feetCounterSubscription = srcData.FeetCounter.Subscribe(value => this.FeetCounterChanged(value));
       this.seamDetectedSubscription = srcData.SeamDetected.Subscribe(value => this.SeamDetected(value));
       this.feetPerMinuteSubscription = srcData.FeetPerMinute.Subscribe(value => this.Speed = value);
+      this.widthSubscription = srcData.WidthChanged.Subscribe(value => this.MeasuredWidth = value);
       this.queueChangedSubscription = sewinQueue.QueueChanged.Subscribe(_ => this.SewinQueueChanged());
       this.timer = Observable
         .Interval(TimeSpan.FromSeconds(1), schedulerProvider.WinFormsThread)
@@ -83,15 +85,13 @@ namespace MahloService.Logic
           h => ((INotifyPropertyChanged)this.CriticalStops).PropertyChanged += h,
           h => ((INotifyPropertyChanged)this.CriticalStops).PropertyChanged -= h)
         .Subscribe(_ => this.IsMapValid &= this.CriticalStops.Any);
-
-      Application.Idle += Application_Idle;
     }
 
     /// <summary>
     /// Gets or sets a value indicating whether this object has been changed
     /// It is set by PropertyChangedFody and reset by Ipc.MahloServer
     /// </summary>
-    public bool IsChanged { get; set; }
+    public bool IsChanged { get; set; } = true;
 
     /// <summary>
     /// Get the roll that is currently being processed
@@ -108,6 +108,8 @@ namespace MahloService.Logic
     public IObservable<CarpetRoll> RollStarted { get; }
     public IObservable<CarpetRoll> RollFinished { get; }
 
+    public bool IsSeamDetected { get; set; }
+
     public abstract int Feet { get; set; }
     public abstract int Speed { get; set; }
     public abstract bool IsMapValid { get; set; }
@@ -117,6 +119,8 @@ namespace MahloService.Logic
     public string Recipe { get; set; }
 
     public int PreviousRollLength { get; set; }
+
+    public double MeasuredWidth { get; set; }
 
     public int RollChangesUntilCheckRequired
     {
@@ -179,11 +183,6 @@ namespace MahloService.Logic
       this.critialErrorsChangedSubscription?.Dispose();
     }
 
-    private void Application_Idle(object sender, EventArgs e)
-    {
-      
-    }
-
     private void SewinQueueChanged()
     {
       if (!this.sewinQueue.Rolls.Contains( this.CurrentRoll))
@@ -219,6 +218,7 @@ namespace MahloService.Logic
         return;
       }
 
+      this.IsSeamDetected = true;
       this.UserAttentions.IsRollTooShort |= this.Feet < this.CurrentRoll.RollLength * 0.9;
       this.rollFinishedSubject.OnNext(this.CurrentRoll);
 
@@ -253,6 +253,7 @@ namespace MahloService.Logic
 
     public void MoveToNextRoll()
     {
+      this.IsSeamDetected = false;
       int index = this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
       if (index >= 0 && index < this.sewinQueue.Rolls.Count - 1)
       {
@@ -262,6 +263,7 @@ namespace MahloService.Logic
 
     public void MoveToPriorRoll()
     {
+      this.IsSeamDetected = false;
       int index = this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
       if (index > 0)
       {
@@ -271,7 +273,15 @@ namespace MahloService.Logic
 
     public void WaitForSeam()
     {
-      //throw new NotImplementedException();
+      // pressing this button will essentially "re-arm" the system, regardless of it's
+      // current state
+
+      // reset roll and style counters
+      this.rollCheckCount = 0;
+      this.styleCheckCount = 0;
+
+      // clear all user alerts
+      this.UserAttentions.ClearAll();
     }
   }
 }

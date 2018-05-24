@@ -6,7 +6,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
-using MahloService.AppSettings;
+using MahloService.Settings;
 using MahloService.Models;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -34,7 +34,7 @@ namespace MahloService.Opc
     private IUserAttentions<Model> userAttentions;
     private ICriticalStops<Model> criticalStops;
     private Type priorExceptionType = null;
-    private IMahloOpcSettings mahloSettings;
+    private IOpcSettings mahloSettings;
     //private IPlcSettings seamSettings;
     private IProgramState programState;
     private ILogger log;
@@ -60,7 +60,7 @@ namespace MahloService.Opc
       EasyDAClient opcClient, 
       IUserAttentions<Model> userAttentions,
       ICriticalStops<Model> criticalStops, 
-      IMahloOpcSettings mahloSettings, 
+      IOpcSettings mahloSettings, 
       //IPlcSettings seamSettings,
       IProgramState programState,
       SynchronizationContext synchronizationContext,

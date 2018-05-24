@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MahloService.AppSettings;
+using MahloService.Settings;
 using MahloService.Models;
 using MahloService.Opc;
 using MahloService.Repository;
@@ -18,7 +18,7 @@ namespace MahloService.Logic
     public PatternRepeatLogic(
       IPatternRepeatSrc<PatternRepeatRoll> dataSrc, 
       ISewinQueue sewinQueue, 
-      IAppInfoBAS appInfo, 
+      IServiceSettings appInfo, 
       IUserAttentions<PatternRepeatRoll> userAttentions, 
       ICriticalStops<PatternRepeatRoll> criticalStops, 
       IProgramState programState,

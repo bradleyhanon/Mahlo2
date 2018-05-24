@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Westwind.Utilities.Configuration;
 
-namespace MahloService.AppSettings
+namespace MahloService.Settings
 {
-  class MahloOpcSettings : AppConfiguration, IMahloOpcSettings
+  class OpcSettings : AppConfiguration, IOpcSettings
   {
-    public MahloOpcSettings()
+    public OpcSettings()
     {
       this.Initialize();
     }
