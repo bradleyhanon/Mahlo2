@@ -1,8 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace MahloService.Logic
 {
-  interface ICriticalStops
+  interface ICriticalStops : INotifyPropertyChanged
   {
     bool Any { get; }
     bool IsMahloCommError { get; set; }

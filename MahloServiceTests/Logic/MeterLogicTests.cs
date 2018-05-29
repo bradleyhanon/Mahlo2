@@ -38,6 +38,8 @@ namespace MahloServiceTests.Logic
       const int roll3Length = 300;
       const int roll4Length = 400;
       const int roll5Length = 400;
+      const int roll6Length = 400;
+      const int roll7Length = 400;
 
       this.srcData = new MockMeterSrc<MahloRoll>();
       this.sewinQueue = Substitute.For<ISewinQueue>();
@@ -46,6 +48,9 @@ namespace MahloServiceTests.Logic
       this.appInfo = Substitute.For<IServiceSettings>();
       this.userAttentions = Substitute.For<IUserAttentions<MahloRoll>>();
       this.criticalStops = Substitute.For<ICriticalStops<MahloRoll>>();
+
+      this.appInfo.MinRollLengthForStyleAndRollCounting = 1;
+      this.appInfo.MinRollLengthForLengthChecking = 1;
 
       var stateProvider = Substitute.For<IProgramStateProvider>();
       stateProvider.GetProgramState().Returns("{}");
@@ -86,7 +91,21 @@ namespace MahloServiceTests.Logic
         RollLength = roll5Length,
       };
 
-      this.carpetRolls = new List<CarpetRoll> { roll1, roll2, roll3, roll4, roll5 };
+      var roll6 = new MahloService.Models.CarpetRoll()
+      {
+        Id = 6,
+        RollNo = "12350",
+        RollLength = roll6Length,
+      };
+
+      var roll7 = new MahloService.Models.CarpetRoll()
+      {
+        Id = 7,
+        RollNo = "12351",
+        RollLength = roll7Length,
+      };
+
+      this.carpetRolls = new List<CarpetRoll> { roll1, roll2, roll3, roll4, roll5, roll6, roll7 };
 
       this.sewinQueue.Rolls.Returns(new BindingList<CarpetRoll>(carpetRolls));
 
@@ -140,13 +159,14 @@ namespace MahloServiceTests.Logic
     public void CurrentRollFeetTracksFeetChanges()
     {
       srcData.FeetCounterSubject.OnNext(5);
-      Assert.Equal(5, this.target.Feet);
+      Assert.Equal(5, this.target.MeasuredLength);
     }
 
     [Fact]
     public void RollTooLongSetsUserAttention()
     {
       target.CurrentRoll = this.sewinQueue.Rolls[1];
+      this.appInfo.RollTooLongThreshold = 1.1;
 
       double maxlength = target.CurrentRoll.RollLength * 1.1;
       srcData.FeetCounterSubject.OnNext((int)maxlength);
@@ -168,7 +188,19 @@ namespace MahloServiceTests.Logic
     [Fact]
     public void RollLengthLessThan90PercentOfExpectedRollLengthIsTooShort()
     {
+      this.appInfo.RollTooShortThreshold = 0.9;
+      this.appInfo.RollTooLongThreshold = 1.1;
+      this.appInfo.MinRollLengthForLengthChecking = 50;
+      this.userAttentions.Any.Returns(false);
+      this.criticalStops.Any.Returns(false);
+
+      // The first roll arms things for the second roll to test
       target.CurrentRoll = this.sewinQueue.Rolls[1];
+      srcData.FeetCounterSubject.OnNext(target.CurrentRoll.RollLength);
+      srcData.SeamDetectedSubject.OnNext(true);
+
+      // The second roll
+      this.userAttentions.IsRollTooShort = false;
       double minLength = target.CurrentRoll.RollLength * 0.9;
       srcData.FeetCounterSubject.OnNext((int)minLength - 1);
       srcData.SeamDetectedSubject.OnNext(true);
@@ -180,7 +212,7 @@ namespace MahloServiceTests.Logic
     {
       srcData.FeetCounterSubject.OnNext(500);
       srcData.SeamDetectedSubject.OnNext(false);
-      Assert.Equal(500, target.Feet);
+      Assert.Equal(500, target.MeasuredLength);
     }
 
     [Fact]
@@ -189,7 +221,7 @@ namespace MahloServiceTests.Logic
       userAttentions.IsSystemDisabled = true;
       srcData.FeetCounterSubject.OnNext(500);
       srcData.SeamDetectedSubject.OnNext(true);
-      Assert.Equal(500, target.Feet);
+      Assert.Equal(500, target.MeasuredLength);
     }
 
     [Fact]
@@ -197,7 +229,7 @@ namespace MahloServiceTests.Logic
     {
       srcData.FeetCounterSubject.OnNext(500);
       srcData.SeamDetectedSubject.OnNext(true);
-      Assert.Equal(0, target.Feet);
+      Assert.Equal(0, target.MeasuredLength);
     }
 
     [Fact]
@@ -240,11 +272,11 @@ namespace MahloServiceTests.Logic
       target.CurrentRoll = this.sewinQueue.Rolls[0];
 
       this.appInfo.SeamDetectableThreshold = 50;
-      this.target.Feet = 50;
+      this.target.MeasuredLength = 50;
       this.target.RollFinished.Subscribe(roll =>
       {
         Assert.False(rollStartedSeen);
-        Assert.Equal(50, this.target.Feet);
+        Assert.Equal(50, this.target.MeasuredLength);
         rollFinishedSeen = true;
       });
 
@@ -265,7 +297,7 @@ namespace MahloServiceTests.Logic
 
       target.CurrentRoll = this.sewinQueue.Rolls[0];
 
-      this.target.Feet = appInfo.SeamDetectableThreshold - 1;
+      this.target.MeasuredLength = appInfo.SeamDetectableThreshold - 1;
       this.target.RollFinished.Subscribe(roll => throw new Exception());
 
       target.RollStarted.Subscribe(roll => throw new Exception());
@@ -282,16 +314,16 @@ namespace MahloServiceTests.Logic
       var oldRoll = this.target.CurrentRoll;
       oldRoll.Id = 1;
       srcData.SeamDetectedSubject.OnNext(true);
-      this.sewinQueue.Received(1).TryGetRoll(oldRoll.Id + 1, out CarpetRoll newRoll);
+      Assert.Equal(2, target.CurrentRoll.Id);
     }
 
     [Fact]
-    public void VerifyRollSequeneIsSetWhenConfiguredNumberOfRollAreProcessed()
+    public void VerifyRollSequenceIsSetWhenConfiguredNumberOfRollAreProcessed()
     {
       this.userAttentions.VerifyRollSequence = false;
       this.appInfo.CheckAfterHowManyRolls = 3;
       this.appInfo.CheckAfterHowManyStyles = 1000;
-      for (int j = 0; j < this.appInfo.CheckAfterHowManyRolls - 1; j++)
+      for (int j = 0; j < this.appInfo.CheckAfterHowManyRolls; j++)
       {
         ProduceRoll();
         Assert.False(this.userAttentions.VerifyRollSequence);
@@ -304,7 +336,7 @@ namespace MahloServiceTests.Logic
       {
         srcData.FeetCounterSubject.OnNext(this.target.CurrentRoll.RollLength);
         srcData.SeamDetectedSubject.OnNext(true);
-        Assert.Equal(0, target.Feet);
+        Assert.Equal(0, target.MeasuredLength);
       }
     }
 
@@ -314,7 +346,7 @@ namespace MahloServiceTests.Logic
       this.userAttentions.VerifyRollSequence = false;
       this.appInfo.CheckAfterHowManyStyles = 3;
       this.appInfo.CheckAfterHowManyRolls = 100;
-      this.carpetRolls[0].StyleCode = "style1";
+      this.carpetRolls[0].StyleCode = "style0";
       this.carpetRolls[1].StyleCode = "style1";
       this.carpetRolls[2].StyleCode = "style2";
       this.carpetRolls[3].StyleCode = "style2";
@@ -336,7 +368,7 @@ namespace MahloServiceTests.Logic
       {
         srcData.FeetCounterSubject.OnNext(this.target.CurrentRoll.RollLength);
         srcData.SeamDetectedSubject.OnNext(true);
-        Assert.Equal(0, target.Feet);
+        Assert.Equal(0, target.MeasuredLength);
       }
     }
   }

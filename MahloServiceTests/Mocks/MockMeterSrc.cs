@@ -9,7 +9,7 @@ using MahloService.Opc;
 
 namespace MahloServiceTests.Mocks
 {
-  class MockMeterSrc<Model> : IMahloSrc<Model>, IBowAndSkewSrc<Model>, IPatternRepeatSrc<Model>
+  class MockMeterSrc<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc
   {
     public Subject<int> FeetCounterSubject { get; } = new Subject<int>();
     public Subject<int> FeetPerMinuteSubject { get; } = new Subject<int>();
@@ -53,9 +53,14 @@ namespace MahloServiceTests.Mocks
       throw new NotImplementedException();
     }
 
-    public void SetCriticalAlarm(bool value)
+    public void SetCriticalAlarmIndicator(bool value)
     {
       throw new NotImplementedException();
+    }
+
+    public void SetMiscellaneousIndicator(bool value)
+    {
+      //throw new NotImplementedException();
     }
 
     public void SetRecipe(string recipeName)

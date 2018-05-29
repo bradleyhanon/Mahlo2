@@ -89,13 +89,6 @@
       this.colDefaultRecipe = new System.Windows.Forms.DataGridViewButtonColumn();
       this.patternRepeatLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.srcGrid = new System.Windows.Forms.BindingSource(this.components);
-      this.statusBar1 = new MahloClient.Views.MyStatusBar();
-      this.pnlMessage = new System.Windows.Forms.StatusBarPanel();
-      this.pnlIndicator = new System.Windows.Forms.StatusBarPanel();
-      this.pnlUserAttention = new System.Windows.Forms.StatusBarPanel();
-      this.pnlAlarm = new System.Windows.Forms.StatusBarPanel();
-      this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
-      this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
       this.btnViewCoaterSchedule = new System.Windows.Forms.Button();
       this.icons32x32 = new System.Windows.Forms.ImageList(this.components);
       this.btnSetRecipe = new System.Windows.Forms.Button();
@@ -103,6 +96,14 @@
       this.btnWaitForSeam = new System.Windows.Forms.Button();
       this.btnGoToNextRoll = new System.Windows.Forms.Button();
       this.btnGoToPreviousRoll = new System.Windows.Forms.Button();
+      this.buttonPanel = new System.Windows.Forms.Panel();
+      this.statusBar1 = new MahloClient.Views.MyStatusBar();
+      this.pnlMessage = new System.Windows.Forms.StatusBarPanel();
+      this.pnlIndicator = new System.Windows.Forms.StatusBarPanel();
+      this.pnlUserAttention = new System.Windows.Forms.StatusBarPanel();
+      this.pnlAlarm = new System.Windows.Forms.StatusBarPanel();
+      this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
+      this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
       this.grpNextRoll.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.srcLogic)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcNextRoll)).BeginInit();
@@ -115,6 +116,7 @@
       this.grpSkew.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcGrid)).BeginInit();
+      this.buttonPanel.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pnlMessage)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pnlIndicator)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pnlUserAttention)).BeginInit();
@@ -315,9 +317,8 @@
       // lblRollMapped
       // 
       this.lblRollMapped.BackColor = System.Drawing.Color.Transparent;
-      this.lblRollMapped.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "RollMappedText", true));
-      this.lblRollMapped.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.srcLogic, "RollMappedBackColor", true));
-      this.lblRollMapped.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "RollMappedForeColor", true));
+      this.lblRollMapped.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "LblRollMappedForeColor", true));
+      this.lblRollMapped.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "LblRollMappedText", true));
       this.lblRollMapped.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblRollMapped.ForeColor = System.Drawing.Color.Black;
       this.lblRollMapped.Location = new System.Drawing.Point(184, 308);
@@ -486,13 +487,13 @@
       // lblControllerMode
       // 
       this.lblControllerMode.BackColor = System.Drawing.Color.Silver;
-      this.lblControllerMode.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "MahloStatusMessage", true));
-      this.lblControllerMode.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.srcLogic, "MahloStatusMessageBackColor", true));
-      this.lblControllerMode.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "MappingStatusMessageForeColor", true));
+      this.lblControllerMode.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.srcLogic, "LblControllerModeBackColor", true));
+      this.lblControllerMode.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "LblControllerModeForeColor", true));
+      this.lblControllerMode.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "LblControllerModeText", true));
       this.lblControllerMode.ForeColor = System.Drawing.Color.White;
-      this.lblControllerMode.Location = new System.Drawing.Point(242, 308);
+      this.lblControllerMode.Location = new System.Drawing.Point(244, 308);
       this.lblControllerMode.Name = "lblControllerMode";
-      this.lblControllerMode.Size = new System.Drawing.Size(234, 16);
+      this.lblControllerMode.Size = new System.Drawing.Size(236, 16);
       this.lblControllerMode.TabIndex = 50;
       this.lblControllerMode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
@@ -618,9 +619,8 @@
       // lblMappingStatus
       // 
       this.lblMappingStatus.BackColor = System.Drawing.Color.Transparent;
-      this.lblMappingStatus.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "MappingStatusMessage", true));
-      this.lblMappingStatus.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.srcLogic, "MappingStatusMessageBackColor", true));
-      this.lblMappingStatus.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "MappingStatusMessageForeColor", true));
+      this.lblMappingStatus.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "LblMappingStatusForeColor", true));
+      this.lblMappingStatus.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "LblMappingStatusText", true));
       this.lblMappingStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblMappingStatus.ForeColor = System.Drawing.Color.Black;
       this.lblMappingStatus.Location = new System.Drawing.Point(128, 260);
@@ -778,12 +778,12 @@
       // 
       this.lblRecipeName.BackColor = System.Drawing.Color.Silver;
       this.lblRecipeName.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "Recipe", true));
-      this.lblRecipeName.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.srcLogic, "PlcStatusMessageBackColor", true));
-      this.lblRecipeName.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "PlcStatusMessageForeColor", true));
+      this.lblRecipeName.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.srcLogic, "LblControllerModeBackColor", true));
+      this.lblRecipeName.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "LblControllerModeForeColor", true));
       this.lblRecipeName.ForeColor = System.Drawing.Color.White;
-      this.lblRecipeName.Location = new System.Drawing.Point(8, 308);
+      this.lblRecipeName.Location = new System.Drawing.Point(4, 308);
       this.lblRecipeName.Name = "lblRecipeName";
-      this.lblRecipeName.Size = new System.Drawing.Size(234, 16);
+      this.lblRecipeName.Size = new System.Drawing.Size(236, 16);
       this.lblRecipeName.TabIndex = 22;
       this.lblRecipeName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
@@ -792,8 +792,6 @@
       this.dataGridView1.AllowUserToAddRows = false;
       this.dataGridView1.AllowUserToDeleteRows = false;
       this.dataGridView1.AllowUserToResizeRows = false;
-      this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
       this.dataGridView1.AutoGenerateColumns = false;
       this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -809,7 +807,7 @@
             this.colDefaultRecipe,
             this.patternRepeatLengthDataGridViewTextBoxColumn});
       this.dataGridView1.DataSource = this.srcGrid;
-      this.dataGridView1.Location = new System.Drawing.Point(12, 350);
+      this.dataGridView1.Location = new System.Drawing.Point(13, 350);
       this.dataGridView1.MultiSelect = false;
       this.dataGridView1.Name = "dataGridView1";
       this.dataGridView1.ReadOnly = true;
@@ -931,6 +929,142 @@
       // 
       this.srcGrid.DataSource = typeof(MahloService.Models.CarpetRoll);
       // 
+      // btnViewCoaterSchedule
+      // 
+      this.btnViewCoaterSchedule.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnViewCoaterSchedule.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnViewCoaterSchedule.ForeColor = System.Drawing.Color.Black;
+      this.btnViewCoaterSchedule.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+      this.btnViewCoaterSchedule.ImageIndex = 7;
+      this.btnViewCoaterSchedule.ImageList = this.icons32x32;
+      this.btnViewCoaterSchedule.Location = new System.Drawing.Point(521, 6);
+      this.btnViewCoaterSchedule.Name = "btnViewCoaterSchedule";
+      this.btnViewCoaterSchedule.Size = new System.Drawing.Size(152, 60);
+      this.btnViewCoaterSchedule.TabIndex = 16;
+      this.btnViewCoaterSchedule.Text = "View Coater Schedule";
+      this.btnViewCoaterSchedule.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.btnViewCoaterSchedule.UseVisualStyleBackColor = false;
+      this.btnViewCoaterSchedule.Click += new System.EventHandler(this.BtnViewCoaterSchedule_Click);
+      // 
+      // icons32x32
+      // 
+      this.icons32x32.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("icons32x32.ImageStream")));
+      this.icons32x32.TransparentColor = System.Drawing.Color.Transparent;
+      this.icons32x32.Images.SetKeyName(0, "");
+      this.icons32x32.Images.SetKeyName(1, "");
+      this.icons32x32.Images.SetKeyName(2, "");
+      this.icons32x32.Images.SetKeyName(3, "");
+      this.icons32x32.Images.SetKeyName(4, "");
+      this.icons32x32.Images.SetKeyName(5, "");
+      this.icons32x32.Images.SetKeyName(6, "");
+      this.icons32x32.Images.SetKeyName(7, "");
+      // 
+      // btnSetRecipe
+      // 
+      this.btnSetRecipe.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnSetRecipe.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnSetRecipe.Enabled = false;
+      this.btnSetRecipe.ForeColor = System.Drawing.Color.Black;
+      this.btnSetRecipe.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+      this.btnSetRecipe.ImageIndex = 6;
+      this.btnSetRecipe.ImageList = this.icons32x32;
+      this.btnSetRecipe.Location = new System.Drawing.Point(351, 6);
+      this.btnSetRecipe.Name = "btnSetRecipe";
+      this.btnSetRecipe.Size = new System.Drawing.Size(152, 60);
+      this.btnSetRecipe.TabIndex = 13;
+      this.btnSetRecipe.Text = "Set Recipe";
+      this.btnSetRecipe.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.btnSetRecipe.UseVisualStyleBackColor = false;
+      // 
+      // btnDisableSystem
+      // 
+      this.btnDisableSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnDisableSystem.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnDisableSystem.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "IsSystemEnabled", true));
+      this.btnDisableSystem.ForeColor = System.Drawing.Color.Black;
+      this.btnDisableSystem.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+      this.btnDisableSystem.ImageIndex = 5;
+      this.btnDisableSystem.ImageList = this.icons32x32;
+      this.btnDisableSystem.Location = new System.Drawing.Point(861, 6);
+      this.btnDisableSystem.Name = "btnDisableSystem";
+      this.btnDisableSystem.Size = new System.Drawing.Size(152, 60);
+      this.btnDisableSystem.TabIndex = 15;
+      this.btnDisableSystem.Text = "Disable System";
+      this.btnDisableSystem.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.btnDisableSystem.UseVisualStyleBackColor = false;
+      this.btnDisableSystem.Click += new System.EventHandler(this.BtnDisableSystem_Click);
+      // 
+      // btnWaitForSeam
+      // 
+      this.btnWaitForSeam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnWaitForSeam.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnWaitForSeam.ForeColor = System.Drawing.Color.Black;
+      this.btnWaitForSeam.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+      this.btnWaitForSeam.ImageIndex = 4;
+      this.btnWaitForSeam.ImageList = this.icons32x32;
+      this.btnWaitForSeam.Location = new System.Drawing.Point(691, 6);
+      this.btnWaitForSeam.Name = "btnWaitForSeam";
+      this.btnWaitForSeam.Size = new System.Drawing.Size(152, 60);
+      this.btnWaitForSeam.TabIndex = 14;
+      this.btnWaitForSeam.Text = "Wait for Seam";
+      this.btnWaitForSeam.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.btnWaitForSeam.UseVisualStyleBackColor = false;
+      this.btnWaitForSeam.Click += new System.EventHandler(this.BtnWaitForSeam_Click);
+      // 
+      // btnGoToNextRoll
+      // 
+      this.btnGoToNextRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnGoToNextRoll.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnGoToNextRoll.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "CanMoveForward", true));
+      this.btnGoToNextRoll.Enabled = false;
+      this.btnGoToNextRoll.ForeColor = System.Drawing.Color.Black;
+      this.btnGoToNextRoll.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+      this.btnGoToNextRoll.ImageIndex = 1;
+      this.btnGoToNextRoll.ImageList = this.icons32x32;
+      this.btnGoToNextRoll.Location = new System.Drawing.Point(181, 6);
+      this.btnGoToNextRoll.Name = "btnGoToNextRoll";
+      this.btnGoToNextRoll.Size = new System.Drawing.Size(152, 60);
+      this.btnGoToNextRoll.TabIndex = 12;
+      this.btnGoToNextRoll.Text = "Forward to next roll";
+      this.btnGoToNextRoll.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.btnGoToNextRoll.UseVisualStyleBackColor = false;
+      this.btnGoToNextRoll.Click += new System.EventHandler(this.BtnGoToNextRoll_Click);
+      // 
+      // btnGoToPreviousRoll
+      // 
+      this.btnGoToPreviousRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnGoToPreviousRoll.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnGoToPreviousRoll.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "CanMoveBackward", true));
+      this.btnGoToPreviousRoll.Enabled = false;
+      this.btnGoToPreviousRoll.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.btnGoToPreviousRoll.ForeColor = System.Drawing.Color.Black;
+      this.btnGoToPreviousRoll.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+      this.btnGoToPreviousRoll.ImageIndex = 0;
+      this.btnGoToPreviousRoll.ImageList = this.icons32x32;
+      this.btnGoToPreviousRoll.Location = new System.Drawing.Point(12, 6);
+      this.btnGoToPreviousRoll.Name = "btnGoToPreviousRoll";
+      this.btnGoToPreviousRoll.Size = new System.Drawing.Size(152, 60);
+      this.btnGoToPreviousRoll.TabIndex = 11;
+      this.btnGoToPreviousRoll.Text = "Back to previous roll";
+      this.btnGoToPreviousRoll.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.btnGoToPreviousRoll.UseVisualStyleBackColor = false;
+      this.btnGoToPreviousRoll.Click += new System.EventHandler(this.BtnGoToPreviousRoll_Click);
+      // 
+      // buttonPanel
+      // 
+      this.buttonPanel.Controls.Add(this.btnViewCoaterSchedule);
+      this.buttonPanel.Controls.Add(this.btnSetRecipe);
+      this.buttonPanel.Controls.Add(this.btnGoToPreviousRoll);
+      this.buttonPanel.Controls.Add(this.btnDisableSystem);
+      this.buttonPanel.Controls.Add(this.btnGoToNextRoll);
+      this.buttonPanel.Controls.Add(this.btnWaitForSeam);
+      this.buttonPanel.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "IsConnectionEstablished", true));
+      this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+      this.buttonPanel.Location = new System.Drawing.Point(0, 519);
+      this.buttonPanel.Name = "buttonPanel";
+      this.buttonPanel.Size = new System.Drawing.Size(1026, 72);
+      this.buttonPanel.TabIndex = 17;
+      // 
       // statusBar1
       // 
       this.statusBar1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -993,142 +1127,16 @@
       this.pnlQueueMessage.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.Raised;
       this.pnlQueueMessage.Name = "pnlQueueMessage";
       // 
-      // btnViewCoaterSchedule
-      // 
-      this.btnViewCoaterSchedule.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnViewCoaterSchedule.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.btnViewCoaterSchedule.ForeColor = System.Drawing.Color.Black;
-      this.btnViewCoaterSchedule.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-      this.btnViewCoaterSchedule.ImageIndex = 7;
-      this.btnViewCoaterSchedule.ImageList = this.icons32x32;
-      this.btnViewCoaterSchedule.Location = new System.Drawing.Point(521, 525);
-      this.btnViewCoaterSchedule.Name = "btnViewCoaterSchedule";
-      this.btnViewCoaterSchedule.Size = new System.Drawing.Size(152, 60);
-      this.btnViewCoaterSchedule.TabIndex = 16;
-      this.btnViewCoaterSchedule.Text = "View Coater Schedule";
-      this.btnViewCoaterSchedule.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-      this.btnViewCoaterSchedule.UseVisualStyleBackColor = false;
-      this.btnViewCoaterSchedule.Click += new System.EventHandler(this.BtnViewCoaterSchedule_Click);
-      // 
-      // icons32x32
-      // 
-      this.icons32x32.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("icons32x32.ImageStream")));
-      this.icons32x32.TransparentColor = System.Drawing.Color.Transparent;
-      this.icons32x32.Images.SetKeyName(0, "");
-      this.icons32x32.Images.SetKeyName(1, "");
-      this.icons32x32.Images.SetKeyName(2, "");
-      this.icons32x32.Images.SetKeyName(3, "");
-      this.icons32x32.Images.SetKeyName(4, "");
-      this.icons32x32.Images.SetKeyName(5, "");
-      this.icons32x32.Images.SetKeyName(6, "");
-      this.icons32x32.Images.SetKeyName(7, "");
-      // 
-      // btnSetRecipe
-      // 
-      this.btnSetRecipe.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnSetRecipe.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.btnSetRecipe.Enabled = false;
-      this.btnSetRecipe.ForeColor = System.Drawing.Color.Black;
-      this.btnSetRecipe.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-      this.btnSetRecipe.ImageIndex = 6;
-      this.btnSetRecipe.ImageList = this.icons32x32;
-      this.btnSetRecipe.Location = new System.Drawing.Point(351, 525);
-      this.btnSetRecipe.Name = "btnSetRecipe";
-      this.btnSetRecipe.Size = new System.Drawing.Size(152, 60);
-      this.btnSetRecipe.TabIndex = 13;
-      this.btnSetRecipe.Text = "Set Recipe";
-      this.btnSetRecipe.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-      this.btnSetRecipe.UseVisualStyleBackColor = false;
-      // 
-      // btnDisableSystem
-      // 
-      this.btnDisableSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnDisableSystem.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.btnDisableSystem.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "IsMapValid", true));
-      this.btnDisableSystem.ForeColor = System.Drawing.Color.Black;
-      this.btnDisableSystem.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-      this.btnDisableSystem.ImageIndex = 5;
-      this.btnDisableSystem.ImageList = this.icons32x32;
-      this.btnDisableSystem.Location = new System.Drawing.Point(861, 525);
-      this.btnDisableSystem.Name = "btnDisableSystem";
-      this.btnDisableSystem.Size = new System.Drawing.Size(152, 60);
-      this.btnDisableSystem.TabIndex = 15;
-      this.btnDisableSystem.Text = "Disable System";
-      this.btnDisableSystem.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-      this.btnDisableSystem.UseVisualStyleBackColor = false;
-      this.btnDisableSystem.Click += new System.EventHandler(this.BtnDisableSystem_Click);
-      // 
-      // btnWaitForSeam
-      // 
-      this.btnWaitForSeam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnWaitForSeam.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.btnWaitForSeam.ForeColor = System.Drawing.Color.Black;
-      this.btnWaitForSeam.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-      this.btnWaitForSeam.ImageIndex = 4;
-      this.btnWaitForSeam.ImageList = this.icons32x32;
-      this.btnWaitForSeam.Location = new System.Drawing.Point(691, 525);
-      this.btnWaitForSeam.Name = "btnWaitForSeam";
-      this.btnWaitForSeam.Size = new System.Drawing.Size(152, 60);
-      this.btnWaitForSeam.TabIndex = 14;
-      this.btnWaitForSeam.Text = "Wait for Seam";
-      this.btnWaitForSeam.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-      this.btnWaitForSeam.UseVisualStyleBackColor = false;
-      this.btnWaitForSeam.Click += new System.EventHandler(this.btnWaitForSeam_Click);
-      // 
-      // btnGoToNextRoll
-      // 
-      this.btnGoToNextRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnGoToNextRoll.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.btnGoToNextRoll.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "CanMoveForward", true));
-      this.btnGoToNextRoll.Enabled = false;
-      this.btnGoToNextRoll.ForeColor = System.Drawing.Color.Black;
-      this.btnGoToNextRoll.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-      this.btnGoToNextRoll.ImageIndex = 1;
-      this.btnGoToNextRoll.ImageList = this.icons32x32;
-      this.btnGoToNextRoll.Location = new System.Drawing.Point(181, 525);
-      this.btnGoToNextRoll.Name = "btnGoToNextRoll";
-      this.btnGoToNextRoll.Size = new System.Drawing.Size(152, 60);
-      this.btnGoToNextRoll.TabIndex = 12;
-      this.btnGoToNextRoll.Text = "Forward to next roll";
-      this.btnGoToNextRoll.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-      this.btnGoToNextRoll.UseVisualStyleBackColor = false;
-      this.btnGoToNextRoll.Click += new System.EventHandler(this.BtnGoToNextRoll_Click);
-      // 
-      // btnGoToPreviousRoll
-      // 
-      this.btnGoToPreviousRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnGoToPreviousRoll.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.btnGoToPreviousRoll.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "CanMoveBackward", true));
-      this.btnGoToPreviousRoll.Enabled = false;
-      this.btnGoToPreviousRoll.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.btnGoToPreviousRoll.ForeColor = System.Drawing.Color.Black;
-      this.btnGoToPreviousRoll.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-      this.btnGoToPreviousRoll.ImageIndex = 0;
-      this.btnGoToPreviousRoll.ImageList = this.icons32x32;
-      this.btnGoToPreviousRoll.Location = new System.Drawing.Point(12, 525);
-      this.btnGoToPreviousRoll.Name = "btnGoToPreviousRoll";
-      this.btnGoToPreviousRoll.Size = new System.Drawing.Size(152, 60);
-      this.btnGoToPreviousRoll.TabIndex = 11;
-      this.btnGoToPreviousRoll.Text = "Back to previous roll";
-      this.btnGoToPreviousRoll.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-      this.btnGoToPreviousRoll.UseVisualStyleBackColor = false;
-      this.btnGoToPreviousRoll.Click += new System.EventHandler(this.BtnGoToPreviousRoll_Click);
-      // 
       // FormBowAndSkew
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(1026, 615);
-      this.Controls.Add(this.btnViewCoaterSchedule);
-      this.Controls.Add(this.btnSetRecipe);
-      this.Controls.Add(this.btnDisableSystem);
-      this.Controls.Add(this.btnWaitForSeam);
-      this.Controls.Add(this.btnGoToNextRoll);
-      this.Controls.Add(this.btnGoToPreviousRoll);
-      this.Controls.Add(this.dataGridView1);
       this.Controls.Add(this.grpMappingInfo);
+      this.Controls.Add(this.dataGridView1);
       this.Controls.Add(this.grpCurrentRoll);
       this.Controls.Add(this.grpNextRoll);
+      this.Controls.Add(this.buttonPanel);
       this.Controls.Add(this.statusBar1);
       this.Name = "FormBowAndSkew";
       this.Text = "Bow and Skew Mapper";
@@ -1144,6 +1152,7 @@
       this.grpSkew.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcGrid)).EndInit();
+      this.buttonPanel.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.pnlMessage)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pnlIndicator)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pnlUserAttention)).EndInit();
@@ -1239,5 +1248,6 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn rollWidthStrDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewButtonColumn colDefaultRecipe;
     private System.Windows.Forms.DataGridViewTextBoxColumn patternRepeatLengthDataGridViewTextBoxColumn;
+    private System.Windows.Forms.Panel buttonPanel;
   }
 }

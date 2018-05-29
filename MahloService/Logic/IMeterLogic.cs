@@ -21,6 +21,7 @@ namespace MahloService.Logic
     [JsonIgnore]
     IObservable<CarpetRoll> RollFinished { get; }
 
+    bool IsMappingNow { get; set; }
     bool IsManualMode { get; set; }
 
     string Recipe { get; set; }
@@ -30,11 +31,8 @@ namespace MahloService.Logic
 
     bool IsSeamDetected { get; set; }
 
-    [JsonIgnore]
-    int Feet { get; set; }
-    [JsonIgnore]
+    int MeasuredLength { get; set; }
     int Speed { get; set; }
-    [JsonIgnore]
     bool IsMapValid { get; set; }
     double MeasuredWidth { get; set; }
 
@@ -42,11 +40,14 @@ namespace MahloService.Logic
     int RollChangesUntilCheckRequired { get; set; }
     int StyleChangesUntilCheckRequired { get; set; }
 
+    string QueueMessage { get; set; }
+
+    Task ApplyRecipe(string recipeName, bool isManualMode);
     void RefreshStatusDisplay();
     void MoveToNextRoll();
     void MoveToPriorRoll();
     void WaitForSeam();
-
+    void DisableSystem();
     void Start();
   }
 

@@ -45,6 +45,12 @@ namespace MahloService.Ipc
     {
       this.syncContext.Post(_ => this.GetMeterLogicInstance(name).WaitForSeam(), null);
     }
+
+    public void DisableSystem(string name)
+    {
+      this.syncContext.Post(_ => this.GetMeterLogicInstance(name).DisableSystem(), null);
+    }
+
     public Task<(string message, string caption)> BasSetRecipe(string rollNo, string styleCode, string recipeName, bool isManualMode, RecipeApplyToEnum applyTo)
     {
       var tcs = new TaskCompletionSource<(string message, string caption)>();
@@ -101,25 +107,12 @@ namespace MahloService.Ipc
     public Task BasApplyRecipe(string recipeName, bool isManualMode)
     {
       TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
-      this.syncContext.Post(_ =>
+      this.syncContext.Post(async _ =>
       {
         try
         {
           var bas = Program.Container.GetInstance<IBowAndSkewLogic>();
-          var meterSrc = Program.Container.GetInstance<IMeterSrc<BowAndSkewRoll>>();
-          if (isManualMode)
-          {
-            if (bas.IsManualMode)
-            {
-              meterSrc.SetAutoMode(false);
-            }
-            else
-            {
-              meterSrc.SetRecipe(recipeName);
-              meterSrc.SetAutoMode(true);
-            }
-          }
-
+          await bas.ApplyRecipe(recipeName, isManualMode);
           tcs.SetResult(null);
         }
         catch (Exception ex)

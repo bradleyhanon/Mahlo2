@@ -78,7 +78,7 @@ namespace MahloClient.Views
       var dr = MessageBox.Show("You have requested to move back to the previous roll in the queue.  This will cancel mapping that may be in progress.\n\nAre you sure you want to do this?", "Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
       if (dr == DialogResult.Yes)
       {
-        this.mahloClient.Call(Ipc.MahloIpcClient.MoveToPriorRollCommand, nameof(IBowAndSkewLogic));
+        this.logic.MoveToPriorRoll();
       }
     }
 
@@ -87,13 +87,8 @@ namespace MahloClient.Views
       var dr = MessageBox.Show("You have requested to move ahead to the next roll in the queue.  This will cancel mapping that may be in progress.\n\nAre you sure you want to do this?", "Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
       if (dr == DialogResult.Yes)
       {
-        this.mahloClient.Call(Ipc.MahloIpcClient.MoveToNextRollCommand, nameof(IBowAndSkewLogic));
+        this.logic.MoveToNextRoll();
       }
-    }
-
-    private void BtnDisableSystem_Click(object sender, EventArgs e)
-    {
-
     }
 
     private void DataGridView1_SelectionChanged(object sender, EventArgs e)
@@ -129,9 +124,14 @@ namespace MahloClient.Views
       }
     }
 
-    private void btnWaitForSeam_Click(object sender, EventArgs e)
+    private void BtnWaitForSeam_Click(object sender, EventArgs e)
     {
+      this.logic.WaitForSeam();
+    }
 
+    private void BtnDisableSystem_Click(object sender, EventArgs e)
+    {
+      this.logic.DisableSystem();
     }
   }
 }

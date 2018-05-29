@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -9,7 +10,6 @@ using PropertyChanged;
 
 namespace MahloService.Logic
 {
-  [AddINotifyPropertyChangedInterface]
   class UserAttentions<Model> : IUserAttentions<Model>
   {
     private Attention attentions;
@@ -23,6 +23,8 @@ namespace MahloService.Logic
       SystemDisabled = 8,
       All = VerifyRollSequence | RollTooLong | RollTooShort | SystemDisabled,
     }
+
+    public event PropertyChangedEventHandler PropertyChanged;
 
     public bool IsSystemDisabled
     {

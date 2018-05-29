@@ -19,6 +19,15 @@ namespace MahloService.Settings
     }
 
     public string ServiceUrl { get; set; } = "http://+:80/mahlo/";
+
+    public double SeamDetectIgnoreThreshold { get; set; } = 0.5;
+    public double MinRollLengthForLengthChecking { get; set; } = 100;
+    public double MinRollLengthForStyleAndRollCounting { get; set; } = 50;
+    public double SeamIndicatorKeepOnLength { get; set; } = 10;
+    public double RollTooLongThreshold { get; set; } = 1.1;
+    public double RollTooShortThreshold { get; set; } = 0.9;
+
+
     //public int MainFormBackgroundColor { get; set; } = 0xECF2F2;
     //public string DDEServername { get; set; } = "BowAndSkew";
     //public bool AutoCloseMahloDDEServer { get; set; } = false;
@@ -36,6 +45,8 @@ namespace MahloService.Settings
     //  get => this.metersPerPixelFactor;
     //  set => this.metersPerPixelFactor = Math.Max(value, DEFAULT_METERS_PER_PIXEL);
     //}
+
+
 
     public double BowToleranceInInches { get; set; } = 0.5;
     public double SkewToleranceInInches { get; set; } = 0.5;

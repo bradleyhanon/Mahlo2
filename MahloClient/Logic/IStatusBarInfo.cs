@@ -5,11 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MahloService.Logic;
+using Microsoft.AspNet.SignalR.Client;
 
 namespace MahloClient.Logic
 {
   interface IStatusBarInfo
   {
+    string ConnectionStatusMessage { get; }
     bool IsSeamDetectEnabled { get; }
     bool IsSeamDetected { get; }
     IUserAttentions UserAttentions { get; }

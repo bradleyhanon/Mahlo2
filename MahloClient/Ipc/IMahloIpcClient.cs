@@ -4,13 +4,17 @@ using System.Threading.Tasks;
 using MahloService.Ipc;
 using MahloService.Models;
 using MahloService.Settings;
+using Microsoft.AspNet.SignalR.Client;
 using Newtonsoft.Json.Linq;
 
 namespace MahloClient.Ipc
 {
   interface IMahloIpcClient
   {
+    event Action<string> IpcStatusMessageChanged;
     event Action<(string name, JObject jObject)> MeterLogicUpdated;
+    ConnectionState State { get; }
+
     Task Start();
     Task Call(string cmd, params object[] args);
     Task<T> Call<T>(string cmd, params object[] args);

@@ -20,7 +20,8 @@ namespace MahloService.Opc
     void ResetMeterOffset();
     void ResetSeamDetector();
     void SetStatusIndicator(bool value);
-    void SetCriticalAlarm(bool value);
+    void SetCriticalAlarmIndicator(bool value);
+    void SetMiscellaneousIndicator(bool value);
     void SetRecipe(string recipeName);
     void SetAutoMode(bool value);
   }

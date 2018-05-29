@@ -21,7 +21,7 @@ using PropertyChanged;
 namespace MahloService.Opc
 {
   [AddINotifyPropertyChangedInterface]
-  sealed class MahloOpcClient<Model> : IMeterSrc<Model>, IMahloSrc<Model>, IBowAndSkewSrc<Model>, IPatternRepeatSrc<Model>, IDisposable
+  sealed class MahloOpcClient<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc, IDisposable
   {
     private const string MahloServerClass = "mahlo.10AOpcServer.1";
     private const string PlcServerClass = "Kepware.KEPServerEX.V6";
@@ -80,7 +80,7 @@ namespace MahloService.Opc
           h => ((INotifyPropertyChanged)this.criticalStops).PropertyChanged += h,
           h => ((INotifyPropertyChanged)this.criticalStops).PropertyChanged -= h)
           .Where(args => args.EventArgs.PropertyName == nameof(CriticalStops<Model>.Any))
-          .Subscribe(_ => this.SetCriticalAlarm(this.criticalStops.Any));
+          .Subscribe(_ => this.SetCriticalAlarmIndicator(this.criticalStops.Any));
 
       this.userAttentionsSubscription =
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
@@ -322,7 +322,12 @@ namespace MahloService.Opc
       //throw new NotImplementedException();
     }
 
-    public void SetCriticalAlarm(bool value)
+    public void SetCriticalAlarmIndicator(bool value)
+    {
+      //throw new NotImplementedException();
+    }
+
+    public void SetMiscellaneousIndicator(bool value)
     {
       //throw new NotImplementedException();
     }

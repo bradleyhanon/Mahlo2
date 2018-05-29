@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonMethods.cs" />
     <Compile Include="Settings\ServiceSettings.cs" />
     <Compile Include="Settings\IServiceSettings.cs" />
     <Compile Include="Settings\IOpcSettings.cs" />

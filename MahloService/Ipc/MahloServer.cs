@@ -21,6 +21,7 @@ namespace MahloService.Ipc
     private IBowAndSkewLogic bowAndSkewLogic;
     private IPatternRepeatLogic patternRepeatLogic;
     private IDisposable timer;
+    private IDisposable queueChangedSubscription;
 
     public MahloServer(
       ILogger logger,
@@ -43,12 +44,16 @@ namespace MahloService.Ipc
           //this.UpdateMahloLogic();
           //this.UpdateBowAndSkewLogic();
           //this.UpdatePatternRepeatLogic();
-          this.UpdateMeterLogic(this.mahloLogic);
-          this.UpdateMeterLogic(this.bowAndSkewLogic);
-          this.UpdateMeterLogic(this.patternRepeatLogic);
+          this.UpdateMeterLogic(nameof(IMahloLogic), this.mahloLogic);
+          this.UpdateMeterLogic(nameof(IBowAndSkewLogic), this.bowAndSkewLogic);
+          this.UpdateMeterLogic(nameof(IPatternRepeatLogic), this.patternRepeatLogic);
         });
 
-      sewinQueue.QueueChanged.Subscribe(_ => UpdateSewinQueue());
+      this.queueChangedSubscription = Observable
+        .FromEvent(
+          h => this.sewinQueue.QueueChanged += h,
+          h => this.sewinQueue.QueueChanged -= h)
+        .Subscribe(_ => this.UpdateSewinQueue());
     }
 
     private IHubConnectionContext<dynamic> Clients { get; set; } = GlobalHost.ConnectionManager.GetHubContext<MahloHub>().Clients;
@@ -93,14 +98,14 @@ namespace MahloService.Ipc
     //  }
     //}
 
-    public void UpdateMeterLogic<Model>(IMeterLogic<Model> meterLogic)
+    public void UpdateMeterLogic<Model>(string interfaceName, IMeterLogic<Model> meterLogic)
     {
       if (meterLogic.IsChanged)
       {
         string name = typeof(Model).Name;
-        log.Debug($"UpdateMeterLogic<{name}>");
+        log.Debug($"UpdateMeterLogic<{interfaceName}>");
         meterLogic.IsChanged = false;
-        this.Clients.All.UpdateMeterLogic(name, meterLogic);
+        this.Clients.All.UpdateMeterLogic(interfaceName, meterLogic);
       }
     }
 
@@ -108,9 +113,9 @@ namespace MahloService.Ipc
     {
       var client = this.Clients.Client(connectionId);
       client.UpdateSewinQueue(this.sewinQueue.Rolls.ToArray());
-      client.UpdateMeterLogic<IMahloLogic>(this.mahloLogic);
-      client.UpdateMeterLogic<IBowAndSkewLogic>(this.bowAndSkewLogic);
-      client.UpdateMeterLogic<IPatternRepeatLogic>(this.patternRepeatLogic);
+      client.UpdateMeterLogic(nameof(IMahloLogic), this.mahloLogic);
+      client.UpdateMeterLogic(nameof(IBowAndSkewLogic), this.bowAndSkewLogic);
+      client.UpdateMeterLogic(nameof(IPatternRepeatLogic), this.patternRepeatLogic);
     }
   }
 }

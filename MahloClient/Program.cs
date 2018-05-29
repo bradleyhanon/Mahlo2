@@ -38,11 +38,11 @@ namespace MahloClient
           async void FirstIdle(object sender, EventArgs e)
           {
             // We need to start the client after the form is run so the event loop is estalished.
-            var serviceSettings = container.GetInstance<IServiceSettings>();
-            MahloIpcClient mahloIpcClient = container.GetInstance<MahloIpcClient>();
-            await mahloIpcClient.Start();
-            await mahloIpcClient.GetServiceSettings(serviceSettings);
             Application.Idle -= FirstIdle;
+            var serviceSettings = container.GetInstance<IServiceSettings>();
+            var ipcClient = container.GetInstance<IMahloIpcClient>();
+            await ipcClient.Start();
+            await ipcClient.GetServiceSettings(serviceSettings);
           };
         }
       }

@@ -49,6 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\MahloService\CommonMethods.cs">
+      <Link>CommonMethods.cs</Link>
+    </Compile>
     <Compile Include="..\MahloService\Ipc\RecipeApplyToEnum.cs">
       <Link>Ipc\RecipeApplyToEnum.cs</Link>
     </Compile>
@@ -126,7 +129,6 @@
     <Compile Include="Logic\BowAndSkewLogic.cs" />
     <Compile Include="Logic\CarpetProcessor.cs" />
     <Compile Include="Logic\ICarpetProcessor.cs" />
-    <Compile Include="Logic\IMeterLogicEx.cs" />
     <Compile Include="Logic\ISewinQueue.cs" />
     <Compile Include="Logic\IStatusBarInfo.cs" />
     <Compile Include="Logic\MahloLogic.cs" />

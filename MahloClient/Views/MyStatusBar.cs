@@ -37,6 +37,7 @@ namespace MahloClient.Views
             h => ((INotifyPropertyChanged)value).PropertyChanged -= h)
           .Subscribe(arg => 
           {
+            //Console.WriteLine(arg.EventArgs.PropertyName);
             switch (arg.EventArgs.PropertyName)
             {
               case nameof(_statusBarInfo.IsSeamDetectEnabled):
@@ -47,6 +48,10 @@ namespace MahloClient.Views
               case nameof(_statusBarInfo.CriticalAlarmMessage):
               case nameof(_statusBarInfo.IgnoringSeams):
                 this.Invalidate();
+                break;
+
+              case nameof(_statusBarInfo.ConnectionStatusMessage):
+                this.Panels[PnlMessage].Text = $"Service: {_statusBarInfo.ConnectionStatusMessage}";
                 break;
 
               case nameof(_statusBarInfo.QueueMessage):

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MahloService.Logic
 {
-  interface IPatternRepeatLogic : IMeterLogic<IPatternRepeatLogic>
+  interface IPatternRepeatLogic : IMeterLogic<PatternRepeatRoll>
   {
   }
 }

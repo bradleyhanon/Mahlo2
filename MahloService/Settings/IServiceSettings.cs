@@ -3,6 +3,14 @@
   public interface IServiceSettings
   {
     string ServiceUrl { get; set; }
+
+    double SeamDetectIgnoreThreshold { get; set; }
+    double MinRollLengthForLengthChecking { get; set; }
+    double MinRollLengthForStyleAndRollCounting { get; set; }
+    double SeamIndicatorKeepOnLength { get; set; }
+    double RollTooLongThreshold { get; set; }
+    double RollTooShortThreshold { get; set; }
+
     //bool ArchiveRollMaps { get; set; }
     //bool AutoCloseMahloDDEServer { get; set; }
     bool AutoSetRecipe { get; set; }

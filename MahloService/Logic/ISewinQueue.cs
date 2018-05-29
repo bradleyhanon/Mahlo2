@@ -6,13 +6,15 @@ using MahloService.Models;
 
 namespace MahloService.Logic
 {
-  interface ISewinQueue : IDisposable
+  interface ISewinQueue : INotifyPropertyChanged, IDisposable
   {
-    IObservable<object> QueueChanged { get; }
+    event Action QueueChanged;
+
     BindingList<CarpetRoll> Rolls { get; }
 
+    string Message { get; }
+
     Task Refresh();
-    //bool RollIsLeader(int currentRollId);
 
     /// <summary>
     /// Gets a Roll from the sewin queue.

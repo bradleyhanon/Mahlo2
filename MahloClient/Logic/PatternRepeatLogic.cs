@@ -17,22 +17,24 @@ namespace MahloClient.Logic
     {
     }
 
-    public override int Feet
-    {
-      get => this.CurrentRoll.PrsFeet;
-      set => throw new NotImplementedException();
-    }
+    public override string InterfaceName => nameof(IPatternRepeatLogic);
 
-    public override int Speed
-    {
-      get => this.CurrentRoll.PrsSpeed;
-      set => throw new NotImplementedException();
-    }
+    //public override int Feet
+    //{
+    //  get => this.CurrentRoll.PrsFeet;
+    //  set => throw new NotImplementedException();
+    //}
 
-    public override bool IsMapValid
-    {
-      get => this.CurrentRoll.PrsMapValid;
-      set => throw new NotImplementedException();
-    }
+    //public override int Speed
+    //{
+    //  get => this.CurrentRoll.PrsSpeed;
+    //  set => throw new NotImplementedException();
+    //}
+
+    //public override bool IsMapValid
+    //{
+    //  get => this.CurrentRoll.PrsMapValid;
+    //  set => throw new NotImplementedException();
+    //}
   }
 }

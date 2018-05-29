@@ -16,21 +16,23 @@ namespace MahloService.Logic
 {
   class BowAndSkewLogic : MeterLogic<BowAndSkewRoll>, IBowAndSkewLogic
   {
+    IBowAndSkewSrc dataSrc;
     public BowAndSkewLogic(
-      IBowAndSkewSrc<BowAndSkewRoll> dataSrc, 
-      ISewinQueue sewinQueue, 
-      IServiceSettings appInfo, 
-      IUserAttentions<BowAndSkewRoll> userAttentions, 
-      ICriticalStops<BowAndSkewRoll> criticalStops, 
-      IProgramState programState, 
+      IBowAndSkewSrc dataSrc,
+      ISewinQueue sewinQueue,
+      IServiceSettings appInfo,
+      IUserAttentions<BowAndSkewRoll> userAttentions,
+      ICriticalStops<BowAndSkewRoll> criticalStops,
+      IProgramState programState,
       ISchedulerProvider schedulerProvider)
       : base(dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
     {
+      this.dataSrc = dataSrc;
       dataSrc.BowChanged.Subscribe(value => this.CurrentRoll.Bow = value);
       dataSrc.SkewChanged.Subscribe(value => this.CurrentRoll.Skew = value);
     }
 
-    public override int Feet
+    public override int MeasuredLength
     {
       get => this.CurrentRoll.BasFeet;
       set => this.CurrentRoll.BasFeet = value;
@@ -46,6 +48,24 @@ namespace MahloService.Logic
     {
       get => this.CurrentRoll.BasMapValid;
       set => this.CurrentRoll.BasMapValid = value;
+    }
+
+    public override Task ApplyRecipe(string recipeName, bool isManualMode)
+    {
+      if (isManualMode)
+      {
+        if (this.IsManualMode)
+        {
+          this.dataSrc.SetAutoMode(false);
+        }
+        else
+        {
+          this.dataSrc.SetRecipe(recipeName);
+          this.dataSrc.SetAutoMode(true);
+        }
+      }
+
+      return Task.CompletedTask;
     }
   }
 }

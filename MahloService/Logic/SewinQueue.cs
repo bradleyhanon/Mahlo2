@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 using MahloService.Models;
 using MahloService.Repository;
 using MahloService.Utilities;
+using PropertyChanged;
 
 namespace MahloService.Logic
 {
   sealed class SewinQueue : ISewinQueue
   {
-    private Subject<object> queueChanged = new Subject<object>();
     private int firstRollId;
     private int nextRollId;
 
@@ -47,11 +47,13 @@ namespace MahloService.Logic
         .Subscribe(async _ => await this.RefreshIfChanged());
     }
 
+    public event PropertyChangedEventHandler PropertyChanged;
+    public event Action QueueChanged;
+
     public TimeSpan RefreshInterval => TimeSpan.FromSeconds(10);
 
     public BindingList<CarpetRoll> Rolls { get; private set; } = new BindingList<CarpetRoll>();
-
-    public IObservable<object> QueueChanged => this.queueChanged;
+    public string Message { get; private set; }
 
     public void Dispose()
     {
@@ -87,46 +89,46 @@ namespace MahloService.Logic
       return result;
     }
 
-    public bool RollIsLeader(int rollId)
-    {
-      var theRoll = this.Rolls.Single(item => item.Id == rollId);
-      if (!theRoll.IsCheckRoll)
-      {
-        return false;
-      }
+    //public bool RollIsLeader(int rollId)
+    //{
+    //  var theRoll = this.Rolls.Single(item => item.Id == rollId);
+    //  if (!theRoll.IsCheckRoll)
+    //  {
+    //    return false;
+    //  }
 
-      var theIndex = this.Rolls.IndexOf(theRoll);
+    //  var theIndex = this.Rolls.IndexOf(theRoll);
 
-      string bk1 = "", bk2 = "";
-      double width1 = 0, width2 = 0;
+    //  string bk1 = "", bk2 = "";
+    //  double width1 = 0, width2 = 0;
 
-      int index = theIndex;
-      while (--index >= 0)
-      {
-        var roll = this.Rolls[index];
-        if (!roll.IsCheckRoll)
-        {
-          bk1 = roll.BackingCode;
-          width1 = roll.RollWidth;
-          break;
-        }
-      };
+    //  int index = theIndex;
+    //  while (--index >= 0)
+    //  {
+    //    var roll = this.Rolls[index];
+    //    if (!roll.IsCheckRoll)
+    //    {
+    //      bk1 = roll.BackingCode;
+    //      width1 = roll.RollWidth;
+    //      break;
+    //    }
+    //  };
 
-      index = theIndex;
-      while (++index < this.Rolls.Count)
-      {
-        var roll = this.Rolls[index];
-        if (!roll.IsCheckRoll)
-        {
-          bk2 = roll.BackingCode;
-          width2 = roll.RollWidth;
-          break;
-        }
-      };
+    //  index = theIndex;
+    //  while (++index < this.Rolls.Count)
+    //  {
+    //    var roll = this.Rolls[index];
+    //    if (!roll.IsCheckRoll)
+    //    {
+    //      bk2 = roll.BackingCode;
+    //      width2 = roll.RollWidth;
+    //      break;
+    //    }
+    //  };
 
-      bool result = (bk1 == "XL" && bk2 != "XL") || width1 != width2;
-      return result;
-    }
+    //  bool result = (bk1 == "XL" && bk2 != "XL") || width1 != width2;
+    //  return result;
+    //}
 
     public async Task Refresh()
     {
@@ -162,7 +164,7 @@ namespace MahloService.Logic
 
       }
 
-      this.queueChanged.OnNext(this);
+      this.QueueChanged?.Invoke();
     }
 
     private async Task RefreshIfChanged()
@@ -175,17 +177,21 @@ namespace MahloService.Logic
       this.isRefreshBusy = true;
       try
       {
+        this.Message = "Checking queue";
         await this.dbMfg.GetCutRollFromHost();
         if (await this.dbMfg.GetIsSewinQueueChanged(this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll))
         {
+          this.Message = "Reading queue";
           await Refresh();
 
           //this.firstRollId = this.Rolls.Min(item => item.RollId);
         }
-      }
-      catch
-      {
 
+        this.Message = "Queue sleeping";
+      }
+      catch (Exception ex)
+      {
+        this.Message = $"Error: {ex.Message}";
       }
 
       this.isRefreshBusy = false;

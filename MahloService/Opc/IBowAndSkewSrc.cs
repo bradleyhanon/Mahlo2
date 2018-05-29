@@ -7,7 +7,7 @@ using MahloService.Models;
 
 namespace MahloService.Opc
 {
-  interface IBowAndSkewSrc<Model> : IMeterSrc<Model>
+  interface IBowAndSkewSrc : IMeterSrc<BowAndSkewRoll>
   {
     IObservable<double> BowChanged { get; }
     IObservable<double> SkewChanged { get; }

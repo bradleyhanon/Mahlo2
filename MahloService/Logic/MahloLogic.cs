@@ -15,7 +15,7 @@ namespace MahloService.Logic
   class MahloLogic : MeterLogic<MahloRoll>, IMahloLogic
   {
     public MahloLogic(
-      IMeterSrc<MahloRoll> mahloSrc, 
+      IMahloSrc mahloSrc, 
       ISewinQueue sewinQueue, 
       IServiceSettings appInfo, 
       IUserAttentions<MahloRoll> userAttentions, 
@@ -26,7 +26,7 @@ namespace MahloService.Logic
     {
     }
 
-    public override int Feet
+    public override int MeasuredLength
     {
       get => this.CurrentRoll.MalFeet;
       set => this.CurrentRoll.MalFeet = value;

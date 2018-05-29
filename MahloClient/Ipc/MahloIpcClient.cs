@@ -18,12 +18,14 @@ using MahloService.Settings;
 
 namespace MahloClient.Ipc
 {
-  class MahloIpcClient : IMahloIpcClient
+  sealed class MahloIpcClient : IMahloIpcClient, IDisposable
   {
     public const string MoveToNextRollCommand = "MoveToNextRoll";
     public const string MoveToPriorRollCommand = "MoveToPriorRoll";
     public const string WaitForSeamCommand = "WaitForSeam";
+    public const string DisableSystemCommand = "DisableSystem";
 
+    private bool IsDisposed;
     private HubConnection hubConnection;
     private IHubProxy hubProxy;
     private IClientSettings appInfo;
@@ -31,8 +33,9 @@ namespace MahloClient.Ipc
     private SynchronizationContext context;
 
     private bool isStarting;
-    private ConnectionState state = ConnectionState.Disconnected;
     private string connectionError;
+    private TaskCompletionSource<object> connectionTcs = new TaskCompletionSource<object>();
+    private string ipcStatusMessage;
 
     public MahloIpcClient(
       ISewinQueue sewinQueue,
@@ -44,16 +47,40 @@ namespace MahloClient.Ipc
       this.context = context;
     }
 
+    public string IpcStatusMessage
+    {
+      get => this.ipcStatusMessage;
+      set
+      {
+        if (this.ipcStatusMessage != value)
+        {
+          this.ipcStatusMessage = value;
+          this.context.Post(_ => this.IpcStatusMessageChanged?.Invoke(value), null);
+        }
+      }
+    }
+
     public event Action<(string name, JObject jObject)> MeterLogicUpdated;
+    public event Action<string> IpcStatusMessageChanged;
+
+    public ConnectionState State => this.hubConnection?.State ?? ConnectionState.Disconnected;
+
+    public void Dispose()
+    {
+      this.IsDisposed = true;
+      this.hubConnection.Dispose();
+    }
 
     public async Task Start()
     {
       if (!isStarting)
       {
+        Console.WriteLine("Connection starting");
         this.isStarting = true;
 
         this.hubConnection = new HubConnection(appInfo.ServiceUrl);
         this.hubConnection.StateChanged += HubConnection_StateChanged;
+        this.hubConnection.Received += msg => Console.WriteLine(msg);
         //this.hubConnection.TraceLevel = TraceLevels.All;
         //this.hubConnection.TraceWriter = Console.Out;
         this.hubProxy = hubConnection.CreateHubProxy("MahloHub");
@@ -62,28 +89,6 @@ namespace MahloClient.Ipc
           this.context.Post(_ =>
             this.sewinQueue.UpdateSewinQueue(arg.ToObject<CarpetRoll[]>()), null);
         });
-
-        //this.hubProxy.On("UpdateMahloLogic", arg => this.context.Post(_ =>
-        //{
-        //  JToken token = arg;
-        //  token.Populate(this.mahloLogic);
-        //  this.mahloLogic.RefreshStatusDisplay();
-        //  Console.WriteLine($"UpdateMahloLogic - {arg}");
-        //}, null));
-
-        //this.hubProxy.On("UpdateBowAndSkewLogic", arg => this.context.Post(_ =>
-        //{
-        //  JToken token = arg;
-        //  token.Populate(this.bowAndSkewLogic);
-        //  this.bowAndSkewLogic.RefreshStatusDisplay();
-        //}, null));
-
-        //this.hubProxy.On("UpdatePatternRepeatLogic", arg => this.context.Post(_ =>
-        //{
-        //  JToken token = arg;
-        //  token.Populate(this.patternRepeatLogic);
-        //  this.patternRepeatLogic.RefreshStatusDisplay();
-        //}, null));
 
         this.hubProxy.On<string, JObject>("UpdateMeterLogic", (name, arg) => this.context.Post(_ =>
         {
@@ -96,11 +101,16 @@ namespace MahloClient.Ipc
           try
           {
             await hubConnection.Start();
-            await Call("RefreshAll");
+            this.IpcStatusMessage = this.hubConnection.State.ToString();
+          }
+          catch (HttpClientException ex) when (ex.Response != null)
+          {
+            this.IpcStatusMessage = ex.Response.ReasonPhrase;
+            await Task.Delay(3000);
           }
           catch (Exception ex)
           {
-            var dr = MessageBox.Show("Unable to connect to Mahlo service", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+            var dr = MessageBox.Show($"Unable to connect to Mahlo service\n\n{ex.Message}", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
             if (dr == DialogResult.Cancel)
             {
               Environment.Exit(1);
@@ -110,6 +120,11 @@ namespace MahloClient.Ipc
 
         this.isStarting = false;
       }
+    }
+
+    private void HubConnection_Received(string obj)
+    {
+      throw new NotImplementedException();
     }
 
     public Task<(string message, string caption)> BasSetRecipe(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo)
@@ -129,16 +144,25 @@ namespace MahloClient.Ipc
       obj.Populate(serviceSettings);
     }
 
-    private void HubConnection_StateChanged(StateChange obj)
+    private async void HubConnection_StateChanged(StateChange obj)
     {
-      this.state = obj.NewState;
-    }
-
-    private async Task ConnectedCheck()
-    {
-      if (this.state != ConnectionState.Connected)
+      Console.WriteLine($"OldState={obj.OldState}, NewState={obj.NewState}");
+      this.IpcStatusMessage = obj.NewState.ToString();
+      
+      if (obj.NewState == ConnectionState.Connected)
       {
-        await Start();
+        this.connectionTcs.SetResult(null);
+        this.context.Post(_ => Call("RefreshAll"), null);
+      }
+      else if (obj.OldState == ConnectionState.Connected)
+      {
+        this.connectionTcs = new TaskCompletionSource<object>();
+      }
+
+      if (!this.isStarting && obj.NewState == ConnectionState.Disconnected && !this.IsDisposed)
+      {
+        await Task.Delay(5000);
+        await this.Start();
       }
     }
 
@@ -146,11 +170,7 @@ namespace MahloClient.Ipc
     {
       var dr = MessageBox.Show("Try again?", "Communication Failure", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
       return dr == DialogResult.Retry;
-      //var nav = (FreshNavigationContainer)App.Current.MainPage;
-      //var currentPage = (FreshBaseContentPage)nav.CurrentPage;
-      //return await currentPage.DisplayAlert($"Communication Failure", "Try Again?", "Yes", "No");
     }
-
 
     private void SetConnectionError(Exception ex)
     {
@@ -183,7 +203,7 @@ namespace MahloClient.Ipc
 
     public async Task<T> Call<T>(string method, params object[] args)
     {
-      Console.Clear();
+      //Console.Clear();
       StringBuilder builder = new StringBuilder();
       builder.Append(method);
       builder.Append('(');
@@ -199,16 +219,20 @@ namespace MahloClient.Ipc
 
       Console.WriteLine(builder.ToString());
 
-      T result = default(T);
+      T result = default;
       for (; ; )
       {
         try
         {
-          await ConnectedCheck();
+          await this.connectionTcs.Task;
           result = await hubProxy.Invoke<T>(method, args);
           break;
         }
-        catch (Exception ex) when (this.state != ConnectionState.Connected)
+        catch (InvalidOperationException)
+        {
+
+        }
+        catch (Exception ex) when (this.hubConnection.State != ConnectionState.Connected)
         {
           SetConnectionError(ex);
           if (!RetryCheck(method, ex))

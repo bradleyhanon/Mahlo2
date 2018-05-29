@@ -1,31 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MahloClient.Ipc;
+using MahloService;
 using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Settings;
+using Microsoft.AspNet.SignalR.Client;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
 
 namespace MahloClient.Logic
 {
-  [AddINotifyPropertyChangedInterface]
-  abstract class MeterLogic<Model> : IMeterLogic, IStatusBarInfo, IDisposable
+  abstract class MeterLogic<Model> : IMeterLogic, IStatusBarInfo, IDisposable, INotifyPropertyChanged
   {
     private IMahloIpcClient ipcClient;
     private ISewinQueue sewinQueue;
     private IServiceSettings serviceSettings;
     private string currentRollNo = string.Empty;
     private CarpetRoll currentRoll = new CarpetRoll();
-    private string modelName = typeof(Model).Name;
 
     private IDisposable sewinQueueChangedSubscription;
     private IDisposable updateMeterLogicSubscription;
+    private IDisposable connectionStateSubscription;
+    private IDisposable userAttentionsSubscription;
+    private IDisposable criticalStopsSubscription;
 
     public MeterLogic(IMahloIpcClient ipcClient, ISewinQueue sewinQueue, IServiceSettings serviceSettings)
     {
@@ -46,24 +50,51 @@ namespace MahloClient.Logic
         .FromEvent<Action<(string, JObject)>, (string name, JObject jObject)>(
           h => this.ipcClient.MeterLogicUpdated += h,
           h => this.ipcClient.MeterLogicUpdated -= h)
-        .Where(tuple => tuple.name == this.modelName)
+        .Where(tuple => tuple.name == this.InterfaceName)
         .Subscribe(tuple =>
         {
           tuple.jObject.Populate(this);
           this.RefreshStatusDisplay();
         });
+
+      this.connectionStateSubscription = Observable
+        .FromEvent<Action<string>, string>(
+          h => this.ipcClient.IpcStatusMessageChanged += h,
+          h => this.ipcClient.IpcStatusMessageChanged -= h)
+        .Subscribe(message => this.ConnectionStatusMessage = message);
+
+      this.userAttentionsSubscription = Observable
+        .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+          h => ((INotifyPropertyChanged)this.UserAttentions).PropertyChanged += h,
+          h => ((INotifyPropertyChanged)this.UserAttentions).PropertyChanged -= h)
+        .Subscribe(args => this.OnPropertyChanged(nameof(this.UserAttentions)));
+
+      this.criticalStopsSubscription = Observable
+        .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+          h => ((INotifyPropertyChanged)this.CriticalStops).PropertyChanged += h,
+          h => ((INotifyPropertyChanged)this.CriticalStops).PropertyChanged += h)
+        .Subscribe(args => this.OnPropertyChanged(nameof(this.CriticalStops)));
     }
 
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public abstract string InterfaceName { get; }
+
+    public string ConnectionStatusMessage { get; set; }
+
+    public bool IsConnectionEstablished => this.ipcClient.State == ConnectionState.Connected;
+
     public bool IsChanged { get; set; }
+
     public CarpetRoll CurrentRoll
     {
       get => currentRoll;
       set
       {
         this.currentRoll = value;
-        this.CurrentRollType = this.sewinQueue.DetermineRollType(this.currentRoll);
+        this.CurrentRollType = CommonMethods.DetermineRollType(this.sewinQueue.Rolls, this.currentRoll);
         this.NextRoll = this.sewinQueue.Rolls.SkipWhile(roll => roll != this.CurrentRoll).Skip(1).FirstOrDefault();
-        this.NextRollType = this.NextRoll == null ? (CarpetRollTypeEnum?)null : this.sewinQueue.DetermineRollType(this.NextRoll);
+        this.NextRollType = this.NextRoll == null ? (CarpetRollTypeEnum?)null : CommonMethods.DetermineRollType(this.sewinQueue.Rolls, this.NextRoll);
       }
     }
 
@@ -81,6 +112,8 @@ namespace MahloClient.Logic
 
     public CarpetRollTypeEnum CurrentRollType { get; set; }
     public CarpetRollTypeEnum? NextRollType { get; set; }
+
+    public bool IsMappingNow { get; set; }
 
     public bool IsManualMode { get; set; }
 
@@ -110,13 +143,9 @@ namespace MahloClient.Logic
     [DependsOn(nameof(MappingStatusMessageBackColor))]
     public Color MappingStatusMessageForeColor => MappingStatusMessageBackColor.ContrastColor();
 
-    public string RollMappedText => this.IsMapValid ? "Yes" : "No";
-    public Color RollMappedBackColor => this.IsMapValid ? Color.Green : Color.Red;
-    public Color RollMappedForeColor => this.RollMappedBackColor.ContrastColor();
-
-    public abstract int Feet { get; set; }
-    public abstract int Speed { get; set; }
-    public abstract bool IsMapValid { get; set; }
+    public int MeasuredLength { get; set; }
+    public int Speed { get; set; }
+    public bool IsMapValid { get; set; }
     public double MeasuredWidth { get; set; }
 
     public int PreviousRollLength { get; set; }
@@ -134,23 +163,40 @@ namespace MahloClient.Logic
     public bool IsSeamDetected { get; set; }
 
     [DependsOn(nameof(UserAttentions))]
+    public bool IsSystemEnabled => !this.UserAttentions.IsSystemDisabled;
+
+    [DependsOn(nameof(UserAttentions))]
     string IStatusBarInfo.AlertMessage =>
-      (UserAttentions.IsSystemDisabled)
-			  ? "System is disabled, seams are ignored, press [Wait for Seam] to arm"
-        : UserAttentions.IsRollTooLong
-				? "Current roll measured too long, verify roll sequence"
-        : UserAttentions.IsRollTooShort
-				? "Previous roll measured too short, verify roll sequence"
-        : UserAttentions.VerifyRollSequence
-				? "Verify roll sequence, press [Wait for Seam] to arm system"
-			  : "Ready for next roll seam...";
+      UserAttentions.IsSystemDisabled ? "System is disabled, seams are ignored, press [Wait for Seam] to arm" :
+      UserAttentions.IsRollTooLong ? "Current roll measured too long, verify roll sequence" :
+      UserAttentions.IsRollTooShort ? "Previous roll measured too short, verify roll sequence" :
+      UserAttentions.VerifyRollSequence ? "Verify roll sequence, press [Wait for Seam] to arm system" :
+      "Ready for next roll seam...";
 
-    string IStatusBarInfo.CriticalAlarmMessage => string.Empty;
+    [DependsOn(nameof(CriticalStops))]
+    string IStatusBarInfo.CriticalAlarmMessage => $"{(this.CriticalStops.IsMahloCommError ? "Mahlo" : "Seam detector PLC")} is not communicating";
 
-    [DependsOn(nameof(UserAttentions), nameof(Feet))]
-    public bool IgnoringSeams => this.UserAttentions.IsSystemDisabled || this.Feet < this.serviceSettings.SeamDetectableThreshold;
+    [DependsOn(nameof(UserAttentions), nameof(MeasuredLength))]
+    public bool IgnoringSeams => this.UserAttentions.IsSystemDisabled || this.MeasuredLength < this.serviceSettings.SeamDetectableThreshold;
 
     public string QueueMessage { get; set; }
+
+    [DependsOn(nameof(IsMapValid))]
+    public string LblRollMappedText => this.IsMapValid ? "Yes" : "No";
+    [DependsOn(nameof(IsMapValid))]
+    public Color LblRollMappedForeColor => this.IsMapValid ? Color.Green : Color.Red;
+
+    [DependsOn(nameof(IsManualMode))]
+    public string LblControllerModeText => $"Controller mode is {(this.IsManualMode ? "Manual" : "Automatic")}";
+    [DependsOn(nameof(IsManualMode))]
+    public Color LblControllerModeBackColor => this.IsManualMode ? Color.Yellow : Color.Green;
+    [DependsOn(nameof(IsManualMode))]
+    public Color LblControllerModeForeColor => this.IsManualMode ? Color.Black : Color.White;
+
+    [DependsOn(nameof(IsMappingNow))]
+    public string LblMappingStatusText => this.IsMappingNow ? "Mapping" : "Not mapping";
+    [DependsOn(nameof(IsMappingNow))]
+    public Color LblMappingStatusForeColor => this.IsMappingNow ? Color.Green : Color.Red;
 
     public void RefreshStatusDisplay()
     {
@@ -181,14 +227,21 @@ namespace MahloClient.Logic
       this.MappingStatusMessageBackColor = backColor;
     }
 
+
+    public Task ApplyRecipe(string recipeName, bool isManualMode)
+    {
+      // Only used in MahloServer
+      throw new NotImplementedException();
+    }
+
     public void MoveToNextRoll()
     {
-      this.ipcClient.Call(Ipc.MahloIpcClient.MoveToNextRollCommand, this.modelName);
+      this.ipcClient.Call(Ipc.MahloIpcClient.MoveToNextRollCommand, this.InterfaceName);
     }
 
     public void MoveToPriorRoll()
     {
-      this.ipcClient.Call(Ipc.MahloIpcClient.MoveToPriorRollCommand, this.modelName);
+      this.ipcClient.Call(Ipc.MahloIpcClient.MoveToPriorRollCommand, this.InterfaceName);
     }
 
     public void Start()
@@ -198,7 +251,12 @@ namespace MahloClient.Logic
 
     public void WaitForSeam()
     {
-      this.ipcClient.Call(Ipc.MahloIpcClient.WaitForSeamCommand, this.modelName);
+      this.ipcClient.Call(Ipc.MahloIpcClient.WaitForSeamCommand, this.InterfaceName);
+    }
+
+    public void DisableSystem()
+    {
+      this.ipcClient.Call(Ipc.MahloIpcClient.DisableSystemCommand, this.InterfaceName);
     }
 
     public void Dispose()
@@ -212,7 +270,15 @@ namespace MahloClient.Logic
       {
         this.sewinQueueChangedSubscription.Dispose();
         this.updateMeterLogicSubscription.Dispose();
+        this.connectionStateSubscription.Dispose();
+        this.userAttentionsSubscription.Dispose();
+        this.criticalStopsSubscription.Dispose();
       }
+    }
+
+    protected void OnPropertyChanged(string propertyName)
+    {
+      this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
   }
 }

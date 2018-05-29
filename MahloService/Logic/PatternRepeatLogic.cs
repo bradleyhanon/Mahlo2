@@ -16,7 +16,7 @@ namespace MahloService.Logic
   {
     //public PatternRepeatLogic(IPatternRepeatSrc dataSrc, IMeterLogic<PatternRepeatRoll> meterLogic) 
     public PatternRepeatLogic(
-      IPatternRepeatSrc<PatternRepeatRoll> dataSrc, 
+      IPatternRepeatSrc dataSrc, 
       ISewinQueue sewinQueue, 
       IServiceSettings appInfo, 
       IUserAttentions<PatternRepeatRoll> userAttentions, 
@@ -28,7 +28,7 @@ namespace MahloService.Logic
       dataSrc.PatternRepeatChanged.Subscribe(value => this.CurrentRoll.Elongation = value);
     }
 
-    public override int Feet
+    public override int MeasuredLength
     {
       get => this.CurrentRoll.PrsFeet;
       set => this.CurrentRoll.PrsFeet = value;
