@@ -14,7 +14,7 @@ namespace MahloService.Logic
     bool IsChanged { get; set; }
     [JsonIgnore]
     CarpetRoll CurrentRoll { get; set; }
-    string CurrentRollNo { get; }
+    int CurrentRollIndex { get; }
 
     [JsonIgnore]
     IObservable<CarpetRoll> RollStarted { get; }

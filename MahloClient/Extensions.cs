@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -45,6 +46,23 @@ namespace MahloClient
         };
 
         JsonSerializer.CreateDefault().Populate(sr, target);
+      }
+    }
+
+    public static void EnsureVisibleRow(this DataGridView view, int rowToShow)
+    {
+      if (rowToShow >= 0 && rowToShow < view.RowCount)
+      {
+        var countVisible = view.DisplayedRowCount(false);
+        var firstVisible = view.FirstDisplayedScrollingRowIndex;
+        if (rowToShow < firstVisible)
+        {
+          view.FirstDisplayedScrollingRowIndex = rowToShow;
+        }
+        else if (rowToShow >= firstVisible + countVisible)
+        {
+          view.FirstDisplayedScrollingRowIndex = rowToShow - countVisible + 1;
+        }
       }
     }
   }

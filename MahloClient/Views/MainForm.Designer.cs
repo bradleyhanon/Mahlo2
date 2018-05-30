@@ -148,6 +148,13 @@
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
       this.label5 = new System.Windows.Forms.Label();
+      this.statusBar1 = new MahloClient.Views.MyStatusBar();
+      this.pnlMessage = new System.Windows.Forms.StatusBarPanel();
+      this.pnlIndicator = new System.Windows.Forms.StatusBarPanel();
+      this.pnlUserAttention = new System.Windows.Forms.StatusBarPanel();
+      this.pnlAlarm = new System.Windows.Forms.StatusBarPanel();
+      this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
+      this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.cutRollSrc)).BeginInit();
       this.grpMahlo.SuspendLayout();
@@ -163,6 +170,12 @@
       this.tableLayoutPanel1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSrc)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlMessage)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlIndicator)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlUserAttention)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlAlarm)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlAlertMessage)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlQueueMessage)).BeginInit();
       this.SuspendLayout();
       // 
       // dataGridView5
@@ -1000,8 +1013,7 @@
       // 
       // groupBox5
       // 
-      this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+      this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.groupBox5.Controls.Add(this.textBox17);
       this.groupBox5.Controls.Add(this.textBox23);
       this.groupBox5.Controls.Add(this.textBox24);
@@ -1404,7 +1416,6 @@
       // 
       // label5
       // 
-      this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.label5.Location = new System.Drawing.Point(862, 12);
       this.label5.Name = "label5";
@@ -1413,11 +1424,45 @@
       this.label5.Text = "Cut Rolls";
       this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
+      // statusBar1
+      // 
+      this.statusBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
+      this.statusBar1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.statusBar1.Location = new System.Drawing.Point(0, 517);
+      this.statusBar1.Name = "statusBar1";
+      this.statusBar1.Size = new System.Drawing.Size(1242, 24);
+      this.statusBar1.TabIndex = 22;
+      // 
+      // pnlMessage
+      // 
+      this.pnlMessage.Name = "pnlMessage";
+      // 
+      // pnlIndicator
+      // 
+      this.pnlIndicator.Name = "pnlIndicator";
+      // 
+      // pnlUserAttention
+      // 
+      this.pnlUserAttention.Name = "pnlUserAttention";
+      // 
+      // pnlAlarm
+      // 
+      this.pnlAlarm.Name = "pnlAlarm";
+      // 
+      // pnlAlertMessage
+      // 
+      this.pnlAlertMessage.Name = "pnlAlertMessage";
+      // 
+      // pnlQueueMessage
+      // 
+      this.pnlQueueMessage.Name = "pnlQueueMessage";
+      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1242, 521);
+      this.ClientSize = new System.Drawing.Size(1242, 541);
+      this.Controls.Add(this.statusBar1);
       this.Controls.Add(this.label5);
       this.Controls.Add(this.dataGridView5);
       this.Controls.Add(this.tableLayoutPanel1);
@@ -1429,7 +1474,7 @@
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.MaximizeBox = false;
       this.Name = "MainForm";
-      this.Text = "Mahlo Mapper";
+      this.Text = "Main Form";
       this.Load += new System.EventHandler(this.MainForm_Load);
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.cutRollSrc)).EndInit();
@@ -1450,6 +1495,12 @@
       this.tableLayoutPanel1.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSrc)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlMessage)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlIndicator)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlUserAttention)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlAlarm)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlAlertMessage)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlQueueMessage)).EndInit();
       this.ResumeLayout(false);
 
     }
@@ -1565,5 +1616,12 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
     private System.Windows.Forms.DataGridViewTextBoxColumn prsFeetDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn elongationDataGridViewTextBoxColumn;
+    private MyStatusBar statusBar1;
+    private System.Windows.Forms.StatusBarPanel pnlMessage;
+    private System.Windows.Forms.StatusBarPanel pnlIndicator;
+    private System.Windows.Forms.StatusBarPanel pnlUserAttention;
+    private System.Windows.Forms.StatusBarPanel pnlAlarm;
+    private System.Windows.Forms.StatusBarPanel pnlAlertMessage;
+    private System.Windows.Forms.StatusBarPanel pnlQueueMessage;
   }
 }

@@ -33,7 +33,23 @@ namespace MahloClient
         using (var container = InitializeContainer())
         {
           Application.Idle += FirstIdle;
-          Application.Run(container.GetInstance<FormBowAndSkew>());
+          Form form;
+          switch (args.FirstOrDefault() ?? string.Empty)
+          {
+            case "Mahlo":
+              form = container.GetInstance<FormMahlo>();
+              break;
+
+            case "BowAndSkew":
+              form = container.GetInstance<FormBowAndSkew>();
+              break;
+
+            default:
+              form = container.GetInstance<MainForm>();
+              break;
+          }
+
+          Application.Run(form);
 
           async void FirstIdle(object sender, EventArgs e)
           {
@@ -50,10 +66,6 @@ namespace MahloClient
       {
         MessageBox.Show(ex.ToString(), "Program failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
-    }
-
-    private static void Application_Idle(object sender, EventArgs e)
-    {
     }
 
     private static Container InitializeContainer()

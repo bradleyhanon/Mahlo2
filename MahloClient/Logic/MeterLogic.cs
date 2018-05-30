@@ -22,7 +22,7 @@ namespace MahloClient.Logic
     private IMahloIpcClient ipcClient;
     private ISewinQueue sewinQueue;
     private IServiceSettings serviceSettings;
-    private string currentRollNo = string.Empty;
+    private int currentRollIndex = -1;
     private CarpetRoll currentRoll = new CarpetRoll();
 
     private IDisposable sewinQueueChangedSubscription;
@@ -41,10 +41,11 @@ namespace MahloClient.Logic
         .FromEventPattern<EventHandler, EventArgs>(
           h => this.sewinQueue.Changed += h,
           h => this.sewinQueue.Changed -= h)
-          .Subscribe(args =>
-          {
-            this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == this.CurrentRollNo) ?? new CarpetRoll();
-          });
+        .Subscribe(args =>
+        {
+          bool indexInRange = this.CurrentRollIndex >= 0 && this.currentRollIndex < this.sewinQueue.Rolls.Count;
+          this.CurrentRoll = indexInRange ? this.sewinQueue.Rolls[this.CurrentRollIndex] : new CarpetRoll();
+        });
 
       this.updateMeterLogicSubscription = Observable
         .FromEvent<Action<(string, JObject)>, (string name, JObject jObject)>(
@@ -100,13 +101,14 @@ namespace MahloClient.Logic
 
     public CarpetRoll NextRoll { get; set; } = new CarpetRoll();
 
-    public string CurrentRollNo
+    public int CurrentRollIndex
     {
-      get => this.currentRollNo;
+      get => this.currentRollIndex;
       set
       {
-        this.currentRollNo = value;
-        this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == value) ?? new CarpetRoll();
+        this.currentRollIndex = value;
+        bool isIndexInRange = value >= 0 && value < this.sewinQueue.Rolls.Count;
+        this.CurrentRoll = isIndexInRange ? this.sewinQueue.Rolls[value] : new CarpetRoll();
       }
     }
 

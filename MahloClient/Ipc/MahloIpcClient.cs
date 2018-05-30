@@ -75,12 +75,11 @@ namespace MahloClient.Ipc
     {
       if (!isStarting)
       {
-        Console.WriteLine("Connection starting");
         this.isStarting = true;
 
         this.hubConnection = new HubConnection(appInfo.ServiceUrl);
         this.hubConnection.StateChanged += HubConnection_StateChanged;
-        this.hubConnection.Received += msg => Console.WriteLine(msg);
+        //this.hubConnection.Received += msg => Console.WriteLine(msg);
         //this.hubConnection.TraceLevel = TraceLevels.All;
         //this.hubConnection.TraceWriter = Console.Out;
         this.hubProxy = hubConnection.CreateHubProxy("MahloHub");
@@ -144,9 +143,13 @@ namespace MahloClient.Ipc
       obj.Populate(serviceSettings);
     }
 
+    public void MoveQueueRoll(int rollIndex, int direction)
+    {
+      this.Call(nameof(MoveQueueRoll), rollIndex, direction);
+    }
+
     private async void HubConnection_StateChanged(StateChange obj)
     {
-      Console.WriteLine($"OldState={obj.OldState}, NewState={obj.NewState}");
       this.IpcStatusMessage = obj.NewState.ToString();
       
       if (obj.NewState == ConnectionState.Connected)
@@ -228,10 +231,10 @@ namespace MahloClient.Ipc
           result = await hubProxy.Invoke<T>(method, args);
           break;
         }
-        catch (InvalidOperationException)
-        {
+        //catch (InvalidOperationException ex)
+        //{
 
-        }
+        //}
         catch (Exception ex) when (this.hubConnection.State != ConnectionState.Connected)
         {
           SetConnectionError(ex);

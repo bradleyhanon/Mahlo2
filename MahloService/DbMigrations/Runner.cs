@@ -57,7 +57,7 @@ namespace MahloService.DbMigrations
       var factory = new FluentMigrator.Runner.Processors.MigrationProcessorFactoryProvider().GetFactory(migrationFactoryName);
       var context = new FluentMigrator.Runner.Initialization.RunnerContext(announcer)
       {
-        Namespace = "Mahlo.DbMigrations",
+        Namespace = "MahloService.DbMigrations",
         NestedNamespaces = false,
       };
 
@@ -94,7 +94,7 @@ namespace MahloService.DbMigrations
     private class MigrationOptions : IMigrationProcessorOptions
     {
       public bool PreviewOnly { get; set; } = false;
-      public int Timeout { get; set; } = 60;
+      public int? Timeout { get; set; } = 60;
       public string ProviderSwitches { get; set; } = string.Empty;
     }
   }

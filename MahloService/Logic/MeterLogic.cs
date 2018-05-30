@@ -117,7 +117,7 @@ namespace MahloService.Logic
     public CarpetRoll CurrentRoll { get; set; } = new CarpetRoll();
 
     [DependsOn(nameof(CurrentRoll))]
-    public string CurrentRollNo => this.CurrentRoll.RollNo;
+    public int CurrentRollIndex => this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
 
     public IUserAttentions UserAttentions { get; set; }
 

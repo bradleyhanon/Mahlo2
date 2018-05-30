@@ -45,6 +45,7 @@ namespace MahloClient.Views
       InitializeComponent();
       this.carpetProcessor = carpetProcessor;
       this.mahloClient = mahloClient;
+      this.statusBar1.StatusBarInfo = (IStatusBarInfo)this.carpetProcessor.PatternRepeatLogic;
 
       this.MahloPropertyChangedSubscription =
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(

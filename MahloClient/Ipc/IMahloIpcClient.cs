@@ -21,5 +21,6 @@ namespace MahloClient.Ipc
     Task<(string message, string caption)> BasSetRecipe(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo);
     Task<IEnumerable<CoaterScheduleRoll>> GetCoaterSchedule(int minSequence, int maxSequence);
     Task GetServiceSettings(IServiceSettings serviceSettings);
+    void MoveQueueRoll(int rollIndex, int direction);
   }
 }

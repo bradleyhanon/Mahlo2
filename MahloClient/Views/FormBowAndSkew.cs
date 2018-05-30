@@ -20,8 +20,7 @@ namespace MahloClient.Views
     private ISewinQueue sewinQueue;
     private IMahloIpcClient mahloClient;
 
-    private IDisposable BowAndSkewPropertyChangedSubscription;
-
+    private List<IDisposable> disposables = new List<IDisposable>();
 
     public FormBowAndSkew(IBowAndSkewLogic logic, ISewinQueue sewinQueue, IMahloIpcClient mahloClient)
     {
@@ -31,17 +30,24 @@ namespace MahloClient.Views
       this.sewinQueue = sewinQueue;
       this.mahloClient = mahloClient;
 
-      BowAndSkewPropertyChangedSubscription =
+      this.disposables.AddRange(new[] {
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
           h => ((INotifyPropertyChanged)this.logic).PropertyChanged += h,
           h => ((INotifyPropertyChanged)this.logic).PropertyChanged -= h)
-        .Where(args => 
+        .Where(args =>
           args.EventArgs.PropertyName == nameof(this.logic.CurrentRoll))
         .Subscribe(args =>
         {
           this.srcCurrentRoll.DataSource = this.logic.CurrentRoll;
           this.DataGridView1_SelectionChanged(this.dataGridView1, EventArgs.Empty);
-        });
+          this.dataGridView1.EnsureVisibleRow(this.logic.CurrentRollIndex);
+        }),
+
+        Observable.FromEventPattern<EventHandler, EventArgs>(
+          h=>Application.Idle += h,
+          h=>Application.Idle -= h)
+        .Subscribe(args => this.btnSetRecipe.Enabled = this.dataGridView1.WideRowIndex >= 0),
+       });
 
       // Make column heading alignment match column data alignment
       foreach (DataGridViewColumn column in dataGridView1.Columns)
@@ -66,8 +72,8 @@ namespace MahloClient.Views
     {
       if (disposing)
       {
+        this.disposables.ForEach(item => item.Dispose());
         this.components?.Dispose();
-        this.BowAndSkewPropertyChangedSubscription?.Dispose();
       }
 
       base.Dispose(disposing);
@@ -104,18 +110,6 @@ namespace MahloClient.Views
       }
     }
 
-    private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-    {
-      if (e.ColumnIndex == colDefaultRecipe.Index && e.RowIndex >= 0)
-      {
-        var selectedRoll = this.sewinQueue.Rolls[e.RowIndex];
-        using (var form = new FormSetRecipe(this.mahloClient, this.logic.CurrentRoll, selectedRoll))
-        {
-          form.ShowDialog();
-        }
-      }
-    }
-
     private void BtnViewCoaterSchedule_Click(object sender, EventArgs e)
     {
       using (var form = new FormCoaterSchedule(this.mahloClient))
@@ -132,6 +126,21 @@ namespace MahloClient.Views
     private void BtnDisableSystem_Click(object sender, EventArgs e)
     {
       this.logic.DisableSystem();
+    }
+
+    private void BtnSetRecipe_Click(object sender, EventArgs e)
+    {
+      int wideRowIndex = this.dataGridView1.WideRowIndex;
+
+      // Turn off "Auto Unwiden"
+      this.dataGridView1.WideRowIndex = wideRowIndex;
+
+      var selectedRoll = this.sewinQueue.Rolls[wideRowIndex];
+      using (var form = new FormSetRecipe(this.mahloClient, this.logic.CurrentRoll, selectedRoll))
+      {
+        form.ShowDialog();
+        this.dataGridView1.WideRowIndex = -1;
+      }
     }
   }
 }

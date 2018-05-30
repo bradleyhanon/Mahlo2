@@ -143,6 +143,12 @@ namespace MahloService.Ipc
       return tcs.Task;
     }
 
+    public void MoveQueueRoll(int rollIndex, int direction)
+    {
+      ISewinQueue sewinQueue = Program.Container.GetInstance<ISewinQueue>();
+      sewinQueue.MoveRoll(rollIndex, direction);
+    }
+
     private IMeterLogic GetMeterLogicInstance(string name)
     {
       switch (name)

@@ -30,5 +30,6 @@ namespace MahloService.Logic
     /// <param name="roll">The roll gotten.</param>
     /// <returns>True if the roll was found, false if a dummy roll was returned.</returns>
     bool TryGetRoll(int RollId, out CarpetRoll roll);
+    void MoveRoll(int rollIndex, int direction);
   }
 }

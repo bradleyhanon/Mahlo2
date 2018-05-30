@@ -22,6 +22,8 @@ namespace MahloService.Models
     public const string CheckRollId = "CHKROL";
 
     public int Id { get; set; }
+
+    //-- Database data --//
     public string RollNo { get; set; } = string.Empty;
     public string OrderNo { get; set; } = string.Empty;
     public string StyleCode { get; set; } = string.Empty;
@@ -49,6 +51,7 @@ namespace MahloService.Models
     public double PatternRepeatLength { get; set; }
     public string ProductImageURL { get; set; }
 
+    // Runtime data
     public int MalFeet { get; set; }
     public int MalSpeed { get; set; }
     public bool MalMapValid { get; set; }
@@ -136,6 +139,27 @@ namespace MahloService.Models
       dest.DefaultRecipe = this.DefaultRecipe;
       dest.PatternRepeatLength = this.PatternRepeatLength;
       dest.ProductImageURL = this.ProductImageURL;
+    }
+
+    public void SwapWith(CarpetRoll other)
+    {
+      (other.RollNo, this.RollNo) = (this.RollNo, other.RollNo);
+      (other.OrderNo, this.OrderNo) = (this.OrderNo, other.OrderNo);
+      (other.StyleCode, this.StyleCode) = (this.StyleCode, other.StyleCode);
+      (other.StyleName, this.StyleName) = (this.StyleName, other.StyleName);
+      (other.ColorCode, this.ColorCode) = (this.ColorCode, other.ColorCode);
+      (other.ColorName, this.ColorName) = (this.ColorName, other.ColorName);
+      (other.BackingCode, this.BackingCode) = (this.BackingCode, other.BackingCode);
+      (other.RollLength, this.RollLength) = (this.RollLength, other.RollLength);
+      (other.RollWidth, this.RollWidth) = (this.RollWidth, other.RollWidth);
+      (other.DefaultRecipe, this.DefaultRecipe) = (this.DefaultRecipe, other.DefaultRecipe);
+      (other.PatternRepeatLength, this.PatternRepeatLength) = (this.PatternRepeatLength, other.PatternRepeatLength);
+      (other.ProductImageURL, this.ProductImageURL) = (this.ProductImageURL, other.ProductImageURL);
+    }
+
+    public override string ToString()
+    {
+      return $"RollNo={RollNo}, RollWidth={RollWidth}";
     }
   }
 }

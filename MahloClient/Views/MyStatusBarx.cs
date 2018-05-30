@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Reactive.Linq;
 using MahloClient.Logic;
 
 namespace MahloClient.Views
 {
-  partial class MyStatusBar : UserControl
+  class MyStatusBar : StatusBar
   {
     private const int PnlMessage = 0;
     private const int PnlIndicator = 1;
@@ -23,11 +22,6 @@ namespace MahloClient.Views
 
     private IStatusBarInfo _statusBarInfo;
     private IDisposable propertyChangedSubscription;
-
-    public MyStatusBar()
-    {
-      this.InitializeComponent();
-    }
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IStatusBarInfo StatusBarInfo
@@ -41,8 +35,9 @@ namespace MahloClient.Views
           .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
             h => ((INotifyPropertyChanged)value).PropertyChanged += h,
             h => ((INotifyPropertyChanged)value).PropertyChanged -= h)
-          .Subscribe(arg =>
+          .Subscribe(arg => 
           {
+            //Console.WriteLine(arg.EventArgs.PropertyName);
             switch (arg.EventArgs.PropertyName)
             {
               case nameof(_statusBarInfo.IsSeamDetectEnabled):
@@ -52,25 +47,21 @@ namespace MahloClient.Views
               case nameof(_statusBarInfo.AlertMessage):
               case nameof(_statusBarInfo.CriticalAlarmMessage):
               case nameof(_statusBarInfo.IgnoringSeams):
-                this.statusBar1.Invalidate();
+                this.Invalidate();
                 break;
 
               case nameof(_statusBarInfo.ConnectionStatusMessage):
-                this.statusBar1.Panels[PnlMessage].Text = $"Service: {_statusBarInfo.ConnectionStatusMessage}";
+                this.Panels[PnlMessage].Text = $"Service: {_statusBarInfo.ConnectionStatusMessage}";
                 break;
 
               case nameof(_statusBarInfo.QueueMessage):
-                this.statusBar1.Panels[PnlQueueMessage].Text = _statusBarInfo.QueueMessage;
+                this.Panels[PnlQueueMessage].Text = _statusBarInfo.QueueMessage;
                 break;
             }
           });
       }
     }
 
-    /// <summary> 
-    /// Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing)
     {
       base.Dispose(disposing);
@@ -80,8 +71,9 @@ namespace MahloClient.Views
       }
     }
 
-    private void statusBar1_DrawItem(object sender, StatusBarDrawItemEventArgs sbdevent)
+    protected override void OnDrawItem(StatusBarDrawItemEventArgs sbdevent)
     {
+      base.OnDrawItem(sbdevent);
       if (this.StatusBarInfo == null)
       {
         return;
@@ -89,9 +81,9 @@ namespace MahloClient.Views
 
       StatusBarPanel pnl = sbdevent.Panel;
       Font fnt;
-      Brush brsh;
+      SolidBrush brsh;
       Brush textBrush;
-      brsh = Brushes.Transparent;
+      brsh = new SolidBrush(Color.Transparent);
       StringFormat sf = new StringFormat();
       sf.Alignment = StringAlignment.Center;
       sf.LineAlignment = StringAlignment.Center;
@@ -102,24 +94,24 @@ namespace MahloClient.Views
         case PnlIndicator:
           fnt = new Font(this.Font.FontFamily, this.Font.Size, FontStyle.Bold);
           txt = "Seam Detect";
-          textBrush = Brushes.White;
+          textBrush = new SolidBrush(Color.White);
           if (this.StatusBarInfo.IsSeamDetected)
-            brsh = Brushes.RoyalBlue;
+            brsh = new SolidBrush(Color.RoyalBlue);
           else if (!this.StatusBarInfo.IsSeamDetectEnabled)
           {
-            brsh = Brushes.Red;
-            textBrush = Brushes.White;
+            brsh = new SolidBrush(Color.Red);
+            textBrush = new SolidBrush(Color.White);
           }
           else
           {
             if (this.StatusBarInfo.IgnoringSeams)
             {
               fnt = new Font(this.Font.FontFamily, this.Font.Size, FontStyle.Regular);
-              brsh = Brushes.Transparent;
-              textBrush = Brushes.Black;
+              brsh = new SolidBrush(Color.Transparent);
+              textBrush = new SolidBrush(Color.Black);
             }
             else
-              brsh = Brushes.Green;
+              brsh = new SolidBrush(Color.Green);
           }
           sbdevent.Graphics.FillRectangle(brsh, sbdevent.Bounds);
           sbdevent.Graphics.DrawString(txt, fnt, textBrush, sbdevent.Bounds, sf);
@@ -128,12 +120,12 @@ namespace MahloClient.Views
         case PnlUserAttention:
           fnt = new Font(this.Font.FontFamily, this.Font.Size, FontStyle.Regular);
           txt = "User Alert";
-          textBrush = Brushes.Black;
+          textBrush = new SolidBrush(Color.Black);
           if (this.StatusBarInfo.UserAttentions.Any)
           {
             fnt = new Font(this.Font.FontFamily, this.Font.Size, FontStyle.Bold);
-            brsh = Brushes.Orange;
-            textBrush = Brushes.White;
+            brsh = new SolidBrush(Color.Orange);
+            textBrush = new SolidBrush(Color.White);
           }
           sbdevent.Graphics.FillRectangle(brsh, sbdevent.Bounds);
           sbdevent.Graphics.DrawString(txt, fnt, textBrush, sbdevent.Bounds, sf);
@@ -142,12 +134,12 @@ namespace MahloClient.Views
         case PnlAlarmIndex:
           fnt = new Font(this.Font.FontFamily, this.Font.Size, FontStyle.Regular);
           txt = "Major Alarm";
-          textBrush = Brushes.Black;
+          textBrush = new SolidBrush(Color.Black);
           if (this.StatusBarInfo.CriticalStops.Any)
           {
             fnt = new Font(this.Font.FontFamily, this.Font.Size, FontStyle.Bold);
-            brsh = Brushes.Red;
-            textBrush = Brushes.White;
+            brsh = new SolidBrush(Color.Red);
+            textBrush = new SolidBrush(Color.White);
           }
           sbdevent.Graphics.FillRectangle(brsh, sbdevent.Bounds);
           sbdevent.Graphics.DrawString(txt, fnt, textBrush, sbdevent.Bounds, sf);
@@ -155,12 +147,12 @@ namespace MahloClient.Views
 
         case PnlAlertMessage:
           fnt = new Font(this.Font.FontFamily, this.Font.Size, FontStyle.Regular);
-          textBrush = Brushes.Black;
+          textBrush = new SolidBrush(Color.Black);
           if (this.StatusBarInfo.CriticalStops.Any)
             txt = this.StatusBarInfo.CriticalAlarmMessage;
           else
             txt = this.StatusBarInfo.AlertMessage;
-          //brsh = Brushes.LightGray;
+          //brsh = new SolidBrush(Color.LightGray);
           sf.Alignment = StringAlignment.Near;
           sf.LineAlignment = StringAlignment.Center;
           //sbdevent.Graphics.FillRectangle(brsh, sbdevent.Bounds);

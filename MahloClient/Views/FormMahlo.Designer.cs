@@ -16,19 +16,14 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMahlo));
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMahlo));
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
       this.lblSkewPercent = new System.Windows.Forms.Label();
       this.srcCurrentRoll = new System.Windows.Forms.BindingSource(this.components);
-      this.pnlMessage = new System.Windows.Forms.StatusBarPanel();
-      this.statusBar1 = new System.Windows.Forms.StatusBar();
-      this.pnlIndicator = new System.Windows.Forms.StatusBarPanel();
-      this.pnlUserAttention = new System.Windows.Forms.StatusBarPanel();
-      this.pnlAlarm = new System.Windows.Forms.StatusBarPanel();
-      this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
-      this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
       this.lblPreviousRollLength = new System.Windows.Forms.Label();
       this.srcLogic = new System.Windows.Forms.BindingSource(this.components);
       this.label22 = new System.Windows.Forms.Label();
@@ -43,35 +38,17 @@
       this.lblMeasuredLen = new System.Windows.Forms.Label();
       this.label6 = new System.Windows.Forms.Label();
       this.lblMappingStatus = new System.Windows.Forms.Label();
-      this.dataGridView1 = new System.Windows.Forms.DataGridView();
-      this.rollNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.orderNoColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.rollLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.styleCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.styleNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.colorCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.colorNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.backingCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.rollWidthStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.colDefaultRecipe = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.patternRepeatLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.srcGrid = new System.Windows.Forms.BindingSource(this.components);
       this.label20 = new System.Windows.Forms.Label();
       this.label21 = new System.Windows.Forms.Label();
       this.label8 = new System.Windows.Forms.Label();
       this.lblSkewAmt = new System.Windows.Forms.Label();
-      this.srcNextRoll = new System.Windows.Forms.BindingSource(this.components);
       this.icons32x32 = new System.Windows.Forms.ImageList(this.components);
-      this.btnDisableSystem = new System.Windows.Forms.Button();
-      this.btnWaitForSeam = new System.Windows.Forms.Button();
-      this.btnGoToNextRoll = new System.Windows.Forms.Button();
-      this.btnGoToPreviousRoll = new System.Windows.Forms.Button();
-      this.btnViewCoaterSchedule = new System.Windows.Forms.Button();
       this.label5 = new System.Windows.Forms.Label();
       this.grpSkew = new System.Windows.Forms.GroupBox();
       this.lblNextRollType = new System.Windows.Forms.Label();
       this.label19 = new System.Windows.Forms.Label();
       this.lblNextLength = new System.Windows.Forms.Label();
+      this.srcNextRoll = new System.Windows.Forms.BindingSource(this.components);
       this.lblNextColor = new System.Windows.Forms.Label();
       this.lblNextStyle = new System.Windows.Forms.Label();
       this.lblNextRoll = new System.Windows.Forms.Label();
@@ -102,24 +79,54 @@
       this.grpBow = new System.Windows.Forms.GroupBox();
       this.lblRecipeName = new System.Windows.Forms.Label();
       this.grpMappingInfo = new System.Windows.Forms.GroupBox();
+      this.pnlMessage = new System.Windows.Forms.StatusBarPanel();
+      this.pnlIndicator = new System.Windows.Forms.StatusBarPanel();
+      this.pnlUserAttention = new System.Windows.Forms.StatusBarPanel();
+      this.pnlAlarm = new System.Windows.Forms.StatusBarPanel();
+      this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
+      this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
+      this.buttonPanel = new System.Windows.Forms.Panel();
+      this.btnViewCoaterSchedule = new System.Windows.Forms.Button();
+      this.btnSetRecipe = new System.Windows.Forms.Button();
+      this.btnGoToPreviousRoll = new System.Windows.Forms.Button();
+      this.btnDisableSystem = new System.Windows.Forms.Button();
+      this.btnGoToNextRoll = new System.Windows.Forms.Button();
+      this.btnWaitForSeam = new System.Windows.Forms.Button();
+      this.statusBar1 = new MahloClient.Views.MyStatusBar();
+      this.dataGridView1 = new MahloClient.Views.MyDataGridView();
+      this.srcGrid = new System.Windows.Forms.BindingSource(this.components);
+      this.moveUpColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.moveDownColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.rollNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.orderNoColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.rollLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.styleCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.styleNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colorCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colorNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.backingCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.rollWidthStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colDefaultRecipe = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.patternRepeatLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       ((System.ComponentModel.ISupportInitialize)(this.srcCurrentRoll)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pnlMessage)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pnlIndicator)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pnlUserAttention)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pnlAlarm)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pnlAlertMessage)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pnlQueueMessage)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcLogic)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.srcGrid)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.srcNextRoll)).BeginInit();
       this.grpSkew.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.srcNextRoll)).BeginInit();
       this.grpCurrentRoll.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.picCurrentRoll)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.picNextRoll)).BeginInit();
       this.grpNextRoll.SuspendLayout();
       this.grpBow.SuspendLayout();
       this.grpMappingInfo.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlMessage)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlIndicator)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlUserAttention)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlAlarm)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlAlertMessage)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlQueueMessage)).BeginInit();
+      this.buttonPanel.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.srcGrid)).BeginInit();
       this.SuspendLayout();
       // 
       // lblSkewPercent
@@ -141,68 +148,6 @@
       // 
       this.srcCurrentRoll.DataSource = typeof(MahloService.Models.CarpetRoll);
       // 
-      // pnlMessage
-      // 
-      this.pnlMessage.Name = "pnlMessage";
-      this.pnlMessage.Width = 250;
-      // 
-      // statusBar1
-      // 
-      this.statusBar1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.statusBar1.Location = new System.Drawing.Point(0, 591);
-      this.statusBar1.Name = "statusBar1";
-      this.statusBar1.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
-            this.pnlMessage,
-            this.pnlIndicator,
-            this.pnlUserAttention,
-            this.pnlAlarm,
-            this.pnlAlertMessage,
-            this.pnlQueueMessage});
-      this.statusBar1.ShowPanels = true;
-      this.statusBar1.Size = new System.Drawing.Size(1026, 24);
-      this.statusBar1.TabIndex = 21;
-      this.statusBar1.Text = "statusBar1";
-      // 
-      // pnlIndicator
-      // 
-      this.pnlIndicator.Alignment = System.Windows.Forms.HorizontalAlignment.Center;
-      this.pnlIndicator.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.Raised;
-      this.pnlIndicator.Name = "pnlIndicator";
-      this.pnlIndicator.Style = System.Windows.Forms.StatusBarPanelStyle.OwnerDraw;
-      this.pnlIndicator.Text = "Ind";
-      this.pnlIndicator.Width = 90;
-      // 
-      // pnlUserAttention
-      // 
-      this.pnlUserAttention.Alignment = System.Windows.Forms.HorizontalAlignment.Center;
-      this.pnlUserAttention.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.Raised;
-      this.pnlUserAttention.Name = "pnlUserAttention";
-      this.pnlUserAttention.Style = System.Windows.Forms.StatusBarPanelStyle.OwnerDraw;
-      this.pnlUserAttention.Text = "Att";
-      this.pnlUserAttention.Width = 90;
-      // 
-      // pnlAlarm
-      // 
-      this.pnlAlarm.Alignment = System.Windows.Forms.HorizontalAlignment.Center;
-      this.pnlAlarm.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.Raised;
-      this.pnlAlarm.Name = "pnlAlarm";
-      this.pnlAlarm.Style = System.Windows.Forms.StatusBarPanelStyle.OwnerDraw;
-      this.pnlAlarm.Text = "Err";
-      this.pnlAlarm.Width = 90;
-      // 
-      // pnlAlertMessage
-      // 
-      this.pnlAlertMessage.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Spring;
-      this.pnlAlertMessage.Name = "pnlAlertMessage";
-      this.pnlAlertMessage.Style = System.Windows.Forms.StatusBarPanelStyle.OwnerDraw;
-      this.pnlAlertMessage.Width = 389;
-      // 
-      // pnlQueueMessage
-      // 
-      this.pnlQueueMessage.Alignment = System.Windows.Forms.HorizontalAlignment.Center;
-      this.pnlQueueMessage.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.Raised;
-      this.pnlQueueMessage.Name = "pnlQueueMessage";
-      // 
       // lblPreviousRollLength
       // 
       this.lblPreviousRollLength.BackColor = System.Drawing.Color.Transparent;
@@ -216,7 +161,7 @@
       // 
       // srcLogic
       // 
-      this.srcLogic.DataSource = typeof(MahloClient.Logic.BowAndSkewLogic);
+      this.srcLogic.DataSource = typeof(MahloClient.Logic.MahloLogic);
       // 
       // label22
       // 
@@ -231,15 +176,13 @@
       // lblControllerMode
       // 
       this.lblControllerMode.BackColor = System.Drawing.Color.Silver;
-      this.lblControllerMode.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "MahloStatusMessage", true));
-      this.lblControllerMode.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.srcLogic, "MahloStatusMessageBackColor", true));
-      this.lblControllerMode.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "MappingStatusMessageForeColor", true));
       this.lblControllerMode.ForeColor = System.Drawing.Color.White;
-      this.lblControllerMode.Location = new System.Drawing.Point(242, 308);
+      this.lblControllerMode.Location = new System.Drawing.Point(244, 308);
       this.lblControllerMode.Name = "lblControllerMode";
-      this.lblControllerMode.Size = new System.Drawing.Size(234, 16);
+      this.lblControllerMode.Size = new System.Drawing.Size(236, 16);
       this.lblControllerMode.TabIndex = 50;
       this.lblControllerMode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      this.lblControllerMode.Visible = false;
       // 
       // lblStyleCount
       // 
@@ -352,158 +295,14 @@
       // lblMappingStatus
       // 
       this.lblMappingStatus.BackColor = System.Drawing.Color.Transparent;
-      this.lblMappingStatus.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "MappingStatusMessage", true));
-      this.lblMappingStatus.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.srcLogic, "MappingStatusMessageBackColor", true));
-      this.lblMappingStatus.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "MappingStatusMessageForeColor", true));
+      this.lblMappingStatus.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "LblMappingStatusText", true));
+      this.lblMappingStatus.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "LblMappingStatusForeColor", true));
       this.lblMappingStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblMappingStatus.ForeColor = System.Drawing.Color.Black;
       this.lblMappingStatus.Location = new System.Drawing.Point(128, 260);
       this.lblMappingStatus.Name = "lblMappingStatus";
       this.lblMappingStatus.Size = new System.Drawing.Size(100, 16);
       this.lblMappingStatus.TabIndex = 38;
-      // 
-      // dataGridView1
-      // 
-      this.dataGridView1.AllowUserToAddRows = false;
-      this.dataGridView1.AllowUserToDeleteRows = false;
-      this.dataGridView1.AllowUserToResizeRows = false;
-      this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-      this.dataGridView1.AutoGenerateColumns = false;
-      this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.rollNoDataGridViewTextBoxColumn,
-            this.orderNoColumn,
-            this.rollLengthDataGridViewTextBoxColumn,
-            this.styleCodeDataGridViewTextBoxColumn,
-            this.styleNameDataGridViewTextBoxColumn,
-            this.colorCodeDataGridViewTextBoxColumn,
-            this.colorNameDataGridViewTextBoxColumn,
-            this.backingCodeDataGridViewTextBoxColumn,
-            this.rollWidthStrDataGridViewTextBoxColumn,
-            this.colDefaultRecipe,
-            this.patternRepeatLengthDataGridViewTextBoxColumn});
-      this.dataGridView1.DataSource = this.srcGrid;
-      this.dataGridView1.Location = new System.Drawing.Point(12, 344);
-      this.dataGridView1.MultiSelect = false;
-      this.dataGridView1.Name = "dataGridView1";
-      this.dataGridView1.ReadOnly = true;
-      this.dataGridView1.RowHeadersVisible = false;
-      this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-      this.dataGridView1.Size = new System.Drawing.Size(1000, 169);
-      this.dataGridView1.TabIndex = 20;
-      // 
-      // rollNoDataGridViewTextBoxColumn
-      // 
-      this.rollNoDataGridViewTextBoxColumn.DataPropertyName = "RollNo";
-      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.rollNoDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
-      this.rollNoDataGridViewTextBoxColumn.HeaderText = "Greige Roll";
-      this.rollNoDataGridViewTextBoxColumn.Name = "rollNoDataGridViewTextBoxColumn";
-      this.rollNoDataGridViewTextBoxColumn.ReadOnly = true;
-      this.rollNoDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-      this.rollNoDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.rollNoDataGridViewTextBoxColumn.Width = 70;
-      // 
-      // orderNoColumn
-      // 
-      this.orderNoColumn.DataPropertyName = "OrderNo";
-      this.orderNoColumn.HeaderText = "Order #";
-      this.orderNoColumn.Name = "orderNoColumn";
-      this.orderNoColumn.ReadOnly = true;
-      this.orderNoColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.orderNoColumn.Width = 70;
-      // 
-      // rollLengthDataGridViewTextBoxColumn
-      // 
-      this.rollLengthDataGridViewTextBoxColumn.DataPropertyName = "RollLength";
-      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.rollLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
-      this.rollLengthDataGridViewTextBoxColumn.HeaderText = "Length";
-      this.rollLengthDataGridViewTextBoxColumn.Name = "rollLengthDataGridViewTextBoxColumn";
-      this.rollLengthDataGridViewTextBoxColumn.ReadOnly = true;
-      this.rollLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.rollLengthDataGridViewTextBoxColumn.Width = 65;
-      // 
-      // styleCodeDataGridViewTextBoxColumn
-      // 
-      this.styleCodeDataGridViewTextBoxColumn.DataPropertyName = "StyleCode";
-      this.styleCodeDataGridViewTextBoxColumn.HeaderText = "Style";
-      this.styleCodeDataGridViewTextBoxColumn.Name = "styleCodeDataGridViewTextBoxColumn";
-      this.styleCodeDataGridViewTextBoxColumn.ReadOnly = true;
-      this.styleCodeDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.styleCodeDataGridViewTextBoxColumn.Width = 60;
-      // 
-      // styleNameDataGridViewTextBoxColumn
-      // 
-      this.styleNameDataGridViewTextBoxColumn.DataPropertyName = "StyleName";
-      this.styleNameDataGridViewTextBoxColumn.HeaderText = "Description";
-      this.styleNameDataGridViewTextBoxColumn.Name = "styleNameDataGridViewTextBoxColumn";
-      this.styleNameDataGridViewTextBoxColumn.ReadOnly = true;
-      this.styleNameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.styleNameDataGridViewTextBoxColumn.Width = 125;
-      // 
-      // colorCodeDataGridViewTextBoxColumn
-      // 
-      this.colorCodeDataGridViewTextBoxColumn.DataPropertyName = "ColorCode";
-      this.colorCodeDataGridViewTextBoxColumn.HeaderText = "Color";
-      this.colorCodeDataGridViewTextBoxColumn.Name = "colorCodeDataGridViewTextBoxColumn";
-      this.colorCodeDataGridViewTextBoxColumn.ReadOnly = true;
-      this.colorCodeDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.colorCodeDataGridViewTextBoxColumn.Width = 60;
-      // 
-      // colorNameDataGridViewTextBoxColumn
-      // 
-      this.colorNameDataGridViewTextBoxColumn.DataPropertyName = "ColorName";
-      this.colorNameDataGridViewTextBoxColumn.HeaderText = "Description";
-      this.colorNameDataGridViewTextBoxColumn.Name = "colorNameDataGridViewTextBoxColumn";
-      this.colorNameDataGridViewTextBoxColumn.ReadOnly = true;
-      this.colorNameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.colorNameDataGridViewTextBoxColumn.Width = 125;
-      // 
-      // backingCodeDataGridViewTextBoxColumn
-      // 
-      this.backingCodeDataGridViewTextBoxColumn.DataPropertyName = "BackingCode";
-      this.backingCodeDataGridViewTextBoxColumn.HeaderText = "Backing";
-      this.backingCodeDataGridViewTextBoxColumn.Name = "backingCodeDataGridViewTextBoxColumn";
-      this.backingCodeDataGridViewTextBoxColumn.ReadOnly = true;
-      this.backingCodeDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.backingCodeDataGridViewTextBoxColumn.Width = 50;
-      // 
-      // rollWidthStrDataGridViewTextBoxColumn
-      // 
-      this.rollWidthStrDataGridViewTextBoxColumn.DataPropertyName = "RollWidthStr";
-      this.rollWidthStrDataGridViewTextBoxColumn.HeaderText = "Width";
-      this.rollWidthStrDataGridViewTextBoxColumn.Name = "rollWidthStrDataGridViewTextBoxColumn";
-      this.rollWidthStrDataGridViewTextBoxColumn.ReadOnly = true;
-      this.rollWidthStrDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.rollWidthStrDataGridViewTextBoxColumn.Width = 55;
-      // 
-      // colDefaultRecipe
-      // 
-      this.colDefaultRecipe.DataPropertyName = "DefaultRecipe";
-      this.colDefaultRecipe.HeaderText = "Default Recipe";
-      this.colDefaultRecipe.Name = "colDefaultRecipe";
-      this.colDefaultRecipe.ReadOnly = true;
-      this.colDefaultRecipe.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-      this.colDefaultRecipe.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.colDefaultRecipe.Width = 120;
-      // 
-      // patternRepeatLengthDataGridViewTextBoxColumn
-      // 
-      this.patternRepeatLengthDataGridViewTextBoxColumn.DataPropertyName = "PatternRepeatLength";
-      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      dataGridViewCellStyle3.Format = "N3";
-      dataGridViewCellStyle3.NullValue = null;
-      this.patternRepeatLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
-      this.patternRepeatLengthDataGridViewTextBoxColumn.HeaderText = "Pattern Repeat";
-      this.patternRepeatLengthDataGridViewTextBoxColumn.Name = "patternRepeatLengthDataGridViewTextBoxColumn";
-      this.patternRepeatLengthDataGridViewTextBoxColumn.ReadOnly = true;
-      this.patternRepeatLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      // 
-      // srcGrid
-      // 
-      this.srcGrid.DataSource = typeof(MahloService.Models.CarpetRoll);
       // 
       // label20
       // 
@@ -555,10 +354,6 @@
       this.lblSkewAmt.Text = "0";
       this.lblSkewAmt.TextAlign = System.Drawing.ContentAlignment.TopCenter;
       // 
-      // srcNextRoll
-      // 
-      this.srcNextRoll.DataSource = typeof(MahloService.Models.CarpetRoll);
-      // 
       // icons32x32
       // 
       this.icons32x32.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("icons32x32.ImageStream")));
@@ -571,95 +366,6 @@
       this.icons32x32.Images.SetKeyName(5, "");
       this.icons32x32.Images.SetKeyName(6, "");
       this.icons32x32.Images.SetKeyName(7, "");
-      // 
-      // btnDisableSystem
-      // 
-      this.btnDisableSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnDisableSystem.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.btnDisableSystem.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "IsMapValid", true));
-      this.btnDisableSystem.ForeColor = System.Drawing.Color.Black;
-      this.btnDisableSystem.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-      this.btnDisableSystem.ImageIndex = 5;
-      this.btnDisableSystem.ImageList = this.icons32x32;
-      this.btnDisableSystem.Location = new System.Drawing.Point(861, 519);
-      this.btnDisableSystem.Name = "btnDisableSystem";
-      this.btnDisableSystem.Size = new System.Drawing.Size(152, 60);
-      this.btnDisableSystem.TabIndex = 26;
-      this.btnDisableSystem.Text = "Disable System";
-      this.btnDisableSystem.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-      this.btnDisableSystem.UseVisualStyleBackColor = false;
-      // 
-      // btnWaitForSeam
-      // 
-      this.btnWaitForSeam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnWaitForSeam.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.btnWaitForSeam.ForeColor = System.Drawing.Color.Black;
-      this.btnWaitForSeam.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-      this.btnWaitForSeam.ImageIndex = 4;
-      this.btnWaitForSeam.ImageList = this.icons32x32;
-      this.btnWaitForSeam.Location = new System.Drawing.Point(691, 519);
-      this.btnWaitForSeam.Name = "btnWaitForSeam";
-      this.btnWaitForSeam.Size = new System.Drawing.Size(152, 60);
-      this.btnWaitForSeam.TabIndex = 25;
-      this.btnWaitForSeam.Text = "Wait for Seam";
-      this.btnWaitForSeam.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-      this.btnWaitForSeam.UseVisualStyleBackColor = false;
-      // 
-      // btnGoToNextRoll
-      // 
-      this.btnGoToNextRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnGoToNextRoll.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.btnGoToNextRoll.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "CanMoveForward", true));
-      this.btnGoToNextRoll.Enabled = false;
-      this.btnGoToNextRoll.ForeColor = System.Drawing.Color.Black;
-      this.btnGoToNextRoll.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-      this.btnGoToNextRoll.ImageIndex = 1;
-      this.btnGoToNextRoll.ImageList = this.icons32x32;
-      this.btnGoToNextRoll.Location = new System.Drawing.Point(181, 519);
-      this.btnGoToNextRoll.Name = "btnGoToNextRoll";
-      this.btnGoToNextRoll.Size = new System.Drawing.Size(152, 60);
-      this.btnGoToNextRoll.TabIndex = 23;
-      this.btnGoToNextRoll.Text = "Forward to next roll";
-      this.btnGoToNextRoll.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-      this.btnGoToNextRoll.UseVisualStyleBackColor = false;
-      this.btnGoToNextRoll.Click += new System.EventHandler(this.BtnGoToNextRoll_Click);
-      // 
-      // btnGoToPreviousRoll
-      // 
-      this.btnGoToPreviousRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnGoToPreviousRoll.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.btnGoToPreviousRoll.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "CanMoveBackward", true));
-      this.btnGoToPreviousRoll.Enabled = false;
-      this.btnGoToPreviousRoll.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.btnGoToPreviousRoll.ForeColor = System.Drawing.Color.Black;
-      this.btnGoToPreviousRoll.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-      this.btnGoToPreviousRoll.ImageIndex = 0;
-      this.btnGoToPreviousRoll.ImageList = this.icons32x32;
-      this.btnGoToPreviousRoll.Location = new System.Drawing.Point(12, 519);
-      this.btnGoToPreviousRoll.Name = "btnGoToPreviousRoll";
-      this.btnGoToPreviousRoll.Size = new System.Drawing.Size(152, 60);
-      this.btnGoToPreviousRoll.TabIndex = 22;
-      this.btnGoToPreviousRoll.Text = "Back to previous roll";
-      this.btnGoToPreviousRoll.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-      this.btnGoToPreviousRoll.UseVisualStyleBackColor = false;
-      this.btnGoToPreviousRoll.Click += new System.EventHandler(this.BtnGoToPreviousRoll_Click);
-      // 
-      // btnViewCoaterSchedule
-      // 
-      this.btnViewCoaterSchedule.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnViewCoaterSchedule.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.btnViewCoaterSchedule.ForeColor = System.Drawing.Color.Black;
-      this.btnViewCoaterSchedule.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-      this.btnViewCoaterSchedule.ImageIndex = 7;
-      this.btnViewCoaterSchedule.ImageList = this.icons32x32;
-      this.btnViewCoaterSchedule.Location = new System.Drawing.Point(521, 519);
-      this.btnViewCoaterSchedule.Name = "btnViewCoaterSchedule";
-      this.btnViewCoaterSchedule.Size = new System.Drawing.Size(152, 60);
-      this.btnViewCoaterSchedule.TabIndex = 27;
-      this.btnViewCoaterSchedule.Text = "View Coater Schedule";
-      this.btnViewCoaterSchedule.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-      this.btnViewCoaterSchedule.UseVisualStyleBackColor = false;
-      this.btnViewCoaterSchedule.Click += new System.EventHandler(this.BtnViewCoaterSchedule_Click);
       // 
       // label5
       // 
@@ -715,6 +421,10 @@
       this.lblNextLength.Name = "lblNextLength";
       this.lblNextLength.Size = new System.Drawing.Size(68, 16);
       this.lblNextLength.TabIndex = 8;
+      // 
+      // srcNextRoll
+      // 
+      this.srcNextRoll.DataSource = typeof(MahloService.Models.CarpetRoll);
       // 
       // lblNextColor
       // 
@@ -807,9 +517,8 @@
       // lblRollMapped
       // 
       this.lblRollMapped.BackColor = System.Drawing.Color.Transparent;
-      this.lblRollMapped.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "RollMappedText", true));
-      this.lblRollMapped.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.srcLogic, "RollMappedBackColor", true));
-      this.lblRollMapped.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "RollMappedForeColor", true));
+      this.lblRollMapped.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "LblRollMappedText", true));
+      this.lblRollMapped.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "LblRollMappedForeColor", true));
       this.lblRollMapped.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblRollMapped.ForeColor = System.Drawing.Color.Black;
       this.lblRollMapped.Location = new System.Drawing.Point(184, 308);
@@ -1055,15 +764,13 @@
       // lblRecipeName
       // 
       this.lblRecipeName.BackColor = System.Drawing.Color.Silver;
-      this.lblRecipeName.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "Recipe", true));
-      this.lblRecipeName.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.srcLogic, "PlcStatusMessageBackColor", true));
-      this.lblRecipeName.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.srcLogic, "PlcStatusMessageForeColor", true));
       this.lblRecipeName.ForeColor = System.Drawing.Color.White;
-      this.lblRecipeName.Location = new System.Drawing.Point(8, 308);
+      this.lblRecipeName.Location = new System.Drawing.Point(4, 308);
       this.lblRecipeName.Name = "lblRecipeName";
-      this.lblRecipeName.Size = new System.Drawing.Size(234, 16);
+      this.lblRecipeName.Size = new System.Drawing.Size(236, 16);
       this.lblRecipeName.TabIndex = 22;
       this.lblRecipeName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      this.lblRecipeName.Visible = false;
       // 
       // grpMappingInfo
       // 
@@ -1095,42 +802,368 @@
       this.grpMappingInfo.TabStop = false;
       this.grpMappingInfo.Text = "Mapping Information";
       // 
+      // pnlMessage
+      // 
+      this.pnlMessage.Name = "pnlMessage";
+      // 
+      // pnlIndicator
+      // 
+      this.pnlIndicator.Name = "pnlIndicator";
+      // 
+      // pnlUserAttention
+      // 
+      this.pnlUserAttention.Name = "pnlUserAttention";
+      // 
+      // pnlAlarm
+      // 
+      this.pnlAlarm.Name = "pnlAlarm";
+      // 
+      // pnlAlertMessage
+      // 
+      this.pnlAlertMessage.Name = "pnlAlertMessage";
+      // 
+      // pnlQueueMessage
+      // 
+      this.pnlQueueMessage.Name = "pnlQueueMessage";
+      // 
+      // buttonPanel
+      // 
+      this.buttonPanel.Controls.Add(this.btnViewCoaterSchedule);
+      this.buttonPanel.Controls.Add(this.btnSetRecipe);
+      this.buttonPanel.Controls.Add(this.btnGoToPreviousRoll);
+      this.buttonPanel.Controls.Add(this.btnDisableSystem);
+      this.buttonPanel.Controls.Add(this.btnGoToNextRoll);
+      this.buttonPanel.Controls.Add(this.btnWaitForSeam);
+      this.buttonPanel.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "IsConnectionEstablished", true));
+      this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+      this.buttonPanel.Location = new System.Drawing.Point(0, 519);
+      this.buttonPanel.Name = "buttonPanel";
+      this.buttonPanel.Size = new System.Drawing.Size(1026, 72);
+      this.buttonPanel.TabIndex = 29;
+      // 
+      // btnViewCoaterSchedule
+      // 
+      this.btnViewCoaterSchedule.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnViewCoaterSchedule.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnViewCoaterSchedule.ForeColor = System.Drawing.Color.Black;
+      this.btnViewCoaterSchedule.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+      this.btnViewCoaterSchedule.ImageIndex = 7;
+      this.btnViewCoaterSchedule.ImageList = this.icons32x32;
+      this.btnViewCoaterSchedule.Location = new System.Drawing.Point(521, 6);
+      this.btnViewCoaterSchedule.Name = "btnViewCoaterSchedule";
+      this.btnViewCoaterSchedule.Size = new System.Drawing.Size(152, 60);
+      this.btnViewCoaterSchedule.TabIndex = 16;
+      this.btnViewCoaterSchedule.Text = "View Coater Schedule";
+      this.btnViewCoaterSchedule.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.btnViewCoaterSchedule.UseVisualStyleBackColor = false;
+      this.btnViewCoaterSchedule.Click += new System.EventHandler(this.BtnViewCoaterSchedule_Click);
+      // 
+      // btnSetRecipe
+      // 
+      this.btnSetRecipe.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnSetRecipe.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnSetRecipe.Enabled = false;
+      this.btnSetRecipe.ForeColor = System.Drawing.Color.Black;
+      this.btnSetRecipe.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+      this.btnSetRecipe.ImageIndex = 6;
+      this.btnSetRecipe.ImageList = this.icons32x32;
+      this.btnSetRecipe.Location = new System.Drawing.Point(351, 6);
+      this.btnSetRecipe.Name = "btnSetRecipe";
+      this.btnSetRecipe.Size = new System.Drawing.Size(152, 60);
+      this.btnSetRecipe.TabIndex = 13;
+      this.btnSetRecipe.Text = "Set Recipe";
+      this.btnSetRecipe.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.btnSetRecipe.UseVisualStyleBackColor = false;
+      this.btnSetRecipe.Visible = false;
+      // 
+      // btnGoToPreviousRoll
+      // 
+      this.btnGoToPreviousRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnGoToPreviousRoll.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnGoToPreviousRoll.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "CanMoveBackward", true));
+      this.btnGoToPreviousRoll.Enabled = false;
+      this.btnGoToPreviousRoll.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.btnGoToPreviousRoll.ForeColor = System.Drawing.Color.Black;
+      this.btnGoToPreviousRoll.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+      this.btnGoToPreviousRoll.ImageIndex = 0;
+      this.btnGoToPreviousRoll.ImageList = this.icons32x32;
+      this.btnGoToPreviousRoll.Location = new System.Drawing.Point(12, 6);
+      this.btnGoToPreviousRoll.Name = "btnGoToPreviousRoll";
+      this.btnGoToPreviousRoll.Size = new System.Drawing.Size(152, 60);
+      this.btnGoToPreviousRoll.TabIndex = 11;
+      this.btnGoToPreviousRoll.Text = "Back to previous roll";
+      this.btnGoToPreviousRoll.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.btnGoToPreviousRoll.UseVisualStyleBackColor = false;
+      this.btnGoToPreviousRoll.Click += new System.EventHandler(this.BtnGoToPreviousRoll_Click);
+      // 
+      // btnDisableSystem
+      // 
+      this.btnDisableSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnDisableSystem.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnDisableSystem.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "IsSystemEnabled", true));
+      this.btnDisableSystem.ForeColor = System.Drawing.Color.Black;
+      this.btnDisableSystem.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+      this.btnDisableSystem.ImageIndex = 5;
+      this.btnDisableSystem.ImageList = this.icons32x32;
+      this.btnDisableSystem.Location = new System.Drawing.Point(861, 6);
+      this.btnDisableSystem.Name = "btnDisableSystem";
+      this.btnDisableSystem.Size = new System.Drawing.Size(152, 60);
+      this.btnDisableSystem.TabIndex = 15;
+      this.btnDisableSystem.Text = "Disable System";
+      this.btnDisableSystem.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.btnDisableSystem.UseVisualStyleBackColor = false;
+      this.btnDisableSystem.Click += new System.EventHandler(this.BtnDisableSystem_Click);
+      // 
+      // btnGoToNextRoll
+      // 
+      this.btnGoToNextRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnGoToNextRoll.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnGoToNextRoll.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "CanMoveForward", true));
+      this.btnGoToNextRoll.Enabled = false;
+      this.btnGoToNextRoll.ForeColor = System.Drawing.Color.Black;
+      this.btnGoToNextRoll.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+      this.btnGoToNextRoll.ImageIndex = 1;
+      this.btnGoToNextRoll.ImageList = this.icons32x32;
+      this.btnGoToNextRoll.Location = new System.Drawing.Point(181, 6);
+      this.btnGoToNextRoll.Name = "btnGoToNextRoll";
+      this.btnGoToNextRoll.Size = new System.Drawing.Size(152, 60);
+      this.btnGoToNextRoll.TabIndex = 12;
+      this.btnGoToNextRoll.Text = "Forward to next roll";
+      this.btnGoToNextRoll.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.btnGoToNextRoll.UseVisualStyleBackColor = false;
+      this.btnGoToNextRoll.Click += new System.EventHandler(this.BtnGoToNextRoll_Click);
+      // 
+      // btnWaitForSeam
+      // 
+      this.btnWaitForSeam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnWaitForSeam.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnWaitForSeam.ForeColor = System.Drawing.Color.Black;
+      this.btnWaitForSeam.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+      this.btnWaitForSeam.ImageIndex = 4;
+      this.btnWaitForSeam.ImageList = this.icons32x32;
+      this.btnWaitForSeam.Location = new System.Drawing.Point(691, 6);
+      this.btnWaitForSeam.Name = "btnWaitForSeam";
+      this.btnWaitForSeam.Size = new System.Drawing.Size(152, 60);
+      this.btnWaitForSeam.TabIndex = 14;
+      this.btnWaitForSeam.Text = "Wait for Seam";
+      this.btnWaitForSeam.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+      this.btnWaitForSeam.UseVisualStyleBackColor = false;
+      this.btnWaitForSeam.Click += new System.EventHandler(this.BtnWaitForSeam_Click);
+      // 
+      // statusBar1
+      // 
+      this.statusBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
+      this.statusBar1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.statusBar1.Location = new System.Drawing.Point(0, 591);
+      this.statusBar1.Name = "statusBar1";
+      this.statusBar1.Size = new System.Drawing.Size(1026, 24);
+      this.statusBar1.TabIndex = 28;
+      // 
+      // dataGridView1
+      // 
+      this.dataGridView1.AllowUserToAddRows = false;
+      this.dataGridView1.AllowUserToDeleteRows = false;
+      this.dataGridView1.AllowUserToResizeRows = false;
+      this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+      this.dataGridView1.AutoGenerateColumns = false;
+      this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.moveUpColumn,
+            this.moveDownColumn,
+            this.rollNoDataGridViewTextBoxColumn,
+            this.orderNoColumn,
+            this.rollLengthDataGridViewTextBoxColumn,
+            this.styleCodeDataGridViewTextBoxColumn,
+            this.styleNameDataGridViewTextBoxColumn,
+            this.colorCodeDataGridViewTextBoxColumn,
+            this.colorNameDataGridViewTextBoxColumn,
+            this.backingCodeDataGridViewTextBoxColumn,
+            this.rollWidthStrDataGridViewTextBoxColumn,
+            this.colDefaultRecipe,
+            this.patternRepeatLengthDataGridViewTextBoxColumn});
+      this.dataGridView1.DataSource = this.srcGrid;
+      this.dataGridView1.Location = new System.Drawing.Point(12, 344);
+      this.dataGridView1.MultiSelect = false;
+      this.dataGridView1.Name = "dataGridView1";
+      this.dataGridView1.ReadOnly = true;
+      this.dataGridView1.RowHeadersVisible = false;
+      this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+      this.dataGridView1.Size = new System.Drawing.Size(1000, 169);
+      this.dataGridView1.TabIndex = 20;
+      this.dataGridView1.WideRowIndexChanged += new System.EventHandler(this.DataGridView1_WideRowIndexChanged);
+      this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
+      this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.DataGridView1_CellPainting);
+      this.dataGridView1.SelectionChanged += new System.EventHandler(this.DataGridView1_SelectionChanged);
+      // 
+      // srcGrid
+      // 
+      this.srcGrid.DataSource = typeof(MahloService.Models.CarpetRoll);
+      // 
+      // moveUpColumn
+      // 
+      dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+      this.moveUpColumn.DefaultCellStyle = dataGridViewCellStyle1;
+      this.moveUpColumn.HeaderText = "Up";
+      this.moveUpColumn.Name = "moveUpColumn";
+      this.moveUpColumn.ReadOnly = true;
+      this.moveUpColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.moveUpColumn.Visible = false;
+      this.moveUpColumn.Width = 50;
+      // 
+      // moveDownColumn
+      // 
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+      this.moveDownColumn.DefaultCellStyle = dataGridViewCellStyle2;
+      this.moveDownColumn.HeaderText = "Down";
+      this.moveDownColumn.Name = "moveDownColumn";
+      this.moveDownColumn.ReadOnly = true;
+      this.moveDownColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.moveDownColumn.Visible = false;
+      this.moveDownColumn.Width = 50;
+      // 
+      // rollNoDataGridViewTextBoxColumn
+      // 
+      this.rollNoDataGridViewTextBoxColumn.DataPropertyName = "RollNo";
+      dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.rollNoDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
+      this.rollNoDataGridViewTextBoxColumn.HeaderText = "Greige Roll";
+      this.rollNoDataGridViewTextBoxColumn.Name = "rollNoDataGridViewTextBoxColumn";
+      this.rollNoDataGridViewTextBoxColumn.ReadOnly = true;
+      this.rollNoDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+      this.rollNoDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.rollNoDataGridViewTextBoxColumn.Width = 70;
+      // 
+      // orderNoColumn
+      // 
+      this.orderNoColumn.DataPropertyName = "OrderNo";
+      this.orderNoColumn.HeaderText = "Order #";
+      this.orderNoColumn.Name = "orderNoColumn";
+      this.orderNoColumn.ReadOnly = true;
+      this.orderNoColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.orderNoColumn.Width = 70;
+      // 
+      // rollLengthDataGridViewTextBoxColumn
+      // 
+      this.rollLengthDataGridViewTextBoxColumn.DataPropertyName = "RollLength";
+      dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.rollLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle4;
+      this.rollLengthDataGridViewTextBoxColumn.HeaderText = "Length";
+      this.rollLengthDataGridViewTextBoxColumn.Name = "rollLengthDataGridViewTextBoxColumn";
+      this.rollLengthDataGridViewTextBoxColumn.ReadOnly = true;
+      this.rollLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.rollLengthDataGridViewTextBoxColumn.Width = 65;
+      // 
+      // styleCodeDataGridViewTextBoxColumn
+      // 
+      this.styleCodeDataGridViewTextBoxColumn.DataPropertyName = "StyleCode";
+      this.styleCodeDataGridViewTextBoxColumn.HeaderText = "Style";
+      this.styleCodeDataGridViewTextBoxColumn.Name = "styleCodeDataGridViewTextBoxColumn";
+      this.styleCodeDataGridViewTextBoxColumn.ReadOnly = true;
+      this.styleCodeDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.styleCodeDataGridViewTextBoxColumn.Width = 60;
+      // 
+      // styleNameDataGridViewTextBoxColumn
+      // 
+      this.styleNameDataGridViewTextBoxColumn.DataPropertyName = "StyleName";
+      this.styleNameDataGridViewTextBoxColumn.HeaderText = "Description";
+      this.styleNameDataGridViewTextBoxColumn.Name = "styleNameDataGridViewTextBoxColumn";
+      this.styleNameDataGridViewTextBoxColumn.ReadOnly = true;
+      this.styleNameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.styleNameDataGridViewTextBoxColumn.Width = 125;
+      // 
+      // colorCodeDataGridViewTextBoxColumn
+      // 
+      this.colorCodeDataGridViewTextBoxColumn.DataPropertyName = "ColorCode";
+      this.colorCodeDataGridViewTextBoxColumn.HeaderText = "Color";
+      this.colorCodeDataGridViewTextBoxColumn.Name = "colorCodeDataGridViewTextBoxColumn";
+      this.colorCodeDataGridViewTextBoxColumn.ReadOnly = true;
+      this.colorCodeDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colorCodeDataGridViewTextBoxColumn.Width = 60;
+      // 
+      // colorNameDataGridViewTextBoxColumn
+      // 
+      this.colorNameDataGridViewTextBoxColumn.DataPropertyName = "ColorName";
+      this.colorNameDataGridViewTextBoxColumn.HeaderText = "Description";
+      this.colorNameDataGridViewTextBoxColumn.Name = "colorNameDataGridViewTextBoxColumn";
+      this.colorNameDataGridViewTextBoxColumn.ReadOnly = true;
+      this.colorNameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colorNameDataGridViewTextBoxColumn.Width = 125;
+      // 
+      // backingCodeDataGridViewTextBoxColumn
+      // 
+      this.backingCodeDataGridViewTextBoxColumn.DataPropertyName = "BackingCode";
+      this.backingCodeDataGridViewTextBoxColumn.HeaderText = "Backing";
+      this.backingCodeDataGridViewTextBoxColumn.Name = "backingCodeDataGridViewTextBoxColumn";
+      this.backingCodeDataGridViewTextBoxColumn.ReadOnly = true;
+      this.backingCodeDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.backingCodeDataGridViewTextBoxColumn.Width = 50;
+      // 
+      // rollWidthStrDataGridViewTextBoxColumn
+      // 
+      this.rollWidthStrDataGridViewTextBoxColumn.DataPropertyName = "RollWidthStr";
+      this.rollWidthStrDataGridViewTextBoxColumn.HeaderText = "Width";
+      this.rollWidthStrDataGridViewTextBoxColumn.Name = "rollWidthStrDataGridViewTextBoxColumn";
+      this.rollWidthStrDataGridViewTextBoxColumn.ReadOnly = true;
+      this.rollWidthStrDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.rollWidthStrDataGridViewTextBoxColumn.Width = 55;
+      // 
+      // colDefaultRecipe
+      // 
+      this.colDefaultRecipe.DataPropertyName = "DefaultRecipe";
+      this.colDefaultRecipe.HeaderText = "Default Recipe";
+      this.colDefaultRecipe.Name = "colDefaultRecipe";
+      this.colDefaultRecipe.ReadOnly = true;
+      this.colDefaultRecipe.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+      this.colDefaultRecipe.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colDefaultRecipe.Visible = false;
+      this.colDefaultRecipe.Width = 120;
+      // 
+      // patternRepeatLengthDataGridViewTextBoxColumn
+      // 
+      this.patternRepeatLengthDataGridViewTextBoxColumn.DataPropertyName = "PatternRepeatLength";
+      dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle5.Format = "N3";
+      dataGridViewCellStyle5.NullValue = null;
+      this.patternRepeatLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
+      this.patternRepeatLengthDataGridViewTextBoxColumn.HeaderText = "Pattern Repeat";
+      this.patternRepeatLengthDataGridViewTextBoxColumn.Name = "patternRepeatLengthDataGridViewTextBoxColumn";
+      this.patternRepeatLengthDataGridViewTextBoxColumn.ReadOnly = true;
+      this.patternRepeatLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      // 
       // FormMahlo
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(1026, 615);
+      this.Controls.Add(this.buttonPanel);
       this.Controls.Add(this.statusBar1);
       this.Controls.Add(this.dataGridView1);
-      this.Controls.Add(this.btnDisableSystem);
-      this.Controls.Add(this.btnWaitForSeam);
-      this.Controls.Add(this.btnGoToNextRoll);
-      this.Controls.Add(this.btnGoToPreviousRoll);
-      this.Controls.Add(this.btnViewCoaterSchedule);
       this.Controls.Add(this.grpCurrentRoll);
       this.Controls.Add(this.grpNextRoll);
       this.Controls.Add(this.grpMappingInfo);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
       this.Name = "FormMahlo";
-      this.Text = "FormMahlo";
+      this.Text = "Mahlo 2";
       ((System.ComponentModel.ISupportInitialize)(this.srcCurrentRoll)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pnlMessage)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pnlIndicator)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pnlUserAttention)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pnlAlarm)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pnlAlertMessage)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pnlQueueMessage)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcLogic)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.srcGrid)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.srcNextRoll)).EndInit();
       this.grpSkew.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.srcNextRoll)).EndInit();
       this.grpCurrentRoll.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.picCurrentRoll)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.picNextRoll)).EndInit();
       this.grpNextRoll.ResumeLayout(false);
       this.grpBow.ResumeLayout(false);
       this.grpMappingInfo.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.pnlMessage)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlIndicator)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlUserAttention)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlAlarm)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlAlertMessage)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pnlQueueMessage)).EndInit();
+      this.buttonPanel.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.srcGrid)).EndInit();
       this.ResumeLayout(false);
 
     }
@@ -1139,13 +1172,6 @@
 
     private System.Windows.Forms.Label lblSkewPercent;
     private System.Windows.Forms.BindingSource srcCurrentRoll;
-    private System.Windows.Forms.StatusBarPanel pnlMessage;
-    private System.Windows.Forms.StatusBar statusBar1;
-    private System.Windows.Forms.StatusBarPanel pnlIndicator;
-    private System.Windows.Forms.StatusBarPanel pnlUserAttention;
-    private System.Windows.Forms.StatusBarPanel pnlAlarm;
-    private System.Windows.Forms.StatusBarPanel pnlAlertMessage;
-    private System.Windows.Forms.StatusBarPanel pnlQueueMessage;
     private System.Windows.Forms.Label lblPreviousRollLength;
     private System.Windows.Forms.BindingSource srcLogic;
     private System.Windows.Forms.Label label22;
@@ -1160,18 +1186,7 @@
     private System.Windows.Forms.Label lblMeasuredLen;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.Label lblMappingStatus;
-    private System.Windows.Forms.DataGridView dataGridView1;
-    private System.Windows.Forms.DataGridViewTextBoxColumn rollNoDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn orderNoColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn rollLengthDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn styleCodeDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn styleNameDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colorCodeDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colorNameDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn backingCodeDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn rollWidthStrDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colDefaultRecipe;
-    private System.Windows.Forms.DataGridViewTextBoxColumn patternRepeatLengthDataGridViewTextBoxColumn;
+    private MyDataGridView dataGridView1;
     private System.Windows.Forms.BindingSource srcGrid;
     private System.Windows.Forms.Label label20;
     private System.Windows.Forms.Label label21;
@@ -1179,11 +1194,6 @@
     private System.Windows.Forms.Label lblSkewAmt;
     private System.Windows.Forms.BindingSource srcNextRoll;
     private System.Windows.Forms.ImageList icons32x32;
-    private System.Windows.Forms.Button btnDisableSystem;
-    private System.Windows.Forms.Button btnWaitForSeam;
-    private System.Windows.Forms.Button btnGoToNextRoll;
-    private System.Windows.Forms.Button btnGoToPreviousRoll;
-    private System.Windows.Forms.Button btnViewCoaterSchedule;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.GroupBox grpSkew;
     private System.Windows.Forms.Label lblNextRollType;
@@ -1219,5 +1229,32 @@
     private System.Windows.Forms.GroupBox grpBow;
     private System.Windows.Forms.Label lblRecipeName;
     private System.Windows.Forms.GroupBox grpMappingInfo;
+    private MyStatusBar statusBar1;
+    private System.Windows.Forms.StatusBarPanel pnlMessage;
+    private System.Windows.Forms.StatusBarPanel pnlIndicator;
+    private System.Windows.Forms.StatusBarPanel pnlUserAttention;
+    private System.Windows.Forms.StatusBarPanel pnlAlarm;
+    private System.Windows.Forms.StatusBarPanel pnlAlertMessage;
+    private System.Windows.Forms.StatusBarPanel pnlQueueMessage;
+    private System.Windows.Forms.Panel buttonPanel;
+    private System.Windows.Forms.Button btnViewCoaterSchedule;
+    private System.Windows.Forms.Button btnSetRecipe;
+    private System.Windows.Forms.Button btnGoToPreviousRoll;
+    private System.Windows.Forms.Button btnDisableSystem;
+    private System.Windows.Forms.Button btnGoToNextRoll;
+    private System.Windows.Forms.Button btnWaitForSeam;
+    private System.Windows.Forms.DataGridViewTextBoxColumn moveUpColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn moveDownColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn rollNoDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn orderNoColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn rollLengthDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn styleCodeDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn styleNameDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colorCodeDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colorNameDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn backingCodeDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn rollWidthStrDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colDefaultRecipe;
+    private System.Windows.Forms.DataGridViewTextBoxColumn patternRepeatLengthDataGridViewTextBoxColumn;
   }
 }

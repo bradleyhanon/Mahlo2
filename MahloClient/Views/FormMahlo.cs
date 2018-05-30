@@ -16,27 +16,34 @@ namespace MahloClient.Views
 {
   partial class FormMahlo : Form
   {
-    private ICarpetProcessor carpetProcessor;
-    private IMahloIpcClient mahloClient;
+    private readonly string UpArrowStr = new string((char)0xdd, 1);
+    private readonly string DownArrorStr = new string((char)0xde, 1);
+    private IMahloLogic logic;
+    private ISewinQueue sewinQueue;
+    private IMahloIpcClient ipcClient;
+    private Font ArrowFont = new Font("Wingdings", 30);
 
     private IDisposable MahloPropertyChangedSubscription;
 
-    public FormMahlo(ICarpetProcessor carpetProcessor, IMahloIpcClient mahloClient)
+    public FormMahlo(IMahloLogic logic, ISewinQueue sewinQueue, IMahloIpcClient ipcClient)
     {
       InitializeComponent();
-      this.carpetProcessor = carpetProcessor;
-      this.mahloClient = mahloClient;
+      this.logic = logic;
+      this.sewinQueue = sewinQueue;
+      this.ipcClient = ipcClient;
+      this.statusBar1.StatusBarInfo = (IStatusBarInfo)this.logic;
 
       MahloPropertyChangedSubscription =
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-          h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged += h,
-          h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged -= h)
+          h => ((INotifyPropertyChanged)this.logic).PropertyChanged += h,
+          h => ((INotifyPropertyChanged)this.logic).PropertyChanged -= h)
         .Where(args =>
-          args.EventArgs.PropertyName == nameof(this.carpetProcessor.BowAndSkewLogic.CurrentRoll))
+          args.EventArgs.PropertyName == nameof(this.logic.CurrentRoll))
         .Subscribe(args =>
         {
-          this.srcCurrentRoll.DataSource = this.carpetProcessor.BowAndSkewLogic.CurrentRoll;
+          this.srcCurrentRoll.DataSource = this.logic.CurrentRoll;
           this.DataGridView1_SelectionChanged(this.dataGridView1, EventArgs.Empty);
+          this.dataGridView1.EnsureVisibleRow(this.logic.CurrentRollIndex);
         });
 
       // Make column heading alignment match column data alignment
@@ -49,9 +56,9 @@ namespace MahloClient.Views
     protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
-      this.srcGrid.DataSource = this.carpetProcessor.SewinQueue.Rolls;
-      this.srcCurrentRoll.DataSource = this.carpetProcessor.MahloLogic.CurrentRoll;
-      this.srcLogic.DataSource = this.carpetProcessor.MahloLogic;
+      this.srcGrid.DataSource = this.sewinQueue.Rolls;
+      this.srcCurrentRoll.DataSource = this.logic.CurrentRoll;
+      this.srcLogic.DataSource = this.logic;
     }
 
     /// <summary>
@@ -74,7 +81,7 @@ namespace MahloClient.Views
       var dr = MessageBox.Show("You have requested to move back to the previous roll in the queue.  This will cancel mapping that may be in progress.\n\nAre you sure you want to do this?", "Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
       if (dr == DialogResult.Yes)
       {
-        this.mahloClient.Call(Ipc.MahloIpcClient.MoveToPriorRollCommand, nameof(IMahloLogic));
+        this.ipcClient.Call(Ipc.MahloIpcClient.MoveToPriorRollCommand, nameof(IMahloLogic));
       }
     }
 
@@ -83,13 +90,13 @@ namespace MahloClient.Views
       var dr = MessageBox.Show("You have requested to move ahead to the next roll in the queue.  This will cancel mapping that may be in progress.\n\nAre you sure you want to do this?", "Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
       if (dr == DialogResult.Yes)
       {
-        this.mahloClient.Call(Ipc.MahloIpcClient.MoveToNextRollCommand, nameof(IMahloLogic));
+        this.ipcClient.Call(Ipc.MahloIpcClient.MoveToNextRollCommand, nameof(IMahloLogic));
       }
     }
 
     private void DataGridView1_SelectionChanged(object sender, EventArgs e)
     {
-      int index = this.carpetProcessor.SewinQueue.Rolls.IndexOf(this.carpetProcessor.BowAndSkewLogic.CurrentRoll);
+      int index = this.sewinQueue.Rolls.IndexOf(this.logic.CurrentRoll);
       if (index < 0)
       {
         this.dataGridView1.ClearSelection();
@@ -100,11 +107,68 @@ namespace MahloClient.Views
       }
     }
 
+
     private void BtnViewCoaterSchedule_Click(object sender, EventArgs e)
     {
-      using (var form = new FormCoaterSchedule(this.mahloClient))
+      using (var form = new FormCoaterSchedule(this.ipcClient))
       {
         form.ShowDialog();
+      }
+    }
+
+    private void BtnWaitForSeam_Click(object sender, EventArgs e)
+    {
+      this.logic.WaitForSeam();
+    }
+
+    private void BtnDisableSystem_Click(object sender, EventArgs e)
+    {
+      this.logic.DisableSystem();
+    }
+
+    private void DataGridView1_WideRowIndexChanged(object sender, EventArgs e)
+    {
+      this.moveUpColumn.Visible = this.moveDownColumn.Visible = this.dataGridView1.WideRowIndex >= 0;
+    }
+
+    private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+    {
+      if (e.RowIndex == this.dataGridView1.WideRowIndex)
+      {
+        if (e.ColumnIndex == this.moveUpColumn.Index)
+        {
+          this.ipcClient.MoveQueueRoll(e.RowIndex, - 1);
+        }
+        else if (e.ColumnIndex == this.moveDownColumn.Index)
+        {
+          this.ipcClient.MoveQueueRoll(e.RowIndex, 1);
+        }
+      }
+    }
+
+    private void DataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+    {
+      if (e.RowIndex == this.dataGridView1.WideRowIndex)
+      {
+        string s =
+          e.ColumnIndex == this.moveUpColumn.Index ? UpArrowStr :
+          e.ColumnIndex == this.moveDownColumn.Index ? DownArrorStr : string.Empty;
+
+        if (s != string.Empty)
+        {
+          var cell = this.dataGridView1[e.ColumnIndex, e.RowIndex];
+          int selectedRowIndex = this.dataGridView1.SelectedCells.Cast<DataGridViewCell>().FirstOrDefault()?.RowIndex ?? -100;
+          var foreColor = selectedRowIndex == this.dataGridView1.WideRowIndex ? e.CellStyle.SelectionForeColor : e.CellStyle.ForeColor;
+          e.Paint(e.ClipBounds, e.PaintParts & ~DataGridViewPaintParts.ContentForeground);
+          using (var brush = new SolidBrush(foreColor))
+          {
+            var stringFormat = new StringFormat();
+            stringFormat.Alignment = StringAlignment.Center;
+            e.Graphics.DrawString(s, this.ArrowFont, brush, e.CellBounds, stringFormat);
+          }
+
+          e.Handled = true;
+        }
       }
     }
   }

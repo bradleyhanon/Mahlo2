@@ -60,6 +60,19 @@ namespace MahloService.Logic
       this.timer.Dispose();
     }
 
+    public void MoveRoll(int rollIndex, int direction)
+    {
+      int newIndex = rollIndex + direction;
+      if (rollIndex != newIndex && rollIndex >= 0 && rollIndex < this.Rolls.Count && newIndex >= 0 && newIndex < this.Rolls.Count)
+      {
+        var roll1 = this.Rolls[rollIndex];
+        var roll2 = this.Rolls[newIndex];
+        roll1.SwapWith(roll2);
+
+        this.QueueChanged?.Invoke();
+      }
+    }
+
     public CarpetRoll GetRoll(int rollId)
     {
       CarpetRoll result;
@@ -167,6 +180,57 @@ namespace MahloService.Logic
       this.QueueChanged?.Invoke();
     }
 
+    //public void UpdateSewinQueue(IEnumerable<CarpetRoll> newRolls)
+    //{
+    //  var list = new List<ListItem>();
+
+    //  // Update the overlapping rolls and add new rolls
+    //  foreach (var newRoll in newRolls)
+    //  {
+    //    var info = this.Rolls
+    //      .Select((oldRoll, index) => new { oldRoll, index })
+    //      .FirstOrDefault(item => item.oldRoll.RollNo == newRoll.RollNo);
+
+    //    if (info == null)
+    //    {
+    //      list.Add(new ListItem(this.Rolls.Count, newRoll));
+    //      this.Rolls.Add(newRoll);
+    //    }
+    //    else
+    //    {
+    //      list.Add(new ListItem(info.index, info.oldRoll));
+    //      newRoll.CopyTo(info.oldRoll);
+    //    }
+    //  }
+
+    //  // Rearrange the rolls into the same order as the new sewin queue items
+    //  int offset = this.Rolls.Count - list.Count;
+    //  for (int j = list.Count - 1; j >= 0; j--)
+    //  {
+    //    int srcNdx = list[j].Index;
+    //    int dstNdx = j + offset;
+    //    if (list[j].Index != dstNdx)
+    //    {
+    //      // The index of the items after srcNdx (the item to be moved)
+    //      // must be decreased by one
+    //      for (int k = 0; k < j; k++)
+    //      {
+    //        if (list[k].Index > srcNdx)
+    //        {
+    //          list[k].Index--;
+    //        }
+    //      }
+
+    //      // Move the roll to its new position
+    //      var roll = this.Rolls[srcNdx];
+    //      this.Rolls.Insert(dstNdx + 1, roll);
+    //      this.Rolls.RemoveAt(srcNdx);
+    //    }
+    //  }
+
+    //  this.Changed?.Invoke(this, EventArgs.Empty);
+    //}
+
     private async Task RefreshIfChanged()
     {
       if (this.isRefreshBusy)
@@ -196,5 +260,16 @@ namespace MahloService.Logic
 
       this.isRefreshBusy = false;
     }
+    //private class ListItem
+    //{
+    //  public int Index;
+    //  public readonly CarpetRoll Roll;
+
+    //  public ListItem(int index, CarpetRoll roll)
+    //  {
+    //    this.Index = index;
+    //    this.Roll = roll;
+    //  }
+    //}
   }
 }
