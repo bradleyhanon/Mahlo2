@@ -57,7 +57,7 @@ namespace MahloClient.Views
                 {
                   Backing = g.Key,
                   Feet = (int)g.Sum(item => item.Feet),
-                  TimeSpan = TimeSpan.FromMinutes(Math.Max(0, (double)g.Sum(item => item.Minutes))),
+                  Time = TimeSpan.FromMinutes(Math.Max(0, (double)g.Sum(item => item.Minutes))),
                 };
 
       dbgBackingSummary.DataSource = qry.ToArray();
@@ -73,7 +73,6 @@ namespace MahloClient.Views
       for (int c = 0; c < dbgCoaterSchedule.Columns.Count; c++)
       {
         dbgCoaterSchedule.Columns[c].HeaderCell.Style.Alignment = dbgCoaterSchedule.Columns[c].DefaultCellStyle.Alignment;
-        dbgCoaterSchedule.Columns[c].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
       }
     }
 
@@ -110,7 +109,7 @@ namespace MahloClient.Views
 
       var schedule = this.coaterSchedule.Where(item => item.SeqNo >= nMinSequence && item.SeqNo <= nMaxSequence);
       this.srcCoaterSchedule.DataSource = schedule.ToArray();
-      LoadBackingSummary(schedule);
+      this.LoadBackingSummary(schedule);
     }
 
     private void ShowMessage(string Message)
@@ -122,7 +121,7 @@ namespace MahloClient.Views
     {
       public string Backing { get; set; }
       public int Feet { get; set; }
-      public TimeSpan TimeSpan { get; set; }
+      public TimeSpan Time { get; set; }
     }
   }
 }

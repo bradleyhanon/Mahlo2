@@ -94,7 +94,6 @@
       this.btnWaitForSeam = new System.Windows.Forms.Button();
       this.statusBar1 = new MahloClient.Views.MyStatusBar();
       this.dataGridView1 = new MahloClient.Views.MyDataGridView();
-      this.srcGrid = new System.Windows.Forms.BindingSource(this.components);
       this.moveUpColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.moveDownColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.rollNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -108,6 +107,7 @@
       this.rollWidthStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colDefaultRecipe = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.patternRepeatLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.srcGrid = new System.Windows.Forms.BindingSource(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.srcCurrentRoll)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcLogic)).BeginInit();
       this.grpSkew.SuspendLayout();
@@ -996,10 +996,6 @@
       this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.DataGridView1_CellPainting);
       this.dataGridView1.SelectionChanged += new System.EventHandler(this.DataGridView1_SelectionChanged);
       // 
-      // srcGrid
-      // 
-      this.srcGrid.DataSource = typeof(MahloService.Models.CarpetRoll);
-      // 
       // moveUpColumn
       // 
       dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
@@ -1131,6 +1127,10 @@
       this.patternRepeatLengthDataGridViewTextBoxColumn.ReadOnly = true;
       this.patternRepeatLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       // 
+      // srcGrid
+      // 
+      this.srcGrid.DataSource = typeof(MahloService.Models.CarpetRoll);
+      // 
       // FormMahlo
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1143,6 +1143,7 @@
       this.Controls.Add(this.grpNextRoll);
       this.Controls.Add(this.grpMappingInfo);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "FormMahlo";
       this.Text = "Mahlo 2";
       ((System.ComponentModel.ISupportInitialize)(this.srcCurrentRoll)).EndInit();

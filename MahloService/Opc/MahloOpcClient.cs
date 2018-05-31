@@ -253,7 +253,7 @@ namespace MahloService.Opc
         mahloTags.AddRange(new(string, Action<object>)[]
         {
           //("Current.Version.0.KeyColumn", value => this.Recipe = (string)value),
-          ("Readings.MeterCounter.0.Value", value => {this.MetersCount = (double)value; this.meterCountSubject.OnNext((double)value - this.meterOffset); }),
+          ("Readings.Metercounter.0.Value", value => {this.MetersCount = (double)value; this.meterCountSubject.OnNext((double)value - this.meterOffset); }),
           //("Readings.Bridge.0.General.0.MeterOffset", value => this.MetersOffset = (double)value),
           //("Readings.Bridge.0.General.0.Speed", value => { this.speedSubject.OnNext((double)value); }),
         });

@@ -35,6 +35,9 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -121,6 +124,7 @@
     <Compile Include="..\MahloService\Settings\ServiceSettings.cs">
       <Link>Settings\ServiceSettings.cs</Link>
     </Compile>
+    <Compile Include="Dapper\ComputedAttribute.cs" />
     <Compile Include="Settings\ClientSettings.cs" />
     <Compile Include="Settings\IClientSettings.cs" />
     <Compile Include="Extensions.cs" />
@@ -225,17 +229,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App.ico" />
     <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dapper.Contrib">
-      <Version>1.50.5</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.AspNet.SignalR.Client">
       <Version>2.2.3</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
     </PackageReference>
     <PackageReference Include="PropertyChanged.Fody">
       <Version>2.5.6</Version>

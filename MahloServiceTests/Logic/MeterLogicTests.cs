@@ -109,15 +109,8 @@ namespace MahloServiceTests.Logic
 
       this.sewinQueue.Rolls.Returns(new BindingList<CarpetRoll>(carpetRolls));
 
-      this.sewinQueue
-        .TryGetRoll(Arg.Any<int>(), out CarpetRoll value)
-        .Returns(x =>
-        {
-          x[1] = carpetRolls[0];
-          return true;
-        });
-
       this.target = new MahloLogic(this.srcData, this.sewinQueue, this.appInfo, this.userAttentions, this.criticalStops, this.programState, this.testSchedulers);
+      this.target.CurrentRoll = this.sewinQueue.Rolls[0];
       Assert.True(this.userAttentions.VerifyRollSequence);
       Assert.NotNull(this.target.CurrentRoll);
       this.userAttentions.ClearAll();
@@ -242,14 +235,6 @@ namespace MahloServiceTests.Logic
     [Fact]
     public void MeterResetsAfterNewRollSelected()
     {
-      this.sewinQueue
-        .TryGetRoll(Arg.Any<int>(), out CarpetRoll value)
-        .Returns(x =>
-        {
-          x[1] = carpetRolls[1];
-          return true;
-        });
-
       this.carpetRolls[0].MalFeet = 500;
       srcData.SeamDetectedSubject.OnNext(true);
       srcData.FeetCounterSubject.OnNext(1);
@@ -311,10 +296,9 @@ namespace MahloServiceTests.Logic
     [Fact]
     public void NextRollSelectedWhenNewRollStarts()
     {
-      var oldRoll = this.target.CurrentRoll;
-      oldRoll.Id = 1;
+      Assert.Same(this.sewinQueue.Rolls[0], this.target.CurrentRoll);
       srcData.SeamDetectedSubject.OnNext(true);
-      Assert.Equal(2, target.CurrentRoll.Id);
+      Assert.Same(this.sewinQueue.Rolls[1], this.target.CurrentRoll);
     }
 
     [Fact]
@@ -353,14 +337,10 @@ namespace MahloServiceTests.Logic
       this.carpetRolls[4].StyleCode = "style3";
       for (int j = 0; j < 4; j++)
       {
-        this.sewinQueue.TryGetRoll(Arg.Any<int>(), out CarpetRoll outRoll)
-          .Returns(x => { x[1] = this.carpetRolls[j]; return true; });
         ProduceRoll();
         Assert.False(this.userAttentions.VerifyRollSequence);
       }
 
-      this.sewinQueue.TryGetRoll(Arg.Any<int>(), out CarpetRoll anotherRoll)
-          .Returns(x => { x[1] = this.carpetRolls[4]; return true; });
       ProduceRoll();
       Assert.True(this.userAttentions.VerifyRollSequence);
 

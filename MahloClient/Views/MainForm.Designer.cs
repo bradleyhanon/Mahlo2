@@ -126,6 +126,19 @@
       this.label39 = new System.Windows.Forms.Label();
       this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
       this.dataGridView1 = new System.Windows.Forms.DataGridView();
+      this.sewinQueueSrc = new System.Windows.Forms.BindingSource(this.components);
+      this.label4 = new System.Windows.Forms.Label();
+      this.label3 = new System.Windows.Forms.Label();
+      this.label2 = new System.Windows.Forms.Label();
+      this.label1 = new System.Windows.Forms.Label();
+      this.label5 = new System.Windows.Forms.Label();
+      this.statusBar1 = new MahloClient.Views.MyStatusBar();
+      this.pnlMessage = new System.Windows.Forms.StatusBarPanel();
+      this.pnlIndicator = new System.Windows.Forms.StatusBarPanel();
+      this.pnlUserAttention = new System.Windows.Forms.StatusBarPanel();
+      this.pnlAlarm = new System.Windows.Forms.StatusBarPanel();
+      this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
+      this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
       this.rollNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.styleCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colorCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -142,19 +155,6 @@
       this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.prsFeetDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.elongationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.sewinQueueSrc = new System.Windows.Forms.BindingSource(this.components);
-      this.label4 = new System.Windows.Forms.Label();
-      this.label3 = new System.Windows.Forms.Label();
-      this.label2 = new System.Windows.Forms.Label();
-      this.label1 = new System.Windows.Forms.Label();
-      this.label5 = new System.Windows.Forms.Label();
-      this.statusBar1 = new MahloClient.Views.MyStatusBar();
-      this.pnlMessage = new System.Windows.Forms.StatusBarPanel();
-      this.pnlIndicator = new System.Windows.Forms.StatusBarPanel();
-      this.pnlUserAttention = new System.Windows.Forms.StatusBarPanel();
-      this.pnlAlarm = new System.Windows.Forms.StatusBarPanel();
-      this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
-      this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.cutRollSrc)).BeginInit();
       this.grpMahlo.SuspendLayout();
@@ -1194,6 +1194,105 @@
       this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
       this.dataGridView1.SelectionChanged += new System.EventHandler(this.DataGridView1_SelectionChanged);
       // 
+      // sewinQueueSrc
+      // 
+      this.sewinQueueSrc.DataSource = typeof(MahloService.Models.CarpetRoll);
+      // 
+      // label4
+      // 
+      this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.label4.Location = new System.Drawing.Point(692, 0);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(124, 23);
+      this.label4.TabIndex = 20;
+      this.label4.Text = "Pattern Repeat";
+      this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
+      // label3
+      // 
+      this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.label3.Location = new System.Drawing.Point(494, 0);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(192, 23);
+      this.label3.TabIndex = 19;
+      this.label3.Text = "Bow and Skew";
+      this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
+      // label2
+      // 
+      this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.label2.Location = new System.Drawing.Point(431, 0);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(57, 23);
+      this.label2.TabIndex = 18;
+      this.label2.Text = "Mahlo2";
+      this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
+      // label1
+      // 
+      this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.label1.Location = new System.Drawing.Point(3, 0);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(422, 23);
+      this.label1.TabIndex = 17;
+      this.label1.Text = "Sew-in Queue";
+      this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
+      // label5
+      // 
+      this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.label5.Location = new System.Drawing.Point(862, 12);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(333, 23);
+      this.label5.TabIndex = 21;
+      this.label5.Text = "Cut Rolls";
+      this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
+      // statusBar1
+      // 
+      this.statusBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
+      this.statusBar1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.statusBar1.Location = new System.Drawing.Point(0, 517);
+      this.statusBar1.Name = "statusBar1";
+      this.statusBar1.Size = new System.Drawing.Size(1242, 24);
+      this.statusBar1.TabIndex = 22;
+      // 
+      // pnlMessage
+      // 
+      this.pnlMessage.Name = "pnlMessage";
+      // 
+      // pnlIndicator
+      // 
+      this.pnlIndicator.Name = "pnlIndicator";
+      // 
+      // pnlUserAttention
+      // 
+      this.pnlUserAttention.Name = "pnlUserAttention";
+      // 
+      // pnlAlarm
+      // 
+      this.pnlAlarm.Name = "pnlAlarm";
+      // 
+      // pnlAlertMessage
+      // 
+      this.pnlAlertMessage.Name = "pnlAlertMessage";
+      // 
+      // pnlQueueMessage
+      // 
+      this.pnlQueueMessage.Name = "pnlQueueMessage";
+      // 
       // rollNoDataGridViewTextBoxColumn
       // 
       this.rollNoDataGridViewTextBoxColumn.DataPropertyName = "RollNo";
@@ -1306,6 +1405,8 @@
       // 
       this.bowDataGridViewTextBoxColumn.DataPropertyName = "Bow";
       dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle15.Format = "N2";
+      dataGridViewCellStyle15.NullValue = null;
       this.bowDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle15;
       this.bowDataGridViewTextBoxColumn.HeaderText = "Bow";
       this.bowDataGridViewTextBoxColumn.Name = "bowDataGridViewTextBoxColumn";
@@ -1317,6 +1418,8 @@
       // 
       this.skewDataGridViewTextBoxColumn.DataPropertyName = "Skew";
       dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle16.Format = "N2";
+      dataGridViewCellStyle16.NullValue = null;
       this.skewDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle16;
       this.skewDataGridViewTextBoxColumn.HeaderText = "Skew";
       this.skewDataGridViewTextBoxColumn.Name = "skewDataGridViewTextBoxColumn";
@@ -1357,105 +1460,6 @@
       this.elongationDataGridViewTextBoxColumn.ReadOnly = true;
       this.elongationDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.elongationDataGridViewTextBoxColumn.Width = 67;
-      // 
-      // sewinQueueSrc
-      // 
-      this.sewinQueueSrc.DataSource = typeof(MahloService.Models.CarpetRoll);
-      // 
-      // label4
-      // 
-      this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.label4.Location = new System.Drawing.Point(692, 0);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(124, 23);
-      this.label4.TabIndex = 20;
-      this.label4.Text = "Pattern Repeat";
-      this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-      // 
-      // label3
-      // 
-      this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.label3.Location = new System.Drawing.Point(494, 0);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(192, 23);
-      this.label3.TabIndex = 19;
-      this.label3.Text = "Bow and Skew";
-      this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-      // 
-      // label2
-      // 
-      this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.label2.Location = new System.Drawing.Point(431, 0);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(57, 23);
-      this.label2.TabIndex = 18;
-      this.label2.Text = "Mahlo2";
-      this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-      // 
-      // label1
-      // 
-      this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.label1.Location = new System.Drawing.Point(3, 0);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(422, 23);
-      this.label1.TabIndex = 17;
-      this.label1.Text = "Sew-in Queue";
-      this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-      // 
-      // label5
-      // 
-      this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.label5.Location = new System.Drawing.Point(862, 12);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(333, 23);
-      this.label5.TabIndex = 21;
-      this.label5.Text = "Cut Rolls";
-      this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-      // 
-      // statusBar1
-      // 
-      this.statusBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.statusBar1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.statusBar1.Location = new System.Drawing.Point(0, 517);
-      this.statusBar1.Name = "statusBar1";
-      this.statusBar1.Size = new System.Drawing.Size(1242, 24);
-      this.statusBar1.TabIndex = 22;
-      // 
-      // pnlMessage
-      // 
-      this.pnlMessage.Name = "pnlMessage";
-      // 
-      // pnlIndicator
-      // 
-      this.pnlIndicator.Name = "pnlIndicator";
-      // 
-      // pnlUserAttention
-      // 
-      this.pnlUserAttention.Name = "pnlUserAttention";
-      // 
-      // pnlAlarm
-      // 
-      this.pnlAlarm.Name = "pnlAlarm";
-      // 
-      // pnlAlertMessage
-      // 
-      this.pnlAlertMessage.Name = "pnlAlertMessage";
-      // 
-      // pnlQueueMessage
-      // 
-      this.pnlQueueMessage.Name = "pnlQueueMessage";
       // 
       // MainForm
       // 
@@ -1600,6 +1604,13 @@
     private System.Windows.Forms.Label label37;
     private System.Windows.Forms.Label label38;
     private System.Windows.Forms.Label label39;
+    private MyStatusBar statusBar1;
+    private System.Windows.Forms.StatusBarPanel pnlMessage;
+    private System.Windows.Forms.StatusBarPanel pnlIndicator;
+    private System.Windows.Forms.StatusBarPanel pnlUserAttention;
+    private System.Windows.Forms.StatusBarPanel pnlAlarm;
+    private System.Windows.Forms.StatusBarPanel pnlAlertMessage;
+    private System.Windows.Forms.StatusBarPanel pnlQueueMessage;
     private System.Windows.Forms.DataGridViewTextBoxColumn rollNoDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn styleCodeDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn colorCodeDataGridViewTextBoxColumn;
@@ -1616,12 +1627,5 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
     private System.Windows.Forms.DataGridViewTextBoxColumn prsFeetDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn elongationDataGridViewTextBoxColumn;
-    private MyStatusBar statusBar1;
-    private System.Windows.Forms.StatusBarPanel pnlMessage;
-    private System.Windows.Forms.StatusBarPanel pnlIndicator;
-    private System.Windows.Forms.StatusBarPanel pnlUserAttention;
-    private System.Windows.Forms.StatusBarPanel pnlAlarm;
-    private System.Windows.Forms.StatusBarPanel pnlAlertMessage;
-    private System.Windows.Forms.StatusBarPanel pnlQueueMessage;
   }
 }

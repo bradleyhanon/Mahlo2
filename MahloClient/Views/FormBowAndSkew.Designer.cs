@@ -16,10 +16,10 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBowAndSkew));
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBowAndSkew));
       this.grpNextRoll = new System.Windows.Forms.GroupBox();
       this.lblNextRollType = new System.Windows.Forms.Label();
       this.srcLogic = new System.Windows.Forms.BindingSource(this.components);
@@ -77,6 +77,17 @@
       this.label21 = new System.Windows.Forms.Label();
       this.lblRecipeName = new System.Windows.Forms.Label();
       this.dataGridView1 = new MahloClient.Views.MyDataGridView();
+      this.rollNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.orderNoColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.rollLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.styleCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.styleNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colorCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colorNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.backingCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.rollWidthStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colDefaultRecipe = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.patternRepeatLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.srcGrid = new System.Windows.Forms.BindingSource(this.components);
       this.btnViewCoaterSchedule = new System.Windows.Forms.Button();
       this.icons32x32 = new System.Windows.Forms.ImageList(this.components);
@@ -93,17 +104,6 @@
       this.pnlAlarm = new System.Windows.Forms.StatusBarPanel();
       this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
       this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
-      this.rollNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.orderNoColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.rollLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.styleCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.styleNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.colorCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.colorNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.backingCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.rollWidthStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.colDefaultRecipe = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.patternRepeatLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.grpNextRoll.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.srcLogic)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcNextRoll)).BeginInit();
@@ -817,6 +817,114 @@
       this.dataGridView1.TabIndex = 6;
       this.dataGridView1.SelectionChanged += new System.EventHandler(this.DataGridView1_SelectionChanged);
       // 
+      // rollNoDataGridViewTextBoxColumn
+      // 
+      this.rollNoDataGridViewTextBoxColumn.DataPropertyName = "RollNo";
+      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.rollNoDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+      this.rollNoDataGridViewTextBoxColumn.HeaderText = "Greige Roll";
+      this.rollNoDataGridViewTextBoxColumn.Name = "rollNoDataGridViewTextBoxColumn";
+      this.rollNoDataGridViewTextBoxColumn.ReadOnly = true;
+      this.rollNoDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+      this.rollNoDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.rollNoDataGridViewTextBoxColumn.Width = 70;
+      // 
+      // orderNoColumn
+      // 
+      this.orderNoColumn.DataPropertyName = "OrderNo";
+      this.orderNoColumn.HeaderText = "Order #";
+      this.orderNoColumn.Name = "orderNoColumn";
+      this.orderNoColumn.ReadOnly = true;
+      this.orderNoColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.orderNoColumn.Width = 70;
+      // 
+      // rollLengthDataGridViewTextBoxColumn
+      // 
+      this.rollLengthDataGridViewTextBoxColumn.DataPropertyName = "RollLength";
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.rollLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+      this.rollLengthDataGridViewTextBoxColumn.HeaderText = "Length";
+      this.rollLengthDataGridViewTextBoxColumn.Name = "rollLengthDataGridViewTextBoxColumn";
+      this.rollLengthDataGridViewTextBoxColumn.ReadOnly = true;
+      this.rollLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.rollLengthDataGridViewTextBoxColumn.Width = 65;
+      // 
+      // styleCodeDataGridViewTextBoxColumn
+      // 
+      this.styleCodeDataGridViewTextBoxColumn.DataPropertyName = "StyleCode";
+      this.styleCodeDataGridViewTextBoxColumn.HeaderText = "Style";
+      this.styleCodeDataGridViewTextBoxColumn.Name = "styleCodeDataGridViewTextBoxColumn";
+      this.styleCodeDataGridViewTextBoxColumn.ReadOnly = true;
+      this.styleCodeDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.styleCodeDataGridViewTextBoxColumn.Width = 60;
+      // 
+      // styleNameDataGridViewTextBoxColumn
+      // 
+      this.styleNameDataGridViewTextBoxColumn.DataPropertyName = "StyleName";
+      this.styleNameDataGridViewTextBoxColumn.HeaderText = "Description";
+      this.styleNameDataGridViewTextBoxColumn.Name = "styleNameDataGridViewTextBoxColumn";
+      this.styleNameDataGridViewTextBoxColumn.ReadOnly = true;
+      this.styleNameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.styleNameDataGridViewTextBoxColumn.Width = 125;
+      // 
+      // colorCodeDataGridViewTextBoxColumn
+      // 
+      this.colorCodeDataGridViewTextBoxColumn.DataPropertyName = "ColorCode";
+      this.colorCodeDataGridViewTextBoxColumn.HeaderText = "Color";
+      this.colorCodeDataGridViewTextBoxColumn.Name = "colorCodeDataGridViewTextBoxColumn";
+      this.colorCodeDataGridViewTextBoxColumn.ReadOnly = true;
+      this.colorCodeDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colorCodeDataGridViewTextBoxColumn.Width = 60;
+      // 
+      // colorNameDataGridViewTextBoxColumn
+      // 
+      this.colorNameDataGridViewTextBoxColumn.DataPropertyName = "ColorName";
+      this.colorNameDataGridViewTextBoxColumn.HeaderText = "Description";
+      this.colorNameDataGridViewTextBoxColumn.Name = "colorNameDataGridViewTextBoxColumn";
+      this.colorNameDataGridViewTextBoxColumn.ReadOnly = true;
+      this.colorNameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colorNameDataGridViewTextBoxColumn.Width = 125;
+      // 
+      // backingCodeDataGridViewTextBoxColumn
+      // 
+      this.backingCodeDataGridViewTextBoxColumn.DataPropertyName = "BackingCode";
+      this.backingCodeDataGridViewTextBoxColumn.HeaderText = "Backing";
+      this.backingCodeDataGridViewTextBoxColumn.Name = "backingCodeDataGridViewTextBoxColumn";
+      this.backingCodeDataGridViewTextBoxColumn.ReadOnly = true;
+      this.backingCodeDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.backingCodeDataGridViewTextBoxColumn.Width = 50;
+      // 
+      // rollWidthStrDataGridViewTextBoxColumn
+      // 
+      this.rollWidthStrDataGridViewTextBoxColumn.DataPropertyName = "RollWidthStr";
+      this.rollWidthStrDataGridViewTextBoxColumn.HeaderText = "Width";
+      this.rollWidthStrDataGridViewTextBoxColumn.Name = "rollWidthStrDataGridViewTextBoxColumn";
+      this.rollWidthStrDataGridViewTextBoxColumn.ReadOnly = true;
+      this.rollWidthStrDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.rollWidthStrDataGridViewTextBoxColumn.Width = 55;
+      // 
+      // colDefaultRecipe
+      // 
+      this.colDefaultRecipe.DataPropertyName = "DefaultRecipe";
+      this.colDefaultRecipe.HeaderText = "Default Recipe";
+      this.colDefaultRecipe.Name = "colDefaultRecipe";
+      this.colDefaultRecipe.ReadOnly = true;
+      this.colDefaultRecipe.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+      this.colDefaultRecipe.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colDefaultRecipe.Width = 120;
+      // 
+      // patternRepeatLengthDataGridViewTextBoxColumn
+      // 
+      this.patternRepeatLengthDataGridViewTextBoxColumn.DataPropertyName = "PatternRepeatLength";
+      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle3.Format = "N3";
+      dataGridViewCellStyle3.NullValue = null;
+      this.patternRepeatLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
+      this.patternRepeatLengthDataGridViewTextBoxColumn.HeaderText = "Pattern Repeat";
+      this.patternRepeatLengthDataGridViewTextBoxColumn.Name = "patternRepeatLengthDataGridViewTextBoxColumn";
+      this.patternRepeatLengthDataGridViewTextBoxColumn.ReadOnly = true;
+      this.patternRepeatLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      // 
       // srcGrid
       // 
       this.srcGrid.DataSource = typeof(MahloService.Models.CarpetRoll);
@@ -991,114 +1099,6 @@
       // 
       this.pnlQueueMessage.Name = "pnlQueueMessage";
       // 
-      // rollNoDataGridViewTextBoxColumn
-      // 
-      this.rollNoDataGridViewTextBoxColumn.DataPropertyName = "RollNo";
-      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.rollNoDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
-      this.rollNoDataGridViewTextBoxColumn.HeaderText = "Greige Roll";
-      this.rollNoDataGridViewTextBoxColumn.Name = "rollNoDataGridViewTextBoxColumn";
-      this.rollNoDataGridViewTextBoxColumn.ReadOnly = true;
-      this.rollNoDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-      this.rollNoDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.rollNoDataGridViewTextBoxColumn.Width = 70;
-      // 
-      // orderNoColumn
-      // 
-      this.orderNoColumn.DataPropertyName = "OrderNo";
-      this.orderNoColumn.HeaderText = "Order #";
-      this.orderNoColumn.Name = "orderNoColumn";
-      this.orderNoColumn.ReadOnly = true;
-      this.orderNoColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.orderNoColumn.Width = 70;
-      // 
-      // rollLengthDataGridViewTextBoxColumn
-      // 
-      this.rollLengthDataGridViewTextBoxColumn.DataPropertyName = "RollLength";
-      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.rollLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
-      this.rollLengthDataGridViewTextBoxColumn.HeaderText = "Length";
-      this.rollLengthDataGridViewTextBoxColumn.Name = "rollLengthDataGridViewTextBoxColumn";
-      this.rollLengthDataGridViewTextBoxColumn.ReadOnly = true;
-      this.rollLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.rollLengthDataGridViewTextBoxColumn.Width = 65;
-      // 
-      // styleCodeDataGridViewTextBoxColumn
-      // 
-      this.styleCodeDataGridViewTextBoxColumn.DataPropertyName = "StyleCode";
-      this.styleCodeDataGridViewTextBoxColumn.HeaderText = "Style";
-      this.styleCodeDataGridViewTextBoxColumn.Name = "styleCodeDataGridViewTextBoxColumn";
-      this.styleCodeDataGridViewTextBoxColumn.ReadOnly = true;
-      this.styleCodeDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.styleCodeDataGridViewTextBoxColumn.Width = 60;
-      // 
-      // styleNameDataGridViewTextBoxColumn
-      // 
-      this.styleNameDataGridViewTextBoxColumn.DataPropertyName = "StyleName";
-      this.styleNameDataGridViewTextBoxColumn.HeaderText = "Description";
-      this.styleNameDataGridViewTextBoxColumn.Name = "styleNameDataGridViewTextBoxColumn";
-      this.styleNameDataGridViewTextBoxColumn.ReadOnly = true;
-      this.styleNameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.styleNameDataGridViewTextBoxColumn.Width = 125;
-      // 
-      // colorCodeDataGridViewTextBoxColumn
-      // 
-      this.colorCodeDataGridViewTextBoxColumn.DataPropertyName = "ColorCode";
-      this.colorCodeDataGridViewTextBoxColumn.HeaderText = "Color";
-      this.colorCodeDataGridViewTextBoxColumn.Name = "colorCodeDataGridViewTextBoxColumn";
-      this.colorCodeDataGridViewTextBoxColumn.ReadOnly = true;
-      this.colorCodeDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.colorCodeDataGridViewTextBoxColumn.Width = 60;
-      // 
-      // colorNameDataGridViewTextBoxColumn
-      // 
-      this.colorNameDataGridViewTextBoxColumn.DataPropertyName = "ColorName";
-      this.colorNameDataGridViewTextBoxColumn.HeaderText = "Description";
-      this.colorNameDataGridViewTextBoxColumn.Name = "colorNameDataGridViewTextBoxColumn";
-      this.colorNameDataGridViewTextBoxColumn.ReadOnly = true;
-      this.colorNameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.colorNameDataGridViewTextBoxColumn.Width = 125;
-      // 
-      // backingCodeDataGridViewTextBoxColumn
-      // 
-      this.backingCodeDataGridViewTextBoxColumn.DataPropertyName = "BackingCode";
-      this.backingCodeDataGridViewTextBoxColumn.HeaderText = "Backing";
-      this.backingCodeDataGridViewTextBoxColumn.Name = "backingCodeDataGridViewTextBoxColumn";
-      this.backingCodeDataGridViewTextBoxColumn.ReadOnly = true;
-      this.backingCodeDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.backingCodeDataGridViewTextBoxColumn.Width = 50;
-      // 
-      // rollWidthStrDataGridViewTextBoxColumn
-      // 
-      this.rollWidthStrDataGridViewTextBoxColumn.DataPropertyName = "RollWidthStr";
-      this.rollWidthStrDataGridViewTextBoxColumn.HeaderText = "Width";
-      this.rollWidthStrDataGridViewTextBoxColumn.Name = "rollWidthStrDataGridViewTextBoxColumn";
-      this.rollWidthStrDataGridViewTextBoxColumn.ReadOnly = true;
-      this.rollWidthStrDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.rollWidthStrDataGridViewTextBoxColumn.Width = 55;
-      // 
-      // colDefaultRecipe
-      // 
-      this.colDefaultRecipe.DataPropertyName = "DefaultRecipe";
-      this.colDefaultRecipe.HeaderText = "Default Recipe";
-      this.colDefaultRecipe.Name = "colDefaultRecipe";
-      this.colDefaultRecipe.ReadOnly = true;
-      this.colDefaultRecipe.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-      this.colDefaultRecipe.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.colDefaultRecipe.Width = 120;
-      // 
-      // patternRepeatLengthDataGridViewTextBoxColumn
-      // 
-      this.patternRepeatLengthDataGridViewTextBoxColumn.DataPropertyName = "PatternRepeatLength";
-      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      dataGridViewCellStyle3.Format = "N3";
-      dataGridViewCellStyle3.NullValue = null;
-      this.patternRepeatLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
-      this.patternRepeatLengthDataGridViewTextBoxColumn.HeaderText = "Pattern Repeat";
-      this.patternRepeatLengthDataGridViewTextBoxColumn.Name = "patternRepeatLengthDataGridViewTextBoxColumn";
-      this.patternRepeatLengthDataGridViewTextBoxColumn.ReadOnly = true;
-      this.patternRepeatLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      // 
       // FormBowAndSkew
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1110,6 +1110,7 @@
       this.Controls.Add(this.grpNextRoll);
       this.Controls.Add(this.buttonPanel);
       this.Controls.Add(this.statusBar1);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "FormBowAndSkew";
       this.Text = "Bow and Skew Mapper";
       this.grpNextRoll.ResumeLayout(false);

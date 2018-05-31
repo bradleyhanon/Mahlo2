@@ -34,24 +34,24 @@ namespace MahloClientTests.Logic
       var newRolls = this.GenerateRolls(101, 3, 144);
       this.target.UpdateSewinQueue(newRolls);
 
-      var expect = this.GenerateRolls(100, 1, 0).Concat(this.GenerateRolls(101, 3, 144));
+      var expect = this.GenerateRolls(101, 3, 144);
       Assert.True(expect.SequenceEqual(this.target.Rolls, this));
     }
 
-    [Fact]
-    public void RollsAreReorderedToMatchNewRolls()
-    {
-      var newRolls =
-        GenerateRolls(101, 1)
-        .Concat(GenerateRolls(103, 1))
-        .Concat(GenerateRolls(102, 1))
-        .Concat(GenerateRolls(104, 2));
+    //[Fact]
+    //public void RollsAreReorderedToMatchNewRolls()
+    //{
+    //  var newRolls =
+    //    GenerateRolls(101, 1)
+    //    .Concat(GenerateRolls(103, 1))
+    //    .Concat(GenerateRolls(102, 1))
+    //    .Concat(GenerateRolls(104, 2));
 
-      this.target.UpdateSewinQueue(newRolls);
+    //  this.target.UpdateSewinQueue(newRolls);
 
-      var expect = GenerateRolls(100,1).Concat(newRolls);
-      Assert.True(expect.SequenceEqual(this.target.Rolls, this));
-    }
+    //  var expect = GenerateRolls(100,1).Concat(newRolls);
+    //  Assert.True(expect.SequenceEqual(this.target.Rolls, this));
+    //}
 
     [Fact]
     public void MovingExtremesWorks()

@@ -103,7 +103,7 @@ namespace MahloService.Ipc
       if (meterLogic.IsChanged)
       {
         string name = typeof(Model).Name;
-        log.Debug($"UpdateMeterLogic<{interfaceName}>");
+        //log.Debug($"UpdateMeterLogic<{interfaceName}>");
         meterLogic.IsChanged = false;
         this.Clients.All.UpdateMeterLogic(interfaceName, meterLogic);
       }

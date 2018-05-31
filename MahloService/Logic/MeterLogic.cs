@@ -178,8 +178,8 @@ namespace MahloService.Logic
       this.rollCount = state.Get<int?>(nameof(rollCount)) ?? 0;
       this.styleCount = state.Get<int?>(nameof(styleCount)) ?? this.styleCount;
       this.CurrentRoll = state?.Get<CarpetRoll>(nameof(CurrentRoll)) ?? new CarpetRoll();
-      this.sewinQueue.TryGetRoll(this.CurrentRoll.Id, out CarpetRoll roll);
-      this.CurrentRoll = roll;
+      //this.sewinQueue.TryGetRoll(this.CurrentRoll.Id, out CarpetRoll roll);
+      //this.CurrentRoll = roll;
 
       // On startup, roll sequence should be verified
       this.UserAttentions.VerifyRollSequence = true;
@@ -387,7 +387,6 @@ namespace MahloService.Logic
         //set seam detect indicator on immediately
         this.srcData.SetMiscellaneousIndicator(true);
 
-        //if (oCurrentRoll.PositionInQueue < oSewinQueue.Table.DefaultView.Count - 1)
         int index = this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
         if (index < this.sewinQueue.Rolls.Count - 1)
         {
@@ -462,57 +461,6 @@ namespace MahloService.Logic
         //WriteToErrorLog(ex.TargetSite.ToString(), ex.Message);
       }
     }
-
-    //private void SeamDetectedx(bool isSeamDetected)
-    //{
-    //  if (!isSeamDetected)
-    //  {
-    //    return;
-    //  }
-
-    //  this.srcData.ResetSeamDetector();
-
-    //  if (this.UserAttentions.IsSystemDisabled)
-    //  {
-    //    // Do not respond to seam detection if system is disabled
-    //    return;
-    //  }
-
-    //  if (this.Feet < this.appInfo.SeamDetectableThreshold)
-    //  {
-    //    // Do not respond to seam if footage is below threshold, could be detecting same seam
-    //    return;
-    //  }
-
-
-
-    //  this.IsSeamDetected = true;
-    //  this.UserAttentions.IsRollTooShort |= this.Feet < this.CurrentRoll.RollLength * 0.9;
-    //  this.rollFinishedSubject.OnNext(this.CurrentRoll);
-
-    //  // Start new roll
-    //  this.rollCount++;
-    //  this.sewinQueue.TryGetRoll(this.CurrentRoll.Id + 1, out CarpetRoll nextRoll);
-
-    //  if (this.CurrentRoll.StyleCode != nextRoll.StyleCode)
-    //  {
-    //    styleCount++;
-    //  }
-
-    //  if (this.rollCount >= this.appInfo.CheckAfterHowManyRolls || 
-    //    this.styleCount >= this.appInfo.CheckAfterHowManyStyles)
-    //  {
-    //    this.UserAttentions.VerifyRollSequence = true;
-    //  }
-
-    //  this.CurrentRoll = nextRoll;
-
-    //  this.Feet = 0;
-    //  this.IsMapValid = this.GetIsMappingValid();
-    //  this.srcData.ResetMeterOffset();
-
-    //  this.rollStartedSubject.OnNext(this.CurrentRoll);
-    //}
 
     public void RefreshStatusDisplay()
     {

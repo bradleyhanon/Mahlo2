@@ -9,7 +9,7 @@ namespace MahloService.Models
   public class CoaterScheduleRoll
   {
     public int SeqNo { get; set; }
-    public int SchedNo { get; set; }
+    public string SchedNo { get; set; }
     public string Style { get; set; }
     public string Color { get; set; }
     public string Backing { get; set; }

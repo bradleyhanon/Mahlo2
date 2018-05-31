@@ -28,8 +28,8 @@ namespace MahloService.Logic
       : base(dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
     {
       this.dataSrc = dataSrc;
-      dataSrc.BowChanged.Subscribe(value => this.CurrentRoll.Bow = value);
-      dataSrc.SkewChanged.Subscribe(value => this.CurrentRoll.Skew = value);
+      dataSrc.BowChanged.Subscribe(value => this.CurrentRoll.Bow = value * this.MeasuredWidth);
+      dataSrc.SkewChanged.Subscribe(value => this.CurrentRoll.Skew = value * this.MeasuredWidth);
     }
 
     public override int MeasuredLength

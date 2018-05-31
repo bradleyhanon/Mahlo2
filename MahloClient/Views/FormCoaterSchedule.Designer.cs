@@ -48,7 +48,6 @@
       this.btnClose = new System.Windows.Forms.Button();
       this.btnWhichOrders = new System.Windows.Forms.Button();
       this.dbgCoaterSchedule = new System.Windows.Forms.DataGridView();
-      this.srcCoaterSchedule = new System.Windows.Forms.BindingSource(this.components);
       this.dbgBackingSummary = new System.Windows.Forms.DataGridView();
       this.seqNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.schedNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -67,10 +66,11 @@
       this.rushDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.commentDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.comment2DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.srcCoaterSchedule = new System.Windows.Forms.BindingSource(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.pnlMessage)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.dbgCoaterSchedule)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.srcCoaterSchedule)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.dbgBackingSummary)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.srcCoaterSchedule)).BeginInit();
       this.SuspendLayout();
       // 
       // statusBar1
@@ -80,14 +80,14 @@
       this.statusBar1.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
             this.pnlMessage});
       this.statusBar1.ShowPanels = true;
-      this.statusBar1.Size = new System.Drawing.Size(876, 27);
+      this.statusBar1.Size = new System.Drawing.Size(1034, 27);
       this.statusBar1.TabIndex = 7;
       // 
       // pnlMessage
       // 
       this.pnlMessage.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Spring;
       this.pnlMessage.Name = "pnlMessage";
-      this.pnlMessage.Width = 859;
+      this.pnlMessage.Width = 1017;
       // 
       // btnToggleView
       // 
@@ -108,7 +108,7 @@
       this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnClose.BackColor = System.Drawing.SystemColors.ControlLight;
       this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnClose.Location = new System.Drawing.Point(744, 384);
+      this.btnClose.Location = new System.Drawing.Point(902, 384);
       this.btnClose.Name = "btnClose";
       this.btnClose.Size = new System.Drawing.Size(116, 36);
       this.btnClose.TabIndex = 6;
@@ -133,12 +133,12 @@
       // 
       this.dbgCoaterSchedule.AllowUserToAddRows = false;
       this.dbgCoaterSchedule.AllowUserToDeleteRows = false;
-      this.dbgCoaterSchedule.AllowUserToResizeColumns = false;
       this.dbgCoaterSchedule.AllowUserToResizeRows = false;
       this.dbgCoaterSchedule.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.dbgCoaterSchedule.AutoGenerateColumns = false;
+      this.dbgCoaterSchedule.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
       this.dbgCoaterSchedule.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.dbgCoaterSchedule.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.seqNoDataGridViewTextBoxColumn,
@@ -163,12 +163,8 @@
       this.dbgCoaterSchedule.Name = "dbgCoaterSchedule";
       this.dbgCoaterSchedule.ReadOnly = true;
       this.dbgCoaterSchedule.RowHeadersVisible = false;
-      this.dbgCoaterSchedule.Size = new System.Drawing.Size(860, 368);
+      this.dbgCoaterSchedule.Size = new System.Drawing.Size(1018, 368);
       this.dbgCoaterSchedule.TabIndex = 8;
-      // 
-      // srcCoaterSchedule
-      // 
-      this.srcCoaterSchedule.DataSource = typeof(MahloService.Models.CoaterScheduleRoll);
       // 
       // dbgBackingSummary
       // 
@@ -179,20 +175,22 @@
       this.dbgBackingSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.dbgBackingSummary.Location = new System.Drawing.Point(7, 10);
       this.dbgBackingSummary.Name = "dbgBackingSummary";
-      this.dbgBackingSummary.Size = new System.Drawing.Size(304, 156);
+      this.dbgBackingSummary.RowHeadersVisible = false;
+      this.dbgBackingSummary.Size = new System.Drawing.Size(220, 156);
       this.dbgBackingSummary.TabIndex = 9;
+      this.dbgBackingSummary.Visible = false;
       // 
       // seqNoDataGridViewTextBoxColumn
       // 
       this.seqNoDataGridViewTextBoxColumn.DataPropertyName = "SeqNo";
-      dataGridViewCellStyle1.Format = "#";
+      dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
       dataGridViewCellStyle1.NullValue = null;
       this.seqNoDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
       this.seqNoDataGridViewTextBoxColumn.HeaderText = "Seq #";
       this.seqNoDataGridViewTextBoxColumn.Name = "seqNoDataGridViewTextBoxColumn";
       this.seqNoDataGridViewTextBoxColumn.ReadOnly = true;
       this.seqNoDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.seqNoDataGridViewTextBoxColumn.Width = 30;
+      this.seqNoDataGridViewTextBoxColumn.Width = 42;
       // 
       // schedNoDataGridViewTextBoxColumn
       // 
@@ -201,7 +199,7 @@
       this.schedNoDataGridViewTextBoxColumn.Name = "schedNoDataGridViewTextBoxColumn";
       this.schedNoDataGridViewTextBoxColumn.ReadOnly = true;
       this.schedNoDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.schedNoDataGridViewTextBoxColumn.Width = 45;
+      this.schedNoDataGridViewTextBoxColumn.Width = 54;
       // 
       // styleDataGridViewTextBoxColumn
       // 
@@ -212,7 +210,7 @@
       this.styleDataGridViewTextBoxColumn.Name = "styleDataGridViewTextBoxColumn";
       this.styleDataGridViewTextBoxColumn.ReadOnly = true;
       this.styleDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.styleDataGridViewTextBoxColumn.Width = 45;
+      this.styleDataGridViewTextBoxColumn.Width = 36;
       // 
       // colorDataGridViewTextBoxColumn
       // 
@@ -221,7 +219,7 @@
       this.colorDataGridViewTextBoxColumn.Name = "colorDataGridViewTextBoxColumn";
       this.colorDataGridViewTextBoxColumn.ReadOnly = true;
       this.colorDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.colorDataGridViewTextBoxColumn.Width = 45;
+      this.colorDataGridViewTextBoxColumn.Width = 37;
       // 
       // backingDataGridViewTextBoxColumn
       // 
@@ -232,7 +230,7 @@
       this.backingDataGridViewTextBoxColumn.Name = "backingDataGridViewTextBoxColumn";
       this.backingDataGridViewTextBoxColumn.ReadOnly = true;
       this.backingDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.backingDataGridViewTextBoxColumn.Width = 36;
+      this.backingDataGridViewTextBoxColumn.Width = 52;
       // 
       // cutLengthDataGridViewTextBoxColumn
       // 
@@ -243,7 +241,7 @@
       this.cutLengthDataGridViewTextBoxColumn.Name = "cutLengthDataGridViewTextBoxColumn";
       this.cutLengthDataGridViewTextBoxColumn.ReadOnly = true;
       this.cutLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.cutLengthDataGridViewTextBoxColumn.Width = 50;
+      this.cutLengthDataGridViewTextBoxColumn.Width = 65;
       // 
       // faceWtDataGridViewTextBoxColumn
       // 
@@ -254,7 +252,7 @@
       this.faceWtDataGridViewTextBoxColumn.Name = "faceWtDataGridViewTextBoxColumn";
       this.faceWtDataGridViewTextBoxColumn.ReadOnly = true;
       this.faceWtDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.faceWtDataGridViewTextBoxColumn.Width = 50;
+      this.faceWtDataGridViewTextBoxColumn.Width = 54;
       // 
       // promisedDataGridViewTextBoxColumn
       // 
@@ -267,7 +265,7 @@
       this.promisedDataGridViewTextBoxColumn.Name = "promisedDataGridViewTextBoxColumn";
       this.promisedDataGridViewTextBoxColumn.ReadOnly = true;
       this.promisedDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.promisedDataGridViewTextBoxColumn.Width = 50;
+      this.promisedDataGridViewTextBoxColumn.Width = 56;
       // 
       // processDataGridViewTextBoxColumn
       // 
@@ -278,7 +276,7 @@
       this.processDataGridViewTextBoxColumn.Name = "processDataGridViewTextBoxColumn";
       this.processDataGridViewTextBoxColumn.ReadOnly = true;
       this.processDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.processDataGridViewTextBoxColumn.Width = 45;
+      this.processDataGridViewTextBoxColumn.Width = 51;
       // 
       // rollsDataGridViewTextBoxColumn
       // 
@@ -289,7 +287,7 @@
       this.rollsDataGridViewTextBoxColumn.Name = "rollsDataGridViewTextBoxColumn";
       this.rollsDataGridViewTextBoxColumn.ReadOnly = true;
       this.rollsDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.rollsDataGridViewTextBoxColumn.Width = 35;
+      this.rollsDataGridViewTextBoxColumn.Width = 36;
       // 
       // feetDataGridViewTextBoxColumn
       // 
@@ -301,7 +299,7 @@
       this.feetDataGridViewTextBoxColumn.Name = "feetDataGridViewTextBoxColumn";
       this.feetDataGridViewTextBoxColumn.ReadOnly = true;
       this.feetDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.feetDataGridViewTextBoxColumn.Width = 35;
+      this.feetDataGridViewTextBoxColumn.Width = 34;
       // 
       // minutesDataGridViewTextBoxColumn
       // 
@@ -313,7 +311,7 @@
       this.minutesDataGridViewTextBoxColumn.Name = "minutesDataGridViewTextBoxColumn";
       this.minutesDataGridViewTextBoxColumn.ReadOnly = true;
       this.minutesDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.minutesDataGridViewTextBoxColumn.Width = 35;
+      this.minutesDataGridViewTextBoxColumn.Width = 50;
       // 
       // origSeqDataGridViewTextBoxColumn
       // 
@@ -324,7 +322,7 @@
       this.origSeqDataGridViewTextBoxColumn.Name = "origSeqDataGridViewTextBoxColumn";
       this.origSeqDataGridViewTextBoxColumn.ReadOnly = true;
       this.origSeqDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.origSeqDataGridViewTextBoxColumn.Width = 40;
+      this.origSeqDataGridViewTextBoxColumn.Width = 54;
       // 
       // sewninDataGridViewTextBoxColumn
       // 
@@ -335,7 +333,7 @@
       this.sewninDataGridViewTextBoxColumn.Name = "sewninDataGridViewTextBoxColumn";
       this.sewninDataGridViewTextBoxColumn.ReadOnly = true;
       this.sewninDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.sewninDataGridViewTextBoxColumn.Width = 40;
+      this.sewninDataGridViewTextBoxColumn.Width = 51;
       // 
       // rushDataGridViewTextBoxColumn
       // 
@@ -346,7 +344,7 @@
       this.rushDataGridViewTextBoxColumn.Name = "rushDataGridViewTextBoxColumn";
       this.rushDataGridViewTextBoxColumn.ReadOnly = true;
       this.rushDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.rushDataGridViewTextBoxColumn.Width = 40;
+      this.rushDataGridViewTextBoxColumn.Width = 38;
       // 
       // commentDataGridViewTextBoxColumn
       // 
@@ -355,7 +353,7 @@
       this.commentDataGridViewTextBoxColumn.Name = "commentDataGridViewTextBoxColumn";
       this.commentDataGridViewTextBoxColumn.ReadOnly = true;
       this.commentDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.commentDataGridViewTextBoxColumn.Width = 300;
+      this.commentDataGridViewTextBoxColumn.Width = 57;
       // 
       // comment2DataGridViewTextBoxColumn
       // 
@@ -365,26 +363,30 @@
       this.comment2DataGridViewTextBoxColumn.ReadOnly = true;
       this.comment2DataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.comment2DataGridViewTextBoxColumn.Visible = false;
+      this.comment2DataGridViewTextBoxColumn.Width = 63;
+      // 
+      // srcCoaterSchedule
+      // 
+      this.srcCoaterSchedule.DataSource = typeof(MahloService.Models.CoaterScheduleRoll);
       // 
       // FormCoaterSchedule
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnClose;
-      this.ClientSize = new System.Drawing.Size(876, 453);
+      this.ClientSize = new System.Drawing.Size(1034, 453);
       this.Controls.Add(this.dbgBackingSummary);
       this.Controls.Add(this.statusBar1);
       this.Controls.Add(this.btnToggleView);
       this.Controls.Add(this.btnClose);
       this.Controls.Add(this.btnWhichOrders);
       this.Controls.Add(this.dbgCoaterSchedule);
-      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
       this.Name = "FormCoaterSchedule";
       this.Text = "FormCoaterSchedule";
       ((System.ComponentModel.ISupportInitialize)(this.pnlMessage)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.dbgCoaterSchedule)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.srcCoaterSchedule)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.dbgBackingSummary)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.srcCoaterSchedule)).EndInit();
       this.ResumeLayout(false);
 
     }
