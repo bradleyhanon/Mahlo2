@@ -78,6 +78,8 @@ namespace MahloClient.Logic
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
+    public event Action<CarpetRoll> RollStarted;
+    public event Action<CarpetRoll> RollFinished;
 
     public abstract string InterfaceName { get; }
 
@@ -126,10 +128,6 @@ namespace MahloClient.Logic
     public ICriticalStops CriticalStops { get; } = new CriticalStops<Model>();
 
 
-    public IObservable<CarpetRoll> RollStarted => throw new NotImplementedException();
-
-    public IObservable<CarpetRoll> RollFinished => throw new NotImplementedException();
-
     public string PlcStatusMessage { get; set; }
     public Color PlcStatusMessageBackColor { get; set; }
     [DependsOn(nameof(PlcStatusMessageBackColor))]
@@ -149,6 +147,8 @@ namespace MahloClient.Logic
     public int Speed { get; set; }
     public bool IsMapValid { get; set; }
     public double MeasuredWidth { get; set; }
+    [DependsOn(nameof(MeasuredWidth))]
+    public string MeasuredWidthStr => CommonMethods.WidthToStr(this.MeasuredWidth);
 
     public int PreviousRollLength { get; set; }
     public int RollChangesUntilCheckRequired { get; set; }

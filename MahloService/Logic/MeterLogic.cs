@@ -31,17 +31,16 @@ namespace MahloService.Logic
     private bool checkRollSize = true;
     private int rollCount;
     private int styleCount;
-    private double meterResetAtLength;
+    //private double meterResetAtLength;
+    private int feetCounterAtRollStart;
 
-    private Subject<CarpetRoll> rollFinishedSubject = new Subject<CarpetRoll>();
-    private Subject<CarpetRoll> rollStartedSubject = new Subject<CarpetRoll>();
     private List<IDisposable> disposables = new List<IDisposable>();
 
     public MeterLogic(
-      IMeterSrc<Model> srcData, 
+      IMeterSrc<Model> srcData,
       ISewinQueue sewinQueue,
       IServiceSettings appInfo,
-      IUserAttentions<Model> userAttentions, 
+      IUserAttentions<Model> userAttentions,
       ICriticalStops<Model> criticalStops,
       IProgramState programState,
       ISchedulerProvider schedulerProvider)
@@ -55,10 +54,11 @@ namespace MahloService.Logic
       this.RestoreState();
       this.disposables.AddRange(new[]
         {
-          srcData.FeetCounter.Subscribe(value => this.MeterCounterChanged(value)),
-          srcData.SeamDetected.Subscribe(value => this.SeamDetected(value)),
-          srcData.FeetPerMinute.Subscribe(value => this.Speed = value),
-          srcData.WidthChanged.Subscribe(value => this.MeasuredWidth = value),
+          Observable
+            .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+              h => this.srcData.PropertyChanged += h,
+              h => this.srcData.PropertyChanged -= h)
+            .Subscribe(args => this.OpcValueChanged(args.EventArgs.PropertyName)),
 
           Observable
             .Interval(TimeSpan.FromSeconds(1), schedulerProvider.WinFormsThread)
@@ -101,15 +101,16 @@ namespace MahloService.Logic
             .Subscribe(args => this.QueueMessage = this.sewinQueue.Message),
         });
 
-      this.RollStarted = this.rollStartedSubject;
-      this.RollFinished = this.rollFinishedSubject;
     }
 
-  /// <summary>
-  /// Gets or sets a value indicating whether this object has been changed
-  /// It is set by PropertyChangedFody and reset by Ipc.MahloServer
-  /// </summary>
-  public bool IsChanged { get; set; } = true;
+    public event Action<CarpetRoll> RollStarted;
+    public event Action<CarpetRoll> RollFinished;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this object has been changed
+    /// It is set by PropertyChangedFody and reset by Ipc.MahloServer
+    /// </summary>
+    public bool IsChanged { get; set; } = true;
 
     /// <summary>
     /// Get the roll that is currently being processed
@@ -122,9 +123,6 @@ namespace MahloService.Logic
     public IUserAttentions UserAttentions { get; set; }
 
     public ICriticalStops CriticalStops { get; set; }
-
-    public IObservable<CarpetRoll> RollStarted { get; }
-    public IObservable<CarpetRoll> RollFinished { get; }
 
     public bool IsSeamDetected { get; set; }
 
@@ -175,11 +173,13 @@ namespace MahloService.Logic
     protected virtual void RestoreState()
     {
       var state = this.programState.GetSubState(nameof(MeterLogic<Model>), nameof(Model));
+      this.checkRollSize = state.Get<bool?>(nameof(checkRollSize)) ?? true;
       this.rollCount = state.Get<int?>(nameof(rollCount)) ?? 0;
       this.styleCount = state.Get<int?>(nameof(styleCount)) ?? this.styleCount;
-      this.CurrentRoll = state?.Get<CarpetRoll>(nameof(CurrentRoll)) ?? new CarpetRoll();
-      //this.sewinQueue.TryGetRoll(this.CurrentRoll.Id, out CarpetRoll roll);
-      //this.CurrentRoll = roll;
+      this.feetCounterAtRollStart = state.Get<int?>(nameof(feetCounterAtRollStart)) ?? 0;
+
+      string rollNo = state.Get<string>(nameof(this.CurrentRoll.RollNo)) ?? string.Empty;
+      this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == rollNo) ?? new CarpetRoll();
 
       // On startup, roll sequence should be verified
       this.UserAttentions.VerifyRollSequence = true;
@@ -192,6 +192,16 @@ namespace MahloService.Logic
       this.disposables.ForEach(item => item.Dispose());
     }
 
+    protected virtual void OnRollStarted(CarpetRoll carpetRoll)
+    {
+      this.RollStarted?.Invoke(carpetRoll);
+    }
+
+    protected virtual void OnRollFinished(CarpetRoll carpetRoll)
+    {
+      this.RollFinished?.Invoke(carpetRoll);
+    }
+
     private void SaveState()
     {
       var state = programState.GetSubState(nameof(MeterLogic<Model>));
@@ -199,7 +209,9 @@ namespace MahloService.Logic
       {
         this.rollCount,
         this.styleCount,
-        this.CurrentRoll,
+        this.feetCounterAtRollStart,
+        this.checkRollSize,
+        this.CurrentRoll.RollNo,
       });
     }
 
@@ -224,7 +236,7 @@ namespace MahloService.Logic
 
       if (this.MeasuredLength >= keepOnLength)
       {
-        if (this.meterResetAtLength == 0)
+        //if (this.meterResetAtLength == 0)
         {
           this.IsSeamDetected = false;
         }
@@ -270,6 +282,28 @@ namespace MahloService.Logic
       return Task.CompletedTask;
     }
 
+    protected virtual void OpcValueChanged(string propertyName)
+    {
+      switch (propertyName)
+      {
+        case nameof(this.srcData.FeetCounter):
+          this.FeetCounterChanged((int)this.srcData.FeetCounter);
+          break;
+
+        case nameof(this.srcData.IsSeamDetected):
+          this.SeamDetected(this.srcData.IsSeamDetected);
+          break;
+
+        case nameof(this.srcData.MeasuredWidth):
+          this.MeasuredWidth = this.srcData.MeasuredWidth;
+          break;
+
+        case nameof(this.srcData.FeetPerMinute):
+          this.Speed = (int)this.srcData.FeetPerMinute;
+          break;
+      }
+    }
+
     private void SewinQueueChanged()
     {
       if (!this.sewinQueue.Rolls.Contains(this.CurrentRoll))
@@ -278,30 +312,32 @@ namespace MahloService.Logic
       }
     }
 
-    private void MeterCounterChanged(int feet)
+    private void FeetCounterChanged(int feetCounter)
     {
       try
       {
+        int measuredLength = feetCounter - this.feetCounterAtRollStart;
+
         if (this.CurrentRoll == null)
         {
           return;
         }
 
         //meter reset has been initiated but not completed, ignore this value
-        if (feet == 0)
+        if (measuredLength == 0)
         {
           return;
         }
 
-        if (this.meterResetAtLength > 0 && feet - this.meterResetAtLength >= 0 && feet - this.meterResetAtLength < 10)
-        {
-          return;
-        }
+        //if (this.meterResetAtLength > 0 && measuredLength - this.meterResetAtLength >= 0 && measuredLength - this.meterResetAtLength < 10)
+        //{
+        //  return;
+        //}
 
-        this.meterResetAtLength = 0;
+        //this.meterResetAtLength = 0;
 
         //update roll info
-        this.MeasuredLength = feet;
+        this.MeasuredLength = measuredLength;
         //oCurrentRoll.MeasuredWidth = oMahlo.RollWidth;
 
         //update display values
@@ -374,15 +410,15 @@ namespace MahloService.Logic
           SaveRollMap();
         }
 
-        this.rollFinishedSubject.OnNext(this.CurrentRoll);
+        this.OnRollFinished(this.CurrentRoll);
 
         string prevStyle = this.CurrentRoll.StyleCode;
 
         //must reset mahlo footage counter immediately so roll measurement is as
         //accurate as possible
         this.IsSeamDetected = true;
-        this.meterResetAtLength = this.MeasuredLength;
-        this.srcData.ResetMeterOffset();
+        //this.meterResetAtLength = this.MeasuredLength;
+        this.feetCounterAtRollStart = (int)this.srcData.FeetCounter;
 
         //set seam detect indicator on immediately
         this.srcData.SetMiscellaneousIndicator(true);
@@ -392,6 +428,7 @@ namespace MahloService.Logic
         {
           //advance to next position in queue
           this.CurrentRoll = this.sewinQueue.Rolls[index + 1];
+          this.MeasuredLength = 0;
           //InitializeRollsFromQueue(oCurrentRoll.PositionInQueue + 1);
           //InitializeCharts();)
           switch (CommonMethods.DetermineRollType(this.sewinQueue.Rolls, this.CurrentRoll))
@@ -454,7 +491,7 @@ namespace MahloService.Logic
           this.IsMappingNow = false;
         }
 
-        this.rollStartedSubject.OnNext(this.CurrentRoll);
+        this.OnRollStarted(this.CurrentRoll);
       }
       catch (Exception ex)
       {
@@ -515,7 +552,7 @@ namespace MahloService.Logic
       this.IsMappingNow = false;
 
       //WriteToErrorLog("DisableSystem", "Mapping stopped due to system being disabled.");
-    
+
       this.UserAttentions.IsSystemDisabled = true;
     }
   }

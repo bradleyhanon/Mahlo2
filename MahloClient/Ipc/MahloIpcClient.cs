@@ -79,7 +79,7 @@ namespace MahloClient.Ipc
 
         this.hubConnection = new HubConnection(appInfo.ServiceUrl);
         this.hubConnection.StateChanged += HubConnection_StateChanged;
-        //this.hubConnection.Received += msg => Console.WriteLine(msg);
+        this.hubConnection.Received += msg => Console.WriteLine(msg);
         //this.hubConnection.TraceLevel = TraceLevels.All;
         //this.hubConnection.TraceWriter = Console.Out;
         this.hubProxy = hubConnection.CreateHubProxy("MahloHub");

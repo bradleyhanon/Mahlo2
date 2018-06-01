@@ -9,7 +9,7 @@ namespace MahloService.Opc
 {
   interface IBowAndSkewSrc : IMeterSrc<BowAndSkewRoll>
   {
-    IObservable<double> BowChanged { get; }
-    IObservable<double> SkewChanged { get; }
+    double Bow { get; }
+    double Skew { get; }
   }
 }

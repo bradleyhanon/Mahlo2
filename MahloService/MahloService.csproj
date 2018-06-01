@@ -35,7 +35,7 @@
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>MahloBowAndSkew.ico</ApplicationIcon>
+    <ApplicationIcon>gear.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpcLabs.BaseLib, Version=5.34.345.1, Culture=neutral, PublicKeyToken=6faddca41dacb409, processorArchitecture=MSIL">
@@ -212,7 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
-    <Content Include="MahloBowAndSkew.ico" />
+    <Content Include="gear.ico" />
     <Content Include="Resources\MahloBowAndSkew.ico" />
   </ItemGroup>
   <ItemGroup>

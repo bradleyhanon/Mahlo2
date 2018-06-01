@@ -14,6 +14,8 @@ namespace MahloService.Logic
 {
   class PatternRepeatLogic : MeterLogic<PatternRepeatRoll>, IPatternRepeatLogic
   {
+    IPatternRepeatSrc dataSrc;
+
     //public PatternRepeatLogic(IPatternRepeatSrc dataSrc, IMeterLogic<PatternRepeatRoll> meterLogic) 
     public PatternRepeatLogic(
       IPatternRepeatSrc dataSrc, 
@@ -25,7 +27,7 @@ namespace MahloService.Logic
       ISchedulerProvider schedulerProvider)
       : base(dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
     {
-      dataSrc.PatternRepeatChanged.Subscribe(value => this.CurrentRoll.Elongation = value);
+      this.dataSrc = dataSrc;
     }
 
     public override int MeasuredLength
@@ -44,6 +46,20 @@ namespace MahloService.Logic
     {
       get => this.CurrentRoll.PrsMapValid;
       set => this.CurrentRoll.PrsMapValid = value;
+    }
+
+    protected override void OpcValueChanged(string propertyName)
+    {
+      switch(propertyName)
+      {
+        case nameof(this.dataSrc.PatternRepeatLength):
+          this.CurrentRoll.PatternRepeatLength = this.dataSrc.PatternRepeatLength;
+          break;
+
+        default:
+          base.OpcValueChanged(propertyName);
+          break;
+      }
     }
   }
 }

@@ -10,16 +10,14 @@ namespace MahloService.Logic
 {
   interface IMeterLogic
   {
+    event Action<CarpetRoll> RollStarted;
+    event Action<CarpetRoll> RollFinished;
+
     [JsonIgnore]
     bool IsChanged { get; set; }
     [JsonIgnore]
     CarpetRoll CurrentRoll { get; set; }
     int CurrentRollIndex { get; }
-
-    [JsonIgnore]
-    IObservable<CarpetRoll> RollStarted { get; }
-    [JsonIgnore]
-    IObservable<CarpetRoll> RollFinished { get; }
 
     bool IsMappingNow { get; set; }
     bool IsManualMode { get; set; }

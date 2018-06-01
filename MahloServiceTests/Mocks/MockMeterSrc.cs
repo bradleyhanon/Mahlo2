@@ -6,34 +6,25 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 using MahloService.Opc;
+using PropertyChanged;
 
 namespace MahloServiceTests.Mocks
 {
   class MockMeterSrc<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc
   {
-    public Subject<int> FeetCounterSubject { get; } = new Subject<int>();
-    public Subject<int> FeetPerMinuteSubject { get; } = new Subject<int>();
-    public Subject<bool> SeamDetectedSubject { get; } = new Subject<bool>();
-    public Subject<double> BowSubject { get; } = new Subject<double>();
-    public Subject<double> SkewSubject { get; } = new Subject<double>();
-    public Subject<double> PatternRepeatSubject { get; } = new Subject<double>();
-    public Subject<double> WidthSubject { get; } = new Subject<double>();
+    public event PropertyChangedEventHandler PropertyChanged;
 
-    public IObservable<int> FeetCounter => this.FeetCounterSubject;
-
-    public IObservable<int> FeetPerMinute => this.FeetPerMinuteSubject;
-
-    public IObservable<bool> SeamDetected => this.SeamDetectedSubject;
-    public IObservable<double> WidthChanged => this.WidthSubject;
+    public double FeetCounter { get; set; }
+    public double FeetPerMinute { get; set; }
+    public double MeasuredWidth { get; set; }
+    public double Bow { get; set; }
+    public double Skew { get; set; }
+    public double PatternRepeatLength { get; set; }
+    public bool IsSeamDetected { get; set; }
 
     public string Recipe { get; set; } = string.Empty;
     public bool IsAutoMode { get; set; }
 
-    public IObservable<double> BowChanged => this.BowSubject;
-
-    public IObservable<double> SkewChanged => this.SkewSubject;
-
-    public IObservable<double> PatternRepeatChanged => this.PatternRepeatSubject;
 
     public int ResetMeterOffsetCalled { get; set; }
     public int ResetSeamDetectorCalled { get; set; }
@@ -71,6 +62,11 @@ namespace MahloServiceTests.Mocks
     public void SetStatusIndicator(bool value)
     {
       throw new NotImplementedException();
+    }
+
+    private void OnPropertyChanged(string propertyName)
+    {
+      this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
   }
 }

@@ -4,6 +4,7 @@
   {
     string ServiceUrl { get; set; }
 
+    double EndCheckRollPieceLength { get; set; }
     double SeamDetectIgnoreThreshold { get; set; }
     double MinRollLengthForLengthChecking { get; set; }
     double MinRollLengthForStyleAndRollCounting { get; set; }

@@ -9,6 +9,6 @@ namespace MahloService.Opc
 {
   interface IPatternRepeatSrc : IMeterSrc<PatternRepeatRoll>
   {
-    IObservable<double> PatternRepeatChanged { get; }
+    double PatternRepeatLength { get; }
   }
 }

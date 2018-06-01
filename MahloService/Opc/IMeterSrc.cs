@@ -7,17 +7,15 @@ using System.Threading.Tasks;
 
 namespace MahloService.Opc
 {
-  interface IMeterSrc<Model>
+  interface IMeterSrc<Model> : INotifyPropertyChanged
   {
-    string Recipe { get; set; }
-    bool IsAutoMode { get; set; }
+    double FeetCounter { get; }
+    double FeetPerMinute { get; }
+    double MeasuredWidth { get; }
+    bool IsSeamDetected { get; }
+    string Recipe { get; }
+    bool IsAutoMode { get; }
 
-    IObservable<int> FeetCounter { get; }
-    IObservable<int> FeetPerMinute { get; }
-    IObservable<double> WidthChanged { get; }
-    IObservable<bool> SeamDetected { get; }
-
-    void ResetMeterOffset();
     void ResetSeamDetector();
     void SetStatusIndicator(bool value);
     void SetCriticalAlarmIndicator(bool value);

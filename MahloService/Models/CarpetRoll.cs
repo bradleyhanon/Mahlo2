@@ -36,16 +36,7 @@ namespace MahloService.Models
 
     [DependsOn(nameof(RollWidth))]
     [Computed]
-    public string RollWidthStr
-    {
-      get
-      {
-        int feet = (int)RollWidth / 12;
-        int inches = (int)RollWidth % 12;
-        //return inches == 0 ? $"{feet} ft" : $"{feet}' {inches}\"";
-        return $"{feet}' {inches}\"";
-      }
-    }
+    public string RollWidthStr => CommonMethods.WidthToStr(this.RollWidth);
 
     public string DefaultRecipe { get; set; } = string.Empty;
     public double PatternRepeatLength { get; set; }

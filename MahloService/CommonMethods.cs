@@ -10,6 +10,13 @@ namespace MahloService
 {
   static class CommonMethods
   {
+    public static string WidthToStr(double totalInches)
+    {
+      int feet = (int)totalInches / 12;
+      int inches = (int)totalInches % 12;
+      return $"{feet}' {inches}\"";
+    }
+
     public static CarpetRollTypeEnum DetermineRollType(IList<CarpetRoll> rolls, CarpetRoll roll)
     {
       string[] sHPBackingCodes = { "XL", "XP", "HP" };
