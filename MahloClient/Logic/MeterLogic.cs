@@ -148,7 +148,7 @@ namespace MahloClient.Logic
     public bool IsMapValid { get; set; }
     public double MeasuredWidth { get; set; }
     [DependsOn(nameof(MeasuredWidth))]
-    public string MeasuredWidthStr => CommonMethods.WidthToStr(this.MeasuredWidth);
+    public string MeasuredWidthStr => CommonMethods.InchesToStr(this.MeasuredWidth);
 
     public int PreviousRollLength { get; set; }
     public int RollChangesUntilCheckRequired { get; set; }

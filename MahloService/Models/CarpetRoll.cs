@@ -36,7 +36,7 @@ namespace MahloService.Models
 
     [DependsOn(nameof(RollWidth))]
     [Computed]
-    public string RollWidthStr => CommonMethods.WidthToStr(this.RollWidth);
+    public string RollWidthStr => CommonMethods.InchesToStr(this.RollWidth);
 
     public string DefaultRecipe { get; set; } = string.Empty;
     public double PatternRepeatLength { get; set; }

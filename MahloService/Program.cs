@@ -23,6 +23,7 @@ using OpcLabs.EasyOpc.DataAccess;
 using Serilog;
 using SimpleInjector;
 using SimpleInjector.Diagnostics;
+using MahloService.Simulation;
 
 namespace MahloService
 {
@@ -70,10 +71,11 @@ namespace MahloService
               Environment.Exit(0);
             }
 
+            bool shouldSimulate = args.Contains("--simulate");
             SingleThreadSynchronizationContext syncContext = new SingleThreadSynchronizationContext();
             SynchronizationContext.SetSynchronizationContext(syncContext);
             using (var consoleCtrl = new ConsoleCtrl())
-            using (var container = InitializeContainer(syncContext))
+            using (var container = InitializeContainer(syncContext, shouldSimulate))
             {
               consoleCtrl.ControlEvent += (sender, e) =>
               {
@@ -109,7 +111,7 @@ namespace MahloService
       Environment.Exit(1);
     }
 
-    public static Container InitializeContainer(SynchronizationContext syncContext)
+    public static Container InitializeContainer(SynchronizationContext syncContext, bool shouldSimulate)
     {
       var container = new Container();
       Program.Container = container;
@@ -133,23 +135,33 @@ namespace MahloService
       container.RegisterSingleton<IBowAndSkewLogic, BowAndSkewLogic>();
       container.RegisterSingleton<IPatternRepeatLogic, PatternRepeatLogic>();
 
-      container.RegisterSingleton<IMahloSrc, MahloOpcClient<MahloRoll>>();
-      container.RegisterSingleton<IBowAndSkewSrc, MahloOpcClient<BowAndSkewRoll>>();
-      container.RegisterSingleton<IPatternRepeatSrc, MahloOpcClient<PatternRepeatRoll>>();
+      if (shouldSimulate)
+      {
+        container.RegisterSingleton<IMahloSrc, OpcSrcSim<MahloRoll>>();
+        container.RegisterSingleton<IBowAndSkewSrc, OpcSrcSim<BowAndSkewRoll>>();
+        container.RegisterSingleton<IPatternRepeatSrc, OpcSrcSim<PatternRepeatRoll>>();
+        container.RegisterSingleton<IDbMfg, DbMfgSim>();
+      }
+      else
+      {
+        container.RegisterSingleton<IMahloSrc, OpcClient<MahloRoll>>();
+        container.RegisterSingleton<IBowAndSkewSrc, OpcClient<BowAndSkewRoll>>();
+        container.RegisterSingleton<IPatternRepeatSrc, OpcClient<PatternRepeatRoll>>();
+        container.RegisterSingleton<IEasyDAClient>(() => new EasyDAClient());
+        container.RegisterSingleton<IDbMfg, DbMfg>();
+      }
 
-      container.RegisterSingleton<IMeterSrc<MahloRoll>, MahloOpcClient<MahloRoll>>();
-      container.RegisterSingleton<IMeterSrc<BowAndSkewRoll>, MahloOpcClient<BowAndSkewRoll>>();
-      container.RegisterSingleton<IMeterSrc<PatternRepeatRoll>, MahloOpcClient<PatternRepeatRoll>>();
+      //container.RegisterSingleton<IMeterSrc<MahloRoll>, OpcClient<MahloRoll>>();
+      //container.RegisterSingleton<IMeterSrc<BowAndSkewRoll>, OpcClient<BowAndSkewRoll>>();
+      //container.RegisterSingleton<IMeterSrc<PatternRepeatRoll>, OpcClient<PatternRepeatRoll>>();
 
       container.RegisterSingleton<ISchedulerProvider, SchedulerProvider>();
       container.RegisterInstance<SynchronizationContext>(syncContext);
       container.RegisterSingleton<IConcurrencyInfo, ConcurrencyInfo>();
       container.RegisterSingleton<ISewinQueue, SewinQueue>();
       container.RegisterSingleton<ICutRollLogic, CutRollLogic>();
-      container.RegisterSingleton<EasyDAClient>(() => new EasyDAClient());
 
       container.RegisterSingleton<IDbConnectionFactoryFactory, DbConnectionFactory.Factory>();
-      container.RegisterSingleton<IDbMfg, DbMfg>();
       container.RegisterSingleton<IDbLocal, DbLocal>();
       container.RegisterSingleton<IServiceSettings, ServiceSettings>();
       container.RegisterSingleton<IOpcSettings, OpcSettings>();

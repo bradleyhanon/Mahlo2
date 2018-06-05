@@ -10,7 +10,7 @@ namespace MahloService
 {
   static class CommonMethods
   {
-    public static string WidthToStr(double totalInches)
+    public static string InchesToStr(double totalInches)
     {
       int feet = (int)totalInches / 12;
       int inches = (int)totalInches % 12;

@@ -4,6 +4,6 @@
     <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>-x-migrate</StartArguments>
+    <StartArguments>-x-migrate --simulate</StartArguments>
   </PropertyGroup>
 </Project>

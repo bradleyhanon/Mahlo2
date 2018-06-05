@@ -49,6 +49,14 @@ namespace MahloService
       return newItems;
     }
 
+    public static void ForEach<T>(this IEnumerable<T> items, Action<T> action)
+    {
+      foreach(T item in items)
+      {
+        action(item);
+      }
+    }
+
     public static Color ContrastColor(this Color color)
     {
       int d = 0;

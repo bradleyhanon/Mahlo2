@@ -49,7 +49,7 @@ namespace MahloService
       try
       {
         SynchronizationContext.SetSynchronizationContext(syncContext);
-        using (var container = Program.InitializeContainer(syncContext))
+        using (var container = Program.InitializeContainer(syncContext, false))
         {
           this.log = container.GetInstance<ILogger>();
           var mapper = container.GetInstance<ICarpetProcessor>();

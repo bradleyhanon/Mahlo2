@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MahloService.Opc
 {
-  interface IMeterSrc<Model> : INotifyPropertyChanged
+  interface IMeterSrc : INotifyPropertyChanged
   {
     double FeetCounter { get; }
     double FeetPerMinute { get; }
@@ -22,5 +22,9 @@ namespace MahloService.Opc
     void SetMiscellaneousIndicator(bool value);
     void SetRecipe(string recipeName);
     void SetAutoMode(bool value);
+  }
+
+  interface IMeterSrc<Model> : IMeterSrc
+  {
   }
 }

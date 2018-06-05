@@ -21,7 +21,7 @@ using PropertyChanged;
 namespace MahloService.Opc
 {
   [AddINotifyPropertyChangedInterface]
-  sealed class MahloOpcClient<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc
+  class OpcClient<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc
   {
     private const string MahloServerClass = "mahlo.10AOpcServer.1";
     private const string PlcServerClass = "Kepware.KEPServerEX.V6";
@@ -30,7 +30,7 @@ namespace MahloService.Opc
     //private const string PlcItemFormat = "nsu=KEPServerEX;ns=2;s={0}.{1}";
     string mahloChannel;
 
-    private EasyDAClient opcClient;
+    private IEasyDAClient opcClient;
     private IUserAttentions<Model> userAttentions;
     private ICriticalStops<Model> criticalStops;
     private Type priorExceptionType = null;
@@ -46,8 +46,8 @@ namespace MahloService.Opc
     private IDisposable criticalAlarmsSubscription;
     private IDisposable userAttentionsSubscription;
 
-    public MahloOpcClient(
-      EasyDAClient opcClient, 
+    public OpcClient(
+      IEasyDAClient opcClient, 
       IUserAttentions<Model> userAttentions,
       ICriticalStops<Model> criticalStops, 
       IOpcSettings mahloSettings, 
@@ -79,7 +79,7 @@ namespace MahloService.Opc
           .Where(args => args.EventArgs.PropertyName == nameof(UserAttentions<Model>.Any))
           .Subscribe(_ => this.SetStatusIndicator(this.userAttentions.Any));
 
-      var state = programState.GetSubState(nameof(MahloOpcClient<Model>), typeof(Model).Name);
+      var state = programState.GetSubState(nameof(OpcClient<Model>), typeof(Model).Name);
       this.Initialize();
     }
 
@@ -98,7 +98,7 @@ namespace MahloService.Opc
 
     public void Dispose()
     {
-      var obj = this.programState.GetSubState(nameof(MahloOpcClient<Model>), typeof(Model).Name);
+      this.Dispose(true);
     }
 
     public void ResetSeamDetector()
@@ -108,6 +108,14 @@ namespace MahloService.Opc
         this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 1);
         this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 0);
       });
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (disposing)
+      {
+        var obj = this.programState.GetSubState(nameof(OpcClient<Model>), typeof(Model).Name);
+      }
     }
 
     /// <summary>

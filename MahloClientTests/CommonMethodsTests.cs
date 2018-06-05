@@ -32,7 +32,7 @@ namespace MahloClientTests
 
       foreach(var tuple in tuples)
       {
-        Assert.Equal(tuple.expect, CommonMethods.WidthToStr(tuple.value));
+        Assert.Equal(tuple.expect, CommonMethods.InchesToStr(tuple.value));
       }
     }
   }
