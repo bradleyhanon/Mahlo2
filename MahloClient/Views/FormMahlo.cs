@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using MahloClient.Ipc;
 using MahloClient.Logic;
 using MahloService.Logic;
+using MahloService.Models;
 
 namespace MahloClient.Views
 {
@@ -42,6 +43,8 @@ namespace MahloClient.Views
         .Subscribe(args =>
         {
           this.srcCurrentRoll.DataSource = this.logic.CurrentRoll;
+          int nextIndex = this.sewinQueue.Rolls.IndexOf(this.logic.CurrentRoll) + 1;
+          this.srcNextRoll.DataSource = nextIndex < this.sewinQueue.Rolls.Count ? this.sewinQueue.Rolls[nextIndex] : new CarpetRoll();
           this.DataGridView1_SelectionChanged(this.dataGridView1, EventArgs.Empty);
           this.dataGridView1.EnsureVisibleRow(this.logic.CurrentRollIndex);
         });

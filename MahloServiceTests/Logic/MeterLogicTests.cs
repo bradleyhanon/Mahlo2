@@ -250,10 +250,35 @@ namespace MahloServiceTests.Logic
     }
 
     [Fact]
-    public void SeamDetectedIsAcknowledged()
+    public void SeamDetectedIsAcknowledgedAtMinSeamSpacing()
     {
+      this.appInfo.MinSeamSpacing = 4;
       srcData.IsSeamDetected = true;
-      Assert.Equal(1, srcData.ResetSeamDetectorCalled);
+      srcData.FeetCounter += this.appInfo.MinSeamSpacing - 1;
+      Assert.Equal(0, srcData.AcknowledgeSeamDetectCalled);
+      srcData.FeetCounter++;
+      Assert.Equal(1, srcData.AcknowledgeSeamDetectCalled);
+    }
+
+    [Fact]
+    public void CheckRollFinishedWhenEndCheckRollPieceSeen()
+    {
+      var roll = this.target.CurrentRoll;
+      roll.RollNo = CarpetRoll.CheckRollId;
+      this.appInfo.MaxEndCheckRollPieceLength = 10;
+      this.appInfo.MinSeamSpacing = 4;
+      for (int j = 0; j < 10; j++)
+      {
+        this.srcData.FeetCounter += this.appInfo.MaxEndCheckRollPieceLength + 1;
+        this.srcData.IsSeamDetected = true;
+        this.srcData.IsSeamDetected = false;
+        Assert.Equal(roll, this.target.CurrentRoll);
+      }
+
+      this.srcData.FeetCounter += this.appInfo.MaxEndCheckRollPieceLength;
+      this.srcData.IsSeamDetected = true;
+      this.srcData.IsSeamDetected = false;
+      Assert.NotEqual(roll, this.target.CurrentRoll);
     }
 
     [Fact]
@@ -289,7 +314,7 @@ namespace MahloServiceTests.Logic
       }
     }
 
-    [Fact]
+    [Fact(Skip="No longer relavent")]
     public void SeamDetectedIsIgnoredWhenFeetLessThanSeamDetectedThreshold()
     {
       this.appInfo.SeamDetectableThreshold = 50;
@@ -310,7 +335,7 @@ namespace MahloServiceTests.Logic
       srcData.IsSeamDetected = true;
 
       // ResetSeamDetector should be called for every seam detection event
-      Assert.Equal(1, this.srcData.ResetSeamDetectorCalled);
+      Assert.Equal(1, this.srcData.AcknowledgeSeamDetectCalled);
     }
 
     [Fact]

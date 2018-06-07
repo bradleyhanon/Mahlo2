@@ -72,21 +72,35 @@ namespace MahloService
             }
 
             bool shouldSimulate = args.Contains("--simulate");
-            SingleThreadSynchronizationContext syncContext = new SingleThreadSynchronizationContext();
-            SynchronizationContext.SetSynchronizationContext(syncContext);
-            using (var consoleCtrl = new ConsoleCtrl())
-            using (var container = InitializeContainer(syncContext, shouldSimulate))
+            if (shouldSimulate)
             {
-              consoleCtrl.ControlEvent += (sender, e) =>
+              Application.EnableVisualStyles();
+              Application.SetCompatibleTextRenderingDefault(false);
+              using (new Control()) { }
+              using (var container = InitializeContainer(WindowsFormsSynchronizationContext.Current, shouldSimulate))
               {
-                syncContext.Complete();
-                e.Result = true;
-              };
+                container.GetInstance<ICarpetProcessor>().Start();
+                Application.Run(container.GetInstance<FormSim>());
+              }
+            }
+            else
+            {
+              SingleThreadSynchronizationContext syncContext = new SingleThreadSynchronizationContext();
+              SynchronizationContext.SetSynchronizationContext(syncContext);
+              using (var consoleCtrl = new ConsoleCtrl())
+              using (var container = InitializeContainer(syncContext, shouldSimulate))
+              {
+                consoleCtrl.ControlEvent += (sender, e) =>
+                {
+                  syncContext.Complete();
+                  e.Result = true;
+                };
 
-              Log.Logger.Information("Applicaiton started");
-              container.GetInstance<ICarpetProcessor>().Start();
-              syncContext.RunOnCurrentThread();
-              Log.Logger.Information("Application stopped");
+                Log.Logger.Information("Applicaiton started");
+                container.GetInstance<ICarpetProcessor>().Start();
+                syncContext.RunOnCurrentThread();
+                Log.Logger.Information("Application stopped");
+              }
             }
           }
           else

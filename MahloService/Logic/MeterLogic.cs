@@ -126,8 +126,12 @@ namespace MahloService.Logic
 
     public bool IsSeamDetected { get; set; }
 
+    // Appear last
+    [JsonProperty(Order = 1)]
     public abstract int MeasuredLength { get; set; }
+    [JsonProperty(Order = 1)]
     public abstract int Speed { get; set; }
+    [JsonProperty(Order = 1)]
     public abstract bool IsMapValid { get; set; }
 
     public bool IsManualMode { get; set; }
@@ -245,23 +249,6 @@ namespace MahloService.Logic
       }
     }
 
-    private bool IgnoringSeams()
-    {
-      //ignore seam detect if system is disabled
-      if (this.UserAttentions.IsSystemDisabled)
-      {
-        return true;
-      }
-
-      //ignore seam detect if roll length has not met minumum threshold
-      if (this.IsMappingNow && this.appInfo.SeamDetectIgnoreThreshold > 0 && this.appInfo.SeamDetectIgnoreThreshold < 1 && this.MeasuredLength < (this.CurrentRoll.RollLength * this.appInfo.SeamDetectIgnoreThreshold))
-      {
-        return true;
-      }
-
-      return false;
-    }
-
     private void SaveRealtimeDataToDataSet()
     {
 
@@ -314,9 +301,15 @@ namespace MahloService.Logic
 
     private void FeetCounterChanged(int feetCounter)
     {
+      int measuredLength = feetCounter - this.feetCounterAtRollStart;
+
       try
       {
-        int measuredLength = feetCounter - this.feetCounterAtRollStart;
+        if (this.seamAckNeeded && this.srcData.FeetCounter - this.feetCounterAtLastSeam >= this.appInfo.MinSeamSpacing)
+        {
+          this.seamAckNeeded = false;
+          this.srcData.AcknowledgeSeamDetect();
+        }
 
         if (this.CurrentRoll == null)
         {
@@ -378,6 +371,8 @@ namespace MahloService.Logic
       return;
     }
 
+    private bool seamAckNeeded;
+    private double feetCounterAtLastSeam;
     private void SeamDetected(bool isSeamDetected)
     {
       if (!isSeamDetected)
@@ -385,9 +380,25 @@ namespace MahloService.Logic
         return;
       }
 
-      this.srcData.ResetSeamDetector();
+      double priorFeetCounter = this.feetCounterAtLastSeam;
+      this.seamAckNeeded = true;
+      this.feetCounterAtLastSeam = this.srcData.FeetCounter;
 
-      if (IgnoringSeams()) return;
+      //ignore seam detect if system is disabled
+      if (this.UserAttentions.IsSystemDisabled)
+      {
+        return;
+      }
+
+      if (this.CurrentRoll.IsCheckRoll && this.srcData.FeetCounter - priorFeetCounter > this.appInfo.MaxEndCheckRollPieceLength)
+      {
+        return;
+      }
+
+      if (this.MeasuredLength < this.appInfo.MinSeamSpacing)
+      {
+        return;
+      }
 
       try
       {

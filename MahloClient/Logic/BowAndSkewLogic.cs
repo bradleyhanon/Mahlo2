@@ -19,22 +19,22 @@ namespace MahloClient.Logic
 
     public override string InterfaceName => nameof(IBowAndSkewLogic);
 
-    //public override int Feet
-    //{
-    //  get => this.CurrentRoll.BasFeet;
-    //  set => throw new NotImplementedException();
-    //}
+    public override int MeasuredLength
+    {
+      get => this.CurrentRoll.BasFeet;
+      set => this.CurrentRoll.BasFeet = value;
+    }
 
-    //public override int Speed
-    //{
-    //  get => this.CurrentRoll.BasSpeed;
-    //  set => throw new NotImplementedException();
-    //}
+    public override int Speed
+    {
+      get => this.CurrentRoll.BasSpeed;
+      set => this.CurrentRoll.BasSpeed = value;
+    }
 
-    //public override bool IsMapValid
-    //{
-    //  get => this.CurrentRoll.BasMapValid;
-    //  set => throw new NotImplementedException();
-    //}
+    public override bool IsMapValid
+    {
+      get => this.CurrentRoll.BasMapValid;
+      set => this.CurrentRoll.BasMapValid = value;
+    }
   }
 }

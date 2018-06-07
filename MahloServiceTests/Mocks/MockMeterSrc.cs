@@ -27,16 +27,16 @@ namespace MahloServiceTests.Mocks
 
 
     public int ResetMeterOffsetCalled { get; set; }
-    public int ResetSeamDetectorCalled { get; set; }
+    public int AcknowledgeSeamDetectCalled { get; set; }
 
     public void ResetMeterOffset()
     {
       this.ResetMeterOffsetCalled++;
     }
 
-    public void ResetSeamDetector()
+    public void AcknowledgeSeamDetect()
     {
-      this.ResetSeamDetectorCalled++;
+      this.AcknowledgeSeamDetectCalled++;
     }
 
     public void SetAutoMode(bool value)

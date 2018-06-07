@@ -59,7 +59,9 @@ namespace MahloService.Repository
       {
         await connection.ExecuteAsync("spSewinQueueChanged", p, commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
         int status = p.Get<int>("status");
-        return status != 0;
+        bool result = status != 0;
+        Console.WriteLine($"queuesize={rowCount}, first_roll={firstRollNo}, last_Roll={lastRollNo}, status={status}, result={result}");
+        return result;
       }
     }
 

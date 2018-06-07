@@ -17,14 +17,16 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBowAndSkew));
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
       this.grpNextRoll = new System.Windows.Forms.GroupBox();
       this.lblNextRollType = new System.Windows.Forms.Label();
+      this.srcLogic = new System.Windows.Forms.BindingSource(this.components);
       this.label19 = new System.Windows.Forms.Label();
       this.lblNextLength = new System.Windows.Forms.Label();
+      this.srcNextRoll = new System.Windows.Forms.BindingSource(this.components);
       this.lblNextColor = new System.Windows.Forms.Label();
       this.lblNextStyle = new System.Windows.Forms.Label();
       this.lblNextRoll = new System.Windows.Forms.Label();
@@ -39,6 +41,7 @@
       this.lblRollMapped = new System.Windows.Forms.Label();
       this.label18 = new System.Windows.Forms.Label();
       this.lblCurrentLength = new System.Windows.Forms.Label();
+      this.srcCurrentRoll = new System.Windows.Forms.BindingSource(this.components);
       this.lblCurrentColor = new System.Windows.Forms.Label();
       this.lblCurrentStyle = new System.Windows.Forms.Label();
       this.lblCurrentRoll = new System.Windows.Forms.Label();
@@ -88,8 +91,6 @@
       this.pnlAlarm = new System.Windows.Forms.StatusBarPanel();
       this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
       this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
-      this.srcLogic = new System.Windows.Forms.BindingSource(this.components);
-      this.srcCurrentRoll = new System.Windows.Forms.BindingSource(this.components);
       this.dataGridView1 = new MahloClient.Views.MyDataGridView();
       this.rollNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.orderNoColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -104,11 +105,13 @@
       this.patternRepeatLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colMeasuredLength = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.srcGrid = new System.Windows.Forms.BindingSource(this.components);
-      this.srcNextRoll = new System.Windows.Forms.BindingSource(this.components);
       this.statusBar1 = new MahloClient.Views.MyStatusBar();
       this.grpNextRoll.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.srcLogic)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.srcNextRoll)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.picNextRoll)).BeginInit();
       this.grpCurrentRoll.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.srcCurrentRoll)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.picCurrentRoll)).BeginInit();
       this.grpMappingInfo.SuspendLayout();
       this.grpBow.SuspendLayout();
@@ -120,11 +123,8 @@
       ((System.ComponentModel.ISupportInitialize)(this.pnlAlarm)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pnlAlertMessage)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pnlQueueMessage)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.srcLogic)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.srcCurrentRoll)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcGrid)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.srcNextRoll)).BeginInit();
       this.SuspendLayout();
       // 
       // grpNextRoll
@@ -160,6 +160,10 @@
       this.lblNextRollType.Size = new System.Drawing.Size(68, 16);
       this.lblNextRollType.TabIndex = 10;
       // 
+      // srcLogic
+      // 
+      this.srcLogic.DataSource = typeof(MahloClient.Logic.BowAndSkewLogic);
+      // 
       // label19
       // 
       this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -179,6 +183,10 @@
       this.lblNextLength.Name = "lblNextLength";
       this.lblNextLength.Size = new System.Drawing.Size(68, 16);
       this.lblNextLength.TabIndex = 8;
+      // 
+      // srcNextRoll
+      // 
+      this.srcNextRoll.DataSource = typeof(MahloService.Models.CarpetRoll);
       // 
       // lblNextColor
       // 
@@ -339,6 +347,10 @@
       this.lblCurrentLength.Name = "lblCurrentLength";
       this.lblCurrentLength.Size = new System.Drawing.Size(68, 16);
       this.lblCurrentLength.TabIndex = 8;
+      // 
+      // srcCurrentRoll
+      // 
+      this.srcCurrentRoll.DataSource = typeof(MahloService.Models.CarpetRoll);
       // 
       // lblCurrentColor
       // 
@@ -560,7 +572,7 @@
       // 
       this.lblLineSpeed.BackColor = System.Drawing.Color.Gainsboro;
       this.lblLineSpeed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.lblLineSpeed.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcCurrentRoll, "BasSpeed", true));
+      this.lblLineSpeed.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "Speed", true));
       this.lblLineSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblLineSpeed.ForeColor = System.Drawing.Color.Black;
       this.lblLineSpeed.Location = new System.Drawing.Point(202, 34);
@@ -585,7 +597,7 @@
       // 
       this.lblMeasuredLen.BackColor = System.Drawing.Color.Gainsboro;
       this.lblMeasuredLen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.lblMeasuredLen.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcCurrentRoll, "BasFeet", true));
+      this.lblMeasuredLen.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "MeasuredLength", true));
       this.lblMeasuredLen.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblMeasuredLen.ForeColor = System.Drawing.Color.Black;
       this.lblMeasuredLen.Location = new System.Drawing.Point(24, 34);
@@ -938,14 +950,6 @@
       // 
       this.pnlQueueMessage.Name = "pnlQueueMessage";
       // 
-      // srcLogic
-      // 
-      this.srcLogic.DataSource = typeof(MahloClient.Logic.BowAndSkewLogic);
-      // 
-      // srcCurrentRoll
-      // 
-      this.srcCurrentRoll.DataSource = typeof(MahloService.Models.CarpetRoll);
-      // 
       // dataGridView1
       // 
       this.dataGridView1.AllowUserToAddRows = false;
@@ -983,8 +987,8 @@
       // rollNoDataGridViewTextBoxColumn
       // 
       this.rollNoDataGridViewTextBoxColumn.DataPropertyName = "RollNo";
-      dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.rollNoDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
+      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.rollNoDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
       this.rollNoDataGridViewTextBoxColumn.HeaderText = "Greige Roll";
       this.rollNoDataGridViewTextBoxColumn.Name = "rollNoDataGridViewTextBoxColumn";
       this.rollNoDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1004,8 +1008,8 @@
       // rollLengthDataGridViewTextBoxColumn
       // 
       this.rollLengthDataGridViewTextBoxColumn.DataPropertyName = "RollLength";
-      dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.rollLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.rollLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
       this.rollLengthDataGridViewTextBoxColumn.HeaderText = "Length";
       this.rollLengthDataGridViewTextBoxColumn.Name = "rollLengthDataGridViewTextBoxColumn";
       this.rollLengthDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1079,10 +1083,10 @@
       // patternRepeatLengthDataGridViewTextBoxColumn
       // 
       this.patternRepeatLengthDataGridViewTextBoxColumn.DataPropertyName = "PatternRepeatLength";
-      dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      dataGridViewCellStyle7.Format = "N3";
-      dataGridViewCellStyle7.NullValue = null;
-      this.patternRepeatLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
+      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle3.Format = "N3";
+      dataGridViewCellStyle3.NullValue = null;
+      this.patternRepeatLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
       this.patternRepeatLengthDataGridViewTextBoxColumn.HeaderText = "Pattern Repeat";
       this.patternRepeatLengthDataGridViewTextBoxColumn.Name = "patternRepeatLengthDataGridViewTextBoxColumn";
       this.patternRepeatLengthDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1092,8 +1096,8 @@
       // colMeasuredLength
       // 
       this.colMeasuredLength.DataPropertyName = "BasFeet";
-      dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.colMeasuredLength.DefaultCellStyle = dataGridViewCellStyle8;
+      dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.colMeasuredLength.DefaultCellStyle = dataGridViewCellStyle4;
       this.colMeasuredLength.HeaderText = "Measured Length";
       this.colMeasuredLength.Name = "colMeasuredLength";
       this.colMeasuredLength.ReadOnly = true;
@@ -1102,10 +1106,6 @@
       // srcGrid
       // 
       this.srcGrid.DataSource = typeof(MahloService.Models.CarpetRoll);
-      // 
-      // srcNextRoll
-      // 
-      this.srcNextRoll.DataSource = typeof(MahloService.Models.CarpetRoll);
       // 
       // statusBar1
       // 
@@ -1131,8 +1131,11 @@
       this.Name = "FormBowAndSkew";
       this.Text = "Bow and Skew Mapper";
       this.grpNextRoll.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.srcLogic)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.srcNextRoll)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.picNextRoll)).EndInit();
       this.grpCurrentRoll.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.srcCurrentRoll)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.picCurrentRoll)).EndInit();
       this.grpMappingInfo.ResumeLayout(false);
       this.grpBow.ResumeLayout(false);
@@ -1144,11 +1147,8 @@
       ((System.ComponentModel.ISupportInitialize)(this.pnlAlarm)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pnlAlertMessage)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pnlQueueMessage)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.srcLogic)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.srcCurrentRoll)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcGrid)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.srcNextRoll)).EndInit();
       this.ResumeLayout(false);
 
     }

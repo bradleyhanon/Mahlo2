@@ -20,7 +20,8 @@ namespace MahloService.Settings
 
     public string ServiceUrl { get; set; } = "http://+:80/mahlo/";
 
-    public double EndCheckRollPieceLength { get; set; }
+    public double MaxEndCheckRollPieceLength { get; set; } = 10;
+    public double MinSeamSpacing { get; set; } = 4;
     public double SeamDetectIgnoreThreshold { get; set; } = 0.5;
     public double MinRollLengthForLengthChecking { get; set; } = 100;
     public double MinRollLengthForStyleAndRollCounting { get; set; } = 50;

@@ -16,7 +16,6 @@ namespace MahloService.Logic
   {
     IPatternRepeatSrc dataSrc;
 
-    //public PatternRepeatLogic(IPatternRepeatSrc dataSrc, IMeterLogic<PatternRepeatRoll> meterLogic) 
     public PatternRepeatLogic(
       IPatternRepeatSrc dataSrc, 
       ISewinQueue sewinQueue, 

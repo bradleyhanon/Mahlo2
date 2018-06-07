@@ -16,7 +16,7 @@ namespace MahloService.Opc
     string Recipe { get; }
     bool IsAutoMode { get; }
 
-    void ResetSeamDetector();
+    void AcknowledgeSeamDetect();
     void SetStatusIndicator(bool value);
     void SetCriticalAlarmIndicator(bool value);
     void SetMiscellaneousIndicator(bool value);

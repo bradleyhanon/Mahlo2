@@ -1,6 +1,8 @@
-﻿namespace MahloService.Models
+﻿using System.ComponentModel;
+
+namespace MahloService.Models
 {
-  interface IMahloRoll
+  interface IMahloRoll : INotifyPropertyChanged
   {
     int Id { get; }
     string RollNo { get; }

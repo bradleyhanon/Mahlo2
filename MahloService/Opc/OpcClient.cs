@@ -101,7 +101,7 @@ namespace MahloService.Opc
       this.Dispose(true);
     }
 
-    public void ResetSeamDetector()
+    public void AcknowledgeSeamDetect()
     {
       Task.Run(() =>
       {

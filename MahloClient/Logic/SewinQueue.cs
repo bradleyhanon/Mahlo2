@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MahloService.Models;
+using Newtonsoft.Json.Linq;
 
 namespace MahloClient.Logic
 {
@@ -14,18 +15,18 @@ namespace MahloClient.Logic
 
     public BindingList<CarpetRoll> Rolls { get; } = new BindingList<CarpetRoll>();
 
-    public void UpdateSewinQueue(IEnumerable<CarpetRoll> newRolls)
+    public void UpdateSewinQueue(JArray jsonRolls)
     {
       int index = 0;
-      foreach (var roll in newRolls)
+      foreach (var jsonRoll in jsonRolls)
       {
         if (index < this.Rolls.Count)
         {
-          this.Rolls[index] = roll;
+          jsonRolls[index].Populate(this.Rolls[index]);
         }
         else
         {
-          this.Rolls.Add(roll);
+          this.Rolls.Add(jsonRoll.ToObject<CarpetRoll>());
         }
 
         index++;

@@ -19,22 +19,22 @@ namespace MahloClient.Logic
 
     public override string InterfaceName => nameof(IPatternRepeatLogic);
 
-    //public override int Feet
-    //{
-    //  get => this.CurrentRoll.PrsFeet;
-    //  set => throw new NotImplementedException();
-    //}
+    public override int MeasuredLength
+    {
+      get => this.CurrentRoll.PrsFeet;
+      set => this.CurrentRoll.PrsFeet = value;
+    }
 
-    //public override int Speed
-    //{
-    //  get => this.CurrentRoll.PrsSpeed;
-    //  set => throw new NotImplementedException();
-    //}
+    public override int Speed
+    {
+      get => this.CurrentRoll.PrsSpeed;
+      set => this.CurrentRoll.PrsSpeed = value;
+    }
 
-    //public override bool IsMapValid
-    //{
-    //  get => this.CurrentRoll.PrsMapValid;
-    //  set => throw new NotImplementedException();
-    //}
+    public override bool IsMapValid
+    {
+      get => this.CurrentRoll.PrsMapValid;
+      set => this.CurrentRoll.PrsMapValid = value;
+    }
   }
 }

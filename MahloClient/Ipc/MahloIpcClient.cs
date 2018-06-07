@@ -79,14 +79,14 @@ namespace MahloClient.Ipc
 
         this.hubConnection = new HubConnection(appInfo.ServiceUrl);
         this.hubConnection.StateChanged += HubConnection_StateChanged;
-        this.hubConnection.Received += msg => Console.WriteLine(msg);
+        //this.hubConnection.Received += msg => Console.WriteLine(msg);
         //this.hubConnection.TraceLevel = TraceLevels.All;
         //this.hubConnection.TraceWriter = Console.Out;
         this.hubProxy = hubConnection.CreateHubProxy("MahloHub");
         this.hubProxy.On("UpdateSewinQueue", arg =>
         {
           this.context.Post(_ =>
-            this.sewinQueue.UpdateSewinQueue(arg.ToObject<CarpetRoll[]>()), null);
+            this.sewinQueue.UpdateSewinQueue(arg), null);
         });
 
         this.hubProxy.On<string, JObject>("UpdateMeterLogic", (name, arg) => this.context.Post(_ =>

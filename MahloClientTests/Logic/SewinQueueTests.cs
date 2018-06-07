@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using MahloService.Models;
 using MahloClient.Logic;
 using Xunit;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace MahloClientTests.Logic
 {
@@ -17,7 +19,7 @@ namespace MahloClientTests.Logic
     public SewinQueueTests()
     {
       this.target = new SewinQueue();
-      this.target.UpdateSewinQueue(this.GenerateRolls(100, 3));
+      this.target.UpdateSewinQueue(ToJArray(this.GenerateRolls(100, 3)));
     }
 
     [Fact]
@@ -32,7 +34,7 @@ namespace MahloClientTests.Logic
     public void NewRollsAreAddedAndOldRollsAreUpdated()
     {
       var newRolls = this.GenerateRolls(101, 3, 144);
-      this.target.UpdateSewinQueue(newRolls);
+      this.target.UpdateSewinQueue(ToJArray(newRolls));
 
       var expect = this.GenerateRolls(101, 3, 144);
       Assert.True(expect.SequenceEqual(this.target.Rolls, this));
@@ -59,8 +61,8 @@ namespace MahloClientTests.Logic
       var oldRolls = GenerateRolls(100, 100);
       var newRolls = oldRolls.Skip(1).Concat(oldRolls.Take(1));
       this.target.Rolls.Clear();
-      this.target.UpdateSewinQueue(oldRolls);
-      this.target.UpdateSewinQueue(newRolls);
+      this.target.UpdateSewinQueue(ToJArray(oldRolls));
+      this.target.UpdateSewinQueue(ToJArray(newRolls));
       Assert.True(newRolls.SequenceEqual(this.target.Rolls, this));
     }
 
@@ -80,6 +82,17 @@ namespace MahloClientTests.Logic
         .Select(index => new CarpetRoll() { RollNo = index.ToString(), RollWidth = width });
 
       return items.ToEnumerable().ToArray();
+    }
+
+    private JArray ToJArray(IEnumerable<object> src)
+    {
+      JArray result = new JArray();
+      foreach(var item in src)
+      {
+        result.Add(JObject.FromObject(item));
+      }
+
+      return result;
     }
   }
 }

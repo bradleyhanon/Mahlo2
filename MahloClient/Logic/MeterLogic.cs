@@ -143,9 +143,9 @@ namespace MahloClient.Logic
     [DependsOn(nameof(MappingStatusMessageBackColor))]
     public Color MappingStatusMessageForeColor => MappingStatusMessageBackColor.ContrastColor();
 
-    public int MeasuredLength { get; set; }
-    public int Speed { get; set; }
-    public bool IsMapValid { get; set; }
+    public abstract int MeasuredLength { get; set; }
+    public abstract int Speed { get; set; }
+    public abstract bool IsMapValid { get; set; }
     public double MeasuredWidth { get; set; }
     [DependsOn(nameof(MeasuredWidth))]
     public string MeasuredWidthStr => CommonMethods.InchesToStr(this.MeasuredWidth);

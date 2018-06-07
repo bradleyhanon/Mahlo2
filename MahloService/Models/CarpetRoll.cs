@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,8 @@ namespace MahloService.Models
   public class CarpetRoll : IMahloRoll, IBowAndSkewRoll, IPatternRepeatRoll
   {
     public const string CheckRollId = "CHKROL";
+
+    public event PropertyChangedEventHandler PropertyChanged;
 
     public int Id { get; set; }
 
@@ -151,6 +154,12 @@ namespace MahloService.Models
     public override string ToString()
     {
       return $"RollNo={RollNo}, RollWidth={RollWidth}";
+    }
+
+    private void OnPropertyChanged(string propertyName)
+    {
+      this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+      //Console.WriteLine($"CarpetRoll.{propertyName}: {oldValue} -> {newValue}");
     }
   }
 }

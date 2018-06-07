@@ -37,8 +37,9 @@ namespace MahloService.Logic
       this.dbLocal = dbLocal;
       this.dbMfg = dbMfg;
 
-      this.Rolls.AddRange(this.dbLocal.GetCarpetRolls());
-      this.nextRollId = this.Rolls.LastOrDefault()?.Id + 1 ?? 1;
+      //this.Rolls.AddRange(this.dbLocal.GetCarpetRolls());
+      //this.nextRollId = this.Rolls.LastOrDefault()?.Id + 1 ?? 1;
+      this.nextRollId = this.dbLocal.GetCarpetRolls().LastOrDefault()?.Id ?? 1;
 
       var ignoredResultTask = this.RefreshIfChanged();
       this.timer = Observable
@@ -91,13 +92,15 @@ namespace MahloService.Logic
           if (oldRoll != null)
           {
             newRoll.CopyTo(oldRoll);
-            dbLocal.UpdateCarpetRoll(oldRoll);
+            //dbLocal.UpdateCarpetRoll(oldRoll);
+            Console.WriteLine($"Upd Roll={newRoll.RollNo}");
           }
           else
           {
             newRoll.Id = this.nextRollId++;
             this.Rolls.Add(newRoll);
-            dbLocal.AddCarpetRoll(newRoll);
+            Console.WriteLine($"Add Roll={newRoll.RollNo}");
+            //dbLocal.AddCarpetRoll(newRoll);
           }
         }
       }

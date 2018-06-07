@@ -19,21 +19,22 @@ namespace MahloClient.Logic
 
     public override string InterfaceName => nameof(IMahloLogic);
 
-    //public override int Feet
-    //{
-    //  get => this.CurrentRoll.MalFeet;
-    //  set => throw new NotImplementedException();
-    //}
-    //public override int Speed
-    //{
-    //  get => this.CurrentRoll.MalSpeed;
-    //  set => throw new NotImplementedException();
-    //}
+    public override int MeasuredLength
+    {
+      get => this.CurrentRoll.MalFeet;
+      set => this.CurrentRoll.MalFeet = value;
+    }
 
-    //public override bool IsMapValid
-    //{
-    //  get => this.CurrentRoll.MalMapValid;
-    //  set => throw new NotImplementedException();
-    //}
+    public override int Speed
+    {
+      get => this.CurrentRoll.MalSpeed;
+      set => this.CurrentRoll.MalSpeed = value;
+    }
+
+    public override bool IsMapValid
+    {
+      get => this.CurrentRoll.MalMapValid;
+      set => this.CurrentRoll.MalMapValid = value;
+    }
   }
 }

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MahloService.Models
 {
-  interface IBowAndSkewRoll
+  interface IBowAndSkewRoll : INotifyPropertyChanged
   {
     int Id { get; }
     string RollNo { get; }

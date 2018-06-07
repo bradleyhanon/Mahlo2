@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,17 +9,39 @@ using MahloService.Repository;
 
 namespace MahloService.Simulation
 {
-  class DbMfgSim : IDbMfg
+  class DbMfgSim : IDbMfgSim
   {
-    List<CarpetRoll> SewinQueue { get; } = new List<CarpetRoll>
+    private int nextRollNo = 1000000;
+    public BindingList<CarpetRoll> SewinQueue { get; } = new BindingList<CarpetRoll>
     {
       new CarpetRoll
       {
         RollNo = CarpetRoll.CheckRollId,
-        RollLength = 1000,
+        RollLength = 600,
         RollWidth = 144,
       }
     };
+
+    public void AddRoll()
+    {
+      CarpetRoll roll = new CarpetRoll
+      {
+        RollNo = nextRollNo.ToString(),
+        OrderNo = (nextRollNo + 1000000).ToString(),
+        ColorCode = "001",
+        ColorName = "Red",
+        StyleCode = "Plaid",
+        StyleName = "Checkerboard",
+        BackingCode = "SA",
+        DefaultRecipe = "Line Detection",
+        RollWidth = 144,
+        RollLength = 100,
+        PatternRepeatLength = 2.35,
+      };
+
+      this.nextRollNo++;
+      this.SewinQueue.Add(roll);
+    }
 
     public Task BasUpdateDefaultRecipe(string styleCode, string rollNo, string recipeName)
     {

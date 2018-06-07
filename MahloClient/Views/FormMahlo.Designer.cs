@@ -17,12 +17,12 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMahlo));
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
       this.lblSkewPercent = new System.Windows.Forms.Label();
       this.srcCurrentRoll = new System.Windows.Forms.BindingSource(this.components);
       this.lblPreviousRollLength = new System.Windows.Forms.Label();
@@ -248,7 +248,7 @@
       // 
       this.lblLineSpeed.BackColor = System.Drawing.Color.Gainsboro;
       this.lblLineSpeed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.lblLineSpeed.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcCurrentRoll, "MalSpeed", true));
+      this.lblLineSpeed.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "Speed", true));
       this.lblLineSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblLineSpeed.ForeColor = System.Drawing.Color.Black;
       this.lblLineSpeed.Location = new System.Drawing.Point(202, 34);
@@ -273,7 +273,7 @@
       // 
       this.lblMeasuredLen.BackColor = System.Drawing.Color.Gainsboro;
       this.lblMeasuredLen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.lblMeasuredLen.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcCurrentRoll, "MalFeet", true));
+      this.lblMeasuredLen.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcLogic, "MeasuredLength", true));
       this.lblMeasuredLen.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblMeasuredLen.ForeColor = System.Drawing.Color.Black;
       this.lblMeasuredLen.Location = new System.Drawing.Point(24, 34);
@@ -1002,8 +1002,8 @@
       // 
       // moveUpColumn
       // 
-      dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-      this.moveUpColumn.DefaultCellStyle = dataGridViewCellStyle7;
+      dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+      this.moveUpColumn.DefaultCellStyle = dataGridViewCellStyle1;
       this.moveUpColumn.HeaderText = "Up";
       this.moveUpColumn.Name = "moveUpColumn";
       this.moveUpColumn.ReadOnly = true;
@@ -1013,8 +1013,8 @@
       // 
       // moveDownColumn
       // 
-      dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-      this.moveDownColumn.DefaultCellStyle = dataGridViewCellStyle8;
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+      this.moveDownColumn.DefaultCellStyle = dataGridViewCellStyle2;
       this.moveDownColumn.HeaderText = "Down";
       this.moveDownColumn.Name = "moveDownColumn";
       this.moveDownColumn.ReadOnly = true;
@@ -1025,8 +1025,8 @@
       // rollNoDataGridViewTextBoxColumn
       // 
       this.rollNoDataGridViewTextBoxColumn.DataPropertyName = "RollNo";
-      dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.rollNoDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle9;
+      dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.rollNoDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
       this.rollNoDataGridViewTextBoxColumn.HeaderText = "Greige Roll";
       this.rollNoDataGridViewTextBoxColumn.Name = "rollNoDataGridViewTextBoxColumn";
       this.rollNoDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1046,8 +1046,8 @@
       // rollLengthDataGridViewTextBoxColumn
       // 
       this.rollLengthDataGridViewTextBoxColumn.DataPropertyName = "RollLength";
-      dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.rollLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle10;
+      dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.rollLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle4;
       this.rollLengthDataGridViewTextBoxColumn.HeaderText = "Length";
       this.rollLengthDataGridViewTextBoxColumn.Name = "rollLengthDataGridViewTextBoxColumn";
       this.rollLengthDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1122,10 +1122,10 @@
       // patternRepeatLengthDataGridViewTextBoxColumn
       // 
       this.patternRepeatLengthDataGridViewTextBoxColumn.DataPropertyName = "PatternRepeatLength";
-      dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      dataGridViewCellStyle11.Format = "N3";
-      dataGridViewCellStyle11.NullValue = null;
-      this.patternRepeatLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle11;
+      dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle5.Format = "N3";
+      dataGridViewCellStyle5.NullValue = null;
+      this.patternRepeatLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
       this.patternRepeatLengthDataGridViewTextBoxColumn.HeaderText = "Pattern Repeat";
       this.patternRepeatLengthDataGridViewTextBoxColumn.Name = "patternRepeatLengthDataGridViewTextBoxColumn";
       this.patternRepeatLengthDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1134,8 +1134,8 @@
       // colMeasuredLength
       // 
       this.colMeasuredLength.DataPropertyName = "MalFeet";
-      dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.colMeasuredLength.DefaultCellStyle = dataGridViewCellStyle12;
+      dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.colMeasuredLength.DefaultCellStyle = dataGridViewCellStyle6;
       this.colMeasuredLength.HeaderText = "Measured Length";
       this.colMeasuredLength.Name = "colMeasuredLength";
       this.colMeasuredLength.ReadOnly = true;
