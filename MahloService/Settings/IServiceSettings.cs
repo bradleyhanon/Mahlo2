@@ -10,8 +10,13 @@
     double MinRollLengthForLengthChecking { get; set; }
     double MinRollLengthForStyleAndRollCounting { get; set; }
     double SeamIndicatorKeepOnLength { get; set; }
-    double RollTooLongThreshold { get; set; }
-    double RollTooShortThreshold { get; set; }
+    double RollTooLongFactor { get; set; }
+    double RollTooShortFactor { get; set; }
+
+    double BowLimitSA { get; set; }
+    double BowLimitVinyl { get; set; }
+    double SkewLimitSA { get; set; }
+    double SkewLimitVinyl { get; set; }
 
     //bool ArchiveRollMaps { get; set; }
     //bool AutoCloseMahloDDEServer { get; set; }

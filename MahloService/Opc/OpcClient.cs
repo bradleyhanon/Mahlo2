@@ -152,7 +152,7 @@ namespace MahloService.Opc
         ("Current.Version.0.KeyColumn", value => this.Recipe = (string)value),
         ("Readings.Bridge.0.General.0.MeterCount", value =>  this.FeetCounter = Extensions.MetersToFeet((double)value)),
         //("Readings.Bridge.0.General.0.MeterOffset", value => this.MetersOffset = (double)value),
-        ("Readings.Bridge.0.General.0.Speed", value => this.FeetPerMinute = Extensions.MetersToFeet((double)value)),
+        ("Readings.Bridge.0.General.0.Speed", value => this.FeetPerMinute = Extensions.MetersToFeet((double)value) * 60),
       });
 
       //case IWidthSrc widthSrc:

@@ -14,14 +14,16 @@ namespace MahloService.Logic
 {
   class PatternRepeatLogic : MeterLogic<PatternRepeatRoll>, IPatternRepeatLogic
   {
-    IPatternRepeatSrc dataSrc;
+    private IPatternRepeatSrc dataSrc;
+
+    private double maxElongation;
 
     public PatternRepeatLogic(
-      IPatternRepeatSrc dataSrc, 
-      ISewinQueue sewinQueue, 
-      IServiceSettings appInfo, 
-      IUserAttentions<PatternRepeatRoll> userAttentions, 
-      ICriticalStops<PatternRepeatRoll> criticalStops, 
+      IPatternRepeatSrc dataSrc,
+      ISewinQueue sewinQueue,
+      IServiceSettings appInfo,
+      IUserAttentions<PatternRepeatRoll> userAttentions,
+      ICriticalStops<PatternRepeatRoll> criticalStops,
       IProgramState programState,
       ISchedulerProvider schedulerProvider)
       : base(dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
@@ -47,12 +49,30 @@ namespace MahloService.Logic
       set => this.CurrentRoll.PrsMapValid = value;
     }
 
+    protected override void OnRollFinished(CarpetRoll carpetRoll)
+    {
+      base.OnRollFinished(carpetRoll);
+      carpetRoll.Elongation = this.maxElongation;
+    }
+
+    protected override void OnRollStarted(CarpetRoll carpetRoll)
+    {
+      base.OnRollStarted(carpetRoll);
+      this.maxElongation = 0;
+    }
+
     protected override void OpcValueChanged(string propertyName)
     {
-      switch(propertyName)
+      switch (propertyName)
       {
         case nameof(this.dataSrc.PatternRepeatLength):
           this.CurrentRoll.PatternRepeatLength = this.dataSrc.PatternRepeatLength;
+          double elongation = dataSrc.PatternRepeatLength - this.CurrentRoll.PatternRepeatLength;
+          if (Math.Abs(elongation) > Math.Abs(this.maxElongation))
+          {
+            this.maxElongation = elongation;
+          }
+
           break;
 
         default:

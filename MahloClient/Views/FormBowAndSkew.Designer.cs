@@ -17,10 +17,10 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBowAndSkew));
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
       this.grpNextRoll = new System.Windows.Forms.GroupBox();
       this.lblNextRollType = new System.Windows.Forms.Label();
       this.srcLogic = new System.Windows.Forms.BindingSource(this.components);
@@ -92,9 +92,10 @@
       this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
       this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
       this.dataGridView1 = new MahloClient.Views.MyDataGridView();
+      this.srcGrid = new System.Windows.Forms.BindingSource(this.components);
+      this.statusBar1 = new MahloClient.Views.MyStatusBar();
       this.rollNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.orderNoColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.rollLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.styleCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.styleNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colorCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -103,9 +104,8 @@
       this.rollWidthStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colDefaultRecipe = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.patternRepeatLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colRollLength = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colMeasuredLength = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.srcGrid = new System.Windows.Forms.BindingSource(this.components);
-      this.statusBar1 = new MahloClient.Views.MyStatusBar();
       this.grpNextRoll.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.srcLogic)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcNextRoll)).BeginInit();
@@ -842,6 +842,7 @@
       this.btnDisableSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.btnDisableSystem.BackColor = System.Drawing.SystemColors.ControlLight;
       this.btnDisableSystem.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "IsSystemEnabled", true));
+      this.btnDisableSystem.Enabled = false;
       this.btnDisableSystem.ForeColor = System.Drawing.Color.Black;
       this.btnDisableSystem.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
       this.btnDisableSystem.ImageIndex = 5;
@@ -867,7 +868,7 @@
       this.btnWaitForSeam.Name = "btnWaitForSeam";
       this.btnWaitForSeam.Size = new System.Drawing.Size(152, 60);
       this.btnWaitForSeam.TabIndex = 14;
-      this.btnWaitForSeam.Text = "Wait for Seam";
+      this.btnWaitForSeam.Text = "Clear Alarms";
       this.btnWaitForSeam.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
       this.btnWaitForSeam.UseVisualStyleBackColor = false;
       this.btnWaitForSeam.Click += new System.EventHandler(this.BtnWaitForSeam_Click);
@@ -963,7 +964,6 @@
       this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.rollNoDataGridViewTextBoxColumn,
             this.orderNoColumn,
-            this.rollLengthDataGridViewTextBoxColumn,
             this.styleCodeDataGridViewTextBoxColumn,
             this.styleNameDataGridViewTextBoxColumn,
             this.colorCodeDataGridViewTextBoxColumn,
@@ -972,6 +972,7 @@
             this.rollWidthStrDataGridViewTextBoxColumn,
             this.colDefaultRecipe,
             this.patternRepeatLengthDataGridViewTextBoxColumn,
+            this.colRollLength,
             this.colMeasuredLength});
       this.dataGridView1.DataSource = this.srcGrid;
       this.dataGridView1.Location = new System.Drawing.Point(13, 350);
@@ -982,13 +983,27 @@
       this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
       this.dataGridView1.Size = new System.Drawing.Size(1000, 215);
       this.dataGridView1.TabIndex = 6;
+      this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DataGridView1_CellFormatting);
       this.dataGridView1.SelectionChanged += new System.EventHandler(this.DataGridView1_SelectionChanged);
+      // 
+      // srcGrid
+      // 
+      this.srcGrid.DataSource = typeof(MahloService.Models.CarpetRoll);
+      // 
+      // statusBar1
+      // 
+      this.statusBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
+      this.statusBar1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.statusBar1.Location = new System.Drawing.Point(0, 637);
+      this.statusBar1.Name = "statusBar1";
+      this.statusBar1.Size = new System.Drawing.Size(1026, 24);
+      this.statusBar1.TabIndex = 7;
       // 
       // rollNoDataGridViewTextBoxColumn
       // 
       this.rollNoDataGridViewTextBoxColumn.DataPropertyName = "RollNo";
-      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.rollNoDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+      dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.rollNoDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
       this.rollNoDataGridViewTextBoxColumn.HeaderText = "Greige Roll";
       this.rollNoDataGridViewTextBoxColumn.Name = "rollNoDataGridViewTextBoxColumn";
       this.rollNoDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1004,17 +1019,6 @@
       this.orderNoColumn.ReadOnly = true;
       this.orderNoColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.orderNoColumn.Width = 70;
-      // 
-      // rollLengthDataGridViewTextBoxColumn
-      // 
-      this.rollLengthDataGridViewTextBoxColumn.DataPropertyName = "RollLength";
-      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.rollLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
-      this.rollLengthDataGridViewTextBoxColumn.HeaderText = "Length";
-      this.rollLengthDataGridViewTextBoxColumn.Name = "rollLengthDataGridViewTextBoxColumn";
-      this.rollLengthDataGridViewTextBoxColumn.ReadOnly = true;
-      this.rollLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.rollLengthDataGridViewTextBoxColumn.Width = 60;
       // 
       // styleCodeDataGridViewTextBoxColumn
       // 
@@ -1083,38 +1087,36 @@
       // patternRepeatLengthDataGridViewTextBoxColumn
       // 
       this.patternRepeatLengthDataGridViewTextBoxColumn.DataPropertyName = "PatternRepeatLength";
-      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      dataGridViewCellStyle3.Format = "N3";
-      dataGridViewCellStyle3.NullValue = null;
-      this.patternRepeatLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
+      dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle6.Format = "N3";
+      dataGridViewCellStyle6.NullValue = null;
+      this.patternRepeatLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
       this.patternRepeatLengthDataGridViewTextBoxColumn.HeaderText = "Pattern Repeat";
       this.patternRepeatLengthDataGridViewTextBoxColumn.Name = "patternRepeatLengthDataGridViewTextBoxColumn";
       this.patternRepeatLengthDataGridViewTextBoxColumn.ReadOnly = true;
       this.patternRepeatLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.patternRepeatLengthDataGridViewTextBoxColumn.Width = 75;
       // 
+      // colRollLength
+      // 
+      this.colRollLength.DataPropertyName = "RollLength";
+      dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.colRollLength.DefaultCellStyle = dataGridViewCellStyle7;
+      this.colRollLength.HeaderText = "Roll Length";
+      this.colRollLength.Name = "colRollLength";
+      this.colRollLength.ReadOnly = true;
+      this.colRollLength.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colRollLength.Width = 60;
+      // 
       // colMeasuredLength
       // 
       this.colMeasuredLength.DataPropertyName = "BasFeet";
-      dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.colMeasuredLength.DefaultCellStyle = dataGridViewCellStyle4;
+      dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.colMeasuredLength.DefaultCellStyle = dataGridViewCellStyle8;
       this.colMeasuredLength.HeaderText = "Measured Length";
       this.colMeasuredLength.Name = "colMeasuredLength";
       this.colMeasuredLength.ReadOnly = true;
       this.colMeasuredLength.Width = 75;
-      // 
-      // srcGrid
-      // 
-      this.srcGrid.DataSource = typeof(MahloService.Models.CarpetRoll);
-      // 
-      // statusBar1
-      // 
-      this.statusBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.statusBar1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.statusBar1.Location = new System.Drawing.Point(0, 637);
-      this.statusBar1.Name = "statusBar1";
-      this.statusBar1.Size = new System.Drawing.Size(1026, 24);
-      this.statusBar1.TabIndex = 7;
       // 
       // FormBowAndSkew
       // 
@@ -1230,7 +1232,6 @@
     private System.Windows.Forms.Panel buttonPanel;
     private System.Windows.Forms.DataGridViewTextBoxColumn rollNoDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn orderNoColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn rollLengthDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn styleCodeDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn styleNameDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn colorCodeDataGridViewTextBoxColumn;
@@ -1239,6 +1240,7 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn rollWidthStrDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn colDefaultRecipe;
     private System.Windows.Forms.DataGridViewTextBoxColumn patternRepeatLengthDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colRollLength;
     private System.Windows.Forms.DataGridViewTextBoxColumn colMeasuredLength;
   }
 }

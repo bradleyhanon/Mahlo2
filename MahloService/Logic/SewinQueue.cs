@@ -83,24 +83,32 @@ namespace MahloService.Logic
         this.priorLastRoll = newRolls.LastOrDefault()?.RollNo ?? string.Empty;
         this.priorQueueSize = newRolls.Count();
 
-        // Skip newRolls that overlap with old rows
-        //var rollsToAdd = newRolls.FindNewItems(this.Rolls, (a, b) => a.RollId == b.RollId);
+        // Remove completed rolls
+        for (int j = this.Rolls.Count - 1; j >= 0; j--)
+        {
+          var oldRoll = this.Rolls[j];
+          if (!newRolls.Any(newRoll => newRoll.RollNo == oldRoll.RollNo))
+          {
+            //Console.WriteLine($"Del Roll={oldRoll.RollNo}");
+            this.Rolls.RemoveAt(j);
+          }
+        }
 
         foreach (var newRoll in newRolls)
         {
           var oldRoll = this.Rolls.FirstOrDefault(item => item.RollNo == newRoll.RollNo);
           if (oldRoll != null)
           {
+            // Update old rolls we already have
             newRoll.CopyTo(oldRoll);
-            //dbLocal.UpdateCarpetRoll(oldRoll);
-            Console.WriteLine($"Upd Roll={newRoll.RollNo}");
+            //Console.WriteLine($"Upd Roll={newRoll.RollNo}");
           }
           else
           {
+            // Add new rolls
             newRoll.Id = this.nextRollId++;
             this.Rolls.Add(newRoll);
-            Console.WriteLine($"Add Roll={newRoll.RollNo}");
-            //dbLocal.AddCarpetRoll(newRoll);
+            //Console.WriteLine($"Add Roll={newRoll.RollNo}");
           }
         }
       }

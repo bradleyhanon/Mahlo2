@@ -16,7 +16,11 @@ namespace MahloService.Logic
 {
   class BowAndSkewLogic : MeterLogic<BowAndSkewRoll>, IBowAndSkewLogic
   {
-    IBowAndSkewSrc dataSrc;
+    private IBowAndSkewSrc dataSrc;
+
+    private double maxBow;
+    private double maxSkew;
+
     public BowAndSkewLogic(
       IBowAndSkewSrc dataSrc,
       ISewinQueue sewinQueue,
@@ -66,16 +70,40 @@ namespace MahloService.Logic
       return Task.CompletedTask;
     }
 
+    protected override void OnRollFinished(CarpetRoll carpetRoll)
+    {
+      base.OnRollFinished(carpetRoll);
+      carpetRoll.Bow = this.maxBow;
+      carpetRoll.Skew = this.maxSkew;
+    }
+
+    protected override void OnRollStarted(CarpetRoll carpetRoll)
+    {
+      base.OnRollStarted(carpetRoll);
+      this.maxBow = 0;
+      this.maxSkew = 0;
+    }
+
     protected override void OpcValueChanged(string propertyName)
     {
       switch(propertyName)
       {
         case nameof(this.dataSrc.Bow):
           this.CurrentRoll.Bow = this.dataSrc.Bow;
+          if (Math.Abs(this.dataSrc.Bow) > Math.Abs(this.maxBow))
+          {
+            this.maxBow = this.dataSrc.Bow;
+          }
+
           break;
 
         case nameof(this.dataSrc.Skew):
           this.CurrentRoll.Skew = this.dataSrc.Skew;
+          if (Math.Abs(this.dataSrc.Skew) > Math.Abs(this.maxSkew))
+          {
+            this.maxSkew = this.dataSrc.Skew;
+          }
+
           break;
 
         default:

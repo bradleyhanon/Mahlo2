@@ -100,13 +100,13 @@ namespace MahloServiceTests
     }
 
     [Fact]
-    public void OldRollsAreUpdatedAndNewRollsAreAdded()
+    public void MatchingRollsUpdatedNewRollsAddedOthersRemoved()
     {
       roll3.ProductImageURL = "Unchanged";
       var newRolls1 = new CarpetRoll[] { Clone(roll2), Clone(roll3), Clone(roll4) };
       roll3.ProductImageURL = "Now changed";
-      var newRolls2 = new CarpetRoll[] { Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
-      var expected = new CarpetRoll[] { Clone(roll2), Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
+      var newRolls2 = new CarpetRoll[] { Clone(roll4), Clone(roll3), Clone(roll5), Clone(roll1) };
+      var expected = new CarpetRoll[] { Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
 
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
       this.dbMfg.GetCoaterSewinQueue().Returns(newRolls1);
@@ -121,6 +121,27 @@ namespace MahloServiceTests
       Assert.True(target.Rolls.SequenceEqual(expected, this));
       Assert.Equal("Now changed", target.Rolls.Single(item => item.RollNo == roll3.RollNo).ProductImageURL);
     }
+
+    //[Fact]
+    //public void RollsNotInUpdateAreRemoved()
+    //{
+    //  var newRolls1 = new CarpetRoll[] { Clone(roll2), Clone(roll3), Clone(roll4) };
+    //  var newRolls2 = new CarpetRoll[] { Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
+    //  var expected = new CarpetRoll[] { Clone(roll2), Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
+
+    //  this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
+    //  this.dbMfg.GetCoaterSewinQueue().Returns(newRolls1);
+    //  target = new SewinQueue(schedulers, dbLocal, dbMfg);
+    //  this.dbMfg.Received(1).GetCoaterSewinQueue();
+
+    //  this.dbMfg.ClearReceivedCalls();
+    //  this.dbMfg.GetIsSewinQueueChanged(3, roll2.RollNo, roll4.RollNo).Returns(true);
+    //  this.dbMfg.GetCoaterSewinQueue().Returns(newRolls2);
+    //  this.schedulers.WinFormsThread.AdvanceBy(target.RefreshInterval.Ticks);
+    //  this.dbMfg.Received(1).GetCoaterSewinQueue();
+    //  Assert.True(target.Rolls.SequenceEqual(expected, this));
+    //  Assert.Equal("Now changed", target.Rolls.Single(item => item.RollNo == roll3.RollNo).ProductImageURL);
+    //}
 
     private CarpetRoll Clone(CarpetRoll roll)
     {

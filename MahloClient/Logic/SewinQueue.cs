@@ -32,6 +32,12 @@ namespace MahloClient.Logic
         index++;
       }
 
+      // Remove extra rolls
+      while (this.Rolls.Count > jsonRolls.Count)
+      {
+        this.Rolls.RemoveAt(this.Rolls.Count - 1);
+      }
+
       this.Changed?.Invoke(this, EventArgs.Empty);
     }
 

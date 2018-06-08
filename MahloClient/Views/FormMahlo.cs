@@ -12,6 +12,7 @@ using MahloClient.Ipc;
 using MahloClient.Logic;
 using MahloService.Logic;
 using MahloService.Models;
+using MahloService.Settings;
 
 namespace MahloClient.Views
 {
@@ -22,16 +23,18 @@ namespace MahloClient.Views
     private IMahloLogic logic;
     private ISewinQueue sewinQueue;
     private IMahloIpcClient ipcClient;
+    private IServiceSettings serviceSettings;
     private Font ArrowFont = new Font("Wingdings", 30);
 
     private IDisposable MahloPropertyChangedSubscription;
 
-    public FormMahlo(IMahloLogic logic, ISewinQueue sewinQueue, IMahloIpcClient ipcClient)
+    public FormMahlo(IMahloLogic logic, ISewinQueue sewinQueue, IMahloIpcClient ipcClient, IServiceSettings serviceSettings)
     {
       InitializeComponent();
       this.logic = logic;
       this.sewinQueue = sewinQueue;
       this.ipcClient = ipcClient;
+      this.serviceSettings = serviceSettings;
       this.statusBar1.StatusBarInfo = (IStatusBarInfo)this.logic;
 
       MahloPropertyChangedSubscription =
@@ -110,7 +113,6 @@ namespace MahloClient.Views
       }
     }
 
-
     private void BtnViewCoaterSchedule_Click(object sender, EventArgs e)
     {
       using (var form = new FormCoaterSchedule(this.ipcClient))
@@ -172,6 +174,14 @@ namespace MahloClient.Views
 
           e.Handled = true;
         }
+      }
+    }
+
+    private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+    {
+      if (e.RowIndex >= 0 && e.RowIndex < this.logic.CurrentRollIndex && e.ColumnIndex == this.colMeasuredLength.Index)
+      {
+        MyColors.SetFeetColor(this.dataGridView1, e, this.serviceSettings);
       }
     }
   }

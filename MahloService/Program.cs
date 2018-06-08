@@ -96,7 +96,7 @@ namespace MahloService
                   e.Result = true;
                 };
 
-                Log.Logger.Information("Applicaiton started");
+                Log.Logger.Information("Application started");
                 container.GetInstance<ICarpetProcessor>().Start();
                 syncContext.RunOnCurrentThread();
                 Log.Logger.Information("Application stopped");

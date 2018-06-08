@@ -29,10 +29,12 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.label4 = new System.Windows.Forms.Label();
+      this.textBox4 = new System.Windows.Forms.TextBox();
       this.btnRun = new System.Windows.Forms.Button();
       this.btnAddRoll = new System.Windows.Forms.Button();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -47,8 +49,6 @@
       this.dataGridView1 = new System.Windows.Forms.DataGridView();
       this.orderNoColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.groupBox5 = new System.Windows.Forms.GroupBox();
-      this.label4 = new System.Windows.Forms.Label();
-      this.textBox4 = new System.Windows.Forms.TextBox();
       this.rollNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.rollLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.styleCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -82,6 +82,24 @@
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Sew-in Queue";
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(6, 22);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(84, 13);
+      this.label4.TabIndex = 0;
+      this.label4.Text = "Feet per Minute:";
+      // 
+      // textBox4
+      // 
+      this.textBox4.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcSimInfo, "FeetPerMinute", true));
+      this.textBox4.Location = new System.Drawing.Point(94, 19);
+      this.textBox4.Name = "textBox4";
+      this.textBox4.Size = new System.Drawing.Size(100, 20);
+      this.textBox4.TabIndex = 1;
+      this.textBox4.Text = "200";
       // 
       // btnRun
       // 
@@ -217,7 +235,7 @@
       this.dataGridView1.Location = new System.Drawing.Point(13, 309);
       this.dataGridView1.MultiSelect = false;
       this.dataGridView1.Name = "dataGridView1";
-      this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+      this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
       this.dataGridView1.Size = new System.Drawing.Size(1025, 219);
       this.dataGridView1.TabIndex = 5;
       // 
@@ -238,29 +256,11 @@
       this.groupBox5.TabStop = false;
       this.groupBox5.Text = "Cut Rolls";
       // 
-      // label4
-      // 
-      this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(6, 22);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(84, 13);
-      this.label4.TabIndex = 0;
-      this.label4.Text = "Feet per Minute:";
-      // 
-      // textBox4
-      // 
-      this.textBox4.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcSimInfo, "FeetPerMinute", true));
-      this.textBox4.Location = new System.Drawing.Point(94, 19);
-      this.textBox4.Name = "textBox4";
-      this.textBox4.Size = new System.Drawing.Size(100, 20);
-      this.textBox4.TabIndex = 1;
-      this.textBox4.Text = "200";
-      // 
       // rollNoDataGridViewTextBoxColumn
       // 
       this.rollNoDataGridViewTextBoxColumn.DataPropertyName = "RollNo";
-      dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.rollNoDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle4;
+      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.rollNoDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
       this.rollNoDataGridViewTextBoxColumn.HeaderText = "Greige Roll";
       this.rollNoDataGridViewTextBoxColumn.Name = "rollNoDataGridViewTextBoxColumn";
       this.rollNoDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -270,8 +270,8 @@
       // rollLengthDataGridViewTextBoxColumn
       // 
       this.rollLengthDataGridViewTextBoxColumn.DataPropertyName = "RollLength";
-      dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.rollLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.rollLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
       this.rollLengthDataGridViewTextBoxColumn.HeaderText = "Length";
       this.rollLengthDataGridViewTextBoxColumn.Name = "rollLengthDataGridViewTextBoxColumn";
       this.rollLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
@@ -338,10 +338,10 @@
       // patternRepeatLengthDataGridViewTextBoxColumn
       // 
       this.patternRepeatLengthDataGridViewTextBoxColumn.DataPropertyName = "PatternRepeatLength";
-      dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      dataGridViewCellStyle6.Format = "N3";
-      dataGridViewCellStyle6.NullValue = null;
-      this.patternRepeatLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
+      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle3.Format = "N3";
+      dataGridViewCellStyle3.NullValue = null;
+      this.patternRepeatLengthDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
       this.patternRepeatLengthDataGridViewTextBoxColumn.HeaderText = "Pattern Repeat";
       this.patternRepeatLengthDataGridViewTextBoxColumn.Name = "patternRepeatLengthDataGridViewTextBoxColumn";
       this.patternRepeatLengthDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;

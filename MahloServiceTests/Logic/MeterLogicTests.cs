@@ -112,6 +112,7 @@ namespace MahloServiceTests.Logic
 
       this.target = new MahloLogic(this.srcData, this.sewinQueue, this.appInfo, this.userAttentions, this.criticalStops, this.programState, this.testSchedulers);
       this.target.CurrentRoll = this.sewinQueue.Rolls[0];
+      this.sewinQueue.QueueChanged += Raise.Event<Action>(); 
       Assert.True(this.userAttentions.VerifyRollSequence);
       Assert.NotNull(this.target.CurrentRoll);
       this.userAttentions.ClearAll();
@@ -160,7 +161,7 @@ namespace MahloServiceTests.Logic
     public void RollTooLongSetsUserAttention()
     {
       target.CurrentRoll = this.sewinQueue.Rolls[1];
-      this.appInfo.RollTooLongThreshold = 1.1;
+      this.appInfo.RollTooLongFactor = 1.1;
 
       double maxlength = target.CurrentRoll.RollLength * 1.1;
       srcData.FeetCounter = (int)maxlength;
@@ -182,8 +183,8 @@ namespace MahloServiceTests.Logic
     [Fact]
     public void RollLengthLessThan90PercentOfExpectedRollLengthIsTooShort()
     {
-      this.appInfo.RollTooShortThreshold = 0.9;
-      this.appInfo.RollTooLongThreshold = 1.1;
+      this.appInfo.RollTooShortFactor = 0.9;
+      this.appInfo.RollTooLongFactor = 1.1;
       this.appInfo.MinRollLengthForLengthChecking = 50;
       this.userAttentions.Any.Returns(false);
       this.criticalStops.Any.Returns(false);

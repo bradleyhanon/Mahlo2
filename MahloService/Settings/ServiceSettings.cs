@@ -26,9 +26,12 @@ namespace MahloService.Settings
     public double MinRollLengthForLengthChecking { get; set; } = 100;
     public double MinRollLengthForStyleAndRollCounting { get; set; } = 50;
     public double SeamIndicatorKeepOnLength { get; set; } = 10;
-    public double RollTooLongThreshold { get; set; } = 1.1;
-    public double RollTooShortThreshold { get; set; } = 0.9;
-
+    public double RollTooLongFactor { get; set; } = 1.1;
+    public double RollTooShortFactor { get; set; } = 0.9;
+    public double BowLimitSA { get; set; } = 0.5;
+    public double BowLimitVinyl { get; set; } = 0.25;
+    public double SkewLimitSA { get; set; } = 1.25;
+    public double SkewLimitVinyl { get; set; } = 0.75;
 
     //public int MainFormBackgroundColor { get; set; } = 0xECF2F2;
     //public string DDEServername { get; set; } = "BowAndSkew";

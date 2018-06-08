@@ -33,6 +33,10 @@ namespace MahloService.Logic
     private int styleCount;
     //private double meterResetAtLength;
     private int feetCounterAtRollStart;
+    private bool seamAckNeeded;
+    private double feetCounterAtLastSeam;
+
+    private bool isSewinQueueInitialized;
 
     private List<IDisposable> disposables = new List<IDisposable>();
 
@@ -51,7 +55,6 @@ namespace MahloService.Logic
       this.UserAttentions = userAttentions;
       this.CriticalStops = criticalStops;
       this.programState = programState;
-      this.RestoreState();
       this.disposables.AddRange(new[]
         {
           Observable
@@ -174,21 +177,6 @@ namespace MahloService.Logic
       return !this.CurrentRoll.IsCheckRoll && !this.UserAttentions.Any && !this.CriticalStops.Any;
     }
 
-    protected virtual void RestoreState()
-    {
-      var state = this.programState.GetSubState(nameof(MeterLogic<Model>), nameof(Model));
-      this.checkRollSize = state.Get<bool?>(nameof(checkRollSize)) ?? true;
-      this.rollCount = state.Get<int?>(nameof(rollCount)) ?? 0;
-      this.styleCount = state.Get<int?>(nameof(styleCount)) ?? this.styleCount;
-      this.feetCounterAtRollStart = state.Get<int?>(nameof(feetCounterAtRollStart)) ?? 0;
-
-      string rollNo = state.Get<string>(nameof(this.CurrentRoll.RollNo)) ?? string.Empty;
-      this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == rollNo) ?? new CarpetRoll();
-
-      // On startup, roll sequence should be verified
-      this.UserAttentions.VerifyRollSequence = true;
-    }
-
     protected virtual void Dispose(bool disposing)
     {
       // Save program state
@@ -206,15 +194,34 @@ namespace MahloService.Logic
       this.RollFinished?.Invoke(carpetRoll);
     }
 
+    protected virtual void RestoreState()
+    {
+      var state = this.programState.GetSubState(nameof(MeterLogic<Model>), typeof(Model).Name);
+      this.checkRollSize = state.Get<bool?>(nameof(checkRollSize)) ?? true;
+      this.rollCount = state.Get<int?>(nameof(rollCount)) ?? 0;
+      this.styleCount = state.Get<int?>(nameof(styleCount)) ?? this.styleCount;
+      this.feetCounterAtRollStart = state.Get<int?>(nameof(feetCounterAtRollStart)) ?? 0;
+      this.feetCounterAtLastSeam = state.Get<int?>(nameof(feetCounterAtLastSeam)) ?? 0;
+      this.seamAckNeeded = state.Get<bool?>(nameof(seamAckNeeded)) ?? false;
+
+      string rollNo = state.Get<string>(nameof(this.CurrentRoll.RollNo)) ?? string.Empty;
+      this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == rollNo) ?? new CarpetRoll();
+
+      // On startup, roll sequence should be verified
+      this.UserAttentions.VerifyRollSequence = true;
+    }
+
     private void SaveState()
     {
       var state = programState.GetSubState(nameof(MeterLogic<Model>));
       state.Set(typeof(Model).Name, new
       {
+        this.checkRollSize,
         this.rollCount,
         this.styleCount,
         this.feetCounterAtRollStart,
-        this.checkRollSize,
+        this.feetCounterAtLastSeam,
+        this.seamAckNeeded,
         this.CurrentRoll.RollNo,
       });
     }
@@ -293,6 +300,12 @@ namespace MahloService.Logic
 
     private void SewinQueueChanged()
     {
+      if (!this.isSewinQueueInitialized)
+      {
+        this.isSewinQueueInitialized = true;
+        this.RestoreState();
+      }
+
       if (!this.sewinQueue.Rolls.Contains(this.CurrentRoll))
       {
         this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault() ?? this.CurrentRoll;
@@ -343,7 +356,7 @@ namespace MahloService.Logic
         //check for roll too long condition (possible missed seam)
         if (this.checkRollSize && (this.appInfo.MinRollLengthForLengthChecking == 0 || this.CurrentRoll.RollLength >= this.appInfo.MinRollLengthForLengthChecking))
         {
-          if (this.MeasuredLength > (this.CurrentRoll.RollLength * this.appInfo.RollTooLongThreshold))
+          if (this.MeasuredLength > (this.CurrentRoll.RollLength * this.appInfo.RollTooLongFactor))
           {
             this.checkRollSize = false;
             this.IsMapValid = false;
@@ -371,8 +384,6 @@ namespace MahloService.Logic
       return;
     }
 
-    private bool seamAckNeeded;
-    private double feetCounterAtLastSeam;
     private void SeamDetected(bool isSeamDetected)
     {
       if (!isSeamDetected)
@@ -487,7 +498,7 @@ namespace MahloService.Logic
 
           //check for roll too short condition (possible queue positioning condition)
           //this must occur after counter is reset and roll repositioned within queue
-          if (rollShortMeasuredLength > 0 && rollShortMeasuredLength < (rollExpectedLength * this.appInfo.RollTooShortThreshold))
+          if (rollShortMeasuredLength > 0 && rollShortMeasuredLength < (rollExpectedLength * this.appInfo.RollTooShortFactor))
           {
             this.checkRollSize = false;
             this.UserAttentions.IsRollTooShort = true;

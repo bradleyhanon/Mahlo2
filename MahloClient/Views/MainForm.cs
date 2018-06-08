@@ -12,23 +12,12 @@ using MahloService.Logic;
 using MahloService.Models;
 using MahloClient.Ipc;
 using MahloClient.Logic;
+using MahloService.Settings;
 
 namespace MahloClient.Views
 {
   partial class MainForm : Form
   {
-    // Greenish
-    private readonly Color GoodBackColor = Color.FromArgb(198, 239, 206);
-    private readonly Color GoodForeColor = Color.FromArgb(0, 97, 0);
-
-    // Yellowish
-    private readonly Color ActiveBackColor = Color.FromArgb(255, 235, 156);
-    private readonly Color ActiveForeColor = Color.FromArgb(156, 87, 0);
-
-    // Pinkish background
-    private readonly Color OutOfSpecBackColor = Color.FromArgb(255, 199, 206);
-    private readonly Color OutOfSpecForeColor = Color.FromArgb(156, 0, 6); 
-
     private string[] mahloColumnNames = { nameof(CarpetRoll.MalFeet) };
     private string[] bowAndSkewColumnNames = { nameof(CarpetRoll.BasFeet), nameof(CarpetRoll.Bow), nameof(CarpetRoll.Skew) };
     private string[] patternRepeatColumnNames = { nameof(CarpetRoll.PrsFeet), nameof(CarpetRoll.Elongation) };
@@ -39,12 +28,14 @@ namespace MahloClient.Views
 
     private ICarpetProcessor carpetProcessor;
     private IMahloIpcClient mahloClient;
+    private IServiceSettings serviceSettings;
 
-    public MainForm(ICarpetProcessor carpetProcessor, IMahloIpcClient mahloClient)
+    public MainForm(ICarpetProcessor carpetProcessor, IMahloIpcClient mahloClient, IServiceSettings serviceSettings)
     {
       InitializeComponent();
       this.carpetProcessor = carpetProcessor;
       this.mahloClient = mahloClient;
+      this.serviceSettings = serviceSettings;
       this.statusBar1.StatusBarInfo = (IStatusBarInfo)this.carpetProcessor.PatternRepeatLogic;
 
       this.MahloPropertyChangedSubscription =
@@ -90,6 +81,14 @@ namespace MahloClient.Views
       {
         column.HeaderCell.Style.Alignment = column.DefaultCellStyle.Alignment;
       }
+
+      this.colMalFeet.Tag =
+        this.colBasFeet.Tag =
+        this.colPrsFeet.Tag = new CellFormattingAction(MyColors.SetFeetColor);
+
+      this.colBow.Tag = new CellFormattingAction(MyColors.SetBowColor);
+      this.colSkew.Tag = new CellFormattingAction(MyColors.SetSkewColor);
+      this.colElongation.Tag = new CellFormattingAction(MyColors.SetElongationColor);
     }
 
     /// <summary>
@@ -146,16 +145,23 @@ namespace MahloClient.Views
     {
       var col = this.dataGridView1.Columns[e.ColumnIndex];
       CarpetRoll gridRoll = carpetProcessor.SewinQueue.Rolls[e.RowIndex];
-      SetColor(this.carpetProcessor.MahloLogic.CurrentRoll, mahloColumnNames);
-      SetColor(this.carpetProcessor.BowAndSkewLogic.CurrentRoll, bowAndSkewColumnNames);
-      SetColor(this.carpetProcessor.PatternRepeatLogic.CurrentRoll, patternRepeatColumnNames);
+      SetColor(this.carpetProcessor.MahloLogic, mahloColumnNames);
+      SetColor(this.carpetProcessor.BowAndSkewLogic, bowAndSkewColumnNames);
+      SetColor(this.carpetProcessor.PatternRepeatLogic, patternRepeatColumnNames);
 
-      void SetColor(CarpetRoll currentRoll, string[] names)
+      void SetColor(IMeterLogic logic, string[] names)
       {
-        if (currentRoll == gridRoll && names.Contains(col.DataPropertyName))
+        if (names.Contains(col.DataPropertyName))
         {
-          e.CellStyle.BackColor = ActiveBackColor;
-          e.CellStyle.ForeColor = ActiveForeColor;
+          if (logic.CurrentRoll == gridRoll)
+          {
+            (e.CellStyle.BackColor, e.CellStyle.ForeColor) = MyColors.ActiveColor;
+          }
+          else if (e.RowIndex >= 0 && e.RowIndex < logic.CurrentRollIndex)
+          {
+            var action = this.dataGridView1.Columns[e.ColumnIndex].Tag as CellFormattingAction;
+            action?.Invoke(this.dataGridView1, e, this.serviceSettings);
+          }
         }
       }
     }

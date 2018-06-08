@@ -12,6 +12,7 @@ using MahloClient.Ipc;
 using MahloClient.Logic;
 using MahloService.Logic;
 using MahloService.Models;
+using MahloService.Settings;
 
 namespace MahloClient.Views
 {
@@ -20,16 +21,18 @@ namespace MahloClient.Views
     private IBowAndSkewLogic logic;
     private ISewinQueue sewinQueue;
     private IMahloIpcClient mahloClient;
+    private IServiceSettings serviceSettings;
 
     private List<IDisposable> disposables = new List<IDisposable>();
 
-    public FormBowAndSkew(IBowAndSkewLogic logic, ISewinQueue sewinQueue, IMahloIpcClient mahloClient)
+    public FormBowAndSkew(IBowAndSkewLogic logic, ISewinQueue sewinQueue, IMahloIpcClient mahloClient, IServiceSettings serviceSettings)
     {
       InitializeComponent();
       this.statusBar1.StatusBarInfo = (IStatusBarInfo)logic;
       this.logic = logic;
       this.sewinQueue = sewinQueue;
       this.mahloClient = mahloClient;
+      this.serviceSettings = serviceSettings;
 
       this.disposables.AddRange(new[] {
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
@@ -143,6 +146,14 @@ namespace MahloClient.Views
       {
         form.ShowDialog();
         this.dataGridView1.WideRowIndex = -1;
+      }
+    }
+
+    private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+    {
+      if (e.RowIndex >= 0 && e.RowIndex < this.logic.CurrentRollIndex && e.ColumnIndex == this.colMeasuredLength.Index)
+      {
+        MyColors.SetFeetColor(this.dataGridView1, e, this.serviceSettings);
       }
     }
   }
