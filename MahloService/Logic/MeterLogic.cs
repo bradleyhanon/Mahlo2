@@ -38,8 +38,6 @@ namespace MahloService.Logic
 
     private bool isSewinQueueInitialized;
 
-    private List<IDisposable> disposables = new List<IDisposable>();
-
     public MeterLogic(
       IMeterSrc<Model> srcData,
       ISewinQueue sewinQueue,
@@ -55,59 +53,58 @@ namespace MahloService.Logic
       this.UserAttentions = userAttentions;
       this.CriticalStops = criticalStops;
       this.programState = programState;
-      this.disposables.AddRange(new[]
-        {
-          Observable
-            .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-              h => this.srcData.PropertyChanged += h,
-              h => this.srcData.PropertyChanged -= h)
-            .Subscribe(args => this.OpcValueChanged(args.EventArgs.PropertyName)),
+      this.Disposables = new List<IDisposable>
+      {
+        Observable
+          .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+            h => this.srcData.PropertyChanged += h,
+            h => this.srcData.PropertyChanged -= h)
+          .Subscribe(args => this.OpcValueChanged(args.EventArgs.PropertyName)),
 
-          Observable
-            .Interval(TimeSpan.FromSeconds(1), schedulerProvider.WinFormsThread)
-            .Subscribe(_ =>
-            {
-              this.Recipe = this.srcData.Recipe;
-              this.IsManualMode = this.srcData.IsAutoMode;
-            }),
+        Observable
+          .Interval(TimeSpan.FromSeconds(1), schedulerProvider.WinFormsThread)
+          .Subscribe(_ =>
+          {
+            this.Recipe = this.srcData.Recipe;
+            this.IsManualMode = this.srcData.IsAutoMode;
+          }),
 
-          Observable
-            .FromEvent(
-              h => this.sewinQueue.QueueChanged += h,
-              h => this.sewinQueue.QueueChanged -= h)
-            .Subscribe(_ => this.SewinQueueChanged()),
+        Observable
+          .FromEvent(
+            h => this.sewinQueue.QueueChanged += h,
+            h => this.sewinQueue.QueueChanged -= h)
+          .Subscribe(_ => this.SewinQueueChanged()),
 
-          Observable
-            .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-              h => ((INotifyPropertyChanged)this.UserAttentions).PropertyChanged += h,
-              h => ((INotifyPropertyChanged)this.UserAttentions).PropertyChanged -= h)
-            .Subscribe(_ =>
-            {
-              this.IsMapValid &= this.UserAttentions.Any;
-              this.IsChanged = true;
-            }),
+        Observable
+          .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+            h => ((INotifyPropertyChanged)this.UserAttentions).PropertyChanged += h,
+            h => ((INotifyPropertyChanged)this.UserAttentions).PropertyChanged -= h)
+          .Subscribe(_ =>
+          {
+            this.IsMapValid &= this.UserAttentions.Any;
+            this.IsChanged = true;
+          }),
 
-          Observable
-            .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-              h => this.CriticalStops.PropertyChanged += h,
-              h => this.CriticalStops.PropertyChanged -= h)
-            .Subscribe(_ =>
-            {
-              this.IsMapValid &= this.CriticalStops.Any;
-              this.IsChanged = true;
-            }),
+        Observable
+          .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+            h => this.CriticalStops.PropertyChanged += h,
+            h => this.CriticalStops.PropertyChanged -= h)
+          .Subscribe(_ =>
+          {
+            this.IsMapValid &= this.CriticalStops.Any;
+            this.IsChanged = true;
+          }),
 
-          Observable
-            .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-              h => this.sewinQueue.PropertyChanged += h,
-              h => this.sewinQueue.PropertyChanged -= h)
-            .Subscribe(args => this.QueueMessage = this.sewinQueue.Message),
-        });
-
+        Observable
+          .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+            h => this.sewinQueue.PropertyChanged += h,
+            h => this.sewinQueue.PropertyChanged -= h)
+          .Subscribe(args => this.QueueMessage = this.sewinQueue.Message),
+      };
     }
 
-    public event Action<CarpetRoll> RollStarted;
-    public event Action<CarpetRoll> RollFinished;
+    public event Action<GreigeRoll> RollStarted;
+    public event Action<GreigeRoll> RollFinished;
 
     /// <summary>
     /// Gets or sets a value indicating whether this object has been changed
@@ -118,7 +115,7 @@ namespace MahloService.Logic
     /// <summary>
     /// Get the roll that is currently being processed
     /// </summary>
-    public CarpetRoll CurrentRoll { get; set; } = new CarpetRoll();
+    public GreigeRoll CurrentRoll { get; set; } = new GreigeRoll();
 
     [DependsOn(nameof(CurrentRoll))]
     public int CurrentRollIndex => this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
@@ -131,7 +128,12 @@ namespace MahloService.Logic
 
     // Appear last
     [JsonProperty(Order = 1)]
-    public abstract int MeasuredLength { get; set; }
+    public abstract int FeetCounterStart { get; set; }
+    [JsonProperty(Order = 1)]
+    public abstract int FeetCounterEnd { get; set; }
+    [JsonProperty(Order = 1)]
+    [DependsOn(nameof(FeetCounterStart), nameof(FeetCounterEnd))]
+    public int MeasuredLength => this.FeetCounterEnd - this.FeetCounterStart;
     [JsonProperty(Order = 1)]
     public abstract int Speed { get; set; }
     [JsonProperty(Order = 1)]
@@ -160,6 +162,8 @@ namespace MahloService.Logic
     public string QueueMessage { get; set; }
     public bool IsMappingNow { get; set; }
 
+    protected List<IDisposable> Disposables { get; private set; }
+
     /// <summary>
     /// Called to start data collection
     /// </summary>
@@ -181,17 +185,17 @@ namespace MahloService.Logic
     {
       // Save program state
       this.SaveState();
-      this.disposables.ForEach(item => item.Dispose());
+      this.Disposables.ForEach(item => item.Dispose());
     }
 
-    protected virtual void OnRollStarted(CarpetRoll carpetRoll)
+    protected virtual void OnRollStarted(GreigeRoll greigeRoll)
     {
-      this.RollStarted?.Invoke(carpetRoll);
+      this.RollStarted?.Invoke(greigeRoll);
     }
 
-    protected virtual void OnRollFinished(CarpetRoll carpetRoll)
+    protected virtual void OnRollFinished(GreigeRoll greigeRoll)
     {
-      this.RollFinished?.Invoke(carpetRoll);
+      this.RollFinished?.Invoke(greigeRoll);
     }
 
     protected virtual void RestoreState()
@@ -205,7 +209,7 @@ namespace MahloService.Logic
       this.seamAckNeeded = state.Get<bool?>(nameof(seamAckNeeded)) ?? false;
 
       string rollNo = state.Get<string>(nameof(this.CurrentRoll.RollNo)) ?? string.Empty;
-      this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == rollNo) ?? new CarpetRoll();
+      this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == rollNo) ?? new GreigeRoll();
 
       // On startup, roll sequence should be verified
       this.UserAttentions.VerifyRollSequence = true;
@@ -312,7 +316,7 @@ namespace MahloService.Logic
       }
     }
 
-    private void FeetCounterChanged(int feetCounter)
+    protected virtual void FeetCounterChanged(int feetCounter)
     {
       int measuredLength = feetCounter - this.feetCounterAtRollStart;
 
@@ -329,6 +333,8 @@ namespace MahloService.Logic
           return;
         }
 
+        this.FeetCounterEnd = feetCounter;
+
         //meter reset has been initiated but not completed, ignore this value
         if (measuredLength == 0)
         {
@@ -343,7 +349,7 @@ namespace MahloService.Logic
         //this.meterResetAtLength = 0;
 
         //update roll info
-        this.MeasuredLength = measuredLength;
+        this.FeetCounterEnd = feetCounter;
         //oCurrentRoll.MeasuredWidth = oMahlo.RollWidth;
 
         //update display values
@@ -401,6 +407,8 @@ namespace MahloService.Logic
         return;
       }
 
+      // Check roll can have multple seams
+      // a seam less than MaxEndCheckRollPieceLength designates the end of the check roll
       if (this.CurrentRoll.IsCheckRoll && this.srcData.FeetCounter - priorFeetCounter > this.appInfo.MaxEndCheckRollPieceLength)
       {
         return;
@@ -450,12 +458,12 @@ namespace MahloService.Logic
         {
           //advance to next position in queue
           this.CurrentRoll = this.sewinQueue.Rolls[index + 1];
-          this.MeasuredLength = 0;
+          this.FeetCounterStart = this.FeetCounterEnd = (int)this.srcData.FeetCounter; ;
           //InitializeRollsFromQueue(oCurrentRoll.PositionInQueue + 1);
           //InitializeCharts();)
           switch (CommonMethods.DetermineRollType(this.sewinQueue.Rolls, this.CurrentRoll))
           {
-            case CarpetRollTypeEnum.Greige:
+            case RollTypeEnum.Greige:
               //automatically set recipe
               ApplyRecipe(this.CurrentRoll.DefaultRecipe, false);
 

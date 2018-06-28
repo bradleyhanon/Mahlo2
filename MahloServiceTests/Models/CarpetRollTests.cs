@@ -8,12 +8,12 @@ using Xunit;
 
 namespace MahloServiceTests.Models
 {
-  public class CarpetRollTests
+  public class GreigeRollTests
   {
     [Fact]
     void SwapWithTest()
     {
-      CarpetRoll roll1 = new CarpetRoll
+      GreigeRoll roll1 = new GreigeRoll
       {
         Id = 1,
         RollNo = "Roll1",
@@ -30,7 +30,7 @@ namespace MahloServiceTests.Models
         ProductImageURL = "ProductImageURL1",
       };
 
-      CarpetRoll roll2 = new CarpetRoll
+      GreigeRoll roll2 = new GreigeRoll
       {
         Id = 2,
         RollNo = "Roll2",

@@ -10,13 +10,13 @@ namespace MahloService.Logic
 {
   interface IMeterLogic
   {
-    event Action<CarpetRoll> RollStarted;
-    event Action<CarpetRoll> RollFinished;
+    event Action<GreigeRoll> RollStarted;
+    event Action<GreigeRoll> RollFinished;
 
     [JsonIgnore]
     bool IsChanged { get; set; }
     [JsonIgnore]
-    CarpetRoll CurrentRoll { get; set; }
+    GreigeRoll CurrentRoll { get; set; }
     int CurrentRollIndex { get; }
 
     bool IsMappingNow { get; set; }
@@ -29,7 +29,7 @@ namespace MahloService.Logic
 
     bool IsSeamDetected { get; set; }
 
-    int MeasuredLength { get; set; }
+    int MeasuredLength { get; }
     int Speed { get; set; }
     bool IsMapValid { get; set; }
     double MeasuredWidth { get; set; }

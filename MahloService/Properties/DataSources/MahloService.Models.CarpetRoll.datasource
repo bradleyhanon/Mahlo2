@@ -5,6 +5,6 @@
     Renaming the file extension or editing the content of this file may   
     cause the file to be unrecognizable by the program.
 -->
-<GenericObjectDataSource DisplayName="CarpetRoll" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>MahloService.Models.CarpetRoll, MahloService, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
+<GenericObjectDataSource DisplayName="GreigeRoll" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+   <TypeInfo>MahloService.Models.GreigeRoll, MahloService, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
 </GenericObjectDataSource>

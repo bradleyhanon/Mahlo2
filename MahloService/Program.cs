@@ -24,6 +24,7 @@ using Serilog;
 using SimpleInjector;
 using SimpleInjector.Diagnostics;
 using MahloService.Simulation;
+using System.Collections.ObjectModel;
 
 namespace MahloService
 {
@@ -173,6 +174,7 @@ namespace MahloService
       container.RegisterInstance<SynchronizationContext>(syncContext);
       container.RegisterSingleton<IConcurrencyInfo, ConcurrencyInfo>();
       container.RegisterSingleton<ISewinQueue, SewinQueue>();
+      container.RegisterSingleton<ICutRollList, CutRollList>();
       container.RegisterSingleton<ICutRollLogic, CutRollLogic>();
 
       container.RegisterSingleton<IDbConnectionFactoryFactory, DbConnectionFactory.Factory>();

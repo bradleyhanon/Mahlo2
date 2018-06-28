@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace MahloClientTests.Logic
 {
-  public class SewinQueueTests : IEqualityComparer<CarpetRoll>
+  public class SewinQueueTests : IEqualityComparer<GreigeRoll>
   {
     private SewinQueue target;
 
@@ -66,20 +66,20 @@ namespace MahloClientTests.Logic
       Assert.True(newRolls.SequenceEqual(this.target.Rolls, this));
     }
 
-    public bool Equals(CarpetRoll x, CarpetRoll y)
+    public bool Equals(GreigeRoll x, GreigeRoll y)
     {
       return x.RollNo == y.RollNo && x.RollWidth == y.RollWidth;
     }
 
-    public int GetHashCode(CarpetRoll obj)
+    public int GetHashCode(GreigeRoll obj)
     {
       throw new NotImplementedException();
     }
 
-    private IEnumerable<CarpetRoll> GenerateRolls(int startRollNo, int count, double width = 0)
+    private IEnumerable<GreigeRoll> GenerateRolls(int startRollNo, int count, double width = 0)
     {
       var items = Observable.Range(startRollNo, count)
-        .Select(index => new CarpetRoll() { RollNo = index.ToString(), RollWidth = width });
+        .Select(index => new GreigeRoll() { RollNo = index.ToString(), RollWidth = width });
 
       return items.ToEnumerable().ToArray();
     }

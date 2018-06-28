@@ -22,7 +22,6 @@ namespace MahloClient.Logic
     public override int MeasuredLength
     {
       get => this.CurrentRoll.BasFeet;
-      set => this.CurrentRoll.BasFeet = value;
     }
 
     public override int Speed

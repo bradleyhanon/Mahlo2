@@ -9,6 +9,9 @@ namespace MahloService.Opc
 {
   interface IPatternRepeatSrc : IMeterSrc<PatternRepeatRoll>
   {
+    bool IsDoffDetected { get; }
     double PatternRepeatLength { get; }
+
+    void AcknowledgeDoffDetect();
   }
 }

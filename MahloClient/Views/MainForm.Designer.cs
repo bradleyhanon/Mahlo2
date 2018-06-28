@@ -362,7 +362,7 @@
       // 
       // mahloRollSrc
       // 
-      this.mahloRollSrc.DataSource = typeof(MahloService.Models.CarpetRoll);
+      this.mahloRollSrc.DataSource = typeof(MahloService.Models.GreigeRoll);
       // 
       // label17
       // 
@@ -590,7 +590,7 @@
       // 
       // bowAndSkewRollSrc
       // 
-      this.bowAndSkewRollSrc.DataSource = typeof(MahloService.Models.CarpetRoll);
+      this.bowAndSkewRollSrc.DataSource = typeof(MahloService.Models.GreigeRoll);
       // 
       // label10
       // 
@@ -852,7 +852,7 @@
       // 
       // patternRepeatRollSrc
       // 
-      this.patternRepeatRollSrc.DataSource = typeof(MahloService.Models.CarpetRoll);
+      this.patternRepeatRollSrc.DataSource = typeof(MahloService.Models.GreigeRoll);
       // 
       // label20
       // 
@@ -1196,7 +1196,7 @@
       // 
       // sewinQueueSrc
       // 
-      this.sewinQueueSrc.DataSource = typeof(MahloService.Models.CarpetRoll);
+      this.sewinQueueSrc.DataSource = typeof(MahloService.Models.GreigeRoll);
       // 
       // label4
       // 

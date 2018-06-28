@@ -23,7 +23,7 @@ namespace MahloClient.Logic
     private ISewinQueue sewinQueue;
     private IServiceSettings serviceSettings;
     private int currentRollIndex = -1;
-    private CarpetRoll currentRoll = new CarpetRoll();
+    private GreigeRoll currentRoll = new GreigeRoll();
 
     private IDisposable sewinQueueChangedSubscription;
     private IDisposable updateMeterLogicSubscription;
@@ -44,7 +44,7 @@ namespace MahloClient.Logic
         .Subscribe(args =>
         {
           bool indexInRange = this.CurrentRollIndex >= 0 && this.currentRollIndex < this.sewinQueue.Rolls.Count;
-          this.CurrentRoll = indexInRange ? this.sewinQueue.Rolls[this.CurrentRollIndex] : new CarpetRoll();
+          this.CurrentRoll = indexInRange ? this.sewinQueue.Rolls[this.CurrentRollIndex] : new GreigeRoll();
         });
 
       this.updateMeterLogicSubscription = Observable
@@ -78,8 +78,8 @@ namespace MahloClient.Logic
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
-    public event Action<CarpetRoll> RollStarted;
-    public event Action<CarpetRoll> RollFinished;
+    public event Action<GreigeRoll> RollStarted;
+    public event Action<GreigeRoll> RollFinished;
 
     public abstract string InterfaceName { get; }
 
@@ -89,7 +89,7 @@ namespace MahloClient.Logic
 
     public bool IsChanged { get; set; }
 
-    public CarpetRoll CurrentRoll
+    public GreigeRoll CurrentRoll
     {
       get => currentRoll;
       set
@@ -97,11 +97,11 @@ namespace MahloClient.Logic
         this.currentRoll = value;
         this.CurrentRollType = CommonMethods.DetermineRollType(this.sewinQueue.Rolls, this.currentRoll);
         this.NextRoll = this.sewinQueue.Rolls.SkipWhile(roll => roll != this.CurrentRoll).Skip(1).FirstOrDefault();
-        this.NextRollType = this.NextRoll == null ? (CarpetRollTypeEnum?)null : CommonMethods.DetermineRollType(this.sewinQueue.Rolls, this.NextRoll);
+        this.NextRollType = this.NextRoll == null ? (RollTypeEnum?)null : CommonMethods.DetermineRollType(this.sewinQueue.Rolls, this.NextRoll);
       }
     }
 
-    public CarpetRoll NextRoll { get; set; } = new CarpetRoll();
+    public GreigeRoll NextRoll { get; set; } = new GreigeRoll();
 
     public int CurrentRollIndex
     {
@@ -110,12 +110,12 @@ namespace MahloClient.Logic
       {
         this.currentRollIndex = value;
         bool isIndexInRange = value >= 0 && value < this.sewinQueue.Rolls.Count;
-        this.CurrentRoll = isIndexInRange ? this.sewinQueue.Rolls[value] : new CarpetRoll();
+        this.CurrentRoll = isIndexInRange ? this.sewinQueue.Rolls[value] : new GreigeRoll();
       }
     }
 
-    public CarpetRollTypeEnum CurrentRollType { get; set; }
-    public CarpetRollTypeEnum? NextRollType { get; set; }
+    public RollTypeEnum CurrentRollType { get; set; }
+    public RollTypeEnum? NextRollType { get; set; }
 
     public bool IsMappingNow { get; set; }
 
@@ -143,7 +143,7 @@ namespace MahloClient.Logic
     [DependsOn(nameof(MappingStatusMessageBackColor))]
     public Color MappingStatusMessageForeColor => MappingStatusMessageBackColor.ContrastColor();
 
-    public abstract int MeasuredLength { get; set; }
+    public abstract int MeasuredLength { get; }
     public abstract int Speed { get; set; }
     public abstract bool IsMapValid { get; set; }
     public double MeasuredWidth { get; set; }
@@ -163,6 +163,8 @@ namespace MahloClient.Logic
     public bool IsSeamDetectEnabled => !this.UserAttentions.IsSystemDisabled;
 
     public bool IsSeamDetected { get; set; }
+
+    public bool IsDoffDetected { get; set; }
 
     [DependsOn(nameof(UserAttentions))]
     public bool IsSystemEnabled => !this.UserAttentions.IsSystemDisabled;

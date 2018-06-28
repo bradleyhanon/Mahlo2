@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
@@ -17,15 +19,16 @@ namespace MahloService.Ipc
   {
     private ILogger log;
     private ISewinQueue sewinQueue;
+    private ICutRollList cutRolls;
     private IMahloLogic mahloLogic;
     private IBowAndSkewLogic bowAndSkewLogic;
     private IPatternRepeatLogic patternRepeatLogic;
-    private IDisposable timer;
-    private IDisposable queueChangedSubscription;
+    private List<IDisposable> disposables;
 
     public MahloServer(
       ILogger logger,
       ISewinQueue sewinQueue,
+      ICutRollList cutRolls,
       IMahloLogic mahloLogic,
       IBowAndSkewLogic bowAndSkewLogic,
       IPatternRepeatLogic patternRepeatLogic,
@@ -33,34 +36,42 @@ namespace MahloService.Ipc
     {
       this.log = logger;
       this.sewinQueue = sewinQueue;
+      this.cutRolls = cutRolls;
       this.mahloLogic = mahloLogic;
       this.bowAndSkewLogic = bowAndSkewLogic;
       this.patternRepeatLogic = patternRepeatLogic;
 
-      this.timer = Observable
-        .Interval(TimeSpan.FromMilliseconds(1000), schedulerProvider.WinFormsThread)
-        .Subscribe(_ =>
-        {
-          //this.UpdateMahloLogic();
-          //this.UpdateBowAndSkewLogic();
-          //this.UpdatePatternRepeatLogic();
-          this.UpdateMeterLogic(nameof(IMahloLogic), this.mahloLogic);
-          this.UpdateMeterLogic(nameof(IBowAndSkewLogic), this.bowAndSkewLogic);
-          this.UpdateMeterLogic(nameof(IPatternRepeatLogic), this.patternRepeatLogic);
-        });
+      this.disposables = new List<IDisposable>
+      {
+        Observable
+          .Interval(TimeSpan.FromMilliseconds(1000), schedulerProvider.WinFormsThread)
+          .Subscribe(_ =>
+          {
+            this.UpdateMeterLogic(nameof(IMahloLogic), this.mahloLogic);
+            this.UpdateMeterLogic(nameof(IBowAndSkewLogic), this.bowAndSkewLogic);
+            this.UpdateMeterLogic(nameof(IPatternRepeatLogic), this.patternRepeatLogic);
+          }),
 
-      this.queueChangedSubscription = Observable
-        .FromEvent(
-          h => this.sewinQueue.QueueChanged += h,
-          h => this.sewinQueue.QueueChanged -= h)
-        .Subscribe(_ => this.UpdateSewinQueue());
+        Observable
+          .FromEvent(
+            h => this.sewinQueue.QueueChanged += h,
+            h => this.sewinQueue.QueueChanged -= h)
+          .Subscribe(_ => this.UpdateSewinQueue()),
+
+        Observable
+          .FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
+            h => this.cutRolls.CollectionChanged += h,
+            h => this.cutRolls.CollectionChanged -= h)
+          .Subscribe(_ => this.UpdateCutRollList()),
+      };
     }
 
     private IHubConnectionContext<dynamic> Clients { get; set; } = GlobalHost.ConnectionManager.GetHubContext<MahloHub>().Clients;
 
     public void Dispose()
     {
-      this.timer?.Dispose();
+      this.disposables.ForEach(item => item.Dispose());
+      this.disposables.Clear();
     }
 
     public void UpdateSewinQueue()
@@ -68,35 +79,10 @@ namespace MahloService.Ipc
       this.Clients.All.UpdateSewinQueue(this.sewinQueue.Rolls.ToArray());
     }
 
-    //public void UpdateMahloLogic()
-    //{
-    //  if (this.mahloLogic.IsChanged)
-    //  {
-    //    log.Debug("UpdateMahloLogic()");
-    //    this.mahloLogic.IsChanged = false;
-    //    this.Clients.All.UpdateMahloLogic(this.mahloLogic);
-    //  }
-    //}
-
-    //public void UpdateBowAndSkewLogic()
-    //{
-    //  if (this.bowAndSkewLogic.IsChanged)
-    //  {
-    //    log.Debug("UpdateBowAndSkewLogic()");
-    //    this.bowAndSkewLogic.IsChanged = false;
-    //    this.Clients.All.UpdateBowAndSkewLogic(this.bowAndSkewLogic);
-    //  }
-    //}
-
-    //public void UpdatePatternRepeatLogic()
-    //{
-    //  if (this.patternRepeatLogic.IsChanged)
-    //  {
-    //    log.Debug("UpdatePatternRepeatLogic()");
-    //    this.patternRepeatLogic.IsChanged = false;
-    //    this.Clients.All.UpdatePatternRepeatLogic(this.patternRepeatLogic);
-    //  }
-    //}
+    public void UpdateCutRollList()
+    {
+      this.Clients.All.UpdateCutRollList(this.cutRolls.ToArray());
+    }
 
     public void UpdateMeterLogic<Model>(string interfaceName, IMeterLogic<Model> meterLogic)
     {

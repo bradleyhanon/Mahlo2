@@ -37,7 +37,7 @@ namespace MahloClient.Views
 
     public static void SetFeetColor(DataGridView grid, DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
     {
-      CarpetRoll roll = (CarpetRoll)grid.Rows[args.RowIndex].DataBoundItem;
+      GreigeRoll roll = (GreigeRoll)grid.Rows[args.RowIndex].DataBoundItem;
       int measuredLength = (int)args.Value;
 
       (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
@@ -49,7 +49,7 @@ namespace MahloClient.Views
 
     public static void SetBowColor(DataGridView grid, DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
     {
-      CarpetRoll roll = (CarpetRoll)grid.Rows[args.RowIndex].DataBoundItem;
+      GreigeRoll roll = (GreigeRoll)grid.Rows[args.RowIndex].DataBoundItem;
 
       (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
         (roll.BackingCode == "SA" && Math.Abs((double)args.Value) > settings.BowLimitSA) ||
@@ -59,7 +59,7 @@ namespace MahloClient.Views
 
     public static void SetSkewColor(DataGridView grid, DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
     {
-      CarpetRoll roll = (CarpetRoll)grid.Rows[args.RowIndex].DataBoundItem;
+      GreigeRoll roll = (GreigeRoll)grid.Rows[args.RowIndex].DataBoundItem;
 
       (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
         (roll.BackingCode == "SA" && Math.Abs((double)args.Value) > settings.SkewLimitSA) ||

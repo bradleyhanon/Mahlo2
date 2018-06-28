@@ -21,11 +21,11 @@ namespace MahloClient.Views
     (RadioButton button, RecipeApplyToEnum applyTo)[] applyToMap;
 
     private IMahloIpcClient mahloClient;
-    private CarpetRoll currentRoll;
-    private CarpetRoll selectedRoll;
+    private GreigeRoll currentRoll;
+    private GreigeRoll selectedRoll;
 
 
-    public FormSetRecipe(IMahloIpcClient mahloClient, CarpetRoll currentRoll, CarpetRoll selectedRoll)
+    public FormSetRecipe(IMahloIpcClient mahloClient, GreigeRoll currentRoll, GreigeRoll selectedRoll)
     {
       InitializeComponent();
 

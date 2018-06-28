@@ -37,9 +37,9 @@ namespace MahloService.Logic
       this.dbLocal = dbLocal;
       this.dbMfg = dbMfg;
 
-      //this.Rolls.AddRange(this.dbLocal.GetCarpetRolls());
+      //this.Rolls.AddRange(this.dbLocal.GetGreigeRolls());
       //this.nextRollId = this.Rolls.LastOrDefault()?.Id + 1 ?? 1;
-      this.nextRollId = this.dbLocal.GetCarpetRolls().LastOrDefault()?.Id ?? 1;
+      this.nextRollId = this.dbLocal.GetGreigeRolls().LastOrDefault()?.Id ?? 1;
 
       var ignoredResultTask = this.RefreshIfChanged();
       this.timer = Observable
@@ -52,7 +52,8 @@ namespace MahloService.Logic
 
     public TimeSpan RefreshInterval => TimeSpan.FromSeconds(10);
 
-    public BindingList<CarpetRoll> Rolls { get; private set; } = new BindingList<CarpetRoll>();
+    public BindingList<GreigeRoll> Rolls { get; private set; } = new BindingList<GreigeRoll>();
+
     public string Message { get; private set; }
 
     public void Dispose()

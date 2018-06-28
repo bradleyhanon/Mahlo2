@@ -65,7 +65,7 @@ namespace MahloService.Repository
       }
     }
 
-    public async Task<IEnumerable<CarpetRoll>> GetCoaterSewinQueue()
+    public async Task<IEnumerable<GreigeRoll>> GetCoaterSewinQueue()
     {
       var p = new DynamicParameters();
       p.Add("Application", "BowAndSkew");
@@ -74,7 +74,7 @@ namespace MahloService.Repository
       {
         //var rolls = await connection.QueryAsync<AS400SewinQueueRoll>("spGetCoaterSewinQueueV2", commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
         var rolls = await connection.QueryAsync<AS400SewinQueueRoll>("spGetSewinQueue", p, commandType: CommandType.StoredProcedure, commandTimeout: CommandTimeout);
-        return rolls.Select(roll => roll.ToCarpetRoll());
+        return rolls.Select(roll => roll.ToGreigeRoll());
       }
     }
 

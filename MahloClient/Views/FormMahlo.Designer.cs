@@ -148,7 +148,7 @@
       // 
       // srcCurrentRoll
       // 
-      this.srcCurrentRoll.DataSource = typeof(MahloService.Models.CarpetRoll);
+      this.srcCurrentRoll.DataSource = typeof(MahloService.Models.GreigeRoll);
       // 
       // lblPreviousRollLength
       // 
@@ -426,7 +426,7 @@
       // 
       // srcNextRoll
       // 
-      this.srcNextRoll.DataSource = typeof(MahloService.Models.CarpetRoll);
+      this.srcNextRoll.DataSource = typeof(MahloService.Models.GreigeRoll);
       // 
       // lblNextColor
       // 
@@ -1145,7 +1145,7 @@
       // 
       // srcGrid
       // 
-      this.srcGrid.DataSource = typeof(MahloService.Models.CarpetRoll);
+      this.srcGrid.DataSource = typeof(MahloService.Models.GreigeRoll);
       // 
       // FormMahlo
       // 

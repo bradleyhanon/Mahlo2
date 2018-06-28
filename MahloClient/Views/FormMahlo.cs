@@ -47,7 +47,7 @@ namespace MahloClient.Views
         {
           this.srcCurrentRoll.DataSource = this.logic.CurrentRoll;
           int nextIndex = this.sewinQueue.Rolls.IndexOf(this.logic.CurrentRoll) + 1;
-          this.srcNextRoll.DataSource = nextIndex < this.sewinQueue.Rolls.Count ? this.sewinQueue.Rolls[nextIndex] : new CarpetRoll();
+          this.srcNextRoll.DataSource = nextIndex < this.sewinQueue.Rolls.Count ? this.sewinQueue.Rolls[nextIndex] : new GreigeRoll();
           this.DataGridView1_SelectionChanged(this.dataGridView1, EventArgs.Empty);
           this.dataGridView1.EnsureVisibleRow(this.logic.CurrentRollIndex);
         });

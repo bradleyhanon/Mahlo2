@@ -34,10 +34,16 @@ namespace MahloService.Logic
       this.dataSrc = dataSrc;
     }
 
-    public override int MeasuredLength
+    public override int FeetCounterStart
     {
-      get => this.CurrentRoll.BasFeet;
-      set => this.CurrentRoll.BasFeet = value;
+      get => this.CurrentRoll.BasFeetCounterStart;
+      set => this.CurrentRoll.BasFeetCounterStart = value;
+    }
+
+    public override int FeetCounterEnd
+    {
+      get => this.CurrentRoll.BasFeetCounterEnd;
+      set => this.CurrentRoll.BasFeetCounterEnd = value;
     }
 
     public override int Speed
@@ -70,16 +76,16 @@ namespace MahloService.Logic
       return Task.CompletedTask;
     }
 
-    protected override void OnRollFinished(CarpetRoll carpetRoll)
+    protected override void OnRollFinished(GreigeRoll greigeRoll)
     {
-      base.OnRollFinished(carpetRoll);
-      carpetRoll.Bow = this.maxBow;
-      carpetRoll.Skew = this.maxSkew;
+      base.OnRollFinished(greigeRoll);
+      greigeRoll.Bow = this.maxBow;
+      greigeRoll.Skew = this.maxSkew;
     }
 
-    protected override void OnRollStarted(CarpetRoll carpetRoll)
+    protected override void OnRollStarted(GreigeRoll greigeRoll)
     {
-      base.OnRollStarted(carpetRoll);
+      base.OnRollStarted(greigeRoll);
       this.maxBow = 0;
       this.maxSkew = 0;
     }

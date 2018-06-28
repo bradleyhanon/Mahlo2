@@ -12,11 +12,11 @@ namespace MahloService.Simulation
   class DbMfgSim : IDbMfgSim
   {
     private int nextRollNo = 1000000;
-    public BindingList<CarpetRoll> SewinQueue { get; } = new BindingList<CarpetRoll>
+    public BindingList<GreigeRoll> SewinQueue { get; } = new BindingList<GreigeRoll>
     {
-      new CarpetRoll
+      new GreigeRoll
       {
-        RollNo = CarpetRoll.CheckRollId,
+        RollNo = GreigeRoll.CheckRollId,
         RollLength = 600,
         RollWidth = 144,
       }
@@ -24,7 +24,7 @@ namespace MahloService.Simulation
 
     public void AddRoll()
     {
-      CarpetRoll roll = new CarpetRoll
+      GreigeRoll roll = new GreigeRoll
       {
         RollNo = nextRollNo.ToString(),
         OrderNo = (nextRollNo + 1000000).ToString(),
@@ -60,9 +60,9 @@ namespace MahloService.Simulation
       return Task.FromResult<IEnumerable<CoaterScheduleRoll>>(new CoaterScheduleRoll[0]);
     }
 
-    public Task<IEnumerable<CarpetRoll>> GetCoaterSewinQueue()
+    public Task<IEnumerable<GreigeRoll>> GetCoaterSewinQueue()
     {
-      return Task.FromResult<IEnumerable<CarpetRoll>>(this.SewinQueue);
+      return Task.FromResult<IEnumerable<GreigeRoll>>(this.SewinQueue);
     }
 
     public Task<AS400FinishedRoll> GetCutRollFromHost()

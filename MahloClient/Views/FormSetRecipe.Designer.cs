@@ -194,7 +194,7 @@
       // 
       // srcSelectedRoll
       // 
-      this.srcSelectedRoll.DataSource = typeof(MahloService.Models.CarpetRoll);
+      this.srcSelectedRoll.DataSource = typeof(MahloService.Models.GreigeRoll);
       // 
       // FormSetRecipe
       // 

@@ -13,9 +13,9 @@ namespace MahloService.DbMigrations
 
     public override void Up()
     {
-      const string strCarpetRolls = "CarpetRolls";
+      const string strGreigeRolls = "GreigeRolls";
       const string strId = "Id";
-      const string strFeet = "Feet";
+      const string strFeetCounter = "FeetCounter";
       const string strCutId = "CutId";
       const string strBow = "Bow";
       const string strSkew = "Skew";
@@ -30,9 +30,13 @@ namespace MahloService.DbMigrations
       this.Insert.IntoTable("ProgramState")
         .Row(new { Key = 0, Value = "{}" });
 
-      this.Create.Table(strCarpetRolls)
+      // ---- //
+      this.Create.Table(strGreigeRolls)
         .WithColumn(strId).AsInt32().PrimaryKey()
-        .WithColumn("RollNo").AsAnsiString(10).NotNullable().Indexed("IX_G2ROLL").Unique()
+        .WithColumn("IsComplete").AsBoolean().NotNullable().WithDefaultValue(0)
+
+        // Data from Mfg database
+        .WithColumn("RollNo").AsAnsiString(10).NotNullable()
         .WithColumn("OrderNo").AsAnsiString(10).NotNullable()
         .WithColumn("StyleCode").AsAnsiString(5).NotNullable()
         .WithColumn("StyleName").AsAnsiString(40).NotNullable()
@@ -43,75 +47,48 @@ namespace MahloService.DbMigrations
         .WithColumn("RollWidth").AsDouble().NotNullable()
         .WithColumn("DefaultRecipe").AsAnsiString(50).NotNullable()
         .WithColumn("PatternRepeatLength").AsDouble().NotNullable()
-        .WithColumn("ProductImageURL").AsAnsiString(500)
-        .WithColumn("MalFeet").AsInt32().NotNullable()
+        .WithColumn("ProductImageURL").AsAnsiString(500).Nullable()
+
+        // Runtime calculated data
+        .WithColumn("MalFeetCounterStart").AsInt32().NotNullable()
+        .WithColumn("MalFeetCounterEnd").AsInt32().NotNullable()
         .WithColumn("MalSpeed").AsInt32().NotNullable()
         .WithColumn("MalMapValid").AsBoolean().NotNullable()
-        .WithColumn("BasFeet").AsInt32().NotNullable()
+
+        .WithColumn("BasFeetCounterStart").AsInt32().NotNullable()
+        .WithColumn("BasFeetCounterEnd").AsInt32().NotNullable()
         .WithColumn("BasSpeed").AsInt32().NotNullable()
         .WithColumn("BasMapValid").AsBoolean().NotNullable()
-        .WithColumn("PrsFeet").AsInt32().NotNullable()
+
+        .WithColumn("PrsFeetCounterStart").AsInt32().NotNullable()
+        .WithColumn("PrsFeetCounterEnd").AsInt32().NotNullable()
         .WithColumn("PrsSpeed").AsInt32().NotNullable()
         .WithColumn("PrsMapValid").AsBoolean().NotNullable()
+
         .WithColumn("Bow").AsDouble().NotNullable()
         .WithColumn("Skew").AsDouble().NotNullable()
         .WithColumn("Elongation").AsDouble().NotNullable();
 
-      //this.Create.Table("MahloRolls")
-      //  .WithColumn(strId).AsInt32().PrimaryKey()
-      //  .WithColumn(strFeet).AsInt32();
-
-      //this.Create.Table("BowAndSkewRolls")
-      //  .WithColumn(strId).AsInt32().PrimaryKey().ForeignKey(strCarpetRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
-      //  .WithColumn(strFeet).AsInt32().NotNullable()
-      //  .WithColumn(strBow).AsDouble().NotNullable()
-      //  .WithColumn(strSkew).AsDouble().NotNullable();
-
-      //this.Create.Table("BowAndSkewMaps")
-      //  .WithColumn(strId).AsInt32().NotNullable().ForeignKey(strCarpetRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
-      //  .WithColumn(strFeet).AsInt32().NotNullable()
-      //  .WithColumn(strBow).AsDouble().NotNullable()
-      //  .WithColumn(strSkew).AsDouble().NotNullable();
-
-      //this.Create.PrimaryKey().OnTable("BowAndSkewMaps").Columns(strId, strFeet);
-
-      //this.Create.Table("PatternRepeatRolls")
-      //  .WithColumn(strId).AsInt32().PrimaryKey().ForeignKey(strCarpetRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
-      //  .WithColumn(strFeet).AsInt32()
-      //  .WithColumn(strElongation).AsDouble();
-
-      //this.Create.Table("PatternRepeatMaps")
-      //  .WithColumn(strId).AsInt32().NotNullable().ForeignKey(strCarpetRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
-      //  .WithColumn(strFeet).AsInt32().NotNullable()
-      //  .WithColumn(strElongation).AsDouble();
-
-      //this.Create.PrimaryKey().OnTable("PatternRepeatMaps").Columns(strId, strFeet);
-
       this.Create.Table("CutRolls")
-        .WithColumn(strId).AsInt32().ForeignKey(strCarpetRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
+        .WithColumn(strId).AsInt32().ForeignKey(strGreigeRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
         .WithColumn(strCutId).AsInt32()
         .WithColumn("SapRoll").AsAnsiString().NotNullable()
-        .WithColumn(strFeet).AsInt32()
+        .WithColumn("FeetCounterStart").AsInt32().NotNullable()
+        .WithColumn("FeetCounterEnd").AsInt32().NotNullable()
         .WithColumn(strBow).AsDouble()
         .WithColumn(strSkew).AsDouble()
         .WithColumn(strElongation).AsDouble();
 
       this.Create.PrimaryKey().OnTable("CutRolls").Columns(strId, strCutId);
 
-      this.Create.Table("CutRollMaps")
-        .WithColumn(strId).AsInt32().NotNullable()
-        .WithColumn(strCutId).AsInt32().NotNullable()
-        .WithColumn(strFeet).AsInt32().NotNullable()
+      this.Create.Table("BowAndSkewMap")
+        .WithColumn(strFeetCounter).AsInt32().PrimaryKey()
         .WithColumn(strBow).AsDouble().NotNullable()
-        .WithColumn(strSkew).AsDouble().NotNullable()
-        .WithColumn(strElongation).AsDouble().NotNullable();
+        .WithColumn(strSkew).AsDouble().NotNullable();
 
-      this.Create.PrimaryKey().OnTable("CutRollMaps").Columns(strId, strCutId, strFeet);
-
-      this.Create.ForeignKey()
-        .FromTable("CutRollMaps").ForeignColumns(strId, strCutId)
-        .ToTable("CutRolls").PrimaryColumns(strId, strCutId)
-        .OnDeleteOrUpdate(System.Data.Rule.Cascade);
+      this.Create.Table("ElongationMap")
+        .WithColumn(strFeetCounter).AsInt32().PrimaryKey()
+        .WithColumn(strElongation).AsDouble();
     }
 
     public override void Down()

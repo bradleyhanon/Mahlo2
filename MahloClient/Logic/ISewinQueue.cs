@@ -13,7 +13,7 @@ namespace MahloClient.Logic
   {
     event EventHandler Changed;
 
-    BindingList<CarpetRoll> Rolls { get; }
+    BindingList<GreigeRoll> Rolls { get; }
 
     void UpdateSewinQueue(JArray jsonRolls);
   }

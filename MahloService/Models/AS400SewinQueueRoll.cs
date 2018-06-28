@@ -33,9 +33,9 @@ namespace MahloService.Models
     /// Copy all but RollId to the destination
     /// </summary>
     /// <param name="dest"></param>
-    public CarpetRoll ToCarpetRoll()
+    public GreigeRoll ToGreigeRoll()
     {
-      CarpetRoll dest = new CarpetRoll
+      GreigeRoll dest = new GreigeRoll
       {
         RollNo = this.G2ROLL.Trim(),
         OrderNo = this.G2SCH.Trim(),

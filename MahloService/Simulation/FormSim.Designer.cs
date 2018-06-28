@@ -349,7 +349,7 @@
       // 
       // srcGrid
       // 
-      this.srcGrid.DataSource = typeof(MahloService.Models.CarpetRoll);
+      this.srcGrid.DataSource = typeof(MahloService.Models.GreigeRoll);
       // 
       // srcSimInfo
       // 

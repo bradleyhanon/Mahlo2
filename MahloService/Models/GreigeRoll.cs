@@ -9,7 +9,7 @@ using PropertyChanged;
 
 namespace MahloService.Models
 {
-  public enum CarpetRollTypeEnum
+  public enum RollTypeEnum
   {
     Greige,
     Finished,
@@ -18,7 +18,7 @@ namespace MahloService.Models
   }
 
   [AddINotifyPropertyChangedInterface]
-  public class CarpetRoll : IMahloRoll, IBowAndSkewRoll, IPatternRepeatRoll
+  public class GreigeRoll : IMahloRoll, IBowAndSkewRoll, IPatternRepeatRoll
   {
     public const string CheckRollId = "CHKROL";
 
@@ -26,7 +26,7 @@ namespace MahloService.Models
 
     public int Id { get; set; }
 
-    //-- Database data --//
+    //-- Mfg database data --//
     public string RollNo { get; set; } = string.Empty;
     public string OrderNo { get; set; } = string.Empty;
     public string StyleCode { get; set; } = string.Empty;
@@ -46,15 +46,24 @@ namespace MahloService.Models
     public string ProductImageURL { get; set; }
 
     // Runtime data
-    public int MalFeet { get; set; }
+    public int MalFeetCounterStart { get; set; }
+    public int MalFeetCounterEnd { get; set; }
+    [DependsOn(nameof(MalFeetCounterStart), nameof(MalFeetCounterEnd))]
+    public int MalFeet => this.MalFeetCounterEnd - this.MalFeetCounterStart;
     public int MalSpeed { get; set; }
     public bool MalMapValid { get; set; }
 
-    public int BasFeet { get; set; }
+    public int BasFeetCounterStart { get; set; }
+    public int BasFeetCounterEnd { get; set; }
+    [DependsOn(nameof(BasFeetCounterEnd), nameof(BasFeetCounterEnd))]
+    public int BasFeet => this.BasFeetCounterEnd - this.BasFeetCounterStart;
     public int BasSpeed { get; set; }
     public bool BasMapValid { get; set; }
 
-    public int PrsFeet { get; set; }
+    public int PrsFeetCounterStart { get; set; }
+    public int PrsFeetCounterEnd { get; set; }
+    [DependsOn(nameof(PrsFeetCounterStart), nameof(PrsFeetCounterEnd))]
+    public int PrsFeet => this.PrsFeetCounterEnd - this.PrsFeetCounterStart;
     public int PrsSpeed { get; set; }
     public bool PrsMapValid { get; set; }
 
@@ -77,18 +86,15 @@ namespace MahloService.Models
     int IMahloRoll.Feet
     {
       get => this.MalFeet;
-      set => this.MalFeet = value;
     }
 
     int IBowAndSkewRoll.Feet
     {
       get => this.BasFeet;
-      set => this.BasFeet = value;
     }
     int IPatternRepeatRoll.Feet
     {
       get => this.PrsFeet;
-      set => this.PrsFeet = value;
     }
 
     int IMahloRoll.Speed
@@ -113,7 +119,7 @@ namespace MahloService.Models
     /// Copy all but RollId to the destination
     /// </summary>
     /// <param name="dest"></param>
-    public void CopyTo(CarpetRoll dest)
+    public void CopyTo(GreigeRoll dest)
     {
       if (dest == null)
       {
@@ -135,7 +141,7 @@ namespace MahloService.Models
       dest.ProductImageURL = this.ProductImageURL;
     }
 
-    public void SwapWith(CarpetRoll other)
+    public void SwapWith(GreigeRoll other)
     {
       (other.RollNo, this.RollNo) = (this.RollNo, other.RollNo);
       (other.OrderNo, this.OrderNo) = (this.OrderNo, other.OrderNo);
@@ -159,7 +165,7 @@ namespace MahloService.Models
     private void OnPropertyChanged(string propertyName)
     {
       this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-      //Console.WriteLine($"CarpetRoll.{propertyName}: {oldValue} -> {newValue}");
+      //Console.WriteLine($"GreigeRoll.{propertyName}: {oldValue} -> {newValue}");
     }
   }
 }

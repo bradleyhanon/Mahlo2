@@ -17,7 +17,7 @@ namespace MahloService.Models
     double PatternRepeatLength { get; }
     string ProductImageURL { get; }
 
-    int Feet { get; set; }
+    int Feet { get; }
     int Speed { get; set; }
 
     bool IsCheckRoll { get; }

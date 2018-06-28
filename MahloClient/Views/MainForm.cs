@@ -18,9 +18,9 @@ namespace MahloClient.Views
 {
   partial class MainForm : Form
   {
-    private string[] mahloColumnNames = { nameof(CarpetRoll.MalFeet) };
-    private string[] bowAndSkewColumnNames = { nameof(CarpetRoll.BasFeet), nameof(CarpetRoll.Bow), nameof(CarpetRoll.Skew) };
-    private string[] patternRepeatColumnNames = { nameof(CarpetRoll.PrsFeet), nameof(CarpetRoll.Elongation) };
+    private string[] mahloColumnNames = { nameof(GreigeRoll.MalFeet) };
+    private string[] bowAndSkewColumnNames = { nameof(GreigeRoll.BasFeet), nameof(GreigeRoll.Bow), nameof(GreigeRoll.Skew) };
+    private string[] patternRepeatColumnNames = { nameof(GreigeRoll.PrsFeet), nameof(GreigeRoll.Elongation) };
 
     private IDisposable MahloPropertyChangedSubscription;
     private IDisposable BowAndSkewPropertyChangedSubscription;
@@ -144,7 +144,7 @@ namespace MahloClient.Views
     private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
     {
       var col = this.dataGridView1.Columns[e.ColumnIndex];
-      CarpetRoll gridRoll = carpetProcessor.SewinQueue.Rolls[e.RowIndex];
+      GreigeRoll gridRoll = carpetProcessor.SewinQueue.Rolls[e.RowIndex];
       SetColor(this.carpetProcessor.MahloLogic, mahloColumnNames);
       SetColor(this.carpetProcessor.BowAndSkewLogic, bowAndSkewColumnNames);
       SetColor(this.carpetProcessor.PatternRepeatLogic, patternRepeatColumnNames);

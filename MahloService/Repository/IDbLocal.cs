@@ -7,13 +7,13 @@ namespace MahloService.Repository
   {
     IDbConnectionFactory ConnectionFactory { get; }
 
-    IEnumerable<CarpetRoll> GetCarpetRolls();
+    IEnumerable<GreigeRoll> GetGreigeRolls();
 
-    void AddCarpetRoll(CarpetRoll roll);
+    void AddGreigeRoll(GreigeRoll roll);
 
-    void UpdateCarpetRoll(CarpetRoll roll);
+    void UpdateGreigeRoll(GreigeRoll roll);
 
-    void DeleteCarpetRoll(CarpetRoll roll);
+    void DeleteGreigeRoll(GreigeRoll roll);
 
     string GetProgramState();
   }

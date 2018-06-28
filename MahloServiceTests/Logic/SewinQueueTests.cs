@@ -16,13 +16,13 @@ using Xunit;
 
 namespace MahloServiceTests
 {
-  public class SewinQueueTests : IEqualityComparer<CarpetRoll>, IDisposable
+  public class SewinQueueTests : IEqualityComparer<GreigeRoll>, IDisposable
   {
-    private CarpetRoll roll1 = new CarpetRoll() { RollNo = "100" };
-    private CarpetRoll roll2 = new CarpetRoll() { RollNo = "200" };
-    private CarpetRoll roll3 = new CarpetRoll() { RollNo = "300" };
-    private CarpetRoll roll4 = new CarpetRoll() { RollNo = "400" };
-    private CarpetRoll roll5 = new CarpetRoll() { RollNo = "500" };
+    private GreigeRoll roll1 = new GreigeRoll() { RollNo = "100" };
+    private GreigeRoll roll2 = new GreigeRoll() { RollNo = "200" };
+    private GreigeRoll roll3 = new GreigeRoll() { RollNo = "300" };
+    private GreigeRoll roll4 = new GreigeRoll() { RollNo = "400" };
+    private GreigeRoll roll5 = new GreigeRoll() { RollNo = "500" };
 
     IDbLocal dbLocal = Substitute.For<IDbLocal>();
     IDbMfg dbMfg = Substitute.For<IDbMfg>();
@@ -74,7 +74,7 @@ namespace MahloServiceTests
     [Fact]
     public void GetIsSewinQueueChangedCalledWithResultsFromPriorGetCoaterSewinQueue()
     {
-      var newRolls = new CarpetRoll[] { roll1, roll2, roll3 };
+      var newRolls = new GreigeRoll[] { roll1, roll2, roll3 };
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
       this.dbMfg.GetCoaterSewinQueue().Returns(newRolls);
       target = new SewinQueue(schedulers, dbLocal, dbMfg);
@@ -87,7 +87,7 @@ namespace MahloServiceTests
     [Fact]
     public void EmptyQueueIsPopulatedWithRecords()
     {
-      var newRolls = new CarpetRoll[] { roll1, roll2, roll3 };
+      var newRolls = new GreigeRoll[] { roll1, roll2, roll3 };
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
       this.dbMfg.GetCoaterSewinQueue().Returns(newRolls);
       target = new SewinQueue(schedulers, dbLocal, dbMfg);
@@ -103,10 +103,10 @@ namespace MahloServiceTests
     public void MatchingRollsUpdatedNewRollsAddedOthersRemoved()
     {
       roll3.ProductImageURL = "Unchanged";
-      var newRolls1 = new CarpetRoll[] { Clone(roll2), Clone(roll3), Clone(roll4) };
+      var newRolls1 = new GreigeRoll[] { Clone(roll2), Clone(roll3), Clone(roll4) };
       roll3.ProductImageURL = "Now changed";
-      var newRolls2 = new CarpetRoll[] { Clone(roll4), Clone(roll3), Clone(roll5), Clone(roll1) };
-      var expected = new CarpetRoll[] { Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
+      var newRolls2 = new GreigeRoll[] { Clone(roll4), Clone(roll3), Clone(roll5), Clone(roll1) };
+      var expected = new GreigeRoll[] { Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
 
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
       this.dbMfg.GetCoaterSewinQueue().Returns(newRolls1);
@@ -125,9 +125,9 @@ namespace MahloServiceTests
     //[Fact]
     //public void RollsNotInUpdateAreRemoved()
     //{
-    //  var newRolls1 = new CarpetRoll[] { Clone(roll2), Clone(roll3), Clone(roll4) };
-    //  var newRolls2 = new CarpetRoll[] { Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
-    //  var expected = new CarpetRoll[] { Clone(roll2), Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
+    //  var newRolls1 = new GreigeRoll[] { Clone(roll2), Clone(roll3), Clone(roll4) };
+    //  var newRolls2 = new GreigeRoll[] { Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
+    //  var expected = new GreigeRoll[] { Clone(roll2), Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
 
     //  this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
     //  this.dbMfg.GetCoaterSewinQueue().Returns(newRolls1);
@@ -143,19 +143,19 @@ namespace MahloServiceTests
     //  Assert.Equal("Now changed", target.Rolls.Single(item => item.RollNo == roll3.RollNo).ProductImageURL);
     //}
 
-    private CarpetRoll Clone(CarpetRoll roll)
+    private GreigeRoll Clone(GreigeRoll roll)
     {
-      CarpetRoll result = new CarpetRoll();
+      GreigeRoll result = new GreigeRoll();
       roll.CopyTo(result);
       return result;
     }
 
-    public bool Equals(CarpetRoll x, CarpetRoll y)
+    public bool Equals(GreigeRoll x, GreigeRoll y)
     {
       return x.RollNo == y.RollNo;
     }
 
-    public int GetHashCode(CarpetRoll obj)
+    public int GetHashCode(GreigeRoll obj)
     {
       throw new NotImplementedException();
     }

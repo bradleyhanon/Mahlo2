@@ -9,32 +9,63 @@ using MahloService.Opc;
 using MahloService.Repository;
 using MahloService.Utilities;
 using Newtonsoft.Json;
+using System.ComponentModel;
+using System.Reactive.Linq;
+using System.Collections.Specialized;
 
 namespace MahloService.Logic
 {
   class PatternRepeatLogic : MeterLogic<PatternRepeatRoll>, IPatternRepeatLogic
   {
-    private IPatternRepeatSrc dataSrc;
+    IServiceSettings appInfo;
+    private IPatternRepeatSrc srcData;
+    private ICutRollList cutRolls;
 
     private double maxElongation;
+    private bool isDoffAckNeeded;
+    private int feetCounterAtCutRollStart;
 
     public PatternRepeatLogic(
-      IPatternRepeatSrc dataSrc,
+      IPatternRepeatSrc srcData,
       ISewinQueue sewinQueue,
+      ICutRollList cutRolls,
       IServiceSettings appInfo,
       IUserAttentions<PatternRepeatRoll> userAttentions,
       ICriticalStops<PatternRepeatRoll> criticalStops,
       IProgramState programState,
       ISchedulerProvider schedulerProvider)
-      : base(dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
+      : base(srcData, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
     {
-      this.dataSrc = dataSrc;
+      this.appInfo = appInfo;
+      this.srcData = srcData;
+      this.cutRolls = cutRolls;
+
+      this.Disposables.Add(
+        Observable
+        .FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
+          h => this.cutRolls.CollectionChanged += h,
+          h => this.cutRolls.CollectionChanged -= h)
+        .Subscribe(_ =>
+        {
+          this.CurrentCutRoll = this.cutRolls.Last();
+        }));
     }
 
-    public override int MeasuredLength
+    [JsonIgnore]
+    public CutRoll CurrentCutRoll { get; set; }
+
+    public bool IsDoffDetected { get; set; }
+
+    public override int FeetCounterStart
     {
-      get => this.CurrentRoll.PrsFeet;
-      set => this.CurrentRoll.PrsFeet = value;
+      get => this.CurrentRoll.PrsFeetCounterStart;
+      set => this.CurrentRoll.PrsFeetCounterStart = value;
+    }
+
+    public override int FeetCounterEnd
+    {
+      get => this.CurrentRoll.PrsFeetCounterEnd;
+      set => this.CurrentRoll.PrsFeetCounterEnd = value;
     }
 
     public override int Speed
@@ -49,25 +80,27 @@ namespace MahloService.Logic
       set => this.CurrentRoll.PrsMapValid = value;
     }
 
-    protected override void OnRollFinished(CarpetRoll carpetRoll)
+    protected override void OnRollFinished(GreigeRoll greigeRoll)
     {
-      base.OnRollFinished(carpetRoll);
-      carpetRoll.Elongation = this.maxElongation;
+      base.OnRollFinished(greigeRoll);
+      greigeRoll.Elongation = this.maxElongation;
     }
 
-    protected override void OnRollStarted(CarpetRoll carpetRoll)
+    protected override void OnRollStarted(GreigeRoll greigeRoll)
     {
-      base.OnRollStarted(carpetRoll);
+      base.OnRollStarted(greigeRoll);
       this.maxElongation = 0;
+
+      this.feetCounterAtCutRollStart = (int)this.srcData.FeetCounter;
     }
 
     protected override void OpcValueChanged(string propertyName)
     {
       switch (propertyName)
       {
-        case nameof(this.dataSrc.PatternRepeatLength):
-          this.CurrentRoll.PatternRepeatLength = this.dataSrc.PatternRepeatLength;
-          double elongation = dataSrc.PatternRepeatLength - this.CurrentRoll.PatternRepeatLength;
+        case nameof(this.srcData.PatternRepeatLength):
+          this.CurrentRoll.PatternRepeatLength = this.srcData.PatternRepeatLength;
+          double elongation = srcData.PatternRepeatLength - this.CurrentRoll.PatternRepeatLength;
           if (Math.Abs(elongation) > Math.Abs(this.maxElongation))
           {
             this.maxElongation = elongation;
@@ -75,10 +108,80 @@ namespace MahloService.Logic
 
           break;
 
+        case nameof(this.srcData.IsDoffDetected):
+          this.DoffDetected();
+          break;
+
         default:
           base.OpcValueChanged(propertyName);
           break;
       }
+    }
+
+    protected override void FeetCounterChanged(int feetCounter)
+    {
+      base.FeetCounterChanged(feetCounter);
+
+      this.CurrentCutRoll.FeetCounterEnd = feetCounter;
+      if (this.CurrentCutRoll.Length < this.appInfo.MinSeamSpacing)
+      {
+        return;
+      }
+
+      if (this.isDoffAckNeeded)
+      {
+        this.isDoffAckNeeded = false;
+        this.srcData.AcknowledgeDoffDetect();
+        this.IsDoffDetected = false;
+      }
+
+      if (this.CurrentCutRoll == null)
+      {
+        this.CurrentCutRoll = new CutRoll();
+        this.cutRolls.Add(this.CurrentCutRoll);
+      }
+    }
+
+    private void DoffDetected()
+    {
+      if (!this.srcData.IsDoffDetected)
+      {
+        return;
+      }
+
+      this.isDoffAckNeeded = true;
+
+      // Ignore doff if system is disabled
+      if (this.UserAttentions.IsSystemDisabled)
+      {
+        return;
+      }
+
+      if (this.CurrentCutRoll == null)
+      {
+        return;
+      }
+
+      if (this.IsMapValid)
+      {
+        this.SaveCutRollMap();
+      }
+
+      // CutRoll is finished
+      this.CurrentCutRoll = new CutRoll
+      {
+        FeetCounterStart = (int)this.srcData.FeetCounter,
+        FeetCounterEnd = (int)this.srcData.FeetCounter,
+      };
+
+      this.cutRolls.Add(this.CurrentCutRoll);
+
+      this.IsDoffDetected = true;
+    }
+
+    private void SaveCutRollMap()
+    {
+
     }
   }
 }

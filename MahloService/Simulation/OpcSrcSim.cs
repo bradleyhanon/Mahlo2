@@ -99,6 +99,8 @@ namespace MahloService.Simulation
 
     public double PatternRepeatLength { get; set; }
 
+    public bool IsDoffDetected => throw new NotImplementedException();
+
     public void AcknowledgeSeamDetect()
     {
       this.IsSeamDetected = false;
@@ -141,7 +143,7 @@ namespace MahloService.Simulation
           .Subscribe(timer =>
           {
             //Console.WriteLine($"{typeof(Model).Name}: FeetCounter={this.FeetCounter}");
-            CarpetRoll currentRoll = this.sewinQueue.Rolls[rollIndex];
+            GreigeRoll currentRoll = this.sewinQueue.Rolls[rollIndex];
             this.FeetCounter += 1.0;
             double measuredLength = this.FeetCounter - this.feetCounterAtRollStart;
             if (this.isCheckRollEndSeamNeeded)
@@ -172,6 +174,11 @@ namespace MahloService.Simulation
     {
       this.timer?.Dispose();
       this.timer = null;
+    }
+
+    public void AcknowledgeDoffDetect()
+    {
+      throw new NotImplementedException();
     }
   }
 }

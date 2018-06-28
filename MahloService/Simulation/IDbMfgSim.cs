@@ -11,7 +11,7 @@ namespace MahloService.Simulation
 {
   interface IDbMfgSim : IDbMfg
   {
-    BindingList<CarpetRoll> SewinQueue { get; }
+    BindingList<GreigeRoll> SewinQueue { get; }
     void AddRoll();
   }
 }

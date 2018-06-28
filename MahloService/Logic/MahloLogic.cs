@@ -26,10 +26,16 @@ namespace MahloService.Logic
     {
     }
 
-    public override int MeasuredLength
+    public override int FeetCounterStart 
     {
-      get => this.CurrentRoll.MalFeet;
-      set => this.CurrentRoll.MalFeet = value;
+      get => this.CurrentRoll.MalFeetCounterStart;
+      set => this.CurrentRoll.MalFeetCounterStart = value;
+    }
+
+    public override int FeetCounterEnd
+    {
+      get => this.CurrentRoll.MalFeetCounterEnd;
+      set => this.CurrentRoll.MalFeetCounterEnd = value;
     }
 
     public override int Speed

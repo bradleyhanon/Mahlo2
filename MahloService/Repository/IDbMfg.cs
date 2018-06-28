@@ -6,7 +6,7 @@ namespace MahloService.Repository
 {
   interface IDbMfg
   {
-    Task<IEnumerable<CarpetRoll>> GetCoaterSewinQueue();
+    Task<IEnumerable<GreigeRoll>> GetCoaterSewinQueue();
     Task<bool> GetIsSewinQueueChanged(int rowCount, string firstRollNo, string lastRollNo);
     Task<(string styleName, string colorName)> GetNamesFromLegacyCodes(string styleCode, string colorCode);
     Task BasUpdateDefaultRecipe(string styleCode, string rollNo, string recipeName);

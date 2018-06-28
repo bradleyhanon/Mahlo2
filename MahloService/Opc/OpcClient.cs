@@ -41,7 +41,6 @@ namespace MahloService.Opc
 
     private SynchronizationContext synchronizationContext;
     private string seamAckTag;
-    private string seamDetectedTag;
 
     private IDisposable criticalAlarmsSubscription;
     private IDisposable userAttentionsSubscription;
@@ -92,6 +91,7 @@ namespace MahloService.Opc
     public double Skew { get; set; }
     public double PatternRepeatLength { get; set; }
     public bool IsSeamDetected { get; set; }
+    public bool IsDoffDetected { get; set; }
 
     public bool IsAutoMode { get; set; }
     public string Recipe { get; set; }
@@ -108,6 +108,12 @@ namespace MahloService.Opc
         this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 1);
         this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 0);
       });
+    }
+
+    public void AcknowledgeDoffDetect()
+    {
+      this.opcClient.WriteItemValue(string.Empty, PlcServerClass, "MahloSeam.MahloPLC.MahloDoffAck", 1);
+      this.opcClient.WriteItemValue(string.Empty, PlcServerClass, "MahloSeam.MahloPLC.MahloDoffAck", 0);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -146,6 +152,7 @@ namespace MahloService.Opc
     public void Initialize()
     {
       int seamDetectorId;
+      var plcTags = new List<(string, Action<object>)>();
       var mahloTags = new List<(string, Action<object>)>();
       mahloTags.AddRange(new(string, Action<object>)[]
       {
@@ -185,6 +192,8 @@ namespace MahloService.Opc
       }
       else if (typeof(Model) == typeof(PatternRepeatRoll))
       {
+        plcTags.Add(($"MahloPLC.MahloDoff", value => this.IsDoffDetected = (bool)value));
+
         seamDetectorId = 3;
         this.mahloChannel = mahloSettings.PatternRepeatChannelName;
         mahloTags.AddRange(new(string, Action<object>)[]
@@ -217,12 +226,7 @@ namespace MahloService.Opc
       }
 
       this.seamAckTag = $"MahloSeam.MahloPLC.Mahlo{seamDetectorId}SeamAck";
-      this.seamDetectedTag = $"MahloSeam.MahloPLC.Mahlo{seamDetectorId}SeamDetected";
-      var plcTags = new List<(string, Action<object>)>()
-      {
-        ($"MahloPLC.Mahlo{seamDetectorId}SeamDetected", value => this.IsSeamDetected = (bool)value),
-      };
-
+      plcTags.Add(($"MahloPLC.Mahlo{seamDetectorId}SeamDetected", value => this.IsSeamDetected = (bool)value));
       this.PlcSubscribe("MahloSeam", plcTags);
       this.MahloSubscribe(this.mahloChannel, mahloTags);
     }
