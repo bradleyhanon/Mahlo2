@@ -122,6 +122,8 @@
       <Link>Settings\ServiceSettings.cs</Link>
     </Compile>
     <Compile Include="Dapper\ComputedAttribute.cs" />
+    <Compile Include="Logic\CutRollList.cs" />
+    <Compile Include="Logic\ICutRollList.cs" />
     <Compile Include="Settings\ClientSettings.cs" />
     <Compile Include="Settings\IClientSettings.cs" />
     <Compile Include="Extensions.cs" />

@@ -22,6 +22,7 @@ namespace MahloService.Logic
     private double maxSkew;
 
     public BowAndSkewLogic(
+      IDbLocal dbLocal,
       IBowAndSkewSrc dataSrc,
       ISewinQueue sewinQueue,
       IServiceSettings appInfo,
@@ -29,7 +30,7 @@ namespace MahloService.Logic
       ICriticalStops<BowAndSkewRoll> criticalStops,
       IProgramState programState,
       ISchedulerProvider schedulerProvider)
-      : base(dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
+      : base(dbLocal, dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
     {
       this.dataSrc = dataSrc;
     }

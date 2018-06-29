@@ -92,9 +92,12 @@ namespace MahloClient.Views
       Brush brsh;
       Brush textBrush;
       brsh = Brushes.Transparent;
-      StringFormat sf = new StringFormat();
-      sf.Alignment = StringAlignment.Center;
-      sf.LineAlignment = StringAlignment.Center;
+      StringFormat sf = new StringFormat
+      {
+        Alignment = StringAlignment.Center,
+        LineAlignment = StringAlignment.Center
+      };
+
       string txt = "";
 
       switch (sbdevent.Index)

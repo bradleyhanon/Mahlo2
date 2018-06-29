@@ -19,9 +19,16 @@ namespace MahloClient.Logic
 
     public override string InterfaceName => nameof(IMahloLogic);
 
-    public override int MeasuredLength
+    public override int FeetCounterStart
     {
-      get => this.CurrentRoll.MalFeet;
+      get => this.CurrentRoll.MalFeetCounterStart;
+      set => this.CurrentRoll.MalFeetCounterStart = value;
+    }
+
+    public override int FeetCounterEnd
+    {
+      get => this.CurrentRoll.MalFeetCounterEnd;
+      set => this.CurrentRoll.MalFeetCounterEnd = value;
     }
 
     public override int Speed

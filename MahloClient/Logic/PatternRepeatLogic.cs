@@ -19,9 +19,16 @@ namespace MahloClient.Logic
 
     public override string InterfaceName => nameof(IPatternRepeatLogic);
 
-    public override int MeasuredLength
+    public override int FeetCounterStart
     {
-      get => this.CurrentRoll.PrsFeet;
+      get => this.CurrentRoll.PrsFeetCounterStart;
+      set => this.CurrentRoll.PrsFeetCounterStart = value;
+    }
+
+    public override int FeetCounterEnd
+    {
+      get => this.CurrentRoll.PrsFeetCounterEnd;
+      set => this.CurrentRoll.PrsFeetCounterEnd = value;
     }
 
     public override int Speed

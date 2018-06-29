@@ -21,6 +21,7 @@ namespace MahloServiceTests.Mocks
     public double Skew { get; set; }
     public double PatternRepeatLength { get; set; }
     public bool IsSeamDetected { get; set; }
+    public bool IsDoffDetected { get; set; }
 
     public string Recipe { get; set; } = string.Empty;
     public bool IsAutoMode { get; set; }
@@ -28,6 +29,7 @@ namespace MahloServiceTests.Mocks
 
     public int ResetMeterOffsetCalled { get; set; }
     public int AcknowledgeSeamDetectCalled { get; set; }
+    public int AcknowledgeDoffDetectCalled { get; set; }
 
     public void ResetMeterOffset()
     {
@@ -37,6 +39,11 @@ namespace MahloServiceTests.Mocks
     public void AcknowledgeSeamDetect()
     {
       this.AcknowledgeSeamDetectCalled++;
+    }
+
+    public void AcknowledgeDoffDetect()
+    {
+      this.AcknowledgeDoffDetectCalled++;
     }
 
     public void SetAutoMode(bool value)

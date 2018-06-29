@@ -99,11 +99,16 @@ namespace MahloService.Simulation
 
     public double PatternRepeatLength { get; set; }
 
-    public bool IsDoffDetected => throw new NotImplementedException();
+    public bool IsDoffDetected { get; set; }
 
     public void AcknowledgeSeamDetect()
     {
       this.IsSeamDetected = false;
+    }
+
+    public void AcknowledgeDoffDetect()
+    {
+      this.IsDoffDetected = false;
     }
 
     public void SetAutoMode(bool value)
@@ -133,6 +138,7 @@ namespace MahloService.Simulation
 
     public void Start(double startFootage, double feetPerMinute)
     {
+      int cutRollCount = 1;
       this.feetCounterAtRollStart = 0;
       this.FeetCounter = startFootage;
       this.FeetPerMinute = feetPerMinute;
@@ -160,11 +166,16 @@ namespace MahloService.Simulation
             if (this.FeetCounter - this.feetCounterAtRollStart >= currentRoll.RollLength)
             {
               this.IsSeamDetected = true;
+              this.IsDoffDetected = true;
               this.feetCounterAtRollStart = this.FeetCounter;
               if (++this.rollIndex >= this.sewinQueue.Rolls.Count)
               {
                 this.Stop();
               }
+            }
+            else if (measuredLength >= cutRollCount * (currentRoll.RollLength / 4))
+            {
+              this.IsDoffDetected = true;
             }
           });
       }
@@ -174,11 +185,6 @@ namespace MahloService.Simulation
     {
       this.timer?.Dispose();
       this.timer = null;
-    }
-
-    public void AcknowledgeDoffDetect()
-    {
-      throw new NotImplementedException();
     }
   }
 }

@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Collections.Specialized;
+using System.Threading;
 
 namespace MahloService.Logic
 {
@@ -20,31 +21,39 @@ namespace MahloService.Logic
     IServiceSettings appInfo;
     private IPatternRepeatSrc srcData;
     private ICutRollList cutRolls;
+    private IDbLocal dbLocal;
 
     private double maxElongation;
-    private bool isDoffAckNeeded;
     private int feetCounterAtCutRollStart;
+    private int nextCutRollId;
+    private CancellationTokenSource ctsDoff;
+    private bool isFeetCounterChanged;
 
     public PatternRepeatLogic(
+      IDbLocal dbLocal,
+      ICutRollList cutRolls,
       IPatternRepeatSrc srcData,
       ISewinQueue sewinQueue,
-      ICutRollList cutRolls,
       IServiceSettings appInfo,
       IUserAttentions<PatternRepeatRoll> userAttentions,
       ICriticalStops<PatternRepeatRoll> criticalStops,
       IProgramState programState,
       ISchedulerProvider schedulerProvider)
-      : base(srcData, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
+      : base(dbLocal, srcData, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
     {
+      this.dbLocal = dbLocal;
+      this.cutRolls = cutRolls;
       this.appInfo = appInfo;
       this.srcData = srcData;
-      this.cutRolls = cutRolls;
+
+      this.nextCutRollId = dbLocal.GetNextCutRollId();
 
       this.Disposables.Add(
         Observable
-        .FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
-          h => this.cutRolls.CollectionChanged += h,
-          h => this.cutRolls.CollectionChanged -= h)
+        .FromEventPattern<ListChangedEventHandler, ListChangedEventArgs>(
+          h => this.cutRolls.ListChanged += h,
+          h => this.cutRolls.ListChanged -= h)
+        .Where(args => args.EventArgs.ListChangedType != ListChangedType.ItemChanged)
         .Subscribe(_ =>
         {
           this.CurrentCutRoll = this.cutRolls.Last();
@@ -99,11 +108,15 @@ namespace MahloService.Logic
       switch (propertyName)
       {
         case nameof(this.srcData.PatternRepeatLength):
-          this.CurrentRoll.PatternRepeatLength = this.srcData.PatternRepeatLength;
           double elongation = srcData.PatternRepeatLength - this.CurrentRoll.PatternRepeatLength;
-          if (Math.Abs(elongation) > Math.Abs(this.maxElongation))
+          if (Math.Abs(elongation) > Math.Abs(this.CurrentRoll.Elongation))
           {
-            this.maxElongation = elongation;
+            this.CurrentRoll.Elongation = elongation;
+          }
+
+          if (Math.Abs(elongation) > Math.Abs(this.CurrentCutRoll.MaxEPE))
+          {
+            this.CurrentCutRoll.MaxEPE = elongation;
           }
 
           break;
@@ -122,66 +135,74 @@ namespace MahloService.Logic
     {
       base.FeetCounterChanged(feetCounter);
 
-      this.CurrentCutRoll.FeetCounterEnd = feetCounter;
-      if (this.CurrentCutRoll.Length < this.appInfo.MinSeamSpacing)
+      if (this.CurrentCutRoll == null)
       {
         return;
       }
 
-      if (this.isDoffAckNeeded)
-      {
-        this.isDoffAckNeeded = false;
-        this.srcData.AcknowledgeDoffDetect();
-        this.IsDoffDetected = false;
-      }
+      this.isFeetCounterChanged = this.CurrentCutRoll.FeetCounterEnd != feetCounter;
+      this.CurrentCutRoll.FeetCounterEnd = feetCounter;
+    }
 
-      if (this.CurrentCutRoll == null)
+    private async void KeepBowAndSkewUpToDate()
+    {
+      for (; ;)
       {
-        this.CurrentCutRoll = new CutRoll();
-        this.cutRolls.Add(this.CurrentCutRoll);
+        await Task.Delay(1000);
+        if (this.isFeetCounterChanged)
+        {
+          this.isFeetCounterChanged = false;
+          if (this.CurrentCutRoll != null)
+          {
+            (this.CurrentCutRoll.MaxBow, this.CurrentCutRoll.MaxSkew) = 
+              dbLocal.GetBowAndSkew(this.CurrentCutRoll.GreigeRollId, this.CurrentCutRoll.FeetCounterStart, this.CurrentCutRoll.FeetCounterEnd);
+          }
+        }
       }
     }
 
-    private void DoffDetected()
+    private async void DoffDetected()
     {
       if (!this.srcData.IsDoffDetected)
       {
+        // Cancel any further doff acks
+        this.ctsDoff?.Cancel();
         return;
       }
 
-      this.isDoffAckNeeded = true;
-
-      // Ignore doff if system is disabled
-      if (this.UserAttentions.IsSystemDisabled)
+      if (this.CurrentCutRoll != null)
       {
-        return;
+        this.dbLocal.UpdateCutRoll(this.CurrentCutRoll);
       }
 
-      if (this.CurrentCutRoll == null)
+      if (this.CurrentCutRoll == null || this.CurrentCutRoll.Length >= this.appInfo.MinSeamSpacing)
       {
-        return;
+        // CutRoll is finished
+        this.CurrentCutRoll = new CutRoll
+        {
+          Id = this.nextCutRollId++,
+          GreigeRollId = this.CurrentRoll.Id,
+          FeetCounterStart = (int)this.srcData.FeetCounter,
+          FeetCounterEnd = (int)this.srcData.FeetCounter,
+        };
+
+        this.cutRolls.Add(this.CurrentCutRoll);
+        this.dbLocal.AddCutRoll(this.CurrentCutRoll);
       }
 
-      if (this.IsMapValid)
+      this.ctsDoff.Dispose();
+      this.ctsDoff = new CancellationTokenSource();
+      try
       {
-        this.SaveCutRollMap();
+        do
+        {
+          await Task.Delay(1000, ctsDoff.Token);
+          this.srcData.AcknowledgeDoffDetect();
+        } while (this.srcData.IsDoffDetected);
       }
-
-      // CutRoll is finished
-      this.CurrentCutRoll = new CutRoll
+      catch (TaskCanceledException)
       {
-        FeetCounterStart = (int)this.srcData.FeetCounter,
-        FeetCounterEnd = (int)this.srcData.FeetCounter,
-      };
-
-      this.cutRolls.Add(this.CurrentCutRoll);
-
-      this.IsDoffDetected = true;
-    }
-
-    private void SaveCutRollMap()
-    {
-
+      }
     }
   }
 }

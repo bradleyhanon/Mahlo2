@@ -23,6 +23,7 @@ namespace MahloService.Logic
   abstract class MeterLogic<Model> : IMeterLogic<Model>, IDisposable
     where Model : MahloRoll, new()
   {
+    private IDbLocal dbLocal;
     private ISewinQueue sewinQueue;
     private IMeterSrc<Model> srcData;
     private IServiceSettings appInfo;
@@ -37,8 +38,10 @@ namespace MahloService.Logic
     private double feetCounterAtLastSeam;
 
     private bool isSewinQueueInitialized;
+    private GreigeRoll _currentRoll = new GreigeRoll();
 
     public MeterLogic(
+      IDbLocal dbLocal,
       IMeterSrc<Model> srcData,
       ISewinQueue sewinQueue,
       IServiceSettings appInfo,
@@ -47,6 +50,7 @@ namespace MahloService.Logic
       IProgramState programState,
       ISchedulerProvider schedulerProvider)
     {
+      this.dbLocal = dbLocal;
       this.sewinQueue = sewinQueue;
       this.srcData = srcData;
       this.appInfo = appInfo;
@@ -115,8 +119,7 @@ namespace MahloService.Logic
     /// <summary>
     /// Get the roll that is currently being processed
     /// </summary>
-    public GreigeRoll CurrentRoll { get; set; } = new GreigeRoll();
-
+    public GreigeRoll CurrentRoll { get => _currentRoll; set => _currentRoll = value; }
     [DependsOn(nameof(CurrentRoll))]
     public int CurrentRollIndex => this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
 
@@ -131,8 +134,7 @@ namespace MahloService.Logic
     public abstract int FeetCounterStart { get; set; }
     [JsonProperty(Order = 1)]
     public abstract int FeetCounterEnd { get; set; }
-    [JsonProperty(Order = 1)]
-    [DependsOn(nameof(FeetCounterStart), nameof(FeetCounterEnd))]
+    [JsonIgnore]
     public int MeasuredLength => this.FeetCounterEnd - this.FeetCounterStart;
     [JsonProperty(Order = 1)]
     public abstract int Speed { get; set; }
@@ -434,11 +436,7 @@ namespace MahloService.Logic
           rollExpectedLength = this.CurrentRoll.RollLength;
         }
 
-        //if current map is valid, store it permanently
-        if (this.IsMapValid)
-        {
-          SaveRollMap();
-        }
+        this.dbLocal.UpdateGreigeRoll(this.CurrentRoll);
 
         this.OnRollFinished(this.CurrentRoll);
 
@@ -458,7 +456,8 @@ namespace MahloService.Logic
         {
           //advance to next position in queue
           this.CurrentRoll = this.sewinQueue.Rolls[index + 1];
-          this.FeetCounterStart = this.FeetCounterEnd = (int)this.srcData.FeetCounter; ;
+          this.FeetCounterStart = this.FeetCounterEnd = (int)this.srcData.FeetCounter;
+
           //InitializeRollsFromQueue(oCurrentRoll.PositionInQueue + 1);
           //InitializeCharts();)
           switch (CommonMethods.DetermineRollType(this.sewinQueue.Rolls, this.CurrentRoll))

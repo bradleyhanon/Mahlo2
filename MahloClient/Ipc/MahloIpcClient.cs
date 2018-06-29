@@ -30,6 +30,7 @@ namespace MahloClient.Ipc
     private IHubProxy hubProxy;
     private IClientSettings appInfo;
     private ISewinQueue sewinQueue;
+    private ICutRollList cutRollList;
     private SynchronizationContext context;
 
     private bool isStarting;
@@ -39,11 +40,13 @@ namespace MahloClient.Ipc
 
     public MahloIpcClient(
       ISewinQueue sewinQueue,
+      ICutRollList cutRollList,
       IClientSettings appInfo,
       SynchronizationContext context)
     {
       this.appInfo = appInfo;
       this.sewinQueue = sewinQueue;
+      this.cutRollList = cutRollList;
       this.context = context;
     }
 
@@ -83,17 +86,20 @@ namespace MahloClient.Ipc
         //this.hubConnection.TraceLevel = TraceLevels.All;
         //this.hubConnection.TraceWriter = Console.Out;
         this.hubProxy = hubConnection.CreateHubProxy("MahloHub");
-        this.hubProxy.On("UpdateSewinQueue", arg =>
+        this.hubProxy.On("UpdateSewinQueue", arg =>this.context.Post(_ =>
         {
-          this.context.Post(_ =>
-            this.sewinQueue.UpdateSewinQueue(arg), null);
-        });
+            this.sewinQueue.UpdateSewinQueue(arg);
+        }, null));
 
         this.hubProxy.On<string, JObject>("UpdateMeterLogic", (name, arg) => this.context.Post(_ =>
         {
           this.MeterLogicUpdated?.Invoke((name, arg));
         }, null));
 
+        this.hubProxy.On<JArray>("UpdateCutRollList", array =>this.context.Post(_ =>
+        {
+          this.cutRollList.Update(array);
+        }, null));
 
         do
         {

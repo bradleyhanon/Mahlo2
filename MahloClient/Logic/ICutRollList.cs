@@ -6,11 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MahloService.Models;
+using Newtonsoft.Json.Linq;
 
-namespace MahloService.Logic
+namespace MahloClient.Logic
 {
   interface ICutRollList : IList<CutRoll>, IBindingList
   {
-    bool IsChanged { get; set; }
+    void Update(JArray jArray);
   }
 }

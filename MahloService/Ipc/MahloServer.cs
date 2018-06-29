@@ -50,6 +50,7 @@ namespace MahloService.Ipc
             this.UpdateMeterLogic(nameof(IMahloLogic), this.mahloLogic);
             this.UpdateMeterLogic(nameof(IBowAndSkewLogic), this.bowAndSkewLogic);
             this.UpdateMeterLogic(nameof(IPatternRepeatLogic), this.patternRepeatLogic);
+            this.UpdateCutRollList();
           }),
 
         Observable
@@ -57,12 +58,6 @@ namespace MahloService.Ipc
             h => this.sewinQueue.QueueChanged += h,
             h => this.sewinQueue.QueueChanged -= h)
           .Subscribe(_ => this.UpdateSewinQueue()),
-
-        Observable
-          .FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
-            h => this.cutRolls.CollectionChanged += h,
-            h => this.cutRolls.CollectionChanged -= h)
-          .Subscribe(_ => this.UpdateCutRollList()),
       };
     }
 
@@ -81,7 +76,11 @@ namespace MahloService.Ipc
 
     public void UpdateCutRollList()
     {
-      this.Clients.All.UpdateCutRollList(this.cutRolls.ToArray());
+      if (this.cutRolls.IsChanged)
+      {
+        this.cutRolls.IsChanged = false;
+        this.Clients.All.UpdateCutRollList(this.cutRolls.ToArray());
+      }
     }
 
     public void UpdateMeterLogic<Model>(string interfaceName, IMeterLogic<Model> meterLogic)

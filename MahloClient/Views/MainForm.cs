@@ -27,13 +27,15 @@ namespace MahloClient.Views
     private IDisposable PatternRepeatPropertyChangedSubscription;
 
     private ICarpetProcessor carpetProcessor;
+    private ICutRollList cutRollList;
     private IMahloIpcClient mahloClient;
     private IServiceSettings serviceSettings;
 
-    public MainForm(ICarpetProcessor carpetProcessor, IMahloIpcClient mahloClient, IServiceSettings serviceSettings)
+    public MainForm(ICarpetProcessor carpetProcessor, ICutRollList cutRollList, IMahloIpcClient mahloClient, IServiceSettings serviceSettings)
     {
       InitializeComponent();
       this.carpetProcessor = carpetProcessor;
+      this.cutRollList = cutRollList;
       this.mahloClient = mahloClient;
       this.serviceSettings = serviceSettings;
       this.statusBar1.StatusBarInfo = (IStatusBarInfo)this.carpetProcessor.PatternRepeatLogic;
@@ -77,7 +79,7 @@ namespace MahloClient.Views
         column.HeaderCell.Style.Alignment = column.DefaultCellStyle.Alignment;
       }
 
-      foreach (DataGridViewColumn column in dataGridView5.Columns)
+      foreach (DataGridViewColumn column in cutRollGrid.Columns)
       {
         column.HeaderCell.Style.Alignment = column.DefaultCellStyle.Alignment;
       }
@@ -120,6 +122,7 @@ namespace MahloClient.Views
       this.mahloLogicSrc.DataSource = carpetProcessor.MahloLogic;
       this.bowAndSkewLogicSrc.DataSource = carpetProcessor.BowAndSkewLogic;
       this.patternRepeatLogicSrc.DataSource = carpetProcessor.PatternRepeatLogic;
+      this.cutRollSrc.DataSource = this.cutRollList;
 
       this.grpMahlo.Tag = nameof(IMahloLogic);
       this.grpBowAndSkew.Tag = nameof(IBowAndSkewLogic);

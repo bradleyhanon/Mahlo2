@@ -110,7 +110,7 @@ namespace MahloServiceTests.Logic
 
       this.sewinQueue.Rolls.Returns(new BindingList<GreigeRoll>(greigeRolls));
 
-      this.target = new MahloLogic(this.srcData, this.sewinQueue, this.appInfo, this.userAttentions, this.criticalStops, this.programState, this.testSchedulers);
+      this.target = new MahloLogic(this.dbLocal, this.srcData, this.sewinQueue, this.appInfo, this.userAttentions, this.criticalStops, this.programState, this.testSchedulers);
       this.target.CurrentRoll = this.sewinQueue.Rolls[0];
       this.sewinQueue.QueueChanged += Raise.Event<Action>(); 
       Assert.True(this.userAttentions.VerifyRollSequence);

@@ -143,7 +143,10 @@ namespace MahloClient.Logic
     [DependsOn(nameof(MappingStatusMessageBackColor))]
     public Color MappingStatusMessageForeColor => MappingStatusMessageBackColor.ContrastColor();
 
-    public abstract int MeasuredLength { get; }
+    [DependsOn(nameof(FeetCounterStart), nameof(FeetCounterEnd))]
+    public int MeasuredLength => this.FeetCounterEnd - this.FeetCounterStart;
+    public abstract int FeetCounterStart { get; set; }
+    public abstract int FeetCounterEnd { get; set; }
     public abstract int Speed { get; set; }
     public abstract bool IsMapValid { get; set; }
     public double MeasuredWidth { get; set; }

@@ -15,6 +15,7 @@ namespace MahloService.Logic
   class MahloLogic : MeterLogic<MahloRoll>, IMahloLogic
   {
     public MahloLogic(
+      IDbLocal dbLocal,
       IMahloSrc mahloSrc, 
       ISewinQueue sewinQueue, 
       IServiceSettings appInfo, 
@@ -22,7 +23,7 @@ namespace MahloService.Logic
       ICriticalStops<MahloRoll> criticalStops, 
       IProgramState programState,
       ISchedulerProvider schedulerProvider)
-      : base(mahloSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
+      : base(dbLocal, mahloSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
     {
     }
 

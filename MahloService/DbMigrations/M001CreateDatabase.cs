@@ -70,16 +70,15 @@ namespace MahloService.DbMigrations
         .WithColumn("Elongation").AsDouble().NotNullable();
 
       this.Create.Table("CutRolls")
-        .WithColumn(strId).AsInt32().ForeignKey(strGreigeRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
-        .WithColumn(strCutId).AsInt32()
-        .WithColumn("SapRoll").AsAnsiString().NotNullable()
+        .WithColumn(strId).AsInt32().PrimaryKey()
+        .WithColumn("GreigeRollId").AsInt32().ForeignKey(strGreigeRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
+        .WithColumn("SapRoll").AsAnsiString(20).NotNullable()
         .WithColumn("FeetCounterStart").AsInt32().NotNullable()
         .WithColumn("FeetCounterEnd").AsInt32().NotNullable()
-        .WithColumn(strBow).AsDouble()
-        .WithColumn(strSkew).AsDouble()
-        .WithColumn(strElongation).AsDouble();
-
-      this.Create.PrimaryKey().OnTable("CutRolls").Columns(strId, strCutId);
+        .WithColumn("MaxBow").AsDouble()
+        .WithColumn("MaxSkew").AsDouble()
+        .WithColumn("MaxEPE").AsDouble()
+        .WithColumn("Dlot").AsAnsiString(10);
 
       this.Create.Table("BowAndSkewMap")
         .WithColumn(strFeetCounter).AsInt32().PrimaryKey()

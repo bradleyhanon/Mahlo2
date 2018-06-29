@@ -25,6 +25,7 @@ namespace MahloService.Models
     public event PropertyChangedEventHandler PropertyChanged;
 
     public int Id { get; set; }
+    public bool IsComplete { get; set; }
 
     //-- Mfg database data --//
     public string RollNo { get; set; } = string.Empty;
@@ -49,6 +50,7 @@ namespace MahloService.Models
     public int MalFeetCounterStart { get; set; }
     public int MalFeetCounterEnd { get; set; }
     [DependsOn(nameof(MalFeetCounterStart), nameof(MalFeetCounterEnd))]
+    [Computed]
     public int MalFeet => this.MalFeetCounterEnd - this.MalFeetCounterStart;
     public int MalSpeed { get; set; }
     public bool MalMapValid { get; set; }
@@ -56,6 +58,7 @@ namespace MahloService.Models
     public int BasFeetCounterStart { get; set; }
     public int BasFeetCounterEnd { get; set; }
     [DependsOn(nameof(BasFeetCounterEnd), nameof(BasFeetCounterEnd))]
+    [Computed]
     public int BasFeet => this.BasFeetCounterEnd - this.BasFeetCounterStart;
     public int BasSpeed { get; set; }
     public bool BasMapValid { get; set; }
@@ -63,6 +66,7 @@ namespace MahloService.Models
     public int PrsFeetCounterStart { get; set; }
     public int PrsFeetCounterEnd { get; set; }
     [DependsOn(nameof(PrsFeetCounterStart), nameof(PrsFeetCounterEnd))]
+    [Computed]
     public int PrsFeet => this.PrsFeetCounterEnd - this.PrsFeetCounterStart;
     public int PrsSpeed { get; set; }
     public bool PrsMapValid { get; set; }

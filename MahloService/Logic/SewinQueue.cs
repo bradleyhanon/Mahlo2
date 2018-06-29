@@ -17,7 +17,7 @@ using PropertyChanged;
 
 namespace MahloService.Logic
 {
-  sealed class SewinQueue : ISewinQueue
+  sealed class SewinQueue : ISewinQueue, IEqualityComparer<GreigeRoll>
   {
     private int nextRollId;
 
@@ -85,15 +85,9 @@ namespace MahloService.Logic
         this.priorQueueSize = newRolls.Count();
 
         // Remove completed rolls
-        for (int j = this.Rolls.Count - 1; j >= 0; j--)
-        {
-          var oldRoll = this.Rolls[j];
-          if (!newRolls.Any(newRoll => newRoll.RollNo == oldRoll.RollNo))
-          {
-            //Console.WriteLine($"Del Roll={oldRoll.RollNo}");
-            this.Rolls.RemoveAt(j);
-          }
-        }
+        var rollsToRemove = this.Rolls.Except(newRolls, this).ToArray();
+        this.dbLocal.SetGreigeRollsComplete(rollsToRemove);
+        rollsToRemove.ForEach(roll => this.Rolls.Remove(roll));
 
         foreach (var newRoll in newRolls)
         {
@@ -102,6 +96,7 @@ namespace MahloService.Logic
           {
             // Update old rolls we already have
             newRoll.CopyTo(oldRoll);
+            this.dbLocal.UpdateGreigeRoll(oldRoll);
             //Console.WriteLine($"Upd Roll={newRoll.RollNo}");
           }
           else
@@ -109,6 +104,7 @@ namespace MahloService.Logic
             // Add new rolls
             newRoll.Id = this.nextRollId++;
             this.Rolls.Add(newRoll);
+            this.dbLocal.AddGreigeRoll(newRoll);
             //Console.WriteLine($"Add Roll={newRoll.RollNo}");
           }
         }
@@ -147,6 +143,17 @@ namespace MahloService.Logic
       }
 
       this.isRefreshBusy = false;
+    }
+
+    // For IEqualityComparer<GreigeRoll>
+    public bool Equals(GreigeRoll x, GreigeRoll y)
+    {
+      return x.RollNo == y.RollNo;
+    }
+
+    public int GetHashCode(GreigeRoll obj)
+    {
+      return obj.RollNo.GetHashCode();
     }
   }
 }

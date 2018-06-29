@@ -38,7 +38,7 @@
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-      this.dataGridView5 = new System.Windows.Forms.DataGridView();
+      this.cutRollGrid = new System.Windows.Forms.DataGridView();
       this.sapRollDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.lengthDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.maxBowDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -126,19 +126,6 @@
       this.label39 = new System.Windows.Forms.Label();
       this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
       this.dataGridView1 = new System.Windows.Forms.DataGridView();
-      this.sewinQueueSrc = new System.Windows.Forms.BindingSource(this.components);
-      this.label4 = new System.Windows.Forms.Label();
-      this.label3 = new System.Windows.Forms.Label();
-      this.label2 = new System.Windows.Forms.Label();
-      this.label1 = new System.Windows.Forms.Label();
-      this.label5 = new System.Windows.Forms.Label();
-      this.statusBar1 = new MahloClient.Views.MyStatusBar();
-      this.pnlMessage = new System.Windows.Forms.StatusBarPanel();
-      this.pnlIndicator = new System.Windows.Forms.StatusBarPanel();
-      this.pnlUserAttention = new System.Windows.Forms.StatusBarPanel();
-      this.pnlAlarm = new System.Windows.Forms.StatusBarPanel();
-      this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
-      this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
       this.colRollNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colStyleCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colColorCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -155,7 +142,20 @@
       this.colSpacer3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colPrsFeet = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colElongation = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
+      this.sewinQueueSrc = new System.Windows.Forms.BindingSource(this.components);
+      this.label4 = new System.Windows.Forms.Label();
+      this.label3 = new System.Windows.Forms.Label();
+      this.label2 = new System.Windows.Forms.Label();
+      this.label1 = new System.Windows.Forms.Label();
+      this.label5 = new System.Windows.Forms.Label();
+      this.statusBar1 = new MahloClient.Views.MyStatusBar();
+      this.pnlMessage = new System.Windows.Forms.StatusBarPanel();
+      this.pnlIndicator = new System.Windows.Forms.StatusBarPanel();
+      this.pnlUserAttention = new System.Windows.Forms.StatusBarPanel();
+      this.pnlAlarm = new System.Windows.Forms.StatusBarPanel();
+      this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
+      this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
+      ((System.ComponentModel.ISupportInitialize)(this.cutRollGrid)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.cutRollSrc)).BeginInit();
       this.grpMahlo.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.mahloLogicSrc)).BeginInit();
@@ -178,15 +178,15 @@
       ((System.ComponentModel.ISupportInitialize)(this.pnlQueueMessage)).BeginInit();
       this.SuspendLayout();
       // 
-      // dataGridView5
+      // cutRollGrid
       // 
-      this.dataGridView5.AllowUserToAddRows = false;
-      this.dataGridView5.AllowUserToDeleteRows = false;
-      this.dataGridView5.AllowUserToResizeRows = false;
-      this.dataGridView5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+      this.cutRollGrid.AllowUserToAddRows = false;
+      this.cutRollGrid.AllowUserToDeleteRows = false;
+      this.cutRollGrid.AllowUserToResizeRows = false;
+      this.cutRollGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.dataGridView5.AutoGenerateColumns = false;
+      this.cutRollGrid.AutoGenerateColumns = false;
       dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
       dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -194,16 +194,16 @@
       dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
       dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-      this.dataGridView5.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-      this.dataGridView5.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.dataGridView5.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+      this.cutRollGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+      this.cutRollGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.cutRollGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.sapRollDataGridViewTextBoxColumn,
             this.lengthDataGridViewTextBoxColumn1,
             this.maxBowDataGridViewTextBoxColumn,
             this.maxSkewDataGridViewTextBoxColumn,
             this.maxEPEDataGridViewTextBoxColumn,
             this.dlotDataGridViewTextBoxColumn});
-      this.dataGridView5.DataSource = this.cutRollSrc;
+      this.cutRollGrid.DataSource = this.cutRollSrc;
       dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
       dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -211,13 +211,13 @@
       dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
       dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.dataGridView5.DefaultCellStyle = dataGridViewCellStyle6;
-      this.dataGridView5.Location = new System.Drawing.Point(862, 38);
-      this.dataGridView5.Name = "dataGridView5";
-      this.dataGridView5.RowHeadersVisible = false;
-      this.dataGridView5.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.dataGridView5.Size = new System.Drawing.Size(360, 194);
-      this.dataGridView5.TabIndex = 4;
+      this.cutRollGrid.DefaultCellStyle = dataGridViewCellStyle6;
+      this.cutRollGrid.Location = new System.Drawing.Point(862, 38);
+      this.cutRollGrid.Name = "cutRollGrid";
+      this.cutRollGrid.RowHeadersVisible = false;
+      this.cutRollGrid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+      this.cutRollGrid.Size = new System.Drawing.Size(360, 194);
+      this.cutRollGrid.TabIndex = 4;
       // 
       // sapRollDataGridViewTextBoxColumn
       // 
@@ -234,6 +234,7 @@
       this.lengthDataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle2;
       this.lengthDataGridViewTextBoxColumn1.HeaderText = "Feet";
       this.lengthDataGridViewTextBoxColumn1.Name = "lengthDataGridViewTextBoxColumn1";
+      this.lengthDataGridViewTextBoxColumn1.ReadOnly = true;
       this.lengthDataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.lengthDataGridViewTextBoxColumn1.Width = 50;
       // 
@@ -1194,105 +1195,6 @@
       this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
       this.dataGridView1.SelectionChanged += new System.EventHandler(this.DataGridView1_SelectionChanged);
       // 
-      // sewinQueueSrc
-      // 
-      this.sewinQueueSrc.DataSource = typeof(MahloService.Models.GreigeRoll);
-      // 
-      // label4
-      // 
-      this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.label4.Location = new System.Drawing.Point(692, 0);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(124, 23);
-      this.label4.TabIndex = 20;
-      this.label4.Text = "Pattern Repeat";
-      this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-      // 
-      // label3
-      // 
-      this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.label3.Location = new System.Drawing.Point(494, 0);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(192, 23);
-      this.label3.TabIndex = 19;
-      this.label3.Text = "Bow and Skew";
-      this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-      // 
-      // label2
-      // 
-      this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.label2.Location = new System.Drawing.Point(431, 0);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(57, 23);
-      this.label2.TabIndex = 18;
-      this.label2.Text = "Mahlo2";
-      this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-      // 
-      // label1
-      // 
-      this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.label1.Location = new System.Drawing.Point(3, 0);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(422, 23);
-      this.label1.TabIndex = 17;
-      this.label1.Text = "Sew-in Queue";
-      this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-      // 
-      // label5
-      // 
-      this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.label5.Location = new System.Drawing.Point(862, 12);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(333, 23);
-      this.label5.TabIndex = 21;
-      this.label5.Text = "Cut Rolls";
-      this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-      // 
-      // statusBar1
-      // 
-      this.statusBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.statusBar1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.statusBar1.Location = new System.Drawing.Point(0, 517);
-      this.statusBar1.Name = "statusBar1";
-      this.statusBar1.Size = new System.Drawing.Size(1242, 24);
-      this.statusBar1.TabIndex = 22;
-      // 
-      // pnlMessage
-      // 
-      this.pnlMessage.Name = "pnlMessage";
-      // 
-      // pnlIndicator
-      // 
-      this.pnlIndicator.Name = "pnlIndicator";
-      // 
-      // pnlUserAttention
-      // 
-      this.pnlUserAttention.Name = "pnlUserAttention";
-      // 
-      // pnlAlarm
-      // 
-      this.pnlAlarm.Name = "pnlAlarm";
-      // 
-      // pnlAlertMessage
-      // 
-      this.pnlAlertMessage.Name = "pnlAlertMessage";
-      // 
-      // pnlQueueMessage
-      // 
-      this.pnlQueueMessage.Name = "pnlQueueMessage";
-      // 
       // colRollNo
       // 
       this.colRollNo.DataPropertyName = "RollNo";
@@ -1461,6 +1363,105 @@
       this.colElongation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.colElongation.Width = 67;
       // 
+      // sewinQueueSrc
+      // 
+      this.sewinQueueSrc.DataSource = typeof(MahloService.Models.GreigeRoll);
+      // 
+      // label4
+      // 
+      this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.label4.Location = new System.Drawing.Point(692, 0);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(124, 23);
+      this.label4.TabIndex = 20;
+      this.label4.Text = "Pattern Repeat";
+      this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
+      // label3
+      // 
+      this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.label3.Location = new System.Drawing.Point(494, 0);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(192, 23);
+      this.label3.TabIndex = 19;
+      this.label3.Text = "Bow and Skew";
+      this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
+      // label2
+      // 
+      this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.label2.Location = new System.Drawing.Point(431, 0);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(57, 23);
+      this.label2.TabIndex = 18;
+      this.label2.Text = "Mahlo2";
+      this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
+      // label1
+      // 
+      this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.label1.Location = new System.Drawing.Point(3, 0);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(422, 23);
+      this.label1.TabIndex = 17;
+      this.label1.Text = "Sew-in Queue";
+      this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
+      // label5
+      // 
+      this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.label5.Location = new System.Drawing.Point(862, 12);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(333, 23);
+      this.label5.TabIndex = 21;
+      this.label5.Text = "Cut Rolls";
+      this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
+      // statusBar1
+      // 
+      this.statusBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
+      this.statusBar1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.statusBar1.Location = new System.Drawing.Point(0, 517);
+      this.statusBar1.Name = "statusBar1";
+      this.statusBar1.Size = new System.Drawing.Size(1242, 24);
+      this.statusBar1.TabIndex = 22;
+      // 
+      // pnlMessage
+      // 
+      this.pnlMessage.Name = "pnlMessage";
+      // 
+      // pnlIndicator
+      // 
+      this.pnlIndicator.Name = "pnlIndicator";
+      // 
+      // pnlUserAttention
+      // 
+      this.pnlUserAttention.Name = "pnlUserAttention";
+      // 
+      // pnlAlarm
+      // 
+      this.pnlAlarm.Name = "pnlAlarm";
+      // 
+      // pnlAlertMessage
+      // 
+      this.pnlAlertMessage.Name = "pnlAlertMessage";
+      // 
+      // pnlQueueMessage
+      // 
+      this.pnlQueueMessage.Name = "pnlQueueMessage";
+      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1468,7 +1469,7 @@
       this.ClientSize = new System.Drawing.Size(1242, 541);
       this.Controls.Add(this.statusBar1);
       this.Controls.Add(this.label5);
-      this.Controls.Add(this.dataGridView5);
+      this.Controls.Add(this.cutRollGrid);
       this.Controls.Add(this.tableLayoutPanel1);
       this.Controls.Add(this.groupBox5);
       this.Controls.Add(this.grpPatternRepeat);
@@ -1480,7 +1481,7 @@
       this.Name = "MainForm";
       this.Text = "Main Form";
       this.Load += new System.EventHandler(this.MainForm_Load);
-      ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.cutRollGrid)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.cutRollSrc)).EndInit();
       this.grpMahlo.ResumeLayout(false);
       this.grpMahlo.PerformLayout();
@@ -1515,7 +1516,7 @@
     private System.Windows.Forms.BindingSource bowAndSkewRollSrc;
     private System.Windows.Forms.BindingSource patternRepeatRollSrc;
     private System.Windows.Forms.BindingSource cutRollSrc;
-    private System.Windows.Forms.DataGridView dataGridView5;
+    private System.Windows.Forms.DataGridView cutRollGrid;
     private System.Windows.Forms.GroupBox grpMahlo;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.Label label9;

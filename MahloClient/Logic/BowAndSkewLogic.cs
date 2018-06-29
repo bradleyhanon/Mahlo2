@@ -19,9 +19,16 @@ namespace MahloClient.Logic
 
     public override string InterfaceName => nameof(IBowAndSkewLogic);
 
-    public override int MeasuredLength
+    public override int FeetCounterStart
     {
-      get => this.CurrentRoll.BasFeet;
+      get => this.CurrentRoll.BasFeetCounterStart;
+      set => this.CurrentRoll.BasFeetCounterStart = value;
+    }
+
+    public override int FeetCounterEnd
+    {
+      get => this.CurrentRoll.BasFeetCounterEnd;
+      set => this.CurrentRoll.BasFeetCounterEnd = value;
     }
 
     public override int Speed

@@ -30,9 +30,9 @@ namespace MahloClientTests
         (156, "13' 0\""),
       };
 
-      foreach(var tuple in tuples)
+      foreach(var (value, expect) in tuples)
       {
-        Assert.Equal(tuple.expect, CommonMethods.InchesToStr(tuple.value));
+        Assert.Equal(expect, CommonMethods.InchesToStr(value));
       }
     }
   }
