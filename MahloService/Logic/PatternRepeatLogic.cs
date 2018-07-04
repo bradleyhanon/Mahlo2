@@ -16,27 +16,28 @@ using System.Threading;
 
 namespace MahloService.Logic
 {
-  class PatternRepeatLogic : MeterLogic<PatternRepeatRoll>, IPatternRepeatLogic
+  class PatternRepeatLogic : MeterLogic<PatternRepeatModel>, IPatternRepeatLogic
   {
-    IServiceSettings appInfo;
+    readonly IServiceSettings appInfo;
     private IPatternRepeatSrc srcData;
-    private ICutRollList cutRolls;
+    private CutRollList cutRolls;
     private IDbLocal dbLocal;
 
     private double maxElongation;
-    private int feetCounterAtCutRollStart;
+    private long feetCounterAtCutRollStart;
     private int nextCutRollId;
     private CancellationTokenSource ctsDoff;
     private bool isFeetCounterChanged;
+    private readonly PatternRepeatMapDatum mapDatum = new PatternRepeatMapDatum();
 
     public PatternRepeatLogic(
       IDbLocal dbLocal,
-      ICutRollList cutRolls,
+      CutRollList cutRolls,
       IPatternRepeatSrc srcData,
       ISewinQueue sewinQueue,
       IServiceSettings appInfo,
-      IUserAttentions<PatternRepeatRoll> userAttentions,
-      ICriticalStops<PatternRepeatRoll> criticalStops,
+      IUserAttentions<PatternRepeatModel> userAttentions,
+      ICriticalStops<PatternRepeatModel> criticalStops,
       IProgramState programState,
       ISchedulerProvider schedulerProvider)
       : base(dbLocal, srcData, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
@@ -56,8 +57,19 @@ namespace MahloService.Logic
         .Where(args => args.EventArgs.ListChangedType != ListChangedType.ItemChanged)
         .Subscribe(_ =>
         {
-          this.CurrentCutRoll = this.cutRolls.Last();
+          this.CurrentCutRoll = this.cutRolls.LastOrDefault();
         }));
+    }
+
+    public override GreigeRoll CurrentRoll
+    {
+      get => base.CurrentRoll;
+      set
+      {
+        base.CurrentRoll = value;
+        this.cutRolls.Clear();
+        this.cutRolls.AddRange(this.dbLocal.GetCutRollsFor(this.CurrentRoll.Id));
+      }
     }
 
     [JsonIgnore]
@@ -65,13 +77,13 @@ namespace MahloService.Logic
 
     public bool IsDoffDetected { get; set; }
 
-    public override int FeetCounterStart
+    public override long FeetCounterStart
     {
       get => this.CurrentRoll.PrsFeetCounterStart;
       set => this.CurrentRoll.PrsFeetCounterStart = value;
     }
 
-    public override int FeetCounterEnd
+    public override long FeetCounterEnd
     {
       get => this.CurrentRoll.PrsFeetCounterEnd;
       set => this.CurrentRoll.PrsFeetCounterEnd = value;
@@ -89,6 +101,18 @@ namespace MahloService.Logic
       set => this.CurrentRoll.PrsMapValid = value;
     }
 
+    protected override string MapTableName => "PatternRepeatMap";
+
+    protected override void SaveMapDatum()
+    {
+      this.mapDatum.FeetCounter = this.CurrentFeetCounter;
+      this.dbLocal.InsertPatternRepeatMapDatum(this.mapDatum);
+      this.mapDatum.Elongation = 0.0;
+
+      // Update Current cut roll every time datum is recorded
+      this.dbLocal.UpdateCutRoll(this.CurrentCutRoll);
+    }
+
     protected override void OnRollFinished(GreigeRoll greigeRoll)
     {
       base.OnRollFinished(greigeRoll);
@@ -100,7 +124,7 @@ namespace MahloService.Logic
       base.OnRollStarted(greigeRoll);
       this.maxElongation = 0;
 
-      this.feetCounterAtCutRollStart = (int)this.srcData.FeetCounter;
+      this.feetCounterAtCutRollStart = this.CurrentFeetCounter;
     }
 
     protected override void OpcValueChanged(string propertyName)
@@ -108,15 +132,18 @@ namespace MahloService.Logic
       switch (propertyName)
       {
         case nameof(this.srcData.PatternRepeatLength):
-          double elongation = srcData.PatternRepeatLength - this.CurrentRoll.PatternRepeatLength;
-          if (Math.Abs(elongation) > Math.Abs(this.CurrentRoll.Elongation))
+          if (this.IsMovementForward)
           {
-            this.CurrentRoll.Elongation = elongation;
-          }
+            double elongation = srcData.PatternRepeatLength - this.CurrentRoll.PatternRepeatLength;
+            if (Math.Abs(elongation) > Math.Abs(this.CurrentRoll.Elongation))
+            {
+              this.CurrentRoll.Elongation = elongation;
+            }
 
-          if (Math.Abs(elongation) > Math.Abs(this.CurrentCutRoll.MaxEPE))
-          {
-            this.CurrentCutRoll.MaxEPE = elongation;
+            if (this.CurrentCutRoll != null && Math.Abs(elongation) > Math.Abs(this.CurrentCutRoll.MaxEPE))
+            {
+              this.CurrentCutRoll.MaxEPE = elongation;
+            }
           }
 
           break;
@@ -131,17 +158,17 @@ namespace MahloService.Logic
       }
     }
 
-    protected override void FeetCounterChanged(int feetCounter)
+    protected override void FeetCounterChanged()
     {
-      base.FeetCounterChanged(feetCounter);
+      base.FeetCounterChanged();
 
       if (this.CurrentCutRoll == null)
       {
         return;
       }
 
-      this.isFeetCounterChanged = this.CurrentCutRoll.FeetCounterEnd != feetCounter;
-      this.CurrentCutRoll.FeetCounterEnd = feetCounter;
+      this.isFeetCounterChanged = this.CurrentCutRoll.FeetCounterEnd != this.CurrentFeetCounter;
+      this.CurrentCutRoll.FeetCounterEnd = this.CurrentFeetCounter;
     }
 
     private async void KeepBowAndSkewUpToDate()
@@ -165,7 +192,7 @@ namespace MahloService.Logic
     {
       if (!this.srcData.IsDoffDetected)
       {
-        // Cancel any further doff acks
+        // Doff signal gone away so cancel any further doff acks
         this.ctsDoff?.Cancel();
         return;
       }
@@ -182,15 +209,15 @@ namespace MahloService.Logic
         {
           Id = this.nextCutRollId++,
           GreigeRollId = this.CurrentRoll.Id,
-          FeetCounterStart = (int)this.srcData.FeetCounter,
-          FeetCounterEnd = (int)this.srcData.FeetCounter,
+          FeetCounterStart = this.CurrentFeetCounter,
+          FeetCounterEnd = this.CurrentFeetCounter,
         };
 
         this.cutRolls.Add(this.CurrentCutRoll);
         this.dbLocal.AddCutRoll(this.CurrentCutRoll);
       }
 
-      this.ctsDoff.Dispose();
+      this.ctsDoff?.Dispose();
       this.ctsDoff = new CancellationTokenSource();
       try
       {

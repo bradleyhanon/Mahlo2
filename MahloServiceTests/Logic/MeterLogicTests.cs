@@ -19,18 +19,18 @@ namespace MahloServiceTests.Logic
 {
   public sealed class MeterLogicTests : IDisposable
   {
-    private MockMeterSrc<MahloRoll> srcData;
-    private ISewinQueue sewinQueue;
-    private IDbMfg dbMfg;
-    private IDbLocal dbLocal;
+    private MockMeterSrc<MahloModel> srcData;
+    private readonly ISewinQueue sewinQueue;
+    private readonly IDbMfg dbMfg;
+    private readonly IDbLocal dbLocal;
     private IServiceSettings appInfo;
-    private IUserAttentions<MahloRoll> userAttentions;
-    private ICriticalStops<MahloRoll> criticalStops;
-    private TestSchedulers testSchedulers = new TestSchedulers();
-    private dynamic programState;
+    private IUserAttentions<MahloModel> userAttentions;
+    private readonly ICriticalStops<MahloModel> criticalStops;
+    private readonly TestSchedulers testSchedulers = new TestSchedulers();
+    private readonly dynamic programState;
 
-    private MeterLogic<MahloRoll> target;
-    private List<GreigeRoll> greigeRolls;
+    private MeterLogic<MahloModel> target;
+    private readonly List<GreigeRoll> greigeRolls;
 
     public MeterLogicTests()
     {
@@ -42,13 +42,13 @@ namespace MahloServiceTests.Logic
       const int roll6Length = 400;
       const int roll7Length = 400;
 
-      this.srcData = new MockMeterSrc<MahloRoll>();
+      this.srcData = new MockMeterSrc<MahloModel>();
       this.sewinQueue = Substitute.For<ISewinQueue>();
       this.dbMfg = Substitute.For<IDbMfg>();
       this.dbLocal = Substitute.For<IDbLocal>();
       this.appInfo = Substitute.For<IServiceSettings>();
-      this.userAttentions = Substitute.For<IUserAttentions<MahloRoll>>();
-      this.criticalStops = Substitute.For<ICriticalStops<MahloRoll>>();
+      this.userAttentions = Substitute.For<IUserAttentions<MahloModel>>();
+      this.criticalStops = Substitute.For<ICriticalStops<MahloModel>>();
 
       this.appInfo.MinRollLengthForStyleAndRollCounting = 1;
       this.appInfo.MinRollLengthForLengthChecking = 1;
@@ -110,8 +110,11 @@ namespace MahloServiceTests.Logic
 
       this.sewinQueue.Rolls.Returns(new BindingList<GreigeRoll>(greigeRolls));
 
-      this.target = new MahloLogic(this.dbLocal, this.srcData, this.sewinQueue, this.appInfo, this.userAttentions, this.criticalStops, this.programState, this.testSchedulers);
-      this.target.CurrentRoll = this.sewinQueue.Rolls[0];
+      this.target = new MahloLogic(this.dbLocal, this.srcData, this.sewinQueue, this.appInfo, this.userAttentions, this.criticalStops, this.programState, this.testSchedulers)
+      {
+        CurrentRoll = this.sewinQueue.Rolls[0]
+      };
+
       this.sewinQueue.QueueChanged += Raise.Event<Action>(); 
       Assert.True(this.userAttentions.VerifyRollSequence);
       Assert.NotNull(this.target.CurrentRoll);

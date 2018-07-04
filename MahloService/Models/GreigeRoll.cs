@@ -18,12 +18,11 @@ namespace MahloService.Models
   }
 
   [AddINotifyPropertyChangedInterface]
-  public class GreigeRoll : IMahloRoll, IBowAndSkewRoll, IPatternRepeatRoll
+  public class GreigeRoll //: IMahloRoll, IBowAndSkewRoll, IPatternRepeatRoll
   {
     public const string CheckRollId = "CHKROL";
 
-    public event PropertyChangedEventHandler PropertyChanged;
-
+    [ExplicitKey]
     public int Id { get; set; }
     public bool IsComplete { get; set; }
 
@@ -47,27 +46,27 @@ namespace MahloService.Models
     public string ProductImageURL { get; set; }
 
     // Runtime data
-    public int MalFeetCounterStart { get; set; }
-    public int MalFeetCounterEnd { get; set; }
+    public long MalFeetCounterStart { get; set; }
+    public long MalFeetCounterEnd { get; set; }
     [DependsOn(nameof(MalFeetCounterStart), nameof(MalFeetCounterEnd))]
     [Computed]
-    public int MalFeet => this.MalFeetCounterEnd - this.MalFeetCounterStart;
+    public long MalFeet => this.MalFeetCounterEnd - this.MalFeetCounterStart;
     public int MalSpeed { get; set; }
     public bool MalMapValid { get; set; }
 
-    public int BasFeetCounterStart { get; set; }
-    public int BasFeetCounterEnd { get; set; }
+    public long BasFeetCounterStart { get; set; }
+    public long BasFeetCounterEnd { get; set; }
     [DependsOn(nameof(BasFeetCounterEnd), nameof(BasFeetCounterEnd))]
     [Computed]
-    public int BasFeet => this.BasFeetCounterEnd - this.BasFeetCounterStart;
+    public long BasFeet => this.BasFeetCounterEnd - this.BasFeetCounterStart;
     public int BasSpeed { get; set; }
     public bool BasMapValid { get; set; }
 
-    public int PrsFeetCounterStart { get; set; }
-    public int PrsFeetCounterEnd { get; set; }
+    public long PrsFeetCounterStart { get; set; }
+    public long PrsFeetCounterEnd { get; set; }
     [DependsOn(nameof(PrsFeetCounterStart), nameof(PrsFeetCounterEnd))]
     [Computed]
-    public int PrsFeet => this.PrsFeetCounterEnd - this.PrsFeetCounterStart;
+    public long PrsFeet => this.PrsFeetCounterEnd - this.PrsFeetCounterStart;
     public int PrsSpeed { get; set; }
     public bool PrsMapValid { get; set; }
 
@@ -86,38 +85,6 @@ namespace MahloService.Models
     [DependsOn(nameof(RollNo))]
     [Computed]
     public bool IsCheckRoll => this.RollNo == CheckRollId;
-
-    int IMahloRoll.Feet
-    {
-      get => this.MalFeet;
-    }
-
-    int IBowAndSkewRoll.Feet
-    {
-      get => this.BasFeet;
-    }
-    int IPatternRepeatRoll.Feet
-    {
-      get => this.PrsFeet;
-    }
-
-    int IMahloRoll.Speed
-    {
-      get => this.MalSpeed;
-      set => this.MalSpeed = value;
-    }
-
-    int IBowAndSkewRoll.Speed
-    {
-      get => this.BasSpeed;
-      set => this.BasSpeed = value;
-    }
-
-    int IPatternRepeatRoll.Speed
-    {
-      get => this.PrsSpeed;
-      set => this.PrsSpeed = value;
-    }
 
     /// <summary>
     /// Copy all but RollId to the destination
@@ -164,12 +131,6 @@ namespace MahloService.Models
     public override string ToString()
     {
       return $"RollNo={RollNo}, RollWidth={RollWidth}";
-    }
-
-    private void OnPropertyChanged(string propertyName)
-    {
-      this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-      //Console.WriteLine($"GreigeRoll.{propertyName}: {oldValue} -> {newValue}");
     }
   }
 }

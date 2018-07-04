@@ -9,7 +9,7 @@ namespace MahloService.Repository
 {
   class ProgramState : IProgramState
   {
-    private IProgramStateProvider provider;
+    private readonly IProgramStateProvider provider;
     JObject root;
 
     public ProgramState(IProgramStateProvider provider)
@@ -22,6 +22,7 @@ namespace MahloService.Repository
       }
       catch (Exception)
       {
+        this.root = new JObject();
       }
     }
 

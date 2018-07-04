@@ -38,7 +38,7 @@ namespace MahloClient.Views
     public static void SetFeetColor(DataGridView grid, DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
     {
       GreigeRoll roll = (GreigeRoll)grid.Rows[args.RowIndex].DataBoundItem;
-      int measuredLength = (int)args.Value;
+      long measuredLength = (long)args.Value;
 
       (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
         roll.RollLength == 0 ? (grid.DefaultCellStyle.BackColor, grid.DefaultCellStyle.ForeColor) :

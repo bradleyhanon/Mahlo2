@@ -12,15 +12,23 @@ namespace MahloService.Simulation
   class DbMfgSim : IDbMfgSim
   {
     private int nextRollNo = 1000000;
-    public BindingList<GreigeRoll> SewinQueue { get; } = new BindingList<GreigeRoll>
+
+    public DbMfgSim(IDbLocal dbLocal)
     {
-      new GreigeRoll
+      this.SewinQueue.AddRange(dbLocal.GetIncompleteGreigeRolls());
+      this.nextRollNo = dbLocal.GetNextGreigeRollId() + 1000000;
+      if (this.SewinQueue.Count == 0)
       {
-        RollNo = GreigeRoll.CheckRollId,
-        RollLength = 600,
-        RollWidth = 144,
+        this.SewinQueue.Add(new GreigeRoll
+        {
+          RollNo = GreigeRoll.CheckRollId,
+          RollLength = 600,
+          RollWidth = 144,
+        });
       }
-    };
+    }
+
+    public BindingList<GreigeRoll> SewinQueue { get; } = new BindingList<GreigeRoll>();
 
     public void AddRoll()
     {
@@ -41,6 +49,14 @@ namespace MahloService.Simulation
 
       this.nextRollNo++;
       this.SewinQueue.Add(roll);
+    }
+
+    public void RemoveRoll()
+    {
+      if (this.SewinQueue.Count > 0)
+      {
+        this.SewinQueue.RemoveAt(0);
+      }
     }
 
     public Task BasUpdateDefaultRecipe(string styleCode, string rollNo, string recipeName)
@@ -72,7 +88,10 @@ namespace MahloService.Simulation
 
     public Task<bool> GetIsSewinQueueChanged(int rowCount, string firstRollNo, string lastRollNo)
     {
-      return Task.FromResult<bool>(true);
+      return Task.FromResult(
+        this.SewinQueue.Count != rowCount ||
+        firstRollNo != (this.SewinQueue.First()?.RollNo ?? string.Empty) ||
+        lastRollNo != (this.SewinQueue.Last()?.RollNo ?? string.Empty));
     }
 
     public Task<(string styleName, string colorName)> GetNamesFromLegacyCodes(string styleCode, string colorCode)

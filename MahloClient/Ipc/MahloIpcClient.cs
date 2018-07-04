@@ -29,9 +29,9 @@ namespace MahloClient.Ipc
     private HubConnection hubConnection;
     private IHubProxy hubProxy;
     private IClientSettings appInfo;
-    private ISewinQueue sewinQueue;
-    private ICutRollList cutRollList;
-    private SynchronizationContext context;
+    private readonly ISewinQueue sewinQueue;
+    private readonly ICutRollList cutRollList;
+    private readonly SynchronizationContext context;
 
     private bool isStarting;
     private string connectionError;

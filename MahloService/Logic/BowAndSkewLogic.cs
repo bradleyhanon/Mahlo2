@@ -14,9 +14,11 @@ using Newtonsoft.Json;
 
 namespace MahloService.Logic
 {
-  class BowAndSkewLogic : MeterLogic<BowAndSkewRoll>, IBowAndSkewLogic
+  class BowAndSkewLogic : MeterLogic<BowAndSkewModel>, IBowAndSkewLogic
   {
-    private IBowAndSkewSrc dataSrc;
+    private readonly IDbLocal dbLocal;
+    private readonly IBowAndSkewSrc dataSrc;
+    private readonly BowAndSkewMapDatum mapDatum = new BowAndSkewMapDatum();
 
     private double maxBow;
     private double maxSkew;
@@ -26,22 +28,23 @@ namespace MahloService.Logic
       IBowAndSkewSrc dataSrc,
       ISewinQueue sewinQueue,
       IServiceSettings appInfo,
-      IUserAttentions<BowAndSkewRoll> userAttentions,
-      ICriticalStops<BowAndSkewRoll> criticalStops,
+      IUserAttentions<BowAndSkewModel> userAttentions,
+      ICriticalStops<BowAndSkewModel> criticalStops,
       IProgramState programState,
       ISchedulerProvider schedulerProvider)
       : base(dbLocal, dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
     {
+      this.dbLocal = dbLocal;
       this.dataSrc = dataSrc;
     }
 
-    public override int FeetCounterStart
+    public override long FeetCounterStart
     {
       get => this.CurrentRoll.BasFeetCounterStart;
       set => this.CurrentRoll.BasFeetCounterStart = value;
     }
 
-    public override int FeetCounterEnd
+    public override long FeetCounterEnd
     {
       get => this.CurrentRoll.BasFeetCounterEnd;
       set => this.CurrentRoll.BasFeetCounterEnd = value;
@@ -59,6 +62,8 @@ namespace MahloService.Logic
       set => this.CurrentRoll.BasMapValid = value;
     }
 
+    protected override string MapTableName => "BowAndSkewMap";
+
     public override Task ApplyRecipe(string recipeName, bool isManualMode)
     {
       if (isManualMode)
@@ -75,6 +80,14 @@ namespace MahloService.Logic
       }
 
       return Task.CompletedTask;
+    }
+
+    protected override void SaveMapDatum()
+    {
+      this.mapDatum.FeetCounter = this.CurrentFeetCounter;
+      this.dbLocal.InsertBowAndSkewMapDatum(this.mapDatum);
+      this.mapDatum.Bow = 0.0;
+      this.mapDatum.Skew = 0.0;
     }
 
     protected override void OnRollFinished(GreigeRoll greigeRoll)
@@ -96,19 +109,35 @@ namespace MahloService.Logic
       switch(propertyName)
       {
         case nameof(this.dataSrc.Bow):
-          this.CurrentRoll.Bow = this.dataSrc.Bow;
-          if (Math.Abs(this.dataSrc.Bow) > Math.Abs(this.maxBow))
+          if (this.IsMovementForward)
           {
-            this.maxBow = this.dataSrc.Bow;
+            this.CurrentRoll.Bow = this.dataSrc.Bow;
+            if (Math.Abs(this.dataSrc.Bow) > Math.Abs(this.maxBow))
+            {
+              this.maxBow = this.dataSrc.Bow;
+            }
+
+            if (Math.Abs(this.dataSrc.Bow) > Math.Abs(this.mapDatum.Bow))
+            {
+              this.mapDatum.Bow = this.dataSrc.Bow;
+            }
           }
 
           break;
 
         case nameof(this.dataSrc.Skew):
-          this.CurrentRoll.Skew = this.dataSrc.Skew;
-          if (Math.Abs(this.dataSrc.Skew) > Math.Abs(this.maxSkew))
+          if (this.IsMovementForward)
           {
-            this.maxSkew = this.dataSrc.Skew;
+            this.CurrentRoll.Skew = this.dataSrc.Skew;
+            if (Math.Abs(this.dataSrc.Skew) > Math.Abs(this.maxSkew))
+            {
+              this.maxSkew = this.dataSrc.Skew;
+            }
+
+            if (Math.Abs(this.dataSrc.Skew) > Math.Abs(this.mapDatum.Skew))
+            {
+              this.mapDatum.Skew = this.dataSrc.Skew;
+            }
           }
 
           break;

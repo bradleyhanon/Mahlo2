@@ -67,23 +67,23 @@ namespace MahloServiceTests.Repository
     [Fact]
     public void GettingAnObjectWorks()
     {
-      MahloRoll roll = new MahloRoll() { Id = 5, Feet = 605 };
+      BowAndSkewMapDatum datum = new BowAndSkewMapDatum() { FeetCounter = 5, Bow = 605 };
       var state = new ProgramState(this.provider);
-      state.Set(nameof(roll), roll);
+      state.Set(nameof(datum), datum);
 
-      MahloRoll roll2 = state.Get<MahloRoll>(nameof(roll));
-      Assert.Equal(5, roll2.Id);
-      Assert.Equal(605, roll2.Feet);
+      BowAndSkewMapDatum roll2 = state.Get<BowAndSkewMapDatum>(nameof(datum));
+      Assert.Equal(5, roll2.FeetCounter);
+      Assert.Equal(605, roll2.Bow);
     }
 
     [Fact]
     public void RemoveAllClearsAll()
     {
       var state = new ProgramState(this.provider);
-      state.Set(nameof(MahloRoll), new { rollId = 1 });
-      Assert.NotNull(state.Get<MahloRoll>(nameof(MahloRoll)));
+      state.Set(nameof(Mahlo2MapDatum), new { FeetCounter = 1 });
+      Assert.NotNull(state.Get<Mahlo2MapDatum>(nameof(Mahlo2MapDatum)));
       state.RemoveAll();
-      Assert.Null(state.Get<MahloRoll>(nameof(MahloRoll)));
+      Assert.Null(state.Get<Mahlo2MapDatum>(nameof(Mahlo2MapDatum)));
     }
 
     [Fact]
@@ -100,8 +100,8 @@ namespace MahloServiceTests.Repository
       var state = new ProgramState(this.provider);
       state.Set("Age", 55);
       state.Set("Address", new { Street = street, City = city, Garbage = false });
-      state.Set(nameof(BowAndSkewRoll), new { Id = 5 });
-      state.Set(nameof(PatternRepeatRoll), new { Id = 4 });
+      state.Set(nameof(BowAndSkewMapDatum), new { FeetCounter = 5 });
+      state.Set(nameof(PatternRepeatMapDatum), new { FeetCounter = 4 });
       state.Dispose();
       this.provider
         .Received(1);
@@ -116,8 +116,8 @@ namespace MahloServiceTests.Repository
       Assert.Equal(city, address.Get<string>("City"));
       Assert.False(address.Get<bool>("Garbage"));
 
-      Assert.Equal(5, state2.Get<BowAndSkewRoll>(nameof(BowAndSkewRoll)).Id);
-      Assert.Equal(4, state2.Get<PatternRepeatRoll>(nameof(PatternRepeatRoll)).Id);
+      Assert.Equal(5, state2.Get<BowAndSkewMapDatum>(nameof(BowAndSkewMapDatum)).FeetCounter);
+      Assert.Equal(4, state2.Get<PatternRepeatMapDatum>(nameof(PatternRepeatMapDatum)).FeetCounter);
     }
 
     [Fact]
@@ -135,9 +135,9 @@ namespace MahloServiceTests.Repository
       state.Set("Settings", new
       {
         Age = 55,
-        MahloRoll = new { Street = street, City = city, Garbage = false },
-        BowAndSkewRoll = new { Id = 5 },
-        PatternRepeatRoll = new { Id = 4 },
+        Mahlo2MapDatum = new { Street = street, City = city, Garbage = false },
+        BowAndSkewMapDatum = new { FeetCounter = 5 },
+        PatternRepeatMapDatum = new { FeetCounter = 4 },
       });
 
       ((IDisposable)state).Dispose();
@@ -150,12 +150,12 @@ namespace MahloServiceTests.Repository
       var state2 = new ProgramState(this.provider);
       var settings = state2.GetSubState("Settings");
       Assert.Equal(55, settings.Get<int>("Age"));
-      Assert.Equal(street, settings.GetSubState("MahloRoll").Get<string>("Street"));
-      Assert.Equal(city, settings.GetSubState("MahloRoll").Get<string>("City"));
-      Assert.False(settings.GetSubState("MahloRoll").Get<bool>("Garbage"));
+      Assert.Equal(street, settings.GetSubState("Mahlo2MapDatum").Get<string>("Street"));
+      Assert.Equal(city, settings.GetSubState("Mahlo2MapDatum").Get<string>("City"));
+      Assert.False(settings.GetSubState("Mahlo2MapDatum").Get<bool>("Garbage"));
 
-      Assert.Equal(5, settings.Get<BowAndSkewRoll>(nameof(BowAndSkewRoll)).Id);
-      Assert.Equal(4, settings.Get<PatternRepeatRoll>(nameof(PatternRepeatRoll)).Id);
+      Assert.Equal(5, settings.Get<BowAndSkewMapDatum>(nameof(BowAndSkewMapDatum)).FeetCounter);
+      Assert.Equal(4, settings.Get<PatternRepeatMapDatum>(nameof(PatternRepeatMapDatum)).FeetCounter);
     }
   }
 }

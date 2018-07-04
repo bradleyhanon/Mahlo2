@@ -7,7 +7,7 @@ using MahloService.Models;
 
 namespace MahloService.Opc
 {
-  interface IPatternRepeatSrc : IMeterSrc<PatternRepeatRoll>
+  interface IPatternRepeatSrc : IMeterSrc<PatternRepeatModel>
   {
     bool IsDoffDetected { get; }
     double PatternRepeatLength { get; }

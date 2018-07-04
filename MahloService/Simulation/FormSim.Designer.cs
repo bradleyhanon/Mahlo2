@@ -7,19 +7,6 @@
     /// </summary>
     private System.ComponentModel.IContainer components = null;
 
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && (components != null))
-      {
-        components.Dispose();
-      }
-      base.Dispose(disposing);
-    }
-
     #region Windows Form Designer generated code
 
     /// <summary>
@@ -33,17 +20,25 @@
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.btnExit = new System.Windows.Forms.Button();
+      this.btnRemoveRoll = new System.Windows.Forms.Button();
       this.label4 = new System.Windows.Forms.Label();
       this.textBox4 = new System.Windows.Forms.TextBox();
       this.btnRun = new System.Windows.Forms.Button();
       this.btnAddRoll = new System.Windows.Forms.Button();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.label5 = new System.Windows.Forms.Label();
+      this.textBox5 = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
       this.textBox1 = new System.Windows.Forms.TextBox();
       this.groupBox3 = new System.Windows.Forms.GroupBox();
+      this.label6 = new System.Windows.Forms.Label();
+      this.textBox6 = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
       this.textBox2 = new System.Windows.Forms.TextBox();
       this.groupBox4 = new System.Windows.Forms.GroupBox();
+      this.label7 = new System.Windows.Forms.Label();
+      this.textBox7 = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
       this.textBox3 = new System.Windows.Forms.TextBox();
       this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -61,6 +56,7 @@
       this.patternRepeatLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.srcGrid = new System.Windows.Forms.BindingSource(this.components);
       this.srcSimInfo = new System.Windows.Forms.BindingSource(this.components);
+      this.srcFormSim = new System.Windows.Forms.BindingSource(this.components);
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox3.SuspendLayout();
@@ -68,10 +64,13 @@
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcGrid)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcSimInfo)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.srcFormSim)).BeginInit();
       this.SuspendLayout();
       // 
       // groupBox1
       // 
+      this.groupBox1.Controls.Add(this.btnExit);
+      this.groupBox1.Controls.Add(this.btnRemoveRoll);
       this.groupBox1.Controls.Add(this.label4);
       this.groupBox1.Controls.Add(this.textBox4);
       this.groupBox1.Controls.Add(this.btnRun);
@@ -82,6 +81,26 @@
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Sew-in Queue";
+      // 
+      // btnExit
+      // 
+      this.btnExit.Location = new System.Drawing.Point(105, 261);
+      this.btnExit.Name = "btnExit";
+      this.btnExit.Size = new System.Drawing.Size(75, 23);
+      this.btnExit.TabIndex = 5;
+      this.btnExit.Text = "Exit";
+      this.btnExit.UseVisualStyleBackColor = true;
+      this.btnExit.Click += new System.EventHandler(this.BtnExit_Click);
+      // 
+      // btnRemoveRoll
+      // 
+      this.btnRemoveRoll.Location = new System.Drawing.Point(15, 261);
+      this.btnRemoveRoll.Name = "btnRemoveRoll";
+      this.btnRemoveRoll.Size = new System.Drawing.Size(75, 23);
+      this.btnRemoveRoll.TabIndex = 4;
+      this.btnRemoveRoll.Text = "Remove Roll";
+      this.btnRemoveRoll.UseVisualStyleBackColor = true;
+      this.btnRemoveRoll.Click += new System.EventHandler(this.BtnRemoveRoll_Click);
       // 
       // label4
       // 
@@ -104,7 +123,7 @@
       // btnRun
       // 
       this.btnRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnRun.Location = new System.Drawing.Point(102, 261);
+      this.btnRun.Location = new System.Drawing.Point(105, 232);
       this.btnRun.Name = "btnRun";
       this.btnRun.Size = new System.Drawing.Size(75, 23);
       this.btnRun.TabIndex = 3;
@@ -115,16 +134,18 @@
       // btnAddRoll
       // 
       this.btnAddRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnAddRoll.Location = new System.Drawing.Point(21, 261);
+      this.btnAddRoll.Location = new System.Drawing.Point(15, 232);
       this.btnAddRoll.Name = "btnAddRoll";
       this.btnAddRoll.Size = new System.Drawing.Size(75, 23);
       this.btnAddRoll.TabIndex = 2;
       this.btnAddRoll.Text = "Add Roll";
       this.btnAddRoll.UseVisualStyleBackColor = true;
-      this.btnAddRoll.Click += new System.EventHandler(this.btnAddRoll_Click);
+      this.btnAddRoll.Click += new System.EventHandler(this.BtnAddRoll_Click);
       // 
       // groupBox2
       // 
+      this.groupBox2.Controls.Add(this.label5);
+      this.groupBox2.Controls.Add(this.textBox5);
       this.groupBox2.Controls.Add(this.label1);
       this.groupBox2.Controls.Add(this.textBox1);
       this.groupBox2.Location = new System.Drawing.Point(219, 13);
@@ -133,6 +154,24 @@
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Mahlo2";
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(6, 48);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(71, 13);
+      this.label5.TabIndex = 2;
+      this.label5.Text = "Feet Counter:";
+      // 
+      // textBox5
+      // 
+      this.textBox5.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcFormSim, "MalFeetCounter", true));
+      this.textBox5.Location = new System.Drawing.Point(94, 45);
+      this.textBox5.Name = "textBox5";
+      this.textBox5.Size = new System.Drawing.Size(100, 20);
+      this.textBox5.TabIndex = 3;
+      this.textBox5.Text = "200";
       // 
       // label1
       // 
@@ -154,6 +193,8 @@
       // 
       // groupBox3
       // 
+      this.groupBox3.Controls.Add(this.label6);
+      this.groupBox3.Controls.Add(this.textBox6);
       this.groupBox3.Controls.Add(this.label2);
       this.groupBox3.Controls.Add(this.textBox2);
       this.groupBox3.Location = new System.Drawing.Point(426, 13);
@@ -162,6 +203,24 @@
       this.groupBox3.TabIndex = 2;
       this.groupBox3.TabStop = false;
       this.groupBox3.Text = "Bow and Skew";
+      // 
+      // label6
+      // 
+      this.label6.AutoSize = true;
+      this.label6.Location = new System.Drawing.Point(6, 48);
+      this.label6.Name = "label6";
+      this.label6.Size = new System.Drawing.Size(71, 13);
+      this.label6.TabIndex = 4;
+      this.label6.Text = "Feet Counter:";
+      // 
+      // textBox6
+      // 
+      this.textBox6.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcFormSim, "BasFeetCounter", true));
+      this.textBox6.Location = new System.Drawing.Point(94, 45);
+      this.textBox6.Name = "textBox6";
+      this.textBox6.Size = new System.Drawing.Size(100, 20);
+      this.textBox6.TabIndex = 5;
+      this.textBox6.Text = "200";
       // 
       // label2
       // 
@@ -183,6 +242,8 @@
       // 
       // groupBox4
       // 
+      this.groupBox4.Controls.Add(this.label7);
+      this.groupBox4.Controls.Add(this.textBox7);
       this.groupBox4.Controls.Add(this.label3);
       this.groupBox4.Controls.Add(this.textBox3);
       this.groupBox4.Location = new System.Drawing.Point(632, 13);
@@ -191,6 +252,24 @@
       this.groupBox4.TabIndex = 3;
       this.groupBox4.TabStop = false;
       this.groupBox4.Text = "Pattern Repeat";
+      // 
+      // label7
+      // 
+      this.label7.AutoSize = true;
+      this.label7.Location = new System.Drawing.Point(6, 48);
+      this.label7.Name = "label7";
+      this.label7.Size = new System.Drawing.Size(71, 13);
+      this.label7.TabIndex = 4;
+      this.label7.Text = "Feet Counter:";
+      // 
+      // textBox7
+      // 
+      this.textBox7.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcFormSim, "PrsFeetCounter", true));
+      this.textBox7.Location = new System.Drawing.Point(94, 45);
+      this.textBox7.Name = "textBox7";
+      this.textBox7.Size = new System.Drawing.Size(100, 20);
+      this.textBox7.TabIndex = 5;
+      this.textBox7.Text = "200";
       // 
       // label3
       // 
@@ -355,6 +434,10 @@
       // 
       this.srcSimInfo.DataSource = typeof(MahloService.Simulation.SimInfo);
       // 
+      // srcFormSim
+      // 
+      this.srcFormSim.DataSource = typeof(MahloService.Simulation.FormSim);
+      // 
       // FormSim
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -379,6 +462,7 @@
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcGrid)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.srcSimInfo)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.srcFormSim)).EndInit();
       this.ResumeLayout(false);
 
     }
@@ -414,5 +498,14 @@
     private System.Windows.Forms.BindingSource srcSimInfo;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.TextBox textBox4;
+    private System.Windows.Forms.Button btnRemoveRoll;
+    private System.Windows.Forms.Label label5;
+    private System.Windows.Forms.TextBox textBox5;
+    private System.Windows.Forms.Label label6;
+    private System.Windows.Forms.TextBox textBox6;
+    private System.Windows.Forms.Label label7;
+    private System.Windows.Forms.TextBox textBox7;
+    private System.Windows.Forms.Button btnExit;
+    private System.Windows.Forms.BindingSource srcFormSim;
   }
 }

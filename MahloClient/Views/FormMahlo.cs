@@ -167,8 +167,11 @@ namespace MahloClient.Views
           e.Paint(e.ClipBounds, e.PaintParts & ~DataGridViewPaintParts.ContentForeground);
           using (var brush = new SolidBrush(foreColor))
           {
-            var stringFormat = new StringFormat();
-            stringFormat.Alignment = StringAlignment.Center;
+            var stringFormat = new StringFormat
+            {
+              Alignment = StringAlignment.Center
+            };
+
             e.Graphics.DrawString(s, this.ArrowFont, brush, e.CellBounds, stringFormat);
           }
 

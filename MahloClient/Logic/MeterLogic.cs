@@ -21,15 +21,15 @@ namespace MahloClient.Logic
   {
     private IMahloIpcClient ipcClient;
     private ISewinQueue sewinQueue;
-    private IServiceSettings serviceSettings;
+    private readonly IServiceSettings serviceSettings;
     private int currentRollIndex = -1;
     private GreigeRoll currentRoll = new GreigeRoll();
 
-    private IDisposable sewinQueueChangedSubscription;
-    private IDisposable updateMeterLogicSubscription;
-    private IDisposable connectionStateSubscription;
-    private IDisposable userAttentionsSubscription;
-    private IDisposable criticalStopsSubscription;
+    private readonly IDisposable sewinQueueChangedSubscription;
+    private readonly IDisposable updateMeterLogicSubscription;
+    private readonly IDisposable connectionStateSubscription;
+    private readonly IDisposable userAttentionsSubscription;
+    private readonly IDisposable criticalStopsSubscription;
 
     public MeterLogic(IMahloIpcClient ipcClient, ISewinQueue sewinQueue, IServiceSettings serviceSettings)
     {
@@ -144,9 +144,9 @@ namespace MahloClient.Logic
     public Color MappingStatusMessageForeColor => MappingStatusMessageBackColor.ContrastColor();
 
     [DependsOn(nameof(FeetCounterStart), nameof(FeetCounterEnd))]
-    public int MeasuredLength => this.FeetCounterEnd - this.FeetCounterStart;
-    public abstract int FeetCounterStart { get; set; }
-    public abstract int FeetCounterEnd { get; set; }
+    public long MeasuredLength => this.FeetCounterEnd - this.FeetCounterStart;
+    public abstract long FeetCounterStart { get; set; }
+    public abstract long FeetCounterEnd { get; set; }
     public abstract int Speed { get; set; }
     public abstract bool IsMapValid { get; set; }
     public double MeasuredWidth { get; set; }

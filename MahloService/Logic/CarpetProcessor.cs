@@ -40,9 +40,9 @@ namespace MahloService.Logic
     public void Start()
     {
       Startup.Start(appInfo.ServiceUrl);
-      //this.mahloLogic.Start();
-      //this.bowAndSkewLogic.Start();
-      //this.patternRepeatLogic.Start();
+      this.MahloLogic.Start();
+      this.BowAndSkewLogic.Start();
+      this.PatternRepeatLogic.Start();
     }
   }
 }

@@ -9,7 +9,7 @@ namespace MahloService.Opc
 {
   interface IMeterSrc : INotifyPropertyChanged
   {
-    double FeetCounter { get; }
+    double FeetCounter { get; set; }
     double FeetPerMinute { get; }
     double MeasuredWidth { get; }
     bool IsSeamDetected { get; }

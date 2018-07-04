@@ -10,23 +10,27 @@ using System.Windows.Forms;
 using MahloService.Models;
 using MahloService.Opc;
 using MahloService.Repository;
+using PropertyChanged;
 
 namespace MahloService.Simulation
 {
+  [AddINotifyPropertyChangedInterface]
   partial class FormSim : Form
   {
     private IDbMfgSim dbMfgSim;
     private IMahloSrc mahloSrc;
     private IBowAndSkewSrc bowAndSkewSrc;
     private IPatternRepeatSrc patternRepeatSrc;
-
+    private IProgramState programState;
     private SimInfo simInfo;
+
 
     public FormSim(
       IDbMfg dbMfg,
       IMahloSrc mahloSrc,
       IBowAndSkewSrc bowAndSkewSrc,
-      IPatternRepeatSrc patternRepeatSrc)
+      IPatternRepeatSrc patternRepeatSrc,
+      IProgramState programState)
     {
       InitializeComponent();
 
@@ -34,11 +38,44 @@ namespace MahloService.Simulation
       this.mahloSrc = mahloSrc;
       this.bowAndSkewSrc = bowAndSkewSrc;
       this.patternRepeatSrc = patternRepeatSrc;
+      this.programState = programState;
 
-      this.simInfo = new SimInfo(this.dbMfgSim);
+      this.simInfo = new SimInfo(this.dbMfgSim, this.programState);
       this.srcSimInfo.DataSource = this.simInfo;
+      this.srcFormSim.DataSource = this;
     }
 
+    public double MalFeetCounter
+    {
+      get => this.mahloSrc.FeetCounter;
+      set => this.mahloSrc.FeetCounter = value;
+    }
+
+    public double BasFeetCounter
+    {
+      get => this.bowAndSkewSrc.FeetCounter;
+      set => this.bowAndSkewSrc.FeetCounter = value;
+    }
+
+    public double PrsFeetCounter
+    {
+      get => this.patternRepeatSrc.FeetCounter;
+      set => this.patternRepeatSrc.FeetCounter = value;
+    }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing && (components != null))
+      {
+        components.Dispose();
+      }
+      base.Dispose(disposing);
+      this.simInfo.Dispose();
+    }
 
     protected override void OnLoad(EventArgs e)
     {
@@ -46,9 +83,14 @@ namespace MahloService.Simulation
       this.srcGrid.DataSource = this.dbMfgSim.SewinQueue;
     }
 
-    private void btnAddRoll_Click(object sender, EventArgs e)
+    private void BtnAddRoll_Click(object sender, EventArgs e)
     {
       this.dbMfgSim.AddRoll();
+    }
+
+    private void BtnRemoveRoll_Click(object sender, EventArgs e)
+    {
+      this.dbMfgSim.RemoveRoll();
     }
 
     private void btnRun_Click(object sender, EventArgs e)
@@ -56,17 +98,22 @@ namespace MahloService.Simulation
       if (btnRun.Text == "Run")
       {
         this.btnRun.Text = "Stop";
-        ((OpcSrcSim<MahloRoll>)this.mahloSrc).Start(400, this.simInfo.FeetPerMinute);
-        ((OpcSrcSim<BowAndSkewRoll>)this.bowAndSkewSrc).Start(200, this.simInfo.FeetPerMinute);
-        ((OpcSrcSim<PatternRepeatRoll>)this.patternRepeatSrc).Start(0, this.simInfo.FeetPerMinute);
+        ((OpcSrcSim<MahloModel>)this.mahloSrc).Start(400, this.simInfo.FeetPerMinute);
+        ((OpcSrcSim<BowAndSkewModel>)this.bowAndSkewSrc).Start(200, this.simInfo.FeetPerMinute);
+        ((OpcSrcSim<PatternRepeatModel>)this.patternRepeatSrc).Start(0, this.simInfo.FeetPerMinute);
       }
       else
       {
         btnRun.Text = "Run";
-        ((OpcSrcSim<MahloRoll>)this.mahloSrc).Stop();
-        ((OpcSrcSim<BowAndSkewRoll>)this.bowAndSkewSrc).Stop();
-        ((OpcSrcSim<PatternRepeatRoll>)this.patternRepeatSrc).Stop();
+        ((OpcSrcSim<MahloModel>)this.mahloSrc).Stop();
+        ((OpcSrcSim<BowAndSkewModel>)this.bowAndSkewSrc).Stop();
+        ((OpcSrcSim<PatternRepeatModel>)this.patternRepeatSrc).Stop();
       }
+    }
+
+    private void BtnExit_Click(object sender, EventArgs e)
+    {
+      this.Close();
     }
   }
 }

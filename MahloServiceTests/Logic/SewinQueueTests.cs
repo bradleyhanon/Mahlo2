@@ -18,17 +18,17 @@ namespace MahloServiceTests
 {
   public class SewinQueueTests : IEqualityComparer<GreigeRoll>, IDisposable
   {
-    private GreigeRoll roll1 = new GreigeRoll() { RollNo = "100" };
-    private GreigeRoll roll2 = new GreigeRoll() { RollNo = "200" };
-    private GreigeRoll roll3 = new GreigeRoll() { RollNo = "300" };
-    private GreigeRoll roll4 = new GreigeRoll() { RollNo = "400" };
-    private GreigeRoll roll5 = new GreigeRoll() { RollNo = "500" };
+    private readonly GreigeRoll roll1 = new GreigeRoll() { RollNo = "100" };
+    private readonly GreigeRoll roll2 = new GreigeRoll() { RollNo = "200" };
+    private readonly GreigeRoll roll3 = new GreigeRoll() { RollNo = "300" };
+    private readonly GreigeRoll roll4 = new GreigeRoll() { RollNo = "400" };
+    private readonly GreigeRoll roll5 = new GreigeRoll() { RollNo = "500" };
 
-    IDbLocal dbLocal = Substitute.For<IDbLocal>();
-    IDbMfg dbMfg = Substitute.For<IDbMfg>();
-    TestSchedulers schedulers = new TestSchedulers();
+    private readonly IDbLocal dbLocal = Substitute.For<IDbLocal>();
+    private readonly IDbMfg dbMfg = Substitute.For<IDbMfg>();
+    private readonly TestSchedulers schedulers = new TestSchedulers();
 
-    SewinQueue target;
+    private SewinQueue target;
 
     public SewinQueueTests()
     {

@@ -16,7 +16,6 @@ namespace MahloService.DbMigrations
       const string strGreigeRolls = "GreigeRolls";
       const string strId = "Id";
       const string strFeetCounter = "FeetCounter";
-      const string strCutId = "CutId";
       const string strBow = "Bow";
       const string strSkew = "Skew";
       const string strElongation = "Elongation";
@@ -50,18 +49,18 @@ namespace MahloService.DbMigrations
         .WithColumn("ProductImageURL").AsAnsiString(500).Nullable()
 
         // Runtime calculated data
-        .WithColumn("MalFeetCounterStart").AsInt32().NotNullable()
-        .WithColumn("MalFeetCounterEnd").AsInt32().NotNullable()
+        .WithColumn("MalFeetCounterStart").AsInt64().NotNullable()
+        .WithColumn("MalFeetCounterEnd").AsInt64().NotNullable()
         .WithColumn("MalSpeed").AsInt32().NotNullable()
         .WithColumn("MalMapValid").AsBoolean().NotNullable()
 
-        .WithColumn("BasFeetCounterStart").AsInt32().NotNullable()
-        .WithColumn("BasFeetCounterEnd").AsInt32().NotNullable()
+        .WithColumn("BasFeetCounterStart").AsInt64().NotNullable()
+        .WithColumn("BasFeetCounterEnd").AsInt64().NotNullable()
         .WithColumn("BasSpeed").AsInt32().NotNullable()
         .WithColumn("BasMapValid").AsBoolean().NotNullable()
 
-        .WithColumn("PrsFeetCounterStart").AsInt32().NotNullable()
-        .WithColumn("PrsFeetCounterEnd").AsInt32().NotNullable()
+        .WithColumn("PrsFeetCounterStart").AsInt64().NotNullable()
+        .WithColumn("PrsFeetCounterEnd").AsInt64().NotNullable()
         .WithColumn("PrsSpeed").AsInt32().NotNullable()
         .WithColumn("PrsMapValid").AsBoolean().NotNullable()
 
@@ -73,20 +72,23 @@ namespace MahloService.DbMigrations
         .WithColumn(strId).AsInt32().PrimaryKey()
         .WithColumn("GreigeRollId").AsInt32().ForeignKey(strGreigeRolls, strId).OnDeleteOrUpdate(System.Data.Rule.Cascade)
         .WithColumn("SapRoll").AsAnsiString(20).NotNullable()
-        .WithColumn("FeetCounterStart").AsInt32().NotNullable()
-        .WithColumn("FeetCounterEnd").AsInt32().NotNullable()
+        .WithColumn("FeetCounterStart").AsInt64().NotNullable()
+        .WithColumn("FeetCounterEnd").AsInt64().NotNullable()
         .WithColumn("MaxBow").AsDouble()
         .WithColumn("MaxSkew").AsDouble()
         .WithColumn("MaxEPE").AsDouble()
         .WithColumn("Dlot").AsAnsiString(10);
 
+      this.Create.Table("Mahlo2Map")
+        .WithColumn(strFeetCounter).AsInt64().PrimaryKey();
+
       this.Create.Table("BowAndSkewMap")
-        .WithColumn(strFeetCounter).AsInt32().PrimaryKey()
+        .WithColumn(strFeetCounter).AsInt64().PrimaryKey()
         .WithColumn(strBow).AsDouble().NotNullable()
         .WithColumn(strSkew).AsDouble().NotNullable();
 
-      this.Create.Table("ElongationMap")
-        .WithColumn(strFeetCounter).AsInt32().PrimaryKey()
+      this.Create.Table("PatternRepeatMap")
+        .WithColumn(strFeetCounter).AsInt64().PrimaryKey()
         .WithColumn(strElongation).AsDouble();
     }
 

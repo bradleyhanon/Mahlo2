@@ -29,7 +29,7 @@ namespace MahloService.Logic
 
     bool IsSeamDetected { get; set; }
 
-    int MeasuredLength { get; }
+    long MeasuredLength { get; }
     int Speed { get; set; }
     bool IsMapValid { get; set; }
     double MeasuredWidth { get; set; }

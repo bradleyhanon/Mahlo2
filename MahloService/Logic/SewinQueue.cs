@@ -21,8 +21,8 @@ namespace MahloService.Logic
   {
     private int nextRollId;
 
-    private IDbLocal dbLocal;
-    private IDbMfg dbMfg;
+    private readonly IDbLocal dbLocal;
+    private readonly IDbMfg dbMfg;
 
     private bool isRefreshBusy;
 
@@ -37,9 +37,8 @@ namespace MahloService.Logic
       this.dbLocal = dbLocal;
       this.dbMfg = dbMfg;
 
-      //this.Rolls.AddRange(this.dbLocal.GetGreigeRolls());
-      //this.nextRollId = this.Rolls.LastOrDefault()?.Id + 1 ?? 1;
-      this.nextRollId = this.dbLocal.GetGreigeRolls().LastOrDefault()?.Id ?? 1;
+      this.nextRollId = this.dbLocal.GetNextGreigeRollId();
+      this.Rolls.AddRange(this.dbLocal.GetIncompleteGreigeRolls());
 
       var ignoredResultTask = this.RefreshIfChanged();
       this.timer = Observable
@@ -59,6 +58,7 @@ namespace MahloService.Logic
     public void Dispose()
     {
       this.timer.Dispose();
+      this.timer = null;
     }
 
     public void MoveRoll(int rollIndex, int direction)

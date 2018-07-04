@@ -85,8 +85,8 @@
     <Compile Include="..\MahloService\Logic\UserAttentions.cs">
       <Link>ServerLogic\UserAttentions.cs</Link>
     </Compile>
-    <Compile Include="..\MahloService\Models\BowAndSkewRoll.cs">
-      <Link>Models\BowAndSkewRoll.cs</Link>
+    <Compile Include="..\MahloService\Models\BowAndSkewModel.cs">
+      <Link>Models\BowAndSkewModel.cs</Link>
     </Compile>
     <Compile Include="..\MahloService\Models\GreigeRoll.cs">
       <Link>Models\GreigeRoll.cs</Link>
@@ -100,20 +100,11 @@
     <Compile Include="..\MahloService\Models\CutRollDetail.cs">
       <Link>Models\CutRollDetail.cs</Link>
     </Compile>
-    <Compile Include="..\MahloService\Models\IBowAndSkewRoll.cs">
-      <Link>Models\IBowAndSkewRoll.cs</Link>
+    <Compile Include="..\MahloService\Models\MahloModel.cs">
+      <Link>Models\MahloModel.cs</Link>
     </Compile>
-    <Compile Include="..\MahloService\Models\IMahloRoll.cs">
-      <Link>Models\IMahloRoll.cs</Link>
-    </Compile>
-    <Compile Include="..\MahloService\Models\IPatternRepeatRoll.cs">
-      <Link>Models\IPatternRepeatRoll.cs</Link>
-    </Compile>
-    <Compile Include="..\MahloService\Models\MahloRoll.cs">
-      <Link>Models\MahloRoll.cs</Link>
-    </Compile>
-    <Compile Include="..\MahloService\Models\PatternRepeatRoll.cs">
-      <Link>Models\PatternRepeatRoll.cs</Link>
+    <Compile Include="..\MahloService\Models\PatternRepeatModel.cs">
+      <Link>Models\PatternRepeatModel.cs</Link>
     </Compile>
     <Compile Include="..\MahloService\Settings\IServiceSettings.cs">
       <Link>Settings\IServiceSettings.cs</Link>
@@ -124,6 +115,7 @@
     <Compile Include="Dapper\ComputedAttribute.cs" />
     <Compile Include="Logic\CutRollList.cs" />
     <Compile Include="Logic\ICutRollList.cs" />
+    <Compile Include="Models\ExplicitKeyAttribute.cs" />
     <Compile Include="Settings\ClientSettings.cs" />
     <Compile Include="Settings\IClientSettings.cs" />
     <Compile Include="Extensions.cs" />

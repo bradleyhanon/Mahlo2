@@ -14,7 +14,7 @@ namespace MahloClientTests.Logic
 {
   public class SewinQueueTests : IEqualityComparer<GreigeRoll>
   {
-    private SewinQueue target;
+    private readonly SewinQueue target;
 
     public SewinQueueTests()
     {

@@ -10,7 +10,7 @@ using MahloService.Models;
 
 namespace MahloService.Logic
 {
-  class CutRollList : BindingList<CutRoll>, ICutRollList
+  class CutRollList : BindingList<CutRoll>
   {
     public CutRollList()
     {

@@ -7,7 +7,9 @@ namespace MahloService.Repository
   {
     IDbConnectionFactory ConnectionFactory { get; }
 
-    IEnumerable<GreigeRoll> GetGreigeRolls();
+    IEnumerable<GreigeRoll> GetIncompleteGreigeRolls();
+
+    int GetNextGreigeRollId();
 
     void AddGreigeRoll(GreigeRoll roll);
 
@@ -19,9 +21,15 @@ namespace MahloService.Repository
 
     void SetGreigeRollsComplete(IEnumerable<GreigeRoll> rolls);
 
+    long GetLastFootCounterMapped(string tableName);
     int GetNextCutRollId();
     void AddCutRoll(CutRoll cutRoll);
     void UpdateCutRoll(CutRoll cutRoll);
-    (double maxBow, double maxSkew) GetBowAndSkew(int greigeRollId, int feetCounterStart, int feetCounterEnd);
+    (double maxBow, double maxSkew) GetBowAndSkew(int greigeRollId, long feetCounterStart, long feetCounterEnd);
+
+    void InsertMahlo2MapDatum(Mahlo2MapDatum datum);
+    void InsertBowAndSkewMapDatum(BowAndSkewMapDatum datum);
+    void InsertPatternRepeatMapDatum(PatternRepeatMapDatum datum);
+    IEnumerable<CutRoll> GetCutRollsFor(int greigeRollId);
   }
 }

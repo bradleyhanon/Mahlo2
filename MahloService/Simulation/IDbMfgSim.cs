@@ -13,5 +13,6 @@ namespace MahloService.Simulation
   {
     BindingList<GreigeRoll> SewinQueue { get; }
     void AddRoll();
+    void RemoveRoll();
   }
 }

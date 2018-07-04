@@ -21,21 +21,21 @@ namespace MahloServiceTests.Logic
     //  SystemDisabled = 8,
     //  All = VerifyRollSequence | RollTooLong | RollTooShort | SystemDisabled,
 
-    bool anyChanged;
-    int anyChangesToTrue;
-    int anyChangesToFalse;
-    UserAttentions<MahloRoll> target;
-    IDisposable subscription;
+    private bool anyChanged;
+    private int anyChangesToTrue;
+    private int anyChangesToFalse;
+    private UserAttentions<MahloModel> target;
+    private readonly IDisposable subscription;
 
     public UserAttententionsTests()
     {
-      target = new UserAttentions<MahloRoll>();
+      target = new UserAttentions<MahloModel>();
 
       this.subscription =
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
           h => ((INotifyPropertyChanged)this.target).PropertyChanged += h,
           h => ((INotifyPropertyChanged)this.target).PropertyChanged -= h)
-          .Where(arg => arg.EventArgs.PropertyName == nameof(UserAttentions<MahloRoll>.Any))
+          .Where(arg => arg.EventArgs.PropertyName == nameof(UserAttentions<MahloModel>.Any))
           .Subscribe(_ => anyChanged = (this.target.Any ? ++this.anyChangesToTrue : ++this.anyChangesToFalse) != 0);
 
       Assert.False(target.Any);

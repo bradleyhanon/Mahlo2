@@ -10,7 +10,7 @@ using MahloService.Settings;
 
 namespace MahloClient.Logic
 {
-  class MahloLogic : MeterLogic<MahloRoll>, IMahloLogic
+  class MahloLogic : MeterLogic<MahloModel>, IMahloLogic
   {
     public MahloLogic(IMahloIpcClient ipcClient, ISewinQueue sewinQueue, IServiceSettings serviceSettings)
       : base(ipcClient, sewinQueue, serviceSettings)
@@ -19,13 +19,13 @@ namespace MahloClient.Logic
 
     public override string InterfaceName => nameof(IMahloLogic);
 
-    public override int FeetCounterStart
+    public override long FeetCounterStart
     {
       get => this.CurrentRoll.MalFeetCounterStart;
       set => this.CurrentRoll.MalFeetCounterStart = value;
     }
 
-    public override int FeetCounterEnd
+    public override long FeetCounterEnd
     {
       get => this.CurrentRoll.MalFeetCounterEnd;
       set => this.CurrentRoll.MalFeetCounterEnd = value;

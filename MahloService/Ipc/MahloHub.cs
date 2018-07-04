@@ -15,9 +15,9 @@ namespace MahloService.Ipc
 {
   public class MahloHub : Hub
   {
-    IMahloServer mahloServer;
-    IDbMfg dbMfg;
-    SynchronizationContext syncContext;
+    private readonly IMahloServer mahloServer;
+    private readonly IDbMfg dbMfg;
+    private readonly SynchronizationContext syncContext;
 
     public MahloHub()
     {

@@ -10,7 +10,8 @@ namespace MahloServiceTests.Repository
 {
   public class DbMfgTests
   {
-    private DbMfg target;
+    private readonly DbMfg target;
+
     public DbMfgTests()
     {
       var factoryFactory = new DbConnectionFactory.Factory();

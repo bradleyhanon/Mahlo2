@@ -25,7 +25,10 @@ namespace MahloService.Repository
 
     public void AddGreigeRoll(GreigeRoll roll)
     {
-
+      using (var connection = this.GetOpenConnection())
+      {
+        connection.Insert(roll);
+      }
     }
 
     public void DeleteGreigeRoll(GreigeRoll roll)
@@ -33,11 +36,19 @@ namespace MahloService.Repository
       throw new NotImplementedException();
     }
 
-    public IEnumerable<GreigeRoll> GetGreigeRolls()
+    public int GetNextGreigeRollId()
     {
       using (var connection = this.GetOpenConnection())
       {
-        return connection.GetAll<GreigeRoll>().OrderBy(item => item.Id);
+        return (connection.ExecuteScalar<int?>("SELECT MAX(Id) FROM GreigeRolls") ?? 0) + 1;
+      }
+    }
+
+    public IEnumerable<GreigeRoll> GetIncompleteGreigeRolls()
+    {
+      using (var connection = this.GetOpenConnection())
+      {
+        return connection.Query<GreigeRoll>("SELECT * FROM GreigeRolls WHERE IsComplete = 0 ORDER BY Id");
       }
     }
 
@@ -62,7 +73,7 @@ namespace MahloService.Repository
     }
 
     public void SaveRoll<T>(T roll) 
-      where T : MahloRoll
+      where T : MahloModel
     {
       using (var connection = this.GetOpenConnection())
       {
@@ -71,7 +82,7 @@ namespace MahloService.Repository
     }
 
     public void UpdateRoll<T>(T roll)
-      where T:MahloRoll
+      where T:MahloModel
     {
       using (var connection = this.GetOpenConnection())
       {
@@ -91,7 +102,14 @@ namespace MahloService.Repository
     {
       using (var connection = this.GetOpenConnection())
       {
-        connection.Execute("UPDATE ProgramState SET Value = @Value WHERE [Key] = 0", new { Value = programState });
+        if (connection.ExecuteScalar<int>("SELECT COUNT(*) FROM ProgramState WHERE [Key] = 0") == 0)
+        {
+          connection.Execute("INSERT INTO ProgramState([Key], Value) VALUES(0, @Value)", new { Value = programState });
+        }
+        else
+        {
+          connection.Execute("UPDATE ProgramState SET Value = @Value WHERE [Key] = 0", new { Value = programState });
+        }
       }
     }
 
@@ -100,11 +118,29 @@ namespace MahloService.Repository
       return this.ConnectionFactory.GetOpenConnection();
     }
 
+    public long GetLastFootCounterMapped(string tableName)
+    {
+      using (var connection = this.GetOpenConnection())
+      {
+        return connection.ExecuteScalar<long?>($"SELECT MAX(FeetCounter) FROM {tableName}") ?? 0;
+      }
+    }
+
+    public IEnumerable<CutRoll> GetCutRollsFor(int greigeRollId)
+    {
+      using (var connection = this.GetOpenConnection())
+      {
+        return connection.Query<CutRoll>(
+          "SELECT * FROM CutRolls WHERE GreigeRollId = @GreigeRollId ORDER BY Id", 
+          new { GreigeRollId = greigeRollId });
+      }
+    }
+
     public int GetNextCutRollId()
     {
       using (var connection = this.GetOpenConnection())
       {
-        return connection.ExecuteScalar<int?>("SELECT MAX(Id) FROM GreigeRolls") ?? 1;
+        return (connection.ExecuteScalar<int?>("SELECT MAX(Id) FROM CutRolls") ?? 0) + 1;
       }
     }
 
@@ -124,16 +160,7 @@ namespace MahloService.Repository
       }
     }
 
-    public void AddBowAndSkewEntry(int feetCounter, double bow, double skew)
-    {
-      using (var connection = this.GetOpenConnection())
-      {
-        string cmdText = "INSERT INTO BowAndSkewMap (FeetCounter, Bow, Skew) VALUES (@FeetCounter, @Bow, @Skew)";
-        connection.Execute(cmdText, new { FeetCounter = feetCounter, Bow = bow, Skew = skew });
-      }
-    }
-
-    public (double maxBow, double maxSkew) GetBowAndSkew(int greigeRollId, int feetCounterStart, int feetCounterEnd)
+    public (double maxBow, double maxSkew) GetBowAndSkew(int greigeRollId, long feetCounterStart, long feetCounterEnd)
     {
       //      @"DECLARE @Id Int = 1
       //DECLARE @StartFeet Int = 100
@@ -157,6 +184,30 @@ namespace MahloService.Repository
         var result = connection.Query(cmdText, new { Id = greigeRollId, StartFeet = feetCounterStart, EndFeet = feetCounterEnd }).First();
         return (Math.Abs(result.MinBow) > Math.Abs(result.MaxBow) ? result.MinBow : result.MaxBow,
                 Math.Abs(result.MinSkew) > Math.Abs(result.MaxSkew) ? result.MinSkew : result.MaxSkew);
+      }
+    }
+
+    public void InsertMahlo2MapDatum(Mahlo2MapDatum datum)
+    {
+      using (var connection = this.GetOpenConnection())
+      {
+        connection.Insert(datum);
+      }
+    }
+
+    public void InsertBowAndSkewMapDatum(BowAndSkewMapDatum datum)
+    {
+      using (var connection = this.GetOpenConnection())
+      {
+        connection.Insert(datum);
+      }
+    }
+
+    public void InsertPatternRepeatMapDatum(PatternRepeatMapDatum datum)
+    {
+      using (var connection = this.GetOpenConnection())
+      {
+        connection.Insert(datum);
       }
     }
   }

@@ -30,20 +30,20 @@ namespace MahloService.Opc
     //private const string PlcItemFormat = "nsu=KEPServerEX;ns=2;s={0}.{1}";
     string mahloChannel;
 
-    private IEasyDAClient opcClient;
+    private readonly IEasyDAClient opcClient;
     private IUserAttentions<Model> userAttentions;
     private ICriticalStops<Model> criticalStops;
     private Type priorExceptionType = null;
     private IOpcSettings mahloSettings;
     //private IPlcSettings seamSettings;
-    private IProgramState programState;
+    private readonly IProgramState programState;
     private ILogger log;
 
-    private SynchronizationContext synchronizationContext;
+    private readonly SynchronizationContext synchronizationContext;
     private string seamAckTag;
 
-    private IDisposable criticalAlarmsSubscription;
-    private IDisposable userAttentionsSubscription;
+    private readonly IDisposable criticalAlarmsSubscription;
+    private readonly IDisposable userAttentionsSubscription;
 
     public OpcClient(
       IEasyDAClient opcClient, 
@@ -173,7 +173,7 @@ namespace MahloService.Opc
       //  });
       //  break;
 
-      if (typeof(Model) == typeof(BowAndSkewRoll))
+      if (typeof(Model) == typeof(BowAndSkewModel))
       {
         seamDetectorId = 2;
         this.mahloChannel = mahloSettings.BowAndSkewChannelName;
@@ -190,7 +190,7 @@ namespace MahloService.Opc
             ("Readings.Bridge.0.Calc.0.CalcWidth.0.ValueInMeter", value => this.MeasuredWidth = Extensions.MetersToFeet((double)value) * 12),
         });
       }
-      else if (typeof(Model) == typeof(PatternRepeatRoll))
+      else if (typeof(Model) == typeof(PatternRepeatModel))
       {
         plcTags.Add(($"MahloPLC.MahloDoff", value => this.IsDoffDetected = (bool)value));
 
@@ -206,7 +206,7 @@ namespace MahloService.Opc
             //("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.Contr_State", value => this.ControllerState = (int)value),
         });
       }
-      else if (typeof(Model) == typeof(MahloRoll))
+      else if (typeof(Model) == typeof(MahloModel))
       {
         seamDetectorId = 1;
         this.mahloChannel = mahloSettings.Mahlo2ChannelName;

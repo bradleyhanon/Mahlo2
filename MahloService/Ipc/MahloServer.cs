@@ -17,18 +17,18 @@ namespace MahloService.Ipc
 {
   sealed class MahloServer : IMahloServer, IDisposable
   {
-    private ILogger log;
+    private readonly ILogger log;
     private ISewinQueue sewinQueue;
-    private ICutRollList cutRolls;
+    private readonly CutRollList cutRolls;
     private IMahloLogic mahloLogic;
     private IBowAndSkewLogic bowAndSkewLogic;
     private IPatternRepeatLogic patternRepeatLogic;
-    private List<IDisposable> disposables;
+    private readonly List<IDisposable> disposables;
 
     public MahloServer(
       ILogger logger,
       ISewinQueue sewinQueue,
-      ICutRollList cutRolls,
+      CutRollList cutRolls,
       IMahloLogic mahloLogic,
       IBowAndSkewLogic bowAndSkewLogic,
       IPatternRepeatLogic patternRepeatLogic,
@@ -101,6 +101,7 @@ namespace MahloService.Ipc
       client.UpdateMeterLogic(nameof(IMahloLogic), this.mahloLogic);
       client.UpdateMeterLogic(nameof(IBowAndSkewLogic), this.bowAndSkewLogic);
       client.UpdateMeterLogic(nameof(IPatternRepeatLogic), this.patternRepeatLogic);
+      client.UpdateCutRollList(this.cutRolls.ToArray());
     }
   }
 }

@@ -15,22 +15,22 @@ namespace MahloServiceTests.Logic
 { 
   public class CriticalStopsTests
   {
-    bool anyChanged;
-    int anyChangesToTrue;
-    int anyChangesToFalse;
+    private bool anyChanged;
+    private int anyChangesToTrue;
+    private int anyChangesToFalse;
 
-    private CriticalStops<MahloRoll> target;
-    IDisposable subscription;
+    private CriticalStops<MahloModel> target;
+    private readonly IDisposable subscription;
 
     public CriticalStopsTests()
     {
-      this.target = new CriticalStops<MahloRoll>();
+      this.target = new CriticalStops<MahloModel>();
 
       this.subscription =
       Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
         h => ((INotifyPropertyChanged)this.target).PropertyChanged += h,
         h => ((INotifyPropertyChanged)this.target).PropertyChanged -= h)
-        .Where(arg => arg.EventArgs.PropertyName == nameof(UserAttentions<MahloRoll>.Any))
+        .Where(arg => arg.EventArgs.PropertyName == nameof(UserAttentions<MahloModel>.Any))
         .Subscribe(_ => anyChanged = (this.target.Any ? ++this.anyChangesToTrue : ++this.anyChangesToFalse) != 0);
 
       Assert.False(target.Any);

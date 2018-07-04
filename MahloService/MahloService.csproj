@@ -71,7 +71,9 @@
   <ItemGroup>
     <Compile Include="CommonMethods.cs" />
     <Compile Include="Logic\CutRollList.cs" />
-    <Compile Include="Logic\ICutRollList.cs" />
+    <Compile Include="Models\BowAndSkewMapDatum.cs" />
+    <Compile Include="Models\Mahlo2MapDatum.cs" />
+    <Compile Include="Models\PatternRepeatMapDatum.cs" />
     <Compile Include="Simulation\DbMfgSim.cs" />
     <Compile Include="Simulation\EasyDAClientSimulator.cs" />
     <Compile Include="Simulation\FormSim.cs">
@@ -114,17 +116,14 @@
     <Compile Include="Logic\BowAndSkewLogic.cs" />
     <Compile Include="Logic\UserAttentions.cs" />
     <Compile Include="Models\AS400FinishedRoll.cs" />
-    <Compile Include="Models\BowAndSkewRoll.cs" />
+    <Compile Include="Models\BowAndSkewModel.cs" />
     <Compile Include="Models\GreigeRoll.cs" />
     <Compile Include="Models\CoaterScheduleRoll.cs" />
     <Compile Include="Models\CutRoll.cs" />
     <Compile Include="Models\CutRollDetail.cs" />
-    <Compile Include="Models\IBowAndSkewRoll.cs" />
-    <Compile Include="Models\IMahloRoll.cs" />
-    <Compile Include="Models\IPatternRepeatRoll.cs" />
-    <Compile Include="Models\MahloRoll.cs" />
+    <Compile Include="Models\MahloModel.cs" />
     <Compile Include="Models\AS400SewinQueueRoll.cs" />
-    <Compile Include="Models\PatternRepeatRoll.cs" />
+    <Compile Include="Models\PatternRepeatModel.cs" />
     <Compile Include="Opc\IBowAndSkewSrc.cs" />
     <Compile Include="Opc\IMahloSrc.cs" />
     <Compile Include="Opc\IMeterSrc.cs" />

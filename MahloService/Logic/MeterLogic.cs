@@ -21,21 +21,25 @@ namespace MahloService.Logic
 {
   [AddINotifyPropertyChangedInterface]
   abstract class MeterLogic<Model> : IMeterLogic<Model>, IDisposable
-    where Model : MahloRoll, new()
+    where Model : MahloModel, new()
   {
-    private IDbLocal dbLocal;
+    private const int MappingInterval = 10;
+    private readonly IDbLocal dbLocal;
     private ISewinQueue sewinQueue;
     private IMeterSrc<Model> srcData;
-    private IServiceSettings appInfo;
+    private readonly IServiceSettings appInfo;
     private IProgramState programState;
 
     private bool checkRollSize = true;
     private int rollCount;
     private int styleCount;
     //private double meterResetAtLength;
-    private int feetCounterAtRollStart;
+    private long feetCounterAtRollStart;
     private bool seamAckNeeded;
     private double feetCounterAtLastSeam;
+
+    private double feetCounterOffset;
+    private double dblCurrentFeetCounter;
 
     private bool isSewinQueueInitialized;
     private GreigeRoll _currentRoll = new GreigeRoll();
@@ -119,7 +123,7 @@ namespace MahloService.Logic
     /// <summary>
     /// Get the roll that is currently being processed
     /// </summary>
-    public GreigeRoll CurrentRoll { get => _currentRoll; set => _currentRoll = value; }
+    public virtual GreigeRoll CurrentRoll { get => _currentRoll; set => _currentRoll = value; }
     [DependsOn(nameof(CurrentRoll))]
     public int CurrentRollIndex => this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
 
@@ -129,13 +133,16 @@ namespace MahloService.Logic
 
     public bool IsSeamDetected { get; set; }
 
+    public long CurrentFeetCounter { get; set; }
+    public bool IsMovementForward { get; private set; }
+
     // Appear last
     [JsonProperty(Order = 1)]
-    public abstract int FeetCounterStart { get; set; }
+    public abstract long FeetCounterStart { get; set; }
     [JsonProperty(Order = 1)]
-    public abstract int FeetCounterEnd { get; set; }
+    public abstract long FeetCounterEnd { get; set; }
     [JsonIgnore]
-    public int MeasuredLength => this.FeetCounterEnd - this.FeetCounterStart;
+    public long MeasuredLength => this.FeetCounterEnd - this.FeetCounterStart;
     [JsonProperty(Order = 1)]
     public abstract int Speed { get; set; }
     [JsonProperty(Order = 1)]
@@ -164,6 +171,7 @@ namespace MahloService.Logic
     public string QueueMessage { get; set; }
     public bool IsMappingNow { get; set; }
 
+    protected abstract string MapTableName { get; }
     protected List<IDisposable> Disposables { get; private set; }
 
     /// <summary>
@@ -171,6 +179,7 @@ namespace MahloService.Logic
     /// </summary>
     public void Start()
     {
+      this.SewinQueueChanged();
     }
 
     public void Dispose()
@@ -183,12 +192,77 @@ namespace MahloService.Logic
       return !this.CurrentRoll.IsCheckRoll && !this.UserAttentions.Any && !this.CriticalStops.Any;
     }
 
+    public void RefreshStatusDisplay()
+    {
+      throw new NotImplementedException();
+    }
+
+    public void MoveToNextRoll()
+    {
+      this.IsSeamDetected = false;
+      this.IsMappingNow = false;
+      int index = this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
+      if (index >= 0 && index < this.sewinQueue.Rolls.Count - 1)
+      {
+        this.CurrentRoll = this.sewinQueue.Rolls[index + 1];
+      }
+    }
+
+    public void MoveToPriorRoll()
+    {
+      this.IsSeamDetected = false;
+      this.IsMappingNow = false;
+      int index = this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
+      if (index > 0)
+      {
+        this.CurrentRoll = this.sewinQueue.Rolls[index - 1];
+      }
+    }
+
+    public void WaitForSeam()
+    {
+      // pressing this button will essentially "re-arm" the system, regardless of it's
+      // current state
+
+      // reset roll and style counters
+      this.rollCount = 1;
+      this.styleCount = 1;
+
+      // clear all user alerts
+      this.UserAttentions.ClearAll();
+    }
+
+    public void DisableSystem()
+    {
+      // system is already disabled
+      if (this.UserAttentions.IsSystemDisabled)
+      {
+        return;
+      }
+
+      // invalidate mapping for current roll
+      this.IsMapValid = false;
+      this.IsMappingNow = false;
+
+      //WriteToErrorLog("DisableSystem", "Mapping stopped due to system being disabled.");
+
+      this.UserAttentions.IsSystemDisabled = true;
+    }
+
+    public virtual Task ApplyRecipe(string recipeName, bool isManualMode)
+    {
+      return Task.CompletedTask;
+    }
+
     protected virtual void Dispose(bool disposing)
     {
       // Save program state
       this.SaveState();
+      this.dbLocal.UpdateGreigeRoll(this.CurrentRoll);
       this.Disposables.ForEach(item => item.Dispose());
     }
+
+    protected abstract void SaveMapDatum();
 
     protected virtual void OnRollStarted(GreigeRoll greigeRoll)
     {
@@ -206,6 +280,7 @@ namespace MahloService.Logic
       this.checkRollSize = state.Get<bool?>(nameof(checkRollSize)) ?? true;
       this.rollCount = state.Get<int?>(nameof(rollCount)) ?? 0;
       this.styleCount = state.Get<int?>(nameof(styleCount)) ?? this.styleCount;
+      this.feetCounterOffset = state.Get<double?>(nameof(feetCounterOffset)) ?? 0.0;
       this.feetCounterAtRollStart = state.Get<int?>(nameof(feetCounterAtRollStart)) ?? 0;
       this.feetCounterAtLastSeam = state.Get<int?>(nameof(feetCounterAtLastSeam)) ?? 0;
       this.seamAckNeeded = state.Get<bool?>(nameof(seamAckNeeded)) ?? false;
@@ -213,73 +288,10 @@ namespace MahloService.Logic
       string rollNo = state.Get<string>(nameof(this.CurrentRoll.RollNo)) ?? string.Empty;
       this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == rollNo) ?? new GreigeRoll();
 
-      // On startup, roll sequence should be verified
+      this.CurrentFeetCounter = this.dbLocal.GetLastFootCounterMapped(this.MapTableName) + 1;
+
+      // On startup, roll sequence should be verified by operator
       this.UserAttentions.VerifyRollSequence = true;
-    }
-
-    private void SaveState()
-    {
-      var state = programState.GetSubState(nameof(MeterLogic<Model>));
-      state.Set(typeof(Model).Name, new
-      {
-        this.checkRollSize,
-        this.rollCount,
-        this.styleCount,
-        this.feetCounterAtRollStart,
-        this.feetCounterAtLastSeam,
-        this.seamAckNeeded,
-        this.CurrentRoll.RollNo,
-      });
-    }
-
-    private void Simulate_lblMeasuredLen_TextChanged()
-    {
-      double keepOnLength = this.appInfo.SeamIndicatorKeepOnLength;
-
-      if (this.MeasuredLength == 0)
-      {
-        return;
-      }
-
-      if (this.CurrentRoll.RollLength <= keepOnLength)
-      {
-        keepOnLength = this.CurrentRoll.RollLength / 2;
-      }
-
-      if (keepOnLength == 0)
-      {
-        keepOnLength = 5;
-      }
-
-      if (this.MeasuredLength >= keepOnLength)
-      {
-        //if (this.meterResetAtLength == 0)
-        {
-          this.IsSeamDetected = false;
-        }
-
-        this.srcData.SetMiscellaneousIndicator(false);
-      }
-    }
-
-    private void SaveRealtimeDataToDataSet()
-    {
-
-    }
-
-    private void SaveLineSpeedToFile()
-    {
-
-    }
-
-    private void SaveRollMap()
-    {
-
-    }
-
-    public virtual Task ApplyRecipe(string recipeName, bool isManualMode)
-    {
-      return Task.CompletedTask;
     }
 
     protected virtual void OpcValueChanged(string propertyName)
@@ -287,7 +299,28 @@ namespace MahloService.Logic
       switch (propertyName)
       {
         case nameof(this.srcData.FeetCounter):
-          this.FeetCounterChanged((int)this.srcData.FeetCounter);
+          this.AdjustFeetCounterOffsetAsNeeded();
+
+          // Process feet counter change going forward not reverse.
+          double newFeetCounter = this.srcData.FeetCounter + this.feetCounterOffset;
+          this.IsMovementForward = newFeetCounter > this.dblCurrentFeetCounter;
+          if (this.IsMovementForward)
+          {
+            this.dblCurrentFeetCounter = newFeetCounter;
+            if ((long)newFeetCounter > this.CurrentFeetCounter)
+            {
+              this.CurrentFeetCounter = (long)newFeetCounter;
+              this.FeetCounterChanged();
+              if (this.CurrentFeetCounter % MappingInterval == 0)
+              {
+                SaveMapDatum();
+
+                // Update current greige roll every time a map datum is recorded
+                this.dbLocal.UpdateGreigeRoll(this.CurrentRoll);
+              }
+            }
+          }
+
           break;
 
         case nameof(this.srcData.IsSeamDetected):
@@ -304,23 +337,9 @@ namespace MahloService.Logic
       }
     }
 
-    private void SewinQueueChanged()
+    protected virtual void FeetCounterChanged()
     {
-      if (!this.isSewinQueueInitialized)
-      {
-        this.isSewinQueueInitialized = true;
-        this.RestoreState();
-      }
-
-      if (!this.sewinQueue.Rolls.Contains(this.CurrentRoll))
-      {
-        this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault() ?? this.CurrentRoll;
-      }
-    }
-
-    protected virtual void FeetCounterChanged(int feetCounter)
-    {
-      int measuredLength = feetCounter - this.feetCounterAtRollStart;
+      long measuredLength = this.CurrentFeetCounter - this.feetCounterAtRollStart;
 
       try
       {
@@ -335,7 +354,7 @@ namespace MahloService.Logic
           return;
         }
 
-        this.FeetCounterEnd = feetCounter;
+        this.FeetCounterEnd = this.CurrentFeetCounter;
 
         //meter reset has been initiated but not completed, ignore this value
         if (measuredLength == 0)
@@ -351,7 +370,7 @@ namespace MahloService.Logic
         //this.meterResetAtLength = 0;
 
         //update roll info
-        this.FeetCounterEnd = feetCounter;
+        this.FeetCounterEnd = this.CurrentFeetCounter;
         //oCurrentRoll.MeasuredWidth = oMahlo.RollWidth;
 
         //update display values
@@ -384,7 +403,7 @@ namespace MahloService.Logic
         //  SaveLineSpeedToFile();
         //}
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         //WriteToErrorLog(ex.TargetSite.ToString(), ex.Message);
       }
@@ -446,7 +465,7 @@ namespace MahloService.Logic
         //accurate as possible
         this.IsSeamDetected = true;
         //this.meterResetAtLength = this.MeasuredLength;
-        this.feetCounterAtRollStart = (int)this.srcData.FeetCounter;
+        this.feetCounterAtRollStart = this.CurrentFeetCounter;
 
         //set seam detect indicator on immediately
         this.srcData.SetMiscellaneousIndicator(true);
@@ -456,7 +475,7 @@ namespace MahloService.Logic
         {
           //advance to next position in queue
           this.CurrentRoll = this.sewinQueue.Rolls[index + 1];
-          this.FeetCounterStart = this.FeetCounterEnd = (int)this.srcData.FeetCounter;
+          this.FeetCounterStart = this.FeetCounterEnd = this.CurrentFeetCounter;
 
           //InitializeRollsFromQueue(oCurrentRoll.PositionInQueue + 1);
           //InitializeCharts();)
@@ -522,67 +541,95 @@ namespace MahloService.Logic
 
         this.OnRollStarted(this.CurrentRoll);
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         //WriteToErrorLog(ex.TargetSite.ToString(), ex.Message);
       }
     }
 
-    public void RefreshStatusDisplay()
+    private void SewinQueueChanged()
     {
-      throw new NotImplementedException();
-    }
-
-    public void MoveToNextRoll()
-    {
-      this.IsSeamDetected = false;
-      this.IsMappingNow = false;
-      int index = this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
-      if (index >= 0 && index < this.sewinQueue.Rolls.Count - 1)
+      if (!this.isSewinQueueInitialized)
       {
-        this.CurrentRoll = this.sewinQueue.Rolls[index + 1];
+        this.isSewinQueueInitialized = true;
+        this.RestoreState();
+      }
+
+      if (!this.sewinQueue.Rolls.Contains(this.CurrentRoll))
+      {
+        this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault() ?? this.CurrentRoll;
       }
     }
 
-    public void MoveToPriorRoll()
+    // There may be gaps in feet counter:
+    // 1. A program / system crash may prevent current feet counter from being saved
+    // 2. Mahlo meter counter may have been reset
+    // Adjust feetCounterOffset to prevent large gaps
+    private void AdjustFeetCounterOffsetAsNeeded()
     {
-      this.IsSeamDetected = false;
-      this.IsMappingNow = false;
-      int index = this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
-      if (index > 0)
+      double rawFeetCounter = this.srcData.FeetCounter;
+      double diff = rawFeetCounter + this.feetCounterOffset - this.CurrentFeetCounter;
+      if (diff > 1000 || diff <= - MappingInterval * 2) 
       {
-        this.CurrentRoll = this.sewinQueue.Rolls[index - 1];
+        // If the gap is too large or too negative, adjust offset to leave a 1000 foot gap
+        this.feetCounterOffset = this.CurrentFeetCounter - rawFeetCounter + 1000;
       }
     }
 
-    public void WaitForSeam()
+    private void SaveState()
     {
-      // pressing this button will essentially "re-arm" the system, regardless of it's
-      // current state
-
-      // reset roll and style counters
-      this.rollCount = 1;
-      this.styleCount = 1;
-
-      // clear all user alerts
-      this.UserAttentions.ClearAll();
+      var state = programState.GetSubState(nameof(MeterLogic<Model>));
+      state.Set(typeof(Model).Name, new
+      {
+        this.checkRollSize,
+        this.rollCount,
+        this.styleCount,
+        this.feetCounterOffset,
+        this.feetCounterAtRollStart,
+        this.feetCounterAtLastSeam,
+        this.seamAckNeeded,
+        this.CurrentRoll.RollNo,
+      });
     }
 
-    public void DisableSystem()
+    private void Simulate_lblMeasuredLen_TextChanged()
     {
-      // system is already disabled
-      if (this.UserAttentions.IsSystemDisabled)
+      double keepOnLength = this.appInfo.SeamIndicatorKeepOnLength;
+
+      if (this.MeasuredLength == 0)
       {
         return;
       }
 
-      // invalidate mapping for current roll
-      this.IsMapValid = false;
-      this.IsMappingNow = false;
+      if (this.CurrentRoll.RollLength <= keepOnLength)
+      {
+        keepOnLength = this.CurrentRoll.RollLength / 2;
+      }
 
-      //WriteToErrorLog("DisableSystem", "Mapping stopped due to system being disabled.");
+      if (keepOnLength == 0)
+      {
+        keepOnLength = 5;
+      }
 
-      this.UserAttentions.IsSystemDisabled = true;
+      if (this.MeasuredLength >= keepOnLength)
+      {
+        //if (this.meterResetAtLength == 0)
+        {
+          this.IsSeamDetected = false;
+        }
+
+        this.srcData.SetMiscellaneousIndicator(false);
+      }
+    }
+
+    private void SaveRealtimeDataToDataSet()
+    {
+
+    }
+
+    private void SaveLineSpeedToFile()
+    {
+
     }
   }
 }
