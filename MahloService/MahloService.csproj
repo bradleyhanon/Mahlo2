@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonMethods.cs" />
+    <Compile Include="Logic\Averager.cs" />
     <Compile Include="Logic\CutRollList.cs" />
     <Compile Include="Models\BowAndSkewMapDatum.cs" />
     <Compile Include="Models\Mahlo2MapDatum.cs" />
@@ -120,7 +121,6 @@
     <Compile Include="Models\GreigeRoll.cs" />
     <Compile Include="Models\CoaterScheduleRoll.cs" />
     <Compile Include="Models\CutRoll.cs" />
-    <Compile Include="Models\CutRollDetail.cs" />
     <Compile Include="Models\MahloModel.cs" />
     <Compile Include="Models\AS400SewinQueueRoll.cs" />
     <Compile Include="Models\PatternRepeatModel.cs" />

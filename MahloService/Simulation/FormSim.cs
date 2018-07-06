@@ -43,6 +43,7 @@ namespace MahloService.Simulation
       this.simInfo = new SimInfo(this.dbMfgSim, this.programState);
       this.srcSimInfo.DataSource = this.simInfo;
       this.srcFormSim.DataSource = this;
+      this.srcGrid.DataSource = this.dbMfgSim.SewinQueue;
     }
 
     public double MalFeetCounter
@@ -80,7 +81,12 @@ namespace MahloService.Simulation
     protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
-      this.srcGrid.DataSource = this.dbMfgSim.SewinQueue;
+      if (MalFeetCounter <= 0.0)
+      {
+        MalFeetCounter = 400;
+        BasFeetCounter = 200;
+        PrsFeetCounter = 0;
+      }
     }
 
     private void BtnAddRoll_Click(object sender, EventArgs e)
@@ -98,9 +104,9 @@ namespace MahloService.Simulation
       if (btnRun.Text == "Run")
       {
         this.btnRun.Text = "Stop";
-        ((OpcSrcSim<MahloModel>)this.mahloSrc).Start(400, this.simInfo.FeetPerMinute);
-        ((OpcSrcSim<BowAndSkewModel>)this.bowAndSkewSrc).Start(200, this.simInfo.FeetPerMinute);
-        ((OpcSrcSim<PatternRepeatModel>)this.patternRepeatSrc).Start(0, this.simInfo.FeetPerMinute);
+        ((OpcSrcSim<MahloModel>)this.mahloSrc).Start(this.simInfo.FeetPerMinute);
+        ((OpcSrcSim<BowAndSkewModel>)this.bowAndSkewSrc).Start(this.simInfo.FeetPerMinute);
+        ((OpcSrcSim<PatternRepeatModel>)this.patternRepeatSrc).Start(this.simInfo.FeetPerMinute);
       }
       else
       {

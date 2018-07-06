@@ -136,7 +136,7 @@ namespace MahloService.Logic
     public long CurrentFeetCounter { get; set; }
     public bool IsMovementForward { get; private set; }
 
-    // Appear last
+    // Appear last when serialized
     [JsonProperty(Order = 1)]
     public abstract long FeetCounterStart { get; set; }
     [JsonProperty(Order = 1)]

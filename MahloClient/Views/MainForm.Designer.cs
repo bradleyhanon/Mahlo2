@@ -18,10 +18,6 @@
       this.components = new System.ComponentModel.Container();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -37,14 +33,12 @@
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-      this.cutRollGrid = new System.Windows.Forms.DataGridView();
-      this.sapRollDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.lengthDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.maxBowDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.maxSkewDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.maxEPEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.dlotDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.grdCutRoll = new System.Windows.Forms.DataGridView();
       this.cutRollSrc = new System.Windows.Forms.BindingSource(this.components);
       this.grpMahlo = new System.Windows.Forms.GroupBox();
       this.label29 = new System.Windows.Forms.Label();
@@ -116,16 +110,8 @@
       this.label26 = new System.Windows.Forms.Label();
       this.label27 = new System.Windows.Forms.Label();
       this.groupBox5 = new System.Windows.Forms.GroupBox();
-      this.textBox17 = new System.Windows.Forms.TextBox();
-      this.textBox23 = new System.Windows.Forms.TextBox();
-      this.textBox24 = new System.Windows.Forms.TextBox();
-      this.textBox25 = new System.Windows.Forms.TextBox();
-      this.label36 = new System.Windows.Forms.Label();
-      this.label37 = new System.Windows.Forms.Label();
-      this.label38 = new System.Windows.Forms.Label();
-      this.label39 = new System.Windows.Forms.Label();
       this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-      this.dataGridView1 = new System.Windows.Forms.DataGridView();
+      this.grdGreigeRoll = new System.Windows.Forms.DataGridView();
       this.colRollNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colStyleCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colColorCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -155,7 +141,13 @@
       this.pnlAlarm = new System.Windows.Forms.StatusBarPanel();
       this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
       this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
-      ((System.ComponentModel.ISupportInitialize)(this.cutRollGrid)).BeginInit();
+      this.colCutSapRoll = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colCutFeet = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colCutBow = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colCutSkew = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colCutEPE = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colCutMaxDlot = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      ((System.ComponentModel.ISupportInitialize)(this.grdCutRoll)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.cutRollSrc)).BeginInit();
       this.grpMahlo.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.mahloLogicSrc)).BeginInit();
@@ -166,9 +158,8 @@
       this.grpPatternRepeat.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.patternRepeatLogicSrc)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.patternRepeatRollSrc)).BeginInit();
-      this.groupBox5.SuspendLayout();
       this.tableLayoutPanel1.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.grdGreigeRoll)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSrc)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pnlMessage)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pnlIndicator)).BeginInit();
@@ -178,15 +169,15 @@
       ((System.ComponentModel.ISupportInitialize)(this.pnlQueueMessage)).BeginInit();
       this.SuspendLayout();
       // 
-      // cutRollGrid
+      // grdCutRoll
       // 
-      this.cutRollGrid.AllowUserToAddRows = false;
-      this.cutRollGrid.AllowUserToDeleteRows = false;
-      this.cutRollGrid.AllowUserToResizeRows = false;
-      this.cutRollGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+      this.grdCutRoll.AllowUserToAddRows = false;
+      this.grdCutRoll.AllowUserToDeleteRows = false;
+      this.grdCutRoll.AllowUserToResizeRows = false;
+      this.grdCutRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.cutRollGrid.AutoGenerateColumns = false;
+      this.grdCutRoll.AutoGenerateColumns = false;
       dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
       dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -194,16 +185,16 @@
       dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
       dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-      this.cutRollGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-      this.cutRollGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.cutRollGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.sapRollDataGridViewTextBoxColumn,
-            this.lengthDataGridViewTextBoxColumn1,
-            this.maxBowDataGridViewTextBoxColumn,
-            this.maxSkewDataGridViewTextBoxColumn,
-            this.maxEPEDataGridViewTextBoxColumn,
-            this.dlotDataGridViewTextBoxColumn});
-      this.cutRollGrid.DataSource = this.cutRollSrc;
+      this.grdCutRoll.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+      this.grdCutRoll.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.grdCutRoll.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colCutSapRoll,
+            this.colCutFeet,
+            this.colCutBow,
+            this.colCutSkew,
+            this.colCutEPE,
+            this.colCutMaxDlot});
+      this.grdCutRoll.DataSource = this.cutRollSrc;
       dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
       dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -211,70 +202,14 @@
       dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
       dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.cutRollGrid.DefaultCellStyle = dataGridViewCellStyle6;
-      this.cutRollGrid.Location = new System.Drawing.Point(862, 38);
-      this.cutRollGrid.Name = "cutRollGrid";
-      this.cutRollGrid.RowHeadersVisible = false;
-      this.cutRollGrid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.cutRollGrid.Size = new System.Drawing.Size(360, 194);
-      this.cutRollGrid.TabIndex = 4;
-      // 
-      // sapRollDataGridViewTextBoxColumn
-      // 
-      this.sapRollDataGridViewTextBoxColumn.DataPropertyName = "SapRoll";
-      this.sapRollDataGridViewTextBoxColumn.HeaderText = "SAP Roll";
-      this.sapRollDataGridViewTextBoxColumn.Name = "sapRollDataGridViewTextBoxColumn";
-      this.sapRollDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.sapRollDataGridViewTextBoxColumn.Width = 67;
-      // 
-      // lengthDataGridViewTextBoxColumn1
-      // 
-      this.lengthDataGridViewTextBoxColumn1.DataPropertyName = "Length";
-      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.lengthDataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle2;
-      this.lengthDataGridViewTextBoxColumn1.HeaderText = "Feet";
-      this.lengthDataGridViewTextBoxColumn1.Name = "lengthDataGridViewTextBoxColumn1";
-      this.lengthDataGridViewTextBoxColumn1.ReadOnly = true;
-      this.lengthDataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.lengthDataGridViewTextBoxColumn1.Width = 50;
-      // 
-      // maxBowDataGridViewTextBoxColumn
-      // 
-      this.maxBowDataGridViewTextBoxColumn.DataPropertyName = "MaxBow";
-      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.maxBowDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
-      this.maxBowDataGridViewTextBoxColumn.HeaderText = "Max Bow";
-      this.maxBowDataGridViewTextBoxColumn.Name = "maxBowDataGridViewTextBoxColumn";
-      this.maxBowDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.maxBowDataGridViewTextBoxColumn.Width = 56;
-      // 
-      // maxSkewDataGridViewTextBoxColumn
-      // 
-      this.maxSkewDataGridViewTextBoxColumn.DataPropertyName = "MaxSkew";
-      dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.maxSkewDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle4;
-      this.maxSkewDataGridViewTextBoxColumn.HeaderText = "Max Skew";
-      this.maxSkewDataGridViewTextBoxColumn.Name = "maxSkewDataGridViewTextBoxColumn";
-      this.maxSkewDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.maxSkewDataGridViewTextBoxColumn.Width = 56;
-      // 
-      // maxEPEDataGridViewTextBoxColumn
-      // 
-      this.maxEPEDataGridViewTextBoxColumn.DataPropertyName = "MaxEPE";
-      dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.maxEPEDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
-      this.maxEPEDataGridViewTextBoxColumn.HeaderText = "Max EPE";
-      this.maxEPEDataGridViewTextBoxColumn.Name = "maxEPEDataGridViewTextBoxColumn";
-      this.maxEPEDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.maxEPEDataGridViewTextBoxColumn.Width = 56;
-      // 
-      // dlotDataGridViewTextBoxColumn
-      // 
-      this.dlotDataGridViewTextBoxColumn.DataPropertyName = "Dlot";
-      this.dlotDataGridViewTextBoxColumn.HeaderText = "Dlot";
-      this.dlotDataGridViewTextBoxColumn.Name = "dlotDataGridViewTextBoxColumn";
-      this.dlotDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.dlotDataGridViewTextBoxColumn.Width = 45;
+      this.grdCutRoll.DefaultCellStyle = dataGridViewCellStyle6;
+      this.grdCutRoll.Location = new System.Drawing.Point(862, 38);
+      this.grdCutRoll.Name = "grdCutRoll";
+      this.grdCutRoll.RowHeadersVisible = false;
+      this.grdCutRoll.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+      this.grdCutRoll.Size = new System.Drawing.Size(360, 194);
+      this.grdCutRoll.TabIndex = 4;
+      this.grdCutRoll.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.GrdCutRoll_CellFormatting);
       // 
       // cutRollSrc
       // 
@@ -646,7 +581,7 @@
       // 
       // textBox12
       // 
-      this.textBox12.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewRollSrc, "SkewInches", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
+      this.textBox12.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewRollSrc, "Skew", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
       this.textBox12.Location = new System.Drawing.Point(176, 104);
       this.textBox12.Name = "textBox12";
       this.textBox12.ReadOnly = true;
@@ -664,7 +599,7 @@
       // 
       // textBox11
       // 
-      this.textBox11.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewRollSrc, "BowInches", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
+      this.textBox11.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bowAndSkewRollSrc, "Bow", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
       this.textBox11.Location = new System.Drawing.Point(176, 78);
       this.textBox11.Name = "textBox11";
       this.textBox11.ReadOnly = true;
@@ -1015,96 +950,11 @@
       // groupBox5
       // 
       this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.groupBox5.Controls.Add(this.textBox17);
-      this.groupBox5.Controls.Add(this.textBox23);
-      this.groupBox5.Controls.Add(this.textBox24);
-      this.groupBox5.Controls.Add(this.textBox25);
-      this.groupBox5.Controls.Add(this.label36);
-      this.groupBox5.Controls.Add(this.label37);
-      this.groupBox5.Controls.Add(this.label38);
-      this.groupBox5.Controls.Add(this.label39);
       this.groupBox5.Location = new System.Drawing.Point(862, 244);
       this.groupBox5.Name = "groupBox5";
       this.groupBox5.Size = new System.Drawing.Size(360, 264);
       this.groupBox5.TabIndex = 9;
       this.groupBox5.TabStop = false;
-      this.groupBox5.Text = "Finished Roll";
-      // 
-      // textBox17
-      // 
-      this.textBox17.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "RollLength", true));
-      this.textBox17.Location = new System.Drawing.Point(50, 23);
-      this.textBox17.Name = "textBox17";
-      this.textBox17.ReadOnly = true;
-      this.textBox17.Size = new System.Drawing.Size(69, 20);
-      this.textBox17.TabIndex = 19;
-      this.textBox17.Text = "123456";
-      // 
-      // textBox23
-      // 
-      this.textBox23.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "ColorCode", true));
-      this.textBox23.Location = new System.Drawing.Point(50, 101);
-      this.textBox23.Name = "textBox23";
-      this.textBox23.ReadOnly = true;
-      this.textBox23.Size = new System.Drawing.Size(69, 20);
-      this.textBox23.TabIndex = 18;
-      this.textBox23.Text = "123456";
-      // 
-      // textBox24
-      // 
-      this.textBox24.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "StyleCode", true));
-      this.textBox24.Location = new System.Drawing.Point(50, 75);
-      this.textBox24.Name = "textBox24";
-      this.textBox24.ReadOnly = true;
-      this.textBox24.Size = new System.Drawing.Size(69, 20);
-      this.textBox24.TabIndex = 17;
-      this.textBox24.Text = "123456";
-      // 
-      // textBox25
-      // 
-      this.textBox25.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.patternRepeatRollSrc, "RollNo", true));
-      this.textBox25.Location = new System.Drawing.Point(50, 49);
-      this.textBox25.Name = "textBox25";
-      this.textBox25.ReadOnly = true;
-      this.textBox25.Size = new System.Drawing.Size(69, 20);
-      this.textBox25.TabIndex = 16;
-      this.textBox25.Text = "123456";
-      // 
-      // label36
-      // 
-      this.label36.AutoSize = true;
-      this.label36.Location = new System.Drawing.Point(6, 26);
-      this.label36.Name = "label36";
-      this.label36.Size = new System.Drawing.Size(43, 13);
-      this.label36.TabIndex = 15;
-      this.label36.Text = "Length:";
-      // 
-      // label37
-      // 
-      this.label37.AutoSize = true;
-      this.label37.Location = new System.Drawing.Point(6, 104);
-      this.label37.Name = "label37";
-      this.label37.Size = new System.Drawing.Size(34, 13);
-      this.label37.TabIndex = 14;
-      this.label37.Text = "Color:";
-      // 
-      // label38
-      // 
-      this.label38.AutoSize = true;
-      this.label38.Location = new System.Drawing.Point(6, 78);
-      this.label38.Name = "label38";
-      this.label38.Size = new System.Drawing.Size(33, 13);
-      this.label38.TabIndex = 13;
-      this.label38.Text = "Style:";
-      // 
-      // label39
-      // 
-      this.label39.AutoSize = true;
-      this.label39.Location = new System.Drawing.Point(6, 52);
-      this.label39.Name = "label39";
-      this.label39.Size = new System.Drawing.Size(38, 13);
-      this.label39.TabIndex = 12;
-      this.label39.Text = "Roll #:";
       // 
       // tableLayoutPanel1
       // 
@@ -1117,7 +967,7 @@
       this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 198F));
       this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
       this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-      this.tableLayoutPanel1.Controls.Add(this.dataGridView1, 0, 1);
+      this.tableLayoutPanel1.Controls.Add(this.grdGreigeRoll, 0, 1);
       this.tableLayoutPanel1.Controls.Add(this.label4, 3, 0);
       this.tableLayoutPanel1.Controls.Add(this.label3, 2, 0);
       this.tableLayoutPanel1.Controls.Add(this.label2, 1, 0);
@@ -1130,15 +980,15 @@
       this.tableLayoutPanel1.Size = new System.Drawing.Size(844, 223);
       this.tableLayoutPanel1.TabIndex = 10;
       // 
-      // dataGridView1
+      // grdGreigeRoll
       // 
-      this.dataGridView1.AllowUserToAddRows = false;
-      this.dataGridView1.AllowUserToDeleteRows = false;
-      this.dataGridView1.AllowUserToResizeRows = false;
-      this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+      this.grdGreigeRoll.AllowUserToAddRows = false;
+      this.grdGreigeRoll.AllowUserToDeleteRows = false;
+      this.grdGreigeRoll.AllowUserToResizeRows = false;
+      this.grdGreigeRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.dataGridView1.AutoGenerateColumns = false;
+      this.grdGreigeRoll.AutoGenerateColumns = false;
       dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
       dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1146,9 +996,9 @@
       dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
       dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-      this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
-      this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+      this.grdGreigeRoll.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+      this.grdGreigeRoll.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.grdGreigeRoll.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colRollNo,
             this.colStyleCode,
             this.colColorCode,
@@ -1165,8 +1015,8 @@
             this.colSpacer3,
             this.colPrsFeet,
             this.colElongation});
-      this.tableLayoutPanel1.SetColumnSpan(this.dataGridView1, 5);
-      this.dataGridView1.DataSource = this.sewinQueueSrc;
+      this.tableLayoutPanel1.SetColumnSpan(this.grdGreigeRoll, 5);
+      this.grdGreigeRoll.DataSource = this.sewinQueueSrc;
       dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window;
       dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1174,11 +1024,11 @@
       dataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
       dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle20;
-      this.dataGridView1.EnableHeadersVisualStyles = false;
-      this.dataGridView1.Location = new System.Drawing.Point(3, 26);
-      this.dataGridView1.Name = "dataGridView1";
-      this.dataGridView1.ReadOnly = true;
+      this.grdGreigeRoll.DefaultCellStyle = dataGridViewCellStyle20;
+      this.grdGreigeRoll.EnableHeadersVisualStyles = false;
+      this.grdGreigeRoll.Location = new System.Drawing.Point(3, 26);
+      this.grdGreigeRoll.Name = "grdGreigeRoll";
+      this.grdGreigeRoll.ReadOnly = true;
       dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control;
       dataGridViewCellStyle21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1186,14 +1036,14 @@
       dataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       dataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
       dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-      this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle21;
-      this.dataGridView1.RowHeadersVisible = false;
-      this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-      this.dataGridView1.Size = new System.Drawing.Size(838, 194);
-      this.dataGridView1.TabIndex = 22;
-      this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
-      this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
-      this.dataGridView1.SelectionChanged += new System.EventHandler(this.DataGridView1_SelectionChanged);
+      this.grdGreigeRoll.RowHeadersDefaultCellStyle = dataGridViewCellStyle21;
+      this.grdGreigeRoll.RowHeadersVisible = false;
+      this.grdGreigeRoll.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+      this.grdGreigeRoll.Size = new System.Drawing.Size(838, 194);
+      this.grdGreigeRoll.TabIndex = 22;
+      this.grdGreigeRoll.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.GrdGreigeRoll_CellFormatting);
+      this.grdGreigeRoll.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.GrdGreigeRoll_CellPainting);
+      this.grdGreigeRoll.SelectionChanged += new System.EventHandler(this.DataGridView1_SelectionChanged);
       // 
       // colRollNo
       // 
@@ -1462,6 +1312,68 @@
       // 
       this.pnlQueueMessage.Name = "pnlQueueMessage";
       // 
+      // colCutSapRoll
+      // 
+      this.colCutSapRoll.DataPropertyName = "SapRoll";
+      this.colCutSapRoll.HeaderText = "SAP Roll";
+      this.colCutSapRoll.Name = "colCutSapRoll";
+      this.colCutSapRoll.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colCutSapRoll.Width = 67;
+      // 
+      // colCutFeet
+      // 
+      this.colCutFeet.DataPropertyName = "Length";
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.colCutFeet.DefaultCellStyle = dataGridViewCellStyle2;
+      this.colCutFeet.HeaderText = "Feet";
+      this.colCutFeet.Name = "colCutFeet";
+      this.colCutFeet.ReadOnly = true;
+      this.colCutFeet.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colCutFeet.Width = 50;
+      // 
+      // colCutBow
+      // 
+      this.colCutBow.DataPropertyName = "Bow";
+      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle3.Format = "N2";
+      dataGridViewCellStyle3.NullValue = null;
+      this.colCutBow.DefaultCellStyle = dataGridViewCellStyle3;
+      this.colCutBow.HeaderText = "Max Bow";
+      this.colCutBow.Name = "colCutBow";
+      this.colCutBow.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colCutBow.Width = 56;
+      // 
+      // colCutSkew
+      // 
+      this.colCutSkew.DataPropertyName = "Skew";
+      dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle4.Format = "N2";
+      dataGridViewCellStyle4.NullValue = null;
+      this.colCutSkew.DefaultCellStyle = dataGridViewCellStyle4;
+      this.colCutSkew.HeaderText = "Skew";
+      this.colCutSkew.Name = "colCutSkew";
+      this.colCutSkew.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colCutSkew.Width = 56;
+      // 
+      // colCutEPE
+      // 
+      this.colCutEPE.DataPropertyName = "EPE";
+      dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle5.Format = "N3";
+      dataGridViewCellStyle5.NullValue = null;
+      this.colCutEPE.DefaultCellStyle = dataGridViewCellStyle5;
+      this.colCutEPE.HeaderText = "EPE";
+      this.colCutEPE.Name = "colCutEPE";
+      this.colCutEPE.Width = 56;
+      // 
+      // colCutMaxDlot
+      // 
+      this.colCutMaxDlot.DataPropertyName = "Dlot";
+      this.colCutMaxDlot.HeaderText = "Dlot";
+      this.colCutMaxDlot.Name = "colCutMaxDlot";
+      this.colCutMaxDlot.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colCutMaxDlot.Width = 45;
+      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1469,7 +1381,7 @@
       this.ClientSize = new System.Drawing.Size(1242, 541);
       this.Controls.Add(this.statusBar1);
       this.Controls.Add(this.label5);
-      this.Controls.Add(this.cutRollGrid);
+      this.Controls.Add(this.grdCutRoll);
       this.Controls.Add(this.tableLayoutPanel1);
       this.Controls.Add(this.groupBox5);
       this.Controls.Add(this.grpPatternRepeat);
@@ -1481,7 +1393,7 @@
       this.Name = "MainForm";
       this.Text = "Main Form";
       this.Load += new System.EventHandler(this.MainForm_Load);
-      ((System.ComponentModel.ISupportInitialize)(this.cutRollGrid)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.grdCutRoll)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.cutRollSrc)).EndInit();
       this.grpMahlo.ResumeLayout(false);
       this.grpMahlo.PerformLayout();
@@ -1495,10 +1407,8 @@
       this.grpPatternRepeat.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.patternRepeatLogicSrc)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.patternRepeatRollSrc)).EndInit();
-      this.groupBox5.ResumeLayout(false);
-      this.groupBox5.PerformLayout();
       this.tableLayoutPanel1.ResumeLayout(false);
-      ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.grdGreigeRoll)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.sewinQueueSrc)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pnlMessage)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pnlIndicator)).EndInit();
@@ -1516,7 +1426,7 @@
     private System.Windows.Forms.BindingSource bowAndSkewRollSrc;
     private System.Windows.Forms.BindingSource patternRepeatRollSrc;
     private System.Windows.Forms.BindingSource cutRollSrc;
-    private System.Windows.Forms.DataGridView cutRollGrid;
+    private System.Windows.Forms.DataGridView grdCutRoll;
     private System.Windows.Forms.GroupBox grpMahlo;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.Label label9;
@@ -1586,25 +1496,11 @@
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.DataGridView dataGridView1;
+    private System.Windows.Forms.DataGridView grdGreigeRoll;
     private System.Windows.Forms.BindingSource mahloLogicSrc;
     private System.Windows.Forms.BindingSource bowAndSkewLogicSrc;
     private System.Windows.Forms.BindingSource patternRepeatLogicSrc;
     private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.DataGridViewTextBoxColumn sapRollDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn lengthDataGridViewTextBoxColumn1;
-    private System.Windows.Forms.DataGridViewTextBoxColumn maxBowDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn maxSkewDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn maxEPEDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn dlotDataGridViewTextBoxColumn;
-    private System.Windows.Forms.TextBox textBox17;
-    private System.Windows.Forms.TextBox textBox23;
-    private System.Windows.Forms.TextBox textBox24;
-    private System.Windows.Forms.TextBox textBox25;
-    private System.Windows.Forms.Label label36;
-    private System.Windows.Forms.Label label37;
-    private System.Windows.Forms.Label label38;
-    private System.Windows.Forms.Label label39;
     private MyStatusBar statusBar1;
     private System.Windows.Forms.StatusBarPanel pnlMessage;
     private System.Windows.Forms.StatusBarPanel pnlIndicator;
@@ -1628,5 +1524,11 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn colSpacer3;
     private System.Windows.Forms.DataGridViewTextBoxColumn colPrsFeet;
     private System.Windows.Forms.DataGridViewTextBoxColumn colElongation;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colCutSapRoll;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colCutFeet;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colCutBow;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colCutSkew;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colCutEPE;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colCutMaxDlot;
   }
 }

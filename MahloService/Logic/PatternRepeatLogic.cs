@@ -18,33 +18,35 @@ namespace MahloService.Logic
 {
   class PatternRepeatLogic : MeterLogic<PatternRepeatModel>, IPatternRepeatLogic
   {
-    readonly IServiceSettings appInfo;
+    readonly IServiceSettings serviceSettings;
     private IPatternRepeatSrc srcData;
     private CutRollList cutRolls;
     private IDbLocal dbLocal;
 
-    private double maxElongation;
+    private Averager currentRollAverager = new Averager();
+    private Averager mapDatumAverager = new Averager();
     private long feetCounterAtCutRollStart;
     private int nextCutRollId;
     private CancellationTokenSource ctsDoff;
     private bool isFeetCounterChanged;
     private readonly PatternRepeatMapDatum mapDatum = new PatternRepeatMapDatum();
+    private readonly List<double> cutRollElongations = new List<double>();
 
     public PatternRepeatLogic(
       IDbLocal dbLocal,
       CutRollList cutRolls,
       IPatternRepeatSrc srcData,
       ISewinQueue sewinQueue,
-      IServiceSettings appInfo,
+      IServiceSettings serviceSettings,
       IUserAttentions<PatternRepeatModel> userAttentions,
       ICriticalStops<PatternRepeatModel> criticalStops,
       IProgramState programState,
       ISchedulerProvider schedulerProvider)
-      : base(dbLocal, srcData, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
+      : base(dbLocal, srcData, sewinQueue, serviceSettings, userAttentions, criticalStops, programState, schedulerProvider)
     {
       this.dbLocal = dbLocal;
       this.cutRolls = cutRolls;
-      this.appInfo = appInfo;
+      this.serviceSettings = serviceSettings;
       this.srcData = srcData;
 
       this.nextCutRollId = dbLocal.GetNextCutRollId();
@@ -59,6 +61,8 @@ namespace MahloService.Logic
         {
           this.CurrentCutRoll = this.cutRolls.LastOrDefault();
         }));
+
+      this.KeepBowAndSkewUpToDate();
     }
 
     public override GreigeRoll CurrentRoll
@@ -101,28 +105,46 @@ namespace MahloService.Logic
       set => this.CurrentRoll.PrsMapValid = value;
     }
 
+    public double Elongation
+    {
+      get => this.CurrentRoll.Elongation;
+      set => this.CurrentRoll.Elongation = value;
+    }
+
     protected override string MapTableName => "PatternRepeatMap";
 
     protected override void SaveMapDatum()
     {
       this.mapDatum.FeetCounter = this.CurrentFeetCounter;
+      this.mapDatum.Elongation = this.mapDatumAverager.Average;
       this.dbLocal.InsertPatternRepeatMapDatum(this.mapDatum);
-      this.mapDatum.Elongation = 0.0;
+
+      this.cutRollElongations.Add(this.mapDatum.Elongation);
+
+      this.mapDatumAverager.Clear();
 
       // Update Current cut roll every time datum is recorded
-      this.dbLocal.UpdateCutRoll(this.CurrentCutRoll);
+      if (this.CurrentCutRoll != null)
+      {
+        this.CurrentCutRoll.EPE =
+          CalculateEPE(this.CurrentRoll.PatternRepeatLength, this.cutRollElongations);
+        this.CurrentCutRoll.Dlot =
+          CalculateDlot(this.CurrentRoll.BackingCode, this.CurrentCutRoll.EPE, this.serviceSettings);
+
+        this.dbLocal.UpdateCutRoll(this.CurrentCutRoll);
+      }
     }
 
     protected override void OnRollFinished(GreigeRoll greigeRoll)
     {
       base.OnRollFinished(greigeRoll);
-      greigeRoll.Elongation = this.maxElongation;
+      this.Elongation = this.currentRollAverager.Average;
     }
 
     protected override void OnRollStarted(GreigeRoll greigeRoll)
     {
       base.OnRollStarted(greigeRoll);
-      this.maxElongation = 0;
+      this.currentRollAverager.Clear();
 
       this.feetCounterAtCutRollStart = this.CurrentFeetCounter;
     }
@@ -131,19 +153,19 @@ namespace MahloService.Logic
     {
       switch (propertyName)
       {
+        case nameof(this.srcData.FeetCounter):
+          if (this.IsMovementForward)
+          {
+            this.currentRollAverager.Add(this.srcData.PatternRepeatLength);
+            this.mapDatumAverager.Add(this.srcData.PatternRepeatLength);
+          }
+
+          break;
+
         case nameof(this.srcData.PatternRepeatLength):
           if (this.IsMovementForward)
           {
-            double elongation = srcData.PatternRepeatLength - this.CurrentRoll.PatternRepeatLength;
-            if (Math.Abs(elongation) > Math.Abs(this.CurrentRoll.Elongation))
-            {
-              this.CurrentRoll.Elongation = elongation;
-            }
-
-            if (this.CurrentCutRoll != null && Math.Abs(elongation) > Math.Abs(this.CurrentCutRoll.MaxEPE))
-            {
-              this.CurrentCutRoll.MaxEPE = elongation;
-            }
+            this.Elongation = srcData.PatternRepeatLength; ;
           }
 
           break;
@@ -181,11 +203,30 @@ namespace MahloService.Logic
           this.isFeetCounterChanged = false;
           if (this.CurrentCutRoll != null)
           {
-            (this.CurrentCutRoll.MaxBow, this.CurrentCutRoll.MaxSkew) = 
-              dbLocal.GetBowAndSkew(this.CurrentCutRoll.GreigeRollId, this.CurrentCutRoll.FeetCounterStart, this.CurrentCutRoll.FeetCounterEnd);
+            (this.CurrentCutRoll.Bow, this.CurrentCutRoll.Skew) = 
+              dbLocal.GetAverageBowAndSkew(this.CurrentCutRoll.GreigeRollId, this.CurrentCutRoll.FeetCounterStart, this.CurrentCutRoll.FeetCounterEnd);
           }
         }
       }
+    }
+
+    internal static double CalculateEPE(double patternRepeatLength, IEnumerable<double> elongations)
+    {
+      var spe = patternRepeatLength;
+      var ape = elongations.Average();
+      var epe = spe == 0.0 ? 1.0 : ape / spe;
+      return epe;
+    }
+
+    internal static string CalculateDlot(string backingCode, double epe, IServiceSettings serviceSettings)
+    {
+      var spec = backingCode.Equals("SA", StringComparison.InvariantCultureIgnoreCase) ?
+        serviceSettings.EpeSpecSA : serviceSettings.EpeSpecVinyl;
+
+      var a = ((Math.Abs(1.0 - epe) + spec / 2) / spec);
+      //var r = Math.Round(a);
+      var index = (int)Math.Min(5, a);
+      return (index == 0 ? "" : epe < 1.0 ? "+" : "-") + index.ToString();
     }
 
     private async void DoffDetected()
@@ -202,7 +243,7 @@ namespace MahloService.Logic
         this.dbLocal.UpdateCutRoll(this.CurrentCutRoll);
       }
 
-      if (this.CurrentCutRoll == null || this.CurrentCutRoll.Length >= this.appInfo.MinSeamSpacing)
+      if (this.CurrentCutRoll == null || this.CurrentCutRoll.Length >= this.serviceSettings.MinSeamSpacing)
       {
         // CutRoll is finished
         this.CurrentCutRoll = new CutRoll

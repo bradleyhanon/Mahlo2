@@ -18,6 +18,8 @@ namespace MahloClient.Views
 {
   partial class MainForm : Form
   {
+    delegate void CellFormattingAction(DataGridViewCellFormattingEventArgs args, IServiceSettings settings);
+
     private string[] mahloColumnNames = { nameof(GreigeRoll.MalFeet) };
     private string[] bowAndSkewColumnNames = { nameof(GreigeRoll.BasFeet), nameof(GreigeRoll.Bow), nameof(GreigeRoll.Skew) };
     private string[] patternRepeatColumnNames = { nameof(GreigeRoll.PrsFeet), nameof(GreigeRoll.Elongation) };
@@ -48,7 +50,7 @@ namespace MahloClient.Views
         .Subscribe(args =>
         {
           this.mahloRollSrc.DataSource = this.carpetProcessor.MahloLogic.CurrentRoll;
-          this.dataGridView1.Invalidate();
+          this.grdGreigeRoll.Invalidate();
         });
 
       BowAndSkewPropertyChangedSubscription =
@@ -59,7 +61,7 @@ namespace MahloClient.Views
         .Subscribe(args =>
         {
           this.bowAndSkewRollSrc.DataSource = this.carpetProcessor.BowAndSkewLogic.CurrentRoll;
-          this.dataGridView1.Invalidate();
+          this.grdGreigeRoll.Invalidate();
         });
 
       PatternRepeatPropertyChangedSubscription =
@@ -70,27 +72,31 @@ namespace MahloClient.Views
         .Subscribe(args =>
         {
           this.patternRepeatRollSrc.DataSource = this.carpetProcessor.PatternRepeatLogic.CurrentRoll;
-          this.dataGridView1.Invalidate();
+          this.grdGreigeRoll.Invalidate();
         });
 
       // Make column heading alignment match column data alignment
-      foreach (DataGridViewColumn column in dataGridView1.Columns)
+      foreach (DataGridViewColumn column in grdGreigeRoll.Columns)
       {
         column.HeaderCell.Style.Alignment = column.DefaultCellStyle.Alignment;
       }
 
-      foreach (DataGridViewColumn column in cutRollGrid.Columns)
+      foreach (DataGridViewColumn column in grdCutRoll.Columns)
       {
         column.HeaderCell.Style.Alignment = column.DefaultCellStyle.Alignment;
       }
 
       this.colMalFeet.Tag =
         this.colBasFeet.Tag =
-        this.colPrsFeet.Tag = new CellFormattingAction(MyColors.SetFeetColor);
+        this.colPrsFeet.Tag = new CellFormattingAction(this.SetFeetColor);
 
-      this.colBow.Tag = new CellFormattingAction(MyColors.SetBowColor);
-      this.colSkew.Tag = new CellFormattingAction(MyColors.SetSkewColor);
-      this.colElongation.Tag = new CellFormattingAction(MyColors.SetElongationColor);
+      this.colBow.Tag = new CellFormattingAction(this.SetBowColor);
+      this.colSkew.Tag = new CellFormattingAction(this.SetSkewColor);
+      this.colElongation.Tag = new CellFormattingAction(this.SetElongationColor);
+
+      this.colCutBow.Tag = new CellFormattingAction(this.SetCutBowColor);
+      this.colCutSkew.Tag = new CellFormattingAction(this.SetCutSkewColor);
+      this.colCutEPE.Tag = new CellFormattingAction(this.SetCutEPEColor);
     }
 
     /// <summary>
@@ -114,7 +120,7 @@ namespace MahloClient.Views
     private void MainForm_Load(object sender, EventArgs e)
     {
       this.carpetProcessor.Start();
-      this.dataGridView1.DataSource = carpetProcessor.SewinQueue.Rolls;
+      this.grdGreigeRoll.DataSource = carpetProcessor.SewinQueue.Rolls;
       this.mahloRollSrc.DataSource = carpetProcessor.MahloLogic.CurrentRoll;
       this.bowAndSkewRollSrc.DataSource = carpetProcessor.BowAndSkewLogic.CurrentRoll;
       this.patternRepeatRollSrc.DataSource = carpetProcessor.PatternRepeatLogic.CurrentRoll;
@@ -128,12 +134,12 @@ namespace MahloClient.Views
       this.grpBowAndSkew.Tag = nameof(IBowAndSkewLogic);
       this.grpPatternRepeat.Tag = nameof(IPatternRepeatLogic);
 
-      this.dataGridView1.ClearSelection();
+      this.grdGreigeRoll.ClearSelection();
     }
 
-    private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+    private void GrdGreigeRoll_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
     {
-      var col = this.dataGridView1.Columns[e.ColumnIndex];
+      var col = this.grdGreigeRoll.Columns[e.ColumnIndex];
       e.Handled = string.IsNullOrWhiteSpace(col.DataPropertyName);
       if (e.Handled)
       {
@@ -141,31 +147,6 @@ namespace MahloClient.Views
         rect.X--;
         rect.Width++;
         e.Graphics.FillRectangle(SystemBrushes.AppWorkspace, rect);
-      }
-    }
-
-    private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-    {
-      var col = this.dataGridView1.Columns[e.ColumnIndex];
-      GreigeRoll gridRoll = carpetProcessor.SewinQueue.Rolls[e.RowIndex];
-      SetColor(this.carpetProcessor.MahloLogic, mahloColumnNames);
-      SetColor(this.carpetProcessor.BowAndSkewLogic, bowAndSkewColumnNames);
-      SetColor(this.carpetProcessor.PatternRepeatLogic, patternRepeatColumnNames);
-
-      void SetColor(IMeterLogic logic, string[] names)
-      {
-        if (names.Contains(col.DataPropertyName))
-        {
-          if (logic.CurrentRoll == gridRoll)
-          {
-            (e.CellStyle.BackColor, e.CellStyle.ForeColor) = MyColors.ActiveColor;
-          }
-          else if (e.RowIndex >= 0 && e.RowIndex < logic.CurrentRollIndex)
-          {
-            var action = this.dataGridView1.Columns[e.ColumnIndex].Tag as CellFormattingAction;
-            action?.Invoke(this.dataGridView1, e, this.serviceSettings);
-          }
-        }
       }
     }
 
@@ -197,7 +178,94 @@ namespace MahloClient.Views
     private void DataGridView1_SelectionChanged(object sender, EventArgs e)
     {
       // Prevent selection
-      this.dataGridView1.ClearSelection();
+      this.grdGreigeRoll.ClearSelection();
+    }
+
+    private void GrdGreigeRoll_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+    {
+      var col = this.grdGreigeRoll.Columns[e.ColumnIndex];
+      GreigeRoll gridRoll = carpetProcessor.SewinQueue.Rolls[e.RowIndex];
+      SetColor(this.carpetProcessor.MahloLogic, mahloColumnNames);
+      SetColor(this.carpetProcessor.BowAndSkewLogic, bowAndSkewColumnNames);
+      SetColor(this.carpetProcessor.PatternRepeatLogic, patternRepeatColumnNames);
+
+      void SetColor(IMeterLogic logic, string[] names)
+      {
+        if (names.Contains(col.DataPropertyName))
+        {
+          if (logic.CurrentRoll == gridRoll)
+          {
+            (e.CellStyle.BackColor, e.CellStyle.ForeColor) = CellColor.ActiveColor;
+          }
+          else if (e.RowIndex >= 0 && e.RowIndex < logic.CurrentRollIndex)
+          {
+            var action = this.grdGreigeRoll.Columns[e.ColumnIndex].Tag as CellFormattingAction;
+            action?.Invoke(e, this.serviceSettings);
+          }
+        }
+      }
+    }
+
+    private void GrdCutRoll_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+    {
+      if (e.RowIndex >= 0)
+      {
+        var action = this.grdCutRoll.Columns[e.ColumnIndex].Tag as CellFormattingAction;
+        action?.Invoke(e, this.serviceSettings);
+      }
+    }
+
+    public void SetFeetColor(DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
+    {
+      GreigeRoll roll = (GreigeRoll)this.grdGreigeRoll.Rows[args.RowIndex].DataBoundItem;
+      long measuredLength = (long)args.Value;
+
+      (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
+        roll.RollLength == 0 ?
+        new CellColor { ForeColor = grdGreigeRoll.DefaultCellStyle.BackColor, BackColor = grdGreigeRoll.DefaultCellStyle.ForeColor } :
+        CellColor.GetFeetColor(roll.RollLength, (long)args.Value, this.serviceSettings);
+    }
+
+    public void SetBowColor(DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
+    {
+      GreigeRoll roll = (GreigeRoll)this.grdGreigeRoll.Rows[args.RowIndex].DataBoundItem;
+
+      (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
+        CellColor.GetBowColor(roll.BackingCode, (double)args.Value, this.serviceSettings);
+    }
+
+    public void SetSkewColor(DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
+    {
+      GreigeRoll roll = (GreigeRoll)this.grdGreigeRoll.Rows[args.RowIndex].DataBoundItem;
+
+      (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
+        CellColor.GetSkewColor(roll.BackingCode, (double)args.Value, this.serviceSettings);
+    }
+
+    public void SetElongationColor(DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
+    {
+
+    }
+
+    public void SetCutBowColor(DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
+    {
+      GreigeRoll roll = this.carpetProcessor.PatternRepeatLogic.CurrentRoll;
+
+      (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
+        CellColor.GetBowColor(roll.BackingCode, (double)args.Value, this.serviceSettings);
+    }
+
+    public void SetCutSkewColor(DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
+    {
+      GreigeRoll roll = this.carpetProcessor.PatternRepeatLogic.CurrentRoll;
+
+      (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
+        CellColor.GetSkewColor(roll.BackingCode, (double)args.Value, this.serviceSettings);
+    }
+
+    public void SetCutEPEColor(DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
+    {
+      
     }
   }
 }

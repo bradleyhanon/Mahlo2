@@ -82,7 +82,7 @@ namespace MahloClient.Ipc
 
         this.hubConnection = new HubConnection(appInfo.ServiceUrl);
         this.hubConnection.StateChanged += HubConnection_StateChanged;
-        //this.hubConnection.Received += msg => Console.WriteLine(msg);
+        this.hubConnection.Received += msg => Console.WriteLine(msg);
         //this.hubConnection.TraceLevel = TraceLevels.All;
         //this.hubConnection.TraceWriter = Console.Out;
         this.hubProxy = hubConnection.CreateHubProxy("MahloHub");
@@ -101,12 +101,13 @@ namespace MahloClient.Ipc
           this.cutRollList.Update(array);
         }, null));
 
-        do
+        while (true)
         {
           try
           {
             await hubConnection.Start();
             this.IpcStatusMessage = this.hubConnection.State.ToString();
+            break;
           }
           catch (HttpClientException ex) when (ex.Response != null)
           {
@@ -115,13 +116,9 @@ namespace MahloClient.Ipc
           }
           catch (Exception ex)
           {
-            var dr = MessageBox.Show($"Unable to connect to Mahlo service\n\n{ex.Message}", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
-            if (dr == DialogResult.Cancel)
-            {
-              Environment.Exit(1);
-            }
+            await Task.Delay(3000);
           }
-        } while (this.hubConnection.State != ConnectionState.Connected);
+        }
 
         this.isStarting = false;
       }
@@ -237,10 +234,6 @@ namespace MahloClient.Ipc
           result = await hubProxy.Invoke<T>(method, args);
           break;
         }
-        //catch (InvalidOperationException ex)
-        //{
-
-        //}
         catch (Exception ex) when (this.hubConnection.State != ConnectionState.Connected)
         {
           SetConnectionError(ex);

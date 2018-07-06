@@ -7,6 +7,7 @@ using MahloClient.Ipc;
 using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Settings;
+using PropertyChanged;
 
 namespace MahloClient.Logic
 {
@@ -41,6 +42,18 @@ namespace MahloClient.Logic
     {
       get => this.CurrentRoll.BasMapValid;
       set => this.CurrentRoll.BasMapValid = value;
+    }
+
+    public double Bow
+    {
+      get => this.CurrentRoll.Bow;
+      set => this.CurrentRoll.Bow = value;
+    }
+
+    public double Skew
+    {
+      get => this.CurrentRoll.Skew;
+      set => this.CurrentRoll.Skew = value;
     }
   }
 }

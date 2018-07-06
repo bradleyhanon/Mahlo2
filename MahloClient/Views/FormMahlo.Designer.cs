@@ -714,7 +714,7 @@
       this.lblBowPercent.Anchor = System.Windows.Forms.AnchorStyles.Top;
       this.lblBowPercent.BackColor = System.Drawing.Color.Gainsboro;
       this.lblBowPercent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.lblBowPercent.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcCurrentRoll, "BowInches", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "P2"));
+      this.lblBowPercent.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.srcCurrentRoll, "Bow", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "P2"));
       this.lblBowPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblBowPercent.ForeColor = System.Drawing.Color.Black;
       this.lblBowPercent.Location = new System.Drawing.Point(22, 36);
@@ -902,7 +902,6 @@
       // 
       this.btnDisableSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.btnDisableSystem.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.btnDisableSystem.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.srcLogic, "IsSystemEnabled", true));
       this.btnDisableSystem.Enabled = false;
       this.btnDisableSystem.ForeColor = System.Drawing.Color.Black;
       this.btnDisableSystem.ImageAlign = System.Drawing.ContentAlignment.TopCenter;

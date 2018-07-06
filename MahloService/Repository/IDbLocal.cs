@@ -25,7 +25,7 @@ namespace MahloService.Repository
     int GetNextCutRollId();
     void AddCutRoll(CutRoll cutRoll);
     void UpdateCutRoll(CutRoll cutRoll);
-    (double maxBow, double maxSkew) GetBowAndSkew(int greigeRollId, long feetCounterStart, long feetCounterEnd);
+    (double bow, double skew) GetAverageBowAndSkew(int greigeRollId, long feetCounterStart, long feetCounterEnd);
 
     void InsertMahlo2MapDatum(Mahlo2MapDatum datum);
     void InsertBowAndSkewMapDatum(BowAndSkewMapDatum datum);

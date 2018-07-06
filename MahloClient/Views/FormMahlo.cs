@@ -184,7 +184,12 @@ namespace MahloClient.Views
     {
       if (e.RowIndex >= 0 && e.RowIndex < this.logic.CurrentRollIndex && e.ColumnIndex == this.colMeasuredLength.Index)
       {
-        MyColors.SetFeetColor(this.dataGridView1, e, this.serviceSettings);
+        GreigeRoll roll = this.logic.CurrentRoll;
+
+        (e.CellStyle.BackColor, e.CellStyle.ForeColor) =
+          roll.RollLength == 0 ?
+          new CellColor { ForeColor = this.dataGridView1.DefaultCellStyle.BackColor, BackColor = this.dataGridView1.DefaultCellStyle.ForeColor } :
+          CellColor.GetFeetColor(roll.RollLength, (long)e.Value, this.serviceSettings);
       }
     }
   }

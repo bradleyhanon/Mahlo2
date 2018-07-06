@@ -17,6 +17,8 @@
     double BowLimitVinyl { get; set; }
     double SkewLimitSA { get; set; }
     double SkewLimitVinyl { get; set; }
+    double EpeSpecSA { get; set; }
+    double EpeSpecVinyl { get; set; }
 
     //bool ArchiveRollMaps { get; set; }
     //bool AutoCloseMahloDDEServer { get; set; }

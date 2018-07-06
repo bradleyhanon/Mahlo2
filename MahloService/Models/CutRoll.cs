@@ -24,9 +24,9 @@ namespace MahloService.Models
     [JsonIgnore]
     public long Length => this.FeetCounterEnd - this.FeetCounterStart;
 
-    public double MaxBow { get; set; }
-    public double MaxSkew { get; set; }
-    public double MaxEPE { get; set; }
+    public double Bow { get; set; }
+    public double Skew { get; set; }
+    public double EPE { get; set; }
     public string Dlot { get; set; } = string.Empty;
   }
 }

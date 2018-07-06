@@ -10,8 +10,6 @@ using MahloService.Settings;
 
 namespace MahloClient.Views
 {
-  delegate void CellFormattingAction(DataGridView grid, DataGridViewCellFormattingEventArgs args, IServiceSettings settings);
-
   static class MyColors
   {
     //// Greenish

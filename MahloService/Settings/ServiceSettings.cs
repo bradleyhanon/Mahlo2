@@ -32,6 +32,8 @@ namespace MahloService.Settings
     public double BowLimitVinyl { get; set; } = 0.25;
     public double SkewLimitSA { get; set; } = 1.25;
     public double SkewLimitVinyl { get; set; } = 0.75;
+    public double EpeSpecSA { get; set; } = 0.01;
+    public double EpeSpecVinyl { get; set; } = 0.0075;
 
     //public int MainFormBackgroundColor { get; set; } = 0xECF2F2;
     //public string DDEServername { get; set; } = "BowAndSkew";

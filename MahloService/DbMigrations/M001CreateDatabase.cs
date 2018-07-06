@@ -74,9 +74,9 @@ namespace MahloService.DbMigrations
         .WithColumn("SapRoll").AsAnsiString(20).NotNullable()
         .WithColumn("FeetCounterStart").AsInt64().NotNullable()
         .WithColumn("FeetCounterEnd").AsInt64().NotNullable()
-        .WithColumn("MaxBow").AsDouble()
-        .WithColumn("MaxSkew").AsDouble()
-        .WithColumn("MaxEPE").AsDouble()
+        .WithColumn("Bow").AsDouble()
+        .WithColumn("Skew").AsDouble()
+        .WithColumn("EPE").AsDouble()
         .WithColumn("Dlot").AsAnsiString(10);
 
       this.Create.Table("Mahlo2Map")

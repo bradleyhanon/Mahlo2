@@ -11,6 +11,7 @@ using MahloService.Opc;
 using MahloService.Repository;
 using MahloService.Utilities;
 using Newtonsoft.Json;
+using PropertyChanged;
 
 namespace MahloService.Logic
 {
@@ -20,8 +21,10 @@ namespace MahloService.Logic
     private readonly IBowAndSkewSrc dataSrc;
     private readonly BowAndSkewMapDatum mapDatum = new BowAndSkewMapDatum();
 
-    private double maxBow;
-    private double maxSkew;
+    private Averager bowAverager = new Averager();
+    private Averager skewAverager = new Averager();
+    private Averager bowMapAverager = new Averager();
+    private Averager skewMapAverager = new Averager();
 
     public BowAndSkewLogic(
       IDbLocal dbLocal,
@@ -62,6 +65,18 @@ namespace MahloService.Logic
       set => this.CurrentRoll.BasMapValid = value;
     }
 
+    public double Bow
+    {
+      get => this.CurrentRoll.Bow;
+      set => this.CurrentRoll.Bow = value;
+    }
+
+    public double Skew
+    {
+      get => this.CurrentRoll.Skew;
+      set => this.CurrentRoll.Skew = value;
+    }
+
     protected override string MapTableName => "BowAndSkewMap";
 
     public override Task ApplyRecipe(string recipeName, bool isManualMode)
@@ -85,61 +100,47 @@ namespace MahloService.Logic
     protected override void SaveMapDatum()
     {
       this.mapDatum.FeetCounter = this.CurrentFeetCounter;
+      this.mapDatum.Bow = this.bowMapAverager.Average;
+      this.mapDatum.Skew = this.skewMapAverager.Average;
       this.dbLocal.InsertBowAndSkewMapDatum(this.mapDatum);
-      this.mapDatum.Bow = 0.0;
-      this.mapDatum.Skew = 0.0;
+
+      this.bowMapAverager.Clear();
+      this.skewMapAverager.Clear();
     }
 
     protected override void OnRollFinished(GreigeRoll greigeRoll)
     {
       base.OnRollFinished(greigeRoll);
-      greigeRoll.Bow = this.maxBow;
-      greigeRoll.Skew = this.maxSkew;
+      greigeRoll.Bow = this.bowAverager.Average;
+      greigeRoll.Skew = this.skewAverager.Average;
     }
 
     protected override void OnRollStarted(GreigeRoll greigeRoll)
     {
       base.OnRollStarted(greigeRoll);
-      this.maxBow = 0;
-      this.maxSkew = 0;
+      this.bowAverager.Clear();
+      this.skewAverager.Clear();
     }
 
     protected override void OpcValueChanged(string propertyName)
     {
       switch(propertyName)
       {
-        case nameof(this.dataSrc.Bow):
+        case nameof(this.dataSrc.FeetCounter):
           if (this.IsMovementForward)
           {
-            this.CurrentRoll.Bow = this.dataSrc.Bow;
-            if (Math.Abs(this.dataSrc.Bow) > Math.Abs(this.maxBow))
-            {
-              this.maxBow = this.dataSrc.Bow;
-            }
-
-            if (Math.Abs(this.dataSrc.Bow) > Math.Abs(this.mapDatum.Bow))
-            {
-              this.mapDatum.Bow = this.dataSrc.Bow;
-            }
+            this.bowAverager.Add(this.dataSrc.Bow);
+            this.skewAverager.Add(this.dataSrc.Skew);
           }
 
           break;
 
+        case nameof(this.dataSrc.Bow):
+          this.CurrentRoll.Bow = this.dataSrc.Bow;
+          break;
+
         case nameof(this.dataSrc.Skew):
-          if (this.IsMovementForward)
-          {
-            this.CurrentRoll.Skew = this.dataSrc.Skew;
-            if (Math.Abs(this.dataSrc.Skew) > Math.Abs(this.maxSkew))
-            {
-              this.maxSkew = this.dataSrc.Skew;
-            }
-
-            if (Math.Abs(this.dataSrc.Skew) > Math.Abs(this.mapDatum.Skew))
-            {
-              this.mapDatum.Skew = this.dataSrc.Skew;
-            }
-          }
-
+          this.CurrentRoll.Skew = this.dataSrc.Skew;
           break;
 
         default:

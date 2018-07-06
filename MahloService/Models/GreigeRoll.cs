@@ -18,7 +18,7 @@ namespace MahloService.Models
   }
 
   [AddINotifyPropertyChangedInterface]
-  public class GreigeRoll //: IMahloRoll, IBowAndSkewRoll, IPatternRepeatRoll
+  public class GreigeRoll
   {
     public const string CheckRollId = "CHKROL";
 
@@ -72,13 +72,6 @@ namespace MahloService.Models
 
     public double Bow { get; set; }
     public double Skew { get; set; }
-
-    [DependsOn(nameof(Bow))]
-    [Computed]
-    public double BowInches => this.Bow * this.RollWidth;
-    [DependsOn(nameof(Skew))]
-    [Computed]
-    public double SkewInches => this.Skew * this.RollWidth;
 
     public double Elongation { get; set; }
 

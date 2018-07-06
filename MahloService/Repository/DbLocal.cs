@@ -160,17 +160,15 @@ namespace MahloService.Repository
       }
     }
 
-    public (double maxBow, double maxSkew) GetBowAndSkew(int greigeRollId, long feetCounterStart, long feetCounterEnd)
+    public (double bow, double skew) GetAverageBowAndSkew(int greigeRollId, long feetCounterStart, long feetCounterEnd)
     {
       //      @"DECLARE @Id Int = 1
       //DECLARE @StartFeet Int = 100
       //DECLARE @EndFeet Int = 200
 
       string cmdText =
-        @"SELECT COALESCE(MIN(Bow), 0.0) MinBow, 
-                 COALESCE(MAX(Bow), 0.0) MaxBow, 
-                 COALESCE(MIN(Skew), 0.0) MinSkew, 
-                 COALESCE(MAX(Skew), 0.0) MaxSkew
+        @"SELECT COALESCE(AVERAGE(Bow), 0.0) AvgBow, 
+                 COALESCE(AVERAGE(Skew), 0.0) AvgSkew
           FROM BowAndSkewMap map
           JOIN (SELECT gr.BasFeetCounterStart + (@StartFeet - gr.PrsFeetCounterStart) BasStart,
 		               (SELECT MIN(v)
@@ -182,8 +180,7 @@ namespace MahloService.Repository
       using (var connection = this.GetOpenConnection())
       {
         var result = connection.Query(cmdText, new { Id = greigeRollId, StartFeet = feetCounterStart, EndFeet = feetCounterEnd }).First();
-        return (Math.Abs(result.MinBow) > Math.Abs(result.MaxBow) ? result.MinBow : result.MaxBow,
-                Math.Abs(result.MinSkew) > Math.Abs(result.MaxSkew) ? result.MinSkew : result.MaxSkew);
+        return (result.AvgBow, result.AvgSkew);
       }
     }
 

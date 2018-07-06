@@ -31,8 +31,10 @@ namespace MahloService.Simulation
 
     private readonly SynchronizationContext synchronizationContext;
 
-    private double feetCounterAtRollStart;
+    private GreigeRoll currentRoll;
     private int rollIndex;
+    private int cutRollCount = 0;
+    private double feetCounterAtRollStart;
     private readonly List<IDisposable> disposables = new List<IDisposable>();
     private IDisposable timer;
     private bool isCheckRollEndSeamNeeded;
@@ -73,6 +75,8 @@ namespace MahloService.Simulation
       });
 
       var state = programState.GetSubState(nameof(OpcSrcSim<Model>), typeof(Model).Name);
+      this.cutRollCount = state.Get<int?>(nameof(cutRollCount)) ?? 0;
+      this.rollIndex = state.Get<int?>(nameof(rollIndex)) ?? 0;
       this.FeetCounter = state.Get<double?>(nameof(FeetCounter)) ?? this.FeetCounter;
       this.feetCounterAtRollStart = state.Get<double?>(nameof(feetCounterAtRollStart)) ?? this.feetCounterAtRollStart;
 
@@ -103,9 +107,16 @@ namespace MahloService.Simulation
 
     public void Dispose()
     {
+      if (this.currentRoll != null)
+      {
+        this.rollIndex = this.sewinQueue.Rolls.IndexOf(this.currentRoll);
+      }
+
       var state = this.programState.GetSubState(nameof(OpcSrcSim<Model>));
       state.Set(typeof(Model).Name, new
       {
+        this.cutRollCount,
+        this.rollIndex,
         this.FeetCounter,
         this.feetCounterAtRollStart,
       });
@@ -146,25 +157,28 @@ namespace MahloService.Simulation
       
     }
 
-    public void Start(double startFootage, double feetPerMinute)
+    public void Start(double feetPerMinute)
     {
-      int cutRollCount = 0;
-      //this.feetCounterAtRollStart = 0;
-      //this.FeetCounter = startFootage;
       this.FeetPerMinute = feetPerMinute;
       if (this.rollIndex < this.sewinQueue.Rolls.Count)
       {
+        this.currentRoll = this.sewinQueue.Rolls[this.rollIndex];
+        this.isCheckRollEndSeamNeeded = this.currentRoll.IsCheckRoll;
         this.timer = Observable.Interval(TimeSpan.FromMinutes(1 / FeetPerMinute))
           .ObserveOn(SynchronizationContext.Current)
           .Subscribe(timer =>
           {
             //Console.WriteLine($"{typeof(Model).Name}: FeetCounter={this.FeetCounter}");
-            GreigeRoll currentRoll = this.sewinQueue.Rolls[rollIndex];
             double measuredLength = this.FeetCounter - this.feetCounterAtRollStart;
-            if (this.isCheckRollEndSeamNeeded)
+            var percentComplete = measuredLength / this.currentRoll.RollLength;
+            this.Bow = 2.0 * percentComplete;
+            this.Skew = 2.0 * percentComplete;
+            this.PatternRepeatLength = this.currentRoll.PatternRepeatLength * ((1.045 - 0.955) * percentComplete + 0.955);
+
+            if (this.isCheckRollEndSeamNeeded && this.currentRoll.IsCheckRoll)
             {
               //Console.WriteLine($"Left={currentRoll.RollLength - measuredLength}, Target={this.settings.MaxEndCheckRollPieceLength}");
-              if (currentRoll.RollLength - measuredLength < this.settings.MaxEndCheckRollPieceLength)
+              if (this.currentRoll.RollLength - measuredLength < this.settings.MaxEndCheckRollPieceLength)
               {
                 this.IsSeamDetected = true;
                 this.isCheckRollEndSeamNeeded = false;
@@ -172,18 +186,24 @@ namespace MahloService.Simulation
               }
             }
 
-            if (this.FeetCounter - this.feetCounterAtRollStart >= currentRoll.RollLength)
+            if (this.FeetCounter - this.feetCounterAtRollStart >= this.currentRoll.RollLength)
             {
               cutRollCount = 1;
               this.IsSeamDetected = true;
               this.IsDoffDetected = true;
               this.feetCounterAtRollStart = this.FeetCounter;
+              this.rollIndex = this.sewinQueue.Rolls.IndexOf(this.currentRoll);
               if (++this.rollIndex >= this.sewinQueue.Rolls.Count)
               {
                 this.Stop();
               }
+              else
+              {
+                this.currentRoll = this.sewinQueue.Rolls[this.rollIndex];
+                this.isCheckRollEndSeamNeeded = this.currentRoll.IsCheckRoll;
+              }
             }
-            else if ((int)measuredLength == cutRollCount * (currentRoll.RollLength / 4))
+            else if ((int)measuredLength == cutRollCount * (this.currentRoll.RollLength / 4))
             {
               cutRollCount++;
               this.IsDoffDetected = true;
