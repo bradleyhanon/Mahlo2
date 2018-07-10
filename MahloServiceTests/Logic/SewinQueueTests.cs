@@ -89,6 +89,7 @@ namespace MahloServiceTests
     {
       var newRolls = new GreigeRoll[] { roll1, roll2, roll3 };
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
+      this.dbLocal.GetNextGreigeRollId().Returns(1);
       this.dbMfg.GetCoaterSewinQueue().Returns(newRolls);
       target = new SewinQueue(schedulers, dbLocal, dbMfg);
       Assert.True(newRolls.SequenceEqual(this.target.Rolls));

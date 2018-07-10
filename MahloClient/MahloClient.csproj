@@ -106,6 +106,9 @@
     <Compile Include="..\MahloService\Models\PatternRepeatModel.cs">
       <Link>Models\PatternRepeatModel.cs</Link>
     </Compile>
+    <Compile Include="..\MahloService\Settings\BackingSpec.cs">
+      <Link>Settings\BackingSpec.cs</Link>
+    </Compile>
     <Compile Include="..\MahloService\Settings\IServiceSettings.cs">
       <Link>Settings\IServiceSettings.cs</Link>
     </Compile>

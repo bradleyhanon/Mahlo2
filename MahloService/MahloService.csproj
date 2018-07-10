@@ -75,6 +75,7 @@
     <Compile Include="Models\BowAndSkewMapDatum.cs" />
     <Compile Include="Models\Mahlo2MapDatum.cs" />
     <Compile Include="Models\PatternRepeatMapDatum.cs" />
+    <Compile Include="Settings\BackingSpec.cs" />
     <Compile Include="Simulation\DbMfgSim.cs" />
     <Compile Include="Simulation\EasyDAClientSimulator.cs" />
     <Compile Include="Simulation\FormSim.cs">

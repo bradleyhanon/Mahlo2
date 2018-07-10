@@ -17,10 +17,11 @@ namespace Mahlo2Tests.Logic
     GreigeRoll greigeRoll = new GreigeRoll();
     List<double> elongations = new List<double>();
 
+    BackingSpec saSpec = new BackingSpec { Backing = "SA", MaxBow = 0.5, MaxSkew = 1.25, DlotSpec = 0.0100 };
+    BackingSpec hlSpec = new BackingSpec { Backing = "HL", MaxBow = 0.25, MaxSkew = 0.75, DlotSpec = 0.0075 };
+
     public PatternRepeatLogicTests()
     {
-      settings.EpeSpecSA = 0.01;
-      settings.EpeSpecVinyl = 0.0075;
     }
 
     [Fact]
@@ -58,13 +59,21 @@ namespace Mahlo2Tests.Logic
 
       for (int j = 0; j < saTable.Length; j++)
       {
+        this.settings.GetBackingSpec("SA").Returns(this.saSpec);
         var tuple = saTable[j];
         Assert.Equal(tuple.dlot, PatternRepeatLogic.CalculateDlot("SA", tuple.gt + 0.001, settings));
         Assert.Equal(tuple.dlot, PatternRepeatLogic.CalculateDlot("SA", tuple.le, settings));
 
+        this.settings.GetBackingSpec("HL").Returns(this.hlSpec);
         tuple = vinylTable[j];
         //Assert.Equal(tuple.dlot, PatternRepeatLogic.CalculateDlot("xx", tuple.gt + 0.001, settings));
-        //Assert.Equal(tuple.dlot, PatternRepeatLogic.CalculateDlot("xx", tuple.le, settings));
+        //Assert.Equal(tuple.dlot, PatternRepeatLogic.CalculateDlot("xx", tuple.le - 0.001, settings));
+      }
+
+      List<(double epe, string dlot)> list = new List<(double epe, string dlot)>();
+      for (decimal eped = 0.950M; eped < 1.040M; eped += 0.001M)
+      {
+        list.Add(((double)eped, PatternRepeatLogic.CalculateDlot("HL", (double)eped, settings)));
       }
     }
   }

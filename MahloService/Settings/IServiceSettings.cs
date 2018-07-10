@@ -1,6 +1,6 @@
 ﻿namespace MahloService.Settings
 {
-  public interface IServiceSettings
+  internal interface IServiceSettings
   {
     string ServiceUrl { get; set; }
 
@@ -13,12 +13,8 @@
     double RollTooLongFactor { get; set; }
     double RollTooShortFactor { get; set; }
 
-    double BowLimitSA { get; set; }
-    double BowLimitVinyl { get; set; }
-    double SkewLimitSA { get; set; }
-    double SkewLimitVinyl { get; set; }
-    double EpeSpecSA { get; set; }
-    double EpeSpecVinyl { get; set; }
+
+    BackingSpec[] BackingSpecs { get; set; }
 
     //bool ArchiveRollMaps { get; set; }
     //bool AutoCloseMahloDDEServer { get; set; }
@@ -36,8 +32,8 @@
     //int QueueRefreshRate { get; set; }
     int SeamDetectableThreshold { get; set; }
     //string SendEmailAlertsTo { get; set; }
-    double BowToleranceInInches { get; set; }
-    double SkewToleranceInInches { get; set; }
     //string SqlServerMachine { get; set; }
+
+    BackingSpec GetBackingSpec(string backingCode);
   }
 }

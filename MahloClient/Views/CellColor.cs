@@ -39,18 +39,14 @@ namespace MahloClient.Views
 
     public static CellColor GetBowColor(string backingCode, double value, IServiceSettings settings)
     {
-      double limit = backingCode.Equals("SA", StringComparison.InvariantCultureIgnoreCase) ?
-        settings.BowLimitSA : settings.BowLimitVinyl;
-
-      return Math.Abs(value) > limit ? OutOfSpecColor : GoodColor;
+      var backingSpec = settings.GetBackingSpec(backingCode);
+      return Math.Abs(value) > backingSpec.MaxBow ? OutOfSpecColor : GoodColor;
     }
 
     public static CellColor GetSkewColor(string backingCode, double value, IServiceSettings settings)
     {
-      double limit = backingCode.Equals("SA", StringComparison.InvariantCultureIgnoreCase) ?
-        settings.SkewLimitSA : settings.SkewLimitVinyl;
-
-      return Math.Abs(value) > limit ? OutOfSpecColor : GoodColor;
+      var backingSpecs = settings.GetBackingSpec(backingCode);
+      return Math.Abs(value) > backingSpecs.MaxSkew ? OutOfSpecColor : GoodColor;
     }
   }
 }

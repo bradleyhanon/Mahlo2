@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace MahloService.Settings
 {
-  public class ServiceSettings : Westwind.Utilities.Configuration.AppConfiguration, IServiceSettings
+  internal class ServiceSettings : Westwind.Utilities.Configuration.AppConfiguration, IServiceSettings
   {
     public const double DEFAULT_METERS_PER_PIXEL = 0.00109d;
 
@@ -28,12 +28,13 @@ namespace MahloService.Settings
     public double SeamIndicatorKeepOnLength { get; set; } = 10;
     public double RollTooLongFactor { get; set; } = 1.1;
     public double RollTooShortFactor { get; set; } = 0.9;
-    public double BowLimitSA { get; set; } = 0.5;
-    public double BowLimitVinyl { get; set; } = 0.25;
-    public double SkewLimitSA { get; set; } = 1.25;
-    public double SkewLimitVinyl { get; set; } = 0.75;
-    public double EpeSpecSA { get; set; } = 0.01;
-    public double EpeSpecVinyl { get; set; } = 0.0075;
+
+    public BackingSpec[] BackingSpecs { get; set; } = 
+    {
+      new BackingSpec { Backing = "SA", MaxBow = 0.5, MaxSkew = 1.25, DlotSpec = 0.0100 },
+      new BackingSpec { Backing = "IR", MaxBow = 0.25, MaxSkew = 0.75, DlotSpec = 0.0075 },
+      new BackingSpec { Backing = "HL", MaxBow = 0.25, MaxSkew = 0.75, DlotSpec = 0.0075 },
+    };
 
     //public int MainFormBackgroundColor { get; set; } = 0xECF2F2;
     //public string DDEServername { get; set; } = "BowAndSkew";
@@ -55,11 +56,17 @@ namespace MahloService.Settings
 
 
 
-    public double BowToleranceInInches { get; set; } = 0.5;
-    public double SkewToleranceInInches { get; set; } = 0.5;
     public int SeamDetectableThreshold { get; set; } = 5; // Distance within which seam detects are ignored
     public int CheckAfterHowManyRolls { get; set; } = 10;
     public int CheckAfterHowManyStyles { get; set; } = 3;
     //public string SendEmailAlertsTo { get; set; } = "Calhoun.Mahlo.Alerts";
+
+    public BackingSpec GetBackingSpec(string backingCode)
+    {
+      var result = this.BackingSpecs.FirstOrDefault(item => item.Backing == backingCode) ??
+        this.BackingSpecs.First(item => item.Backing != "SA");
+
+      return result;
+    }
   }
 }

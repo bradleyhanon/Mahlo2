@@ -19,6 +19,7 @@ namespace MahloService.DbMigrations
       const string strBow = "Bow";
       const string strSkew = "Skew";
       const string strElongation = "Elongation";
+      const string strTimeStamp = "TimeStamp";
 
       this.Create.Table("ProgramState")
         .WithColumn("Key").AsInt32().PrimaryKey().WithDefaultValue(0)
@@ -79,17 +80,32 @@ namespace MahloService.DbMigrations
         .WithColumn("EPE").AsDouble()
         .WithColumn("Dlot").AsAnsiString(10);
 
+      this.Create.Table("Mahlo2Seam")
+        .WithColumn(strFeetCounter).AsInt64().PrimaryKey()
+        .WithColumn(strTimeStamp).AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
+
       this.Create.Table("Mahlo2Map")
-        .WithColumn(strFeetCounter).AsInt64().PrimaryKey();
+        .WithColumn(strFeetCounter).AsInt64().PrimaryKey()
+        .WithColumn(strTimeStamp).AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
+
+      this.Create.Table("BowAndSkewSeam")
+        .WithColumn(strFeetCounter).AsInt64().PrimaryKey()
+        .WithColumn(strTimeStamp).AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
 
       this.Create.Table("BowAndSkewMap")
         .WithColumn(strFeetCounter).AsInt64().PrimaryKey()
         .WithColumn(strBow).AsDouble().NotNullable()
-        .WithColumn(strSkew).AsDouble().NotNullable();
+        .WithColumn(strSkew).AsDouble().NotNullable()
+        .WithColumn(strTimeStamp).AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
+
+      this.Create.Table("PatternRepeatSeam")
+        .WithColumn(strFeetCounter).AsInt64().PrimaryKey()
+        .WithColumn(strTimeStamp).AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
 
       this.Create.Table("PatternRepeatMap")
         .WithColumn(strFeetCounter).AsInt64().PrimaryKey()
-        .WithColumn(strElongation).AsDouble();
+        .WithColumn(strElongation).AsDouble()
+        .WithColumn(strTimeStamp).AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
     }
 
     public override void Down()

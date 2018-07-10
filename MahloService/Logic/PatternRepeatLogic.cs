@@ -218,13 +218,10 @@ namespace MahloService.Logic
       return epe;
     }
 
-    internal static string CalculateDlot(string backingCode, double epe, IServiceSettings serviceSettings)
+    internal static string CalculateDlot(string backingCode, double epe, IServiceSettings settings)
     {
-      var spec = backingCode.Equals("SA", StringComparison.InvariantCultureIgnoreCase) ?
-        serviceSettings.EpeSpecSA : serviceSettings.EpeSpecVinyl;
-
-      var a = ((Math.Abs(1.0 - epe) + spec / 2) / spec);
-      //var r = Math.Round(a);
+      var spec = settings.GetBackingSpec(backingCode).DlotSpec;
+      var a = ((Math.Abs(1.0 - epe) + (spec / 2)) / spec);
       var index = (int)Math.Min(5, a);
       return (index == 0 ? "" : epe < 1.0 ? "+" : "-") + index.ToString();
     }

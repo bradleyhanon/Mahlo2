@@ -13,7 +13,7 @@ using Microsoft.AspNet.SignalR;
 
 namespace MahloService.Ipc
 {
-  public class MahloHub : Hub
+  internal class MahloHub : Hub
   {
     private readonly IMahloServer mahloServer;
     private readonly IDbMfg dbMfg;
