@@ -123,7 +123,7 @@ namespace MahloService.Models
 
     public override string ToString()
     {
-      return $"RollNo={RollNo}, RollWidth={RollWidth}";
+      return $"RollNo={this.RollNo}, RollWidth={this.RollWidth}";
     }
   }
 }

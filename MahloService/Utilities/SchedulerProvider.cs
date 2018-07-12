@@ -23,6 +23,5 @@ namespace MahloService.Utilities
     public IScheduler ThreadPool => Scheduler.Default;
     public IScheduler Default => Scheduler.Default;
     public IScheduler WinFormsThread { get; }
-    //public IScheduler TaskPool { get { return Scheduler.TaskPool; } } 
   }
 }

@@ -15,7 +15,7 @@ namespace MahloService.Settings
 
     public override string ToString()
     {
-      return $"{Backing}, {MaxBow}, {MaxSkew}, {DlotSpec}";
+      return $"{this.Backing}, {this.MaxBow}, {this.MaxSkew}, {this.DlotSpec}";
     }
 
     public static BackingSpec FromString(string s)

@@ -20,6 +20,7 @@ namespace MahloService.Simulation
 {
   sealed class OpcSrcSim<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc, IDisposable
   {
+    private readonly IDbMfgSim dbMfg;
     private readonly ISewinQueue sewinQueue;
     private IUserAttentions<Model> userAttentions;
     private ICriticalStops<Model> criticalStops;
@@ -40,6 +41,7 @@ namespace MahloService.Simulation
     private bool isCheckRollEndSeamNeeded;
 
     public OpcSrcSim(
+      IDbMfgSim dbMfg,
       ISewinQueue sewinQueue,
       IUserAttentions<Model> userAttentions,
       ICriticalStops<Model> criticalStops,
@@ -49,6 +51,7 @@ namespace MahloService.Simulation
       ILogger logger,
       IServiceSettings settings)
     {
+      this.dbMfg = dbMfg;
       this.sewinQueue = sewinQueue;
       this.userAttentions = userAttentions;
       this.criticalStops = criticalStops;
@@ -75,10 +78,10 @@ namespace MahloService.Simulation
       });
 
       var state = programState.GetSubState(nameof(OpcSrcSim<Model>), typeof(Model).Name);
-      this.cutRollCount = state.Get<int?>(nameof(cutRollCount)) ?? 0;
-      this.rollIndex = state.Get<int?>(nameof(rollIndex)) ?? 0;
-      this.FeetCounter = state.Get<double?>(nameof(FeetCounter)) ?? this.FeetCounter;
-      this.feetCounterAtRollStart = state.Get<double?>(nameof(feetCounterAtRollStart)) ?? this.feetCounterAtRollStart;
+      this.cutRollCount = state.Get<int?>(nameof(this.cutRollCount)) ?? 0;
+      this.rollIndex = state.Get<int?>(nameof(this.rollIndex)) ?? 0;
+      this.FeetCounter = state.Get<double?>(nameof(this.FeetCounter)) ?? this.FeetCounter;
+      this.feetCounterAtRollStart = state.Get<double?>(nameof(this.feetCounterAtRollStart)) ?? this.feetCounterAtRollStart;
 
       this.isCheckRollEndSeamNeeded = this.sewinQueue.Rolls.FirstOrDefault()?.IsCheckRoll ?? false;
     }
@@ -164,7 +167,7 @@ namespace MahloService.Simulation
       {
         this.currentRoll = this.sewinQueue.Rolls[this.rollIndex];
         this.isCheckRollEndSeamNeeded = this.currentRoll.IsCheckRoll;
-        this.timer = Observable.Interval(TimeSpan.FromMinutes(1 / FeetPerMinute))
+        this.timer = Observable.Interval(TimeSpan.FromMinutes(1 / this.FeetPerMinute))
           .ObserveOn(SynchronizationContext.Current)
           .Subscribe(timer =>
           {
@@ -188,7 +191,7 @@ namespace MahloService.Simulation
 
             if (this.FeetCounter - this.feetCounterAtRollStart >= this.currentRoll.RollLength)
             {
-              cutRollCount = 1;
+              this.cutRollCount = 1;
               this.IsSeamDetected = true;
               this.IsDoffDetected = true;
               this.feetCounterAtRollStart = this.FeetCounter;
@@ -203,9 +206,11 @@ namespace MahloService.Simulation
                 this.isCheckRollEndSeamNeeded = this.currentRoll.IsCheckRoll;
               }
             }
-            else if ((int)measuredLength == cutRollCount * (this.currentRoll.RollLength / 4))
+            else if (typeof(Model) == typeof(PatternRepeatModel) &&
+              (int)measuredLength == this.cutRollCount * (this.currentRoll.RollLength / 4))
             {
-              cutRollCount++;
+              this.cutRollCount++;
+              this.dbMfg.CutRollCompleted();
               this.IsDoffDetected = true;
             }
 

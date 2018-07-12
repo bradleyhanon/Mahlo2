@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MahloClient.Ipc;
+using MahloClient.Views;
 using MahloService;
 using MahloService.Logic;
 using MahloService.Models;
@@ -91,7 +92,7 @@ namespace MahloClient.Logic
 
     public GreigeRoll CurrentRoll
     {
-      get => currentRoll;
+      get => this.currentRoll;
       set
       {
         this.currentRoll = value;
@@ -131,17 +132,17 @@ namespace MahloClient.Logic
     public string PlcStatusMessage { get; set; }
     public Color PlcStatusMessageBackColor { get; set; }
     [DependsOn(nameof(PlcStatusMessageBackColor))]
-    public Color PlcStatusMessageForeColor => PlcStatusMessageBackColor.ContrastColor();
+    public Color PlcStatusMessageForeColor => this.PlcStatusMessageBackColor.ContrastColor();
 
     public string MahloStatusMessage { get; set; }
     public Color MahloStatusMessageBackColor { get; set; }
     [DependsOn(nameof(MahloStatusMessageBackColor))]
-    public Color MahloStatusMessageForeColor => MahloStatusMessageBackColor.ContrastColor();
+    public Color MahloStatusMessageForeColor => this.MahloStatusMessageBackColor.ContrastColor();
 
     public string MappingStatusMessage { get; set; }
     public Color MappingStatusMessageBackColor { get; set; }
     [DependsOn(nameof(MappingStatusMessageBackColor))]
-    public Color MappingStatusMessageForeColor => MappingStatusMessageBackColor.ContrastColor();
+    public Color MappingStatusMessageForeColor => this.MappingStatusMessageBackColor.ContrastColor();
 
     [DependsOn(nameof(FeetCounterStart), nameof(FeetCounterEnd))]
     public long MeasuredLength => this.FeetCounterEnd - this.FeetCounterStart;
@@ -174,10 +175,10 @@ namespace MahloClient.Logic
 
     [DependsOn(nameof(UserAttentions))]
     string IStatusBarInfo.AlertMessage =>
-      UserAttentions.IsSystemDisabled ? "System is disabled, seams are ignored, press [Wait for Seam] to arm" :
-      UserAttentions.IsRollTooLong ? "Current roll measured too long, verify roll sequence" :
-      UserAttentions.IsRollTooShort ? "Previous roll measured too short, verify roll sequence" :
-      UserAttentions.VerifyRollSequence ? "Verify roll sequence, press [Wait for Seam] to arm system" :
+      this.UserAttentions.IsSystemDisabled ? "System is disabled, seams are ignored, press [Wait for Seam] to arm" :
+      this.UserAttentions.IsRollTooLong ? "Current roll measured too long, verify roll sequence" :
+      this.UserAttentions.IsRollTooShort ? "Previous roll measured too short, verify roll sequence" :
+      this.UserAttentions.VerifyRollSequence ? "Verify roll sequence, press [Wait for Seam] to arm system" :
       "Ready for next roll seam...";
 
     [DependsOn(nameof(CriticalStops))]
@@ -241,9 +242,9 @@ namespace MahloClient.Logic
       throw new NotImplementedException();
     }
 
-    public void MoveToNextRoll()
+    public void MoveToNextRoll(int rollLength)
     {
-      this.ipcClient.Call(Ipc.MahloIpcClient.MoveToNextRollCommand, this.InterfaceName);
+      this.ipcClient.Call(Ipc.MahloIpcClient.MoveToNextRollCommand, this.InterfaceName, rollLength);
     }
 
     public void MoveToPriorRoll()

@@ -167,8 +167,8 @@ namespace MahloService.Repository
       //DECLARE @EndFeet Int = 200
 
       string cmdText =
-        @"SELECT COALESCE(AVERAGE(Bow), 0.0) AvgBow, 
-                 COALESCE(AVERAGE(Skew), 0.0) AvgSkew
+        @"SELECT COALESCE(AVG(Bow), 0.0) AvgBow, 
+                 COALESCE(AVG(Skew), 0.0) AvgSkew
           FROM BowAndSkewMap map
           JOIN (SELECT gr.BasFeetCounterStart + (@StartFeet - gr.PrsFeetCounterStart) BasStart,
 		               (SELECT MIN(v)

@@ -9,6 +9,7 @@ using MahloService.Opc;
 using MahloService.Repository;
 using MahloService.Utilities;
 using Newtonsoft.Json;
+using System.Reactive.Concurrency;
 
 namespace MahloService.Logic
 {
@@ -25,8 +26,8 @@ namespace MahloService.Logic
       IUserAttentions<MahloModel> userAttentions, 
       ICriticalStops<MahloModel> criticalStops, 
       IProgramState programState,
-      ISchedulerProvider schedulerProvider)
-      : base(dbLocal, mahloSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
+      IScheduler scheduler)
+      : base(dbLocal, mahloSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, scheduler)
     {
       this.dbLocal = dbLocal;
     }

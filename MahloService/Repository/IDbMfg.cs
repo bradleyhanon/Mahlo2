@@ -12,6 +12,6 @@ namespace MahloService.Repository
     Task BasUpdateDefaultRecipe(string styleCode, string rollNo, string recipeName);
     Task<IEnumerable<CoaterScheduleRoll>> GetCoaterSchedule(int minSequence, int maxSequence);
     Task SendEmail(string pRecipients, string pSubject, string pBody);
-    Task<AS400FinishedRoll> GetCutRollFromHost();
+    Task<decimal?> GetCutRollFromHost();
   }
 }

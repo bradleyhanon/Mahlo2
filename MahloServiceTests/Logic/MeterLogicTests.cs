@@ -14,22 +14,23 @@ using Newtonsoft.Json.Linq;
 using NSubstitute;
 using Xunit;
 using System.Reactive.Linq;
+using Microsoft.Reactive.Testing;
 
 namespace MahloServiceTests.Logic
 {
   public sealed class MeterLogicTests : IDisposable
   {
-    private MockMeterSrc<MahloModel> srcData;
+    private readonly MockMeterSrc<MahloModel> srcData;
     private readonly ISewinQueue sewinQueue;
     private readonly IDbMfg dbMfg;
     private readonly IDbLocal dbLocal;
-    private IServiceSettings appInfo;
-    private IUserAttentions<MahloModel> userAttentions;
+    private readonly IServiceSettings appInfo;
+    private readonly IUserAttentions<MahloModel> userAttentions;
     private readonly ICriticalStops<MahloModel> criticalStops;
-    private readonly TestSchedulers testSchedulers = new TestSchedulers();
+    private readonly TestScheduler testSchedulers = new TestScheduler();
     private readonly dynamic programState;
 
-    private MeterLogic<MahloModel> target;
+    private readonly MeterLogic<MahloModel> target;
     private readonly List<GreigeRoll> greigeRolls;
 
     public MeterLogicTests()
@@ -108,7 +109,7 @@ namespace MahloServiceTests.Logic
 
       this.greigeRolls = new List<GreigeRoll> { roll1, roll2, roll3, roll4, roll5, roll6, roll7 };
 
-      this.sewinQueue.Rolls.Returns(new BindingList<GreigeRoll>(greigeRolls));
+      this.sewinQueue.Rolls.Returns(new BindingList<GreigeRoll>(this.greigeRolls));
 
       this.target = new MahloLogic(this.dbLocal, this.srcData, this.sewinQueue, this.appInfo, this.userAttentions, this.criticalStops, this.programState, this.testSchedulers)
       {
@@ -131,16 +132,16 @@ namespace MahloServiceTests.Logic
     public void SpeedUpdatesWhenItChanges()
     {
       this.srcData.FeetPerMinute = 503;
-      Assert.Equal(503, target.CurrentRoll.MalSpeed);
-      Assert.Equal(503, target.Speed);
+      Assert.Equal(503, this.target.CurrentRoll.MalSpeed);
+      Assert.Equal(503, this.target.Speed);
     }
 
     [Fact]
     public void IsMappingValidPasses()
     {
-      Assert.True(target.GetIsMappingValid());
+      Assert.True(this.target.GetIsMappingValid());
       this.userAttentions.Any.Returns(true);
-      Assert.False(target.GetIsMappingValid());
+      Assert.False(this.target.GetIsMappingValid());
       this.userAttentions.Any.Returns(false);
 
       this.criticalStops.Any.Returns(true);
@@ -156,30 +157,30 @@ namespace MahloServiceTests.Logic
     [Fact]
     public void CurrentRollFeetTracksFeetChanges()
     {
-      srcData.FeetCounter = 5;
+      this.srcData.FeetCounter = 5;
       Assert.Equal(5, this.target.MeasuredLength);
     }
 
     [Fact]
     public void RollTooLongSetsUserAttention()
     {
-      target.CurrentRoll = this.sewinQueue.Rolls[1];
+      this.target.CurrentRoll = this.sewinQueue.Rolls[1];
       this.appInfo.RollTooLongFactor = 1.1;
 
-      double maxlength = target.CurrentRoll.RollLength * 1.1;
-      srcData.FeetCounter = (int)maxlength;
+      double maxlength = this.target.CurrentRoll.RollLength * 1.1;
+      this.srcData.FeetCounter = (int)maxlength;
       Assert.False(this.userAttentions.IsRollTooLong);
-      srcData.FeetCounter = (int)maxlength + 1;
+      this.srcData.FeetCounter = (int)maxlength + 1;
       Assert.True(this.userAttentions.IsRollTooLong);
     }
 
     [Fact]
     public void RollLengthGreaterThan90PercentOfExpectedRollLengthIsNotTooShort()
     {
-      target.CurrentRoll = this.sewinQueue.Rolls[1];
-      double minLength = target.CurrentRoll.RollLength * 0.9;
-      srcData.FeetCounter = (int)minLength;
-      srcData.IsSeamDetected = true;
+      this.target.CurrentRoll = this.sewinQueue.Rolls[1];
+      double minLength = this.target.CurrentRoll.RollLength * 0.9;
+      this.srcData.FeetCounter = (int)minLength;
+      this.srcData.IsSeamDetected = true;
       Assert.False(this.userAttentions.IsRollTooShort);
     }
 
@@ -193,51 +194,51 @@ namespace MahloServiceTests.Logic
       this.criticalStops.Any.Returns(false);
 
       // The first roll arms things for the second roll to test
-      target.CurrentRoll = this.sewinQueue.Rolls[1];
-      srcData.FeetCounter = target.CurrentRoll.RollLength;
-      srcData.IsSeamDetected = true;
+      this.target.CurrentRoll = this.sewinQueue.Rolls[1];
+      this.srcData.FeetCounter = this.target.CurrentRoll.RollLength;
+      this.srcData.IsSeamDetected = true;
 
       // The second roll
       this.userAttentions.IsRollTooShort = false;
-      double minLength = target.CurrentRoll.RollLength * 0.9;
-      srcData.FeetCounter = (int)minLength - 1;
-      srcData.IsSeamDetected = false;
-      srcData.IsSeamDetected = true;
+      double minLength = this.target.CurrentRoll.RollLength * 0.9;
+      this.srcData.FeetCounter = (int)minLength - 1;
+      this.srcData.IsSeamDetected = false;
+      this.srcData.IsSeamDetected = true;
       Assert.True(this.userAttentions.IsRollTooShort);
     }
 
     [Fact]
     public void SeamDetectedFalseIsIgnored()
     {
-      srcData.FeetCounter = 500;
-      srcData.IsSeamDetected = false;
-      Assert.Equal(500, target.MeasuredLength);
+      this.srcData.FeetCounter = 500;
+      this.srcData.IsSeamDetected = false;
+      Assert.Equal(500, this.target.MeasuredLength);
     }
 
     [Fact]
     public void SeamDetectIsIgnoredIfSystemIsDisabled()
     {
-      userAttentions.IsSystemDisabled = true;
-      srcData.FeetCounter = 500;
-      srcData.IsSeamDetected = true;
-      Assert.Equal(500, target.MeasuredLength);
+      this.userAttentions.IsSystemDisabled = true;
+      this.srcData.FeetCounter = 500;
+      this.srcData.IsSeamDetected = true;
+      Assert.Equal(500, this.target.MeasuredLength);
     }
 
     [Fact]
     public void SeamDetectedResetsRollLength()
     {
-      srcData.FeetCounter = 500;
-      srcData.IsSeamDetected = true;
-      Assert.Equal(0, target.MeasuredLength);
+      this.srcData.FeetCounter = 500;
+      this.srcData.IsSeamDetected = true;
+      Assert.Equal(0, this.target.MeasuredLength);
     }
 
     [Fact]
     public void SeamDetectedResetsMeasuredLength()
     {
-      target.FeetCounterStart = 50;
-      target.FeetCounterEnd = target.FeetCounterStart + 595;
-      srcData.IsSeamDetected = true;
-      Assert.Equal(0, target.MeasuredLength);
+      this.target.FeetCounterStart = 50;
+      this.target.FeetCounterEnd = this.target.FeetCounterStart + 595;
+      this.srcData.IsSeamDetected = true;
+      Assert.Equal(0, this.target.MeasuredLength);
     }
 
     [Fact]
@@ -248,21 +249,21 @@ namespace MahloServiceTests.Logic
 
       this.srcData.FeetCounter = 500;
       Assert.Equal(500, this.greigeRolls[0].MalFeet);
-      srcData.IsSeamDetected = true;
-      srcData.FeetCounter += 10;
-      Assert.Equal(500, greigeRolls[0].MalFeet);
-      Assert.Equal(10, greigeRolls[1].MalFeet);
+      this.srcData.IsSeamDetected = true;
+      this.srcData.FeetCounter += 10;
+      Assert.Equal(500, this.greigeRolls[0].MalFeet);
+      Assert.Equal(10, this.greigeRolls[1].MalFeet);
     }
 
     [Fact]
     public void SeamDetectedIsAcknowledgedAtMinSeamSpacing()
     {
       this.appInfo.MinSeamSpacing = 4;
-      srcData.IsSeamDetected = true;
-      srcData.FeetCounter += this.appInfo.MinSeamSpacing - 1;
-      Assert.Equal(0, srcData.AcknowledgeSeamDetectCalled);
-      srcData.FeetCounter++;
-      Assert.Equal(1, srcData.AcknowledgeSeamDetectCalled);
+      this.srcData.IsSeamDetected = true;
+      this.srcData.FeetCounter += this.appInfo.MinSeamSpacing - 1;
+      Assert.Equal(0, this.srcData.AcknowledgeSeamDetectCalled);
+      this.srcData.FeetCounter++;
+      Assert.Equal(1, this.srcData.AcknowledgeSeamDetectCalled);
     }
 
     [Fact]
@@ -291,7 +292,7 @@ namespace MahloServiceTests.Logic
     {
       bool rollFinishedSeen = false;
       bool rollStartedSeen = false;
-      target.CurrentRoll = this.sewinQueue.Rolls[0];
+      this.target.CurrentRoll = this.sewinQueue.Rolls[0];
 
       this.appInfo.SeamDetectableThreshold = 50;
       this.target.FeetCounterEnd = 50;
@@ -314,7 +315,7 @@ namespace MahloServiceTests.Logic
         rollStartedSeen = true;
       }))
       {
-        srcData.IsSeamDetected = true;
+        this.srcData.IsSeamDetected = true;
         Assert.True(rollStartedSeen);
       }
     }
@@ -324,9 +325,9 @@ namespace MahloServiceTests.Logic
     {
       this.appInfo.SeamDetectableThreshold = 50;
 
-      target.CurrentRoll = this.sewinQueue.Rolls[0];
+      this.target.CurrentRoll = this.sewinQueue.Rolls[0];
 
-      this.target.FeetCounterEnd = appInfo.SeamDetectableThreshold - 1;
+      this.target.FeetCounterEnd = this.appInfo.SeamDetectableThreshold - 1;
       Observable.FromEvent<Action<GreigeRoll>, GreigeRoll>(
         h => this.target.RollFinished += h,
         h => this.target.RollFinished -= h)
@@ -337,7 +338,7 @@ namespace MahloServiceTests.Logic
         h => this.target.RollStarted -= h)
       .Subscribe(roll => throw new Exception());
 
-      srcData.IsSeamDetected = true;
+      this.srcData.IsSeamDetected = true;
 
       // ResetSeamDetector should be called for every seam detection event
       Assert.Equal(1, this.srcData.AcknowledgeSeamDetectCalled);
@@ -347,7 +348,7 @@ namespace MahloServiceTests.Logic
     public void NextRollSelectedWhenNewRollStarts()
     {
       Assert.Same(this.sewinQueue.Rolls[0], this.target.CurrentRoll);
-      srcData.IsSeamDetected = true;
+      this.srcData.IsSeamDetected = true;
       Assert.Same(this.sewinQueue.Rolls[1], this.target.CurrentRoll);
     }
 
@@ -368,10 +369,10 @@ namespace MahloServiceTests.Logic
 
       void ProduceRoll()
       {
-        srcData.FeetCounter = this.target.CurrentRoll.RollLength;
-        srcData.IsSeamDetected = false;
-        srcData.IsSeamDetected = true;
-        Assert.Equal(0, target.MeasuredLength);
+        this.srcData.FeetCounter = this.target.CurrentRoll.RollLength;
+        this.srcData.IsSeamDetected = false;
+        this.srcData.IsSeamDetected = true;
+        Assert.Equal(0, this.target.MeasuredLength);
       }
     }
 
@@ -397,10 +398,10 @@ namespace MahloServiceTests.Logic
 
       void ProduceRoll()
       {
-        srcData.FeetCounter = this.target.CurrentRoll.RollLength;
-        srcData.IsSeamDetected = false;
-        srcData.IsSeamDetected = true;
-        Assert.Equal(0, target.MeasuredLength);
+        this.srcData.FeetCounter = this.target.CurrentRoll.RollLength;
+        this.srcData.IsSeamDetected = false;
+        this.srcData.IsSeamDetected = true;
+        Assert.Equal(0, this.target.MeasuredLength);
       }
     }
   }

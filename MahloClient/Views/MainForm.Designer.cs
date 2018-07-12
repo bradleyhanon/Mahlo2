@@ -18,6 +18,10 @@
       this.components = new System.ComponentModel.Container();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -33,12 +37,14 @@
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
       this.grdCutRoll = new System.Windows.Forms.DataGridView();
+      this.colCutSapRoll = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colCutFeet = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colCutBow = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colCutSkew = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colCutEPE = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.colCutMaxDlot = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.cutRollSrc = new System.Windows.Forms.BindingSource(this.components);
       this.grpMahlo = new System.Windows.Forms.GroupBox();
       this.label29 = new System.Windows.Forms.Label();
@@ -50,7 +56,7 @@
       this.label17 = new System.Windows.Forms.Label();
       this.textBox5 = new System.Windows.Forms.TextBox();
       this.label18 = new System.Windows.Forms.Label();
-      this.btnFore2 = new System.Windows.Forms.Button();
+      this.btnForeMahlo2 = new System.Windows.Forms.Button();
       this.textBox4 = new System.Windows.Forms.TextBox();
       this.textBox3 = new System.Windows.Forms.TextBox();
       this.textBox2 = new System.Windows.Forms.TextBox();
@@ -81,7 +87,7 @@
       this.textBox8 = new System.Windows.Forms.TextBox();
       this.textBox9 = new System.Windows.Forms.TextBox();
       this.textBox10 = new System.Windows.Forms.TextBox();
-      this.btnFore3 = new System.Windows.Forms.Button();
+      this.btnForeBowAndSkew = new System.Windows.Forms.Button();
       this.label11 = new System.Windows.Forms.Label();
       this.label12 = new System.Windows.Forms.Label();
       this.label13 = new System.Windows.Forms.Label();
@@ -104,7 +110,7 @@
       this.textBox20 = new System.Windows.Forms.TextBox();
       this.textBox21 = new System.Windows.Forms.TextBox();
       this.textBox22 = new System.Windows.Forms.TextBox();
-      this.btnFore4 = new System.Windows.Forms.Button();
+      this.btnForePatternRepeat = new System.Windows.Forms.Button();
       this.label24 = new System.Windows.Forms.Label();
       this.label25 = new System.Windows.Forms.Label();
       this.label26 = new System.Windows.Forms.Label();
@@ -141,12 +147,6 @@
       this.pnlAlarm = new System.Windows.Forms.StatusBarPanel();
       this.pnlAlertMessage = new System.Windows.Forms.StatusBarPanel();
       this.pnlQueueMessage = new System.Windows.Forms.StatusBarPanel();
-      this.colCutSapRoll = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.colCutFeet = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.colCutBow = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.colCutSkew = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.colCutEPE = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.colCutMaxDlot = new System.Windows.Forms.DataGridViewTextBoxColumn();
       ((System.ComponentModel.ISupportInitialize)(this.grdCutRoll)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.cutRollSrc)).BeginInit();
       this.grpMahlo.SuspendLayout();
@@ -174,8 +174,7 @@
       this.grdCutRoll.AllowUserToAddRows = false;
       this.grdCutRoll.AllowUserToDeleteRows = false;
       this.grdCutRoll.AllowUserToResizeRows = false;
-      this.grdCutRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+      this.grdCutRoll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.grdCutRoll.AutoGenerateColumns = false;
       dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -211,6 +210,68 @@
       this.grdCutRoll.TabIndex = 4;
       this.grdCutRoll.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.GrdCutRoll_CellFormatting);
       // 
+      // colCutSapRoll
+      // 
+      this.colCutSapRoll.DataPropertyName = "SapRoll";
+      this.colCutSapRoll.HeaderText = "SAP Roll";
+      this.colCutSapRoll.Name = "colCutSapRoll";
+      this.colCutSapRoll.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colCutSapRoll.Width = 67;
+      // 
+      // colCutFeet
+      // 
+      this.colCutFeet.DataPropertyName = "Length";
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      this.colCutFeet.DefaultCellStyle = dataGridViewCellStyle2;
+      this.colCutFeet.HeaderText = "Feet";
+      this.colCutFeet.Name = "colCutFeet";
+      this.colCutFeet.ReadOnly = true;
+      this.colCutFeet.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colCutFeet.Width = 50;
+      // 
+      // colCutBow
+      // 
+      this.colCutBow.DataPropertyName = "Bow";
+      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle3.Format = "N2";
+      dataGridViewCellStyle3.NullValue = null;
+      this.colCutBow.DefaultCellStyle = dataGridViewCellStyle3;
+      this.colCutBow.HeaderText = "Bow";
+      this.colCutBow.Name = "colCutBow";
+      this.colCutBow.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colCutBow.Width = 56;
+      // 
+      // colCutSkew
+      // 
+      this.colCutSkew.DataPropertyName = "Skew";
+      dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle4.Format = "N2";
+      dataGridViewCellStyle4.NullValue = null;
+      this.colCutSkew.DefaultCellStyle = dataGridViewCellStyle4;
+      this.colCutSkew.HeaderText = "Skew";
+      this.colCutSkew.Name = "colCutSkew";
+      this.colCutSkew.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colCutSkew.Width = 56;
+      // 
+      // colCutEPE
+      // 
+      this.colCutEPE.DataPropertyName = "EPE";
+      dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+      dataGridViewCellStyle5.Format = "N3";
+      dataGridViewCellStyle5.NullValue = null;
+      this.colCutEPE.DefaultCellStyle = dataGridViewCellStyle5;
+      this.colCutEPE.HeaderText = "EPE";
+      this.colCutEPE.Name = "colCutEPE";
+      this.colCutEPE.Width = 56;
+      // 
+      // colCutMaxDlot
+      // 
+      this.colCutMaxDlot.DataPropertyName = "Dlot";
+      this.colCutMaxDlot.HeaderText = "Dlot";
+      this.colCutMaxDlot.Name = "colCutMaxDlot";
+      this.colCutMaxDlot.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colCutMaxDlot.Width = 45;
+      // 
       // cutRollSrc
       // 
       this.cutRollSrc.DataSource = typeof(MahloService.Models.CutRoll);
@@ -225,7 +286,7 @@
       this.grpMahlo.Controls.Add(this.label17);
       this.grpMahlo.Controls.Add(this.textBox5);
       this.grpMahlo.Controls.Add(this.label18);
-      this.grpMahlo.Controls.Add(this.btnFore2);
+      this.grpMahlo.Controls.Add(this.btnForeMahlo2);
       this.grpMahlo.Controls.Add(this.textBox4);
       this.grpMahlo.Controls.Add(this.textBox3);
       this.grpMahlo.Controls.Add(this.textBox2);
@@ -328,17 +389,17 @@
       this.label18.TabIndex = 12;
       this.label18.Text = "Feet:";
       // 
-      // btnFore2
+      // btnForeMahlo2
       // 
-      this.btnFore2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnFore2.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.mahloLogicSrc, "CanMoveForward", true));
-      this.btnFore2.Location = new System.Drawing.Point(93, 213);
-      this.btnFore2.Name = "btnFore2";
-      this.btnFore2.Size = new System.Drawing.Size(75, 48);
-      this.btnFore2.TabIndex = 6;
-      this.btnFore2.Text = "Forward to Next Roll";
-      this.btnFore2.UseVisualStyleBackColor = true;
-      this.btnFore2.Click += new System.EventHandler(this.BtnFore_Click);
+      this.btnForeMahlo2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnForeMahlo2.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.mahloLogicSrc, "CanMoveForward", true));
+      this.btnForeMahlo2.Location = new System.Drawing.Point(93, 213);
+      this.btnForeMahlo2.Name = "btnForeMahlo2";
+      this.btnForeMahlo2.Size = new System.Drawing.Size(75, 48);
+      this.btnForeMahlo2.TabIndex = 6;
+      this.btnForeMahlo2.Text = "Forward to Next Roll";
+      this.btnForeMahlo2.UseVisualStyleBackColor = true;
+      this.btnForeMahlo2.Click += new System.EventHandler(this.BtnForeMahlo2_Click);
       // 
       // textBox4
       // 
@@ -459,7 +520,7 @@
       this.grpBowAndSkew.Controls.Add(this.textBox8);
       this.grpBowAndSkew.Controls.Add(this.textBox9);
       this.grpBowAndSkew.Controls.Add(this.textBox10);
-      this.grpBowAndSkew.Controls.Add(this.btnFore3);
+      this.grpBowAndSkew.Controls.Add(this.btnForeBowAndSkew);
       this.grpBowAndSkew.Controls.Add(this.label11);
       this.grpBowAndSkew.Controls.Add(this.label12);
       this.grpBowAndSkew.Controls.Add(this.label13);
@@ -655,17 +716,17 @@
       this.textBox10.TabIndex = 8;
       this.textBox10.Text = "123456";
       // 
-      // btnFore3
+      // btnForeBowAndSkew
       // 
-      this.btnFore3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnFore3.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bowAndSkewLogicSrc, "CanMoveForward", true));
-      this.btnFore3.Location = new System.Drawing.Point(93, 213);
-      this.btnFore3.Name = "btnFore3";
-      this.btnFore3.Size = new System.Drawing.Size(75, 48);
-      this.btnFore3.TabIndex = 6;
-      this.btnFore3.Text = "Forward to Next Roll";
-      this.btnFore3.UseVisualStyleBackColor = true;
-      this.btnFore3.Click += new System.EventHandler(this.BtnFore_Click);
+      this.btnForeBowAndSkew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnForeBowAndSkew.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bowAndSkewLogicSrc, "CanMoveForward", true));
+      this.btnForeBowAndSkew.Location = new System.Drawing.Point(93, 213);
+      this.btnForeBowAndSkew.Name = "btnForeBowAndSkew";
+      this.btnForeBowAndSkew.Size = new System.Drawing.Size(75, 48);
+      this.btnForeBowAndSkew.TabIndex = 6;
+      this.btnForeBowAndSkew.Text = "Forward to Next Roll";
+      this.btnForeBowAndSkew.UseVisualStyleBackColor = true;
+      this.btnForeBowAndSkew.Click += new System.EventHandler(this.BtnForeBowAndSkew_Click);
       // 
       // label11
       // 
@@ -721,7 +782,7 @@
       this.grpPatternRepeat.Controls.Add(this.textBox20);
       this.grpPatternRepeat.Controls.Add(this.textBox21);
       this.grpPatternRepeat.Controls.Add(this.textBox22);
-      this.grpPatternRepeat.Controls.Add(this.btnFore4);
+      this.grpPatternRepeat.Controls.Add(this.btnForePatternRepeat);
       this.grpPatternRepeat.Controls.Add(this.label24);
       this.grpPatternRepeat.Controls.Add(this.label25);
       this.grpPatternRepeat.Controls.Add(this.label26);
@@ -899,17 +960,17 @@
       this.textBox22.TabIndex = 8;
       this.textBox22.Text = "123456";
       // 
-      // btnFore4
+      // btnForePatternRepeat
       // 
-      this.btnFore4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnFore4.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.patternRepeatLogicSrc, "CanMoveForward", true));
-      this.btnFore4.Location = new System.Drawing.Point(93, 213);
-      this.btnFore4.Name = "btnFore4";
-      this.btnFore4.Size = new System.Drawing.Size(75, 48);
-      this.btnFore4.TabIndex = 6;
-      this.btnFore4.Text = "Forward to Next Roll";
-      this.btnFore4.UseVisualStyleBackColor = true;
-      this.btnFore4.Click += new System.EventHandler(this.BtnFore_Click);
+      this.btnForePatternRepeat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnForePatternRepeat.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.patternRepeatLogicSrc, "CanMoveForward", true));
+      this.btnForePatternRepeat.Location = new System.Drawing.Point(93, 213);
+      this.btnForePatternRepeat.Name = "btnForePatternRepeat";
+      this.btnForePatternRepeat.Size = new System.Drawing.Size(75, 48);
+      this.btnForePatternRepeat.TabIndex = 6;
+      this.btnForePatternRepeat.Text = "Forward to Next Roll";
+      this.btnForePatternRepeat.UseVisualStyleBackColor = true;
+      this.btnForePatternRepeat.Click += new System.EventHandler(this.BtnForePatternRepeat_Click);
       // 
       // label24
       // 
@@ -949,7 +1010,7 @@
       // 
       // groupBox5
       // 
-      this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox5.Location = new System.Drawing.Point(862, 244);
       this.groupBox5.Name = "groupBox5";
       this.groupBox5.Size = new System.Drawing.Size(360, 264);
@@ -1271,10 +1332,11 @@
       // 
       // label5
       // 
+      this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.label5.Location = new System.Drawing.Point(862, 12);
       this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(333, 23);
+      this.label5.Size = new System.Drawing.Size(360, 23);
       this.label5.TabIndex = 21;
       this.label5.Text = "Cut Rolls";
       this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1311,68 +1373,6 @@
       // pnlQueueMessage
       // 
       this.pnlQueueMessage.Name = "pnlQueueMessage";
-      // 
-      // colCutSapRoll
-      // 
-      this.colCutSapRoll.DataPropertyName = "SapRoll";
-      this.colCutSapRoll.HeaderText = "SAP Roll";
-      this.colCutSapRoll.Name = "colCutSapRoll";
-      this.colCutSapRoll.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.colCutSapRoll.Width = 67;
-      // 
-      // colCutFeet
-      // 
-      this.colCutFeet.DataPropertyName = "Length";
-      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      this.colCutFeet.DefaultCellStyle = dataGridViewCellStyle2;
-      this.colCutFeet.HeaderText = "Feet";
-      this.colCutFeet.Name = "colCutFeet";
-      this.colCutFeet.ReadOnly = true;
-      this.colCutFeet.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.colCutFeet.Width = 50;
-      // 
-      // colCutBow
-      // 
-      this.colCutBow.DataPropertyName = "Bow";
-      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      dataGridViewCellStyle3.Format = "N2";
-      dataGridViewCellStyle3.NullValue = null;
-      this.colCutBow.DefaultCellStyle = dataGridViewCellStyle3;
-      this.colCutBow.HeaderText = "Max Bow";
-      this.colCutBow.Name = "colCutBow";
-      this.colCutBow.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.colCutBow.Width = 56;
-      // 
-      // colCutSkew
-      // 
-      this.colCutSkew.DataPropertyName = "Skew";
-      dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      dataGridViewCellStyle4.Format = "N2";
-      dataGridViewCellStyle4.NullValue = null;
-      this.colCutSkew.DefaultCellStyle = dataGridViewCellStyle4;
-      this.colCutSkew.HeaderText = "Skew";
-      this.colCutSkew.Name = "colCutSkew";
-      this.colCutSkew.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.colCutSkew.Width = 56;
-      // 
-      // colCutEPE
-      // 
-      this.colCutEPE.DataPropertyName = "EPE";
-      dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-      dataGridViewCellStyle5.Format = "N3";
-      dataGridViewCellStyle5.NullValue = null;
-      this.colCutEPE.DefaultCellStyle = dataGridViewCellStyle5;
-      this.colCutEPE.HeaderText = "EPE";
-      this.colCutEPE.Name = "colCutEPE";
-      this.colCutEPE.Width = 56;
-      // 
-      // colCutMaxDlot
-      // 
-      this.colCutMaxDlot.DataPropertyName = "Dlot";
-      this.colCutMaxDlot.HeaderText = "Dlot";
-      this.colCutMaxDlot.Name = "colCutMaxDlot";
-      this.colCutMaxDlot.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.colCutMaxDlot.Width = 45;
       // 
       // MainForm
       // 
@@ -1433,7 +1433,7 @@
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Label label7;
     private System.Windows.Forms.Button btnBack2;
-    private System.Windows.Forms.Button btnFore2;
+    private System.Windows.Forms.Button btnForeMahlo2;
     private System.Windows.Forms.Button btnWaitFormSeam2;
     private System.Windows.Forms.TextBox textBox5;
     private System.Windows.Forms.Label label18;
@@ -1447,7 +1447,7 @@
     private System.Windows.Forms.TextBox textBox9;
     private System.Windows.Forms.TextBox textBox10;
     private System.Windows.Forms.Button btnBack3;
-    private System.Windows.Forms.Button btnFore3;
+    private System.Windows.Forms.Button btnForeBowAndSkew;
     private System.Windows.Forms.Button btnWaitFormSeam3;
     private System.Windows.Forms.Label label11;
     private System.Windows.Forms.Label label12;
@@ -1476,7 +1476,7 @@
     private System.Windows.Forms.TextBox textBox21;
     private System.Windows.Forms.TextBox textBox22;
     private System.Windows.Forms.Button btnBack4;
-    private System.Windows.Forms.Button btnFore4;
+    private System.Windows.Forms.Button btnForePatternRepeat;
     private System.Windows.Forms.Button btnWaitFormSeam4;
     private System.Windows.Forms.Label label24;
     private System.Windows.Forms.Label label25;

@@ -13,7 +13,7 @@ using Microsoft.AspNet.SignalR;
 
 namespace MahloService.Ipc
 {
-  internal class MahloHub : Hub
+  public class MahloHub : Hub
   {
     private readonly IMahloServer mahloServer;
     private readonly IDbMfg dbMfg;
@@ -21,8 +21,8 @@ namespace MahloService.Ipc
 
     public MahloHub()
     {
-      this.mahloServer = Program.Container.GetInstance<MahloServer>();
-      this.dbMfg = Program.Container.GetInstance<DbMfg>();
+      this.mahloServer = Program.Container.GetInstance<IMahloServer>();
+      this.dbMfg = Program.Container.GetInstance<IDbMfg>();
       this.syncContext = Program.Container.GetInstance<SynchronizationContext>();
     }
 
@@ -36,9 +36,9 @@ namespace MahloService.Ipc
       this.syncContext.Post(_ => this.GetMeterLogicInstance(name).MoveToPriorRoll(), null);
     }
 
-    public void MoveToNextRoll(string name)
+    public void MoveToNextRoll(string name, int currentRollLength)
     {
-      this.syncContext.Post(_ => this.GetMeterLogicInstance(name).MoveToNextRoll(), null);
+      this.syncContext.Post(_ => this.GetMeterLogicInstance(name).MoveToNextRoll(currentRollLength), null);
     }
 
     public void WaitForSeam(string name)

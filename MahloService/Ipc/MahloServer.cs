@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace MahloService.Ipc
       IMahloLogic mahloLogic,
       IBowAndSkewLogic bowAndSkewLogic,
       IPatternRepeatLogic patternRepeatLogic,
-      ISchedulerProvider schedulerProvider)
+      IScheduler scheduler)
     {
       this.log = logger;
       this.sewinQueue = sewinQueue;
@@ -44,13 +45,17 @@ namespace MahloService.Ipc
       this.disposables = new List<IDisposable>
       {
         Observable
-          .Interval(TimeSpan.FromMilliseconds(1000), schedulerProvider.WinFormsThread)
+          .Interval(TimeSpan.FromMilliseconds(1000), scheduler)
           .Subscribe(_ =>
           {
             this.UpdateMeterLogic(nameof(IMahloLogic), this.mahloLogic);
             this.UpdateMeterLogic(nameof(IBowAndSkewLogic), this.bowAndSkewLogic);
             this.UpdateMeterLogic(nameof(IPatternRepeatLogic), this.patternRepeatLogic);
             this.UpdateCutRollList();
+            if (this.sewinQueue.IsChanged)
+            {
+              this.UpdateSewinQueue();
+            }
           }),
 
         Observable
@@ -72,6 +77,7 @@ namespace MahloService.Ipc
     public void UpdateSewinQueue()
     {
       this.Clients.All.UpdateSewinQueue(this.sewinQueue.Rolls.ToArray());
+      this.sewinQueue.IsChanged = false;
     }
 
     public void UpdateCutRollList()

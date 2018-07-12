@@ -1,6 +1,8 @@
-﻿namespace MahloService.Settings
+﻿using System.Collections.Generic;
+
+namespace MahloService.Settings
 {
-  internal interface IServiceSettings
+  public interface IServiceSettings
   {
     string ServiceUrl { get; set; }
 
@@ -14,7 +16,7 @@
     double RollTooShortFactor { get; set; }
 
 
-    BackingSpec[] BackingSpecs { get; set; }
+    List<BackingSpec> BackingSpecs { get; set; }
 
     //bool ArchiveRollMaps { get; set; }
     //bool AutoCloseMahloDDEServer { get; set; }

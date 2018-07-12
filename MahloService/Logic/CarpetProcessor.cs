@@ -11,7 +11,7 @@ namespace MahloService.Logic
 {
   class CarpetProcessor : ICarpetProcessor
   {
-    private IServiceSettings appInfo;
+    private readonly IServiceSettings appInfo;
 
     public CarpetProcessor(
       ISewinQueue sewinQueue,
@@ -39,7 +39,7 @@ namespace MahloService.Logic
 
     public void Start()
     {
-      Startup.Start(appInfo.ServiceUrl);
+      Startup.Start(this.appInfo.ServiceUrl);
       this.MahloLogic.Start();
       this.BowAndSkewLogic.Start();
       this.PatternRepeatLogic.Start();

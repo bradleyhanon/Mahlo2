@@ -72,12 +72,14 @@
     <Compile Include="CommonMethods.cs" />
     <Compile Include="Logic\Averager.cs" />
     <Compile Include="Logic\CutRollList.cs" />
+    <Compile Include="Logic\CutRollLogic.cs" />
+    <Compile Include="Logic\ISapRollAssigner.cs" />
+    <Compile Include="Logic\SapRollAssigner.cs" />
     <Compile Include="Models\BowAndSkewMapDatum.cs" />
     <Compile Include="Models\Mahlo2MapDatum.cs" />
     <Compile Include="Models\PatternRepeatMapDatum.cs" />
     <Compile Include="Settings\BackingSpec.cs" />
     <Compile Include="Simulation\DbMfgSim.cs" />
-    <Compile Include="Simulation\EasyDAClientSimulator.cs" />
     <Compile Include="Simulation\FormSim.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,7 +101,6 @@
     <Compile Include="Ipc\Startup.cs" />
     <Compile Include="Logic\CarpetProcessor.cs" />
     <Compile Include="Logic\CriticalStops.cs" />
-    <Compile Include="Logic\CutRollLogic.cs" />
     <Compile Include="Logic\IBowAndSkewLogic.cs" />
     <Compile Include="Logic\ICarpetProcessor.cs" />
     <Compile Include="Logic\ICriticalStops.cs" />
@@ -117,7 +118,7 @@
     <Compile Include="DbMigrations\Runner.cs" />
     <Compile Include="Logic\BowAndSkewLogic.cs" />
     <Compile Include="Logic\UserAttentions.cs" />
-    <Compile Include="Models\AS400FinishedRoll.cs" />
+    <Compile Include="Models\AS400CutRoll.cs" />
     <Compile Include="Models\BowAndSkewModel.cs" />
     <Compile Include="Models\GreigeRoll.cs" />
     <Compile Include="Models\CoaterScheduleRoll.cs" />
@@ -166,8 +167,6 @@
     <Compile Include="Utilities\ConsoleControl.cs" />
     <Compile Include="Utilities\ConsoleEventArgs.cs" />
     <Compile Include="Utilities\IConcurrencyInfo.cs" />
-    <Compile Include="Utilities\ISchedulerProvider.cs" />
-    <Compile Include="Utilities\SchedulerProvider.cs" />
     <Compile Include="Utilities\SingleThreadSynchronizationContext.cs" />
     <Compile Include="WinApi.cs" />
   </ItemGroup>

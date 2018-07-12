@@ -42,7 +42,7 @@ namespace MahloService.Logic
 
     Task ApplyRecipe(string recipeName, bool isManualMode);
     void RefreshStatusDisplay();
-    void MoveToNextRoll();
+    void MoveToNextRoll(int lengthOfCurrentRoll);
     void MoveToPriorRoll();
     void WaitForSeam();
     void DisableSystem();

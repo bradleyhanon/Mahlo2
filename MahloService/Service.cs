@@ -48,21 +48,21 @@ namespace MahloService
     {
       try
       {
-        SynchronizationContext.SetSynchronizationContext(syncContext);
-        using (var container = Program.InitializeContainer(syncContext, false))
+        SynchronizationContext.SetSynchronizationContext(this.syncContext);
+        using (var container = Program.InitializeContainer(this.syncContext, false))
         {
           this.log = container.GetInstance<ILogger>();
           var mapper = container.GetInstance<ICarpetProcessor>();
           mapper.Start();
 
-          log.Information("Service started");
-          syncContext.RunOnCurrentThread();
-          log.Information("Service stopped");
+          this.log.Information("Service started");
+          this.syncContext.RunOnCurrentThread();
+          this.log.Information("Service stopped");
         }
       }
       catch (Exception ex)
       {
-        log.Error("Service thread error.", ex);
+        this.log.Error("Service thread error.", ex);
       }
     }
   }

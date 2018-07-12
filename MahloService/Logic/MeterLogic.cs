@@ -16,6 +16,7 @@ using MahloService.Repository;
 using MahloService.Utilities;
 using Newtonsoft.Json;
 using PropertyChanged;
+using System.Reactive.Concurrency;
 
 namespace MahloService.Logic
 {
@@ -28,7 +29,7 @@ namespace MahloService.Logic
     private ISewinQueue sewinQueue;
     private IMeterSrc<Model> srcData;
     private readonly IServiceSettings appInfo;
-    private IProgramState programState;
+    private readonly IProgramState programState;
 
     private bool checkRollSize = true;
     private int rollCount;
@@ -42,7 +43,7 @@ namespace MahloService.Logic
     private double dblCurrentFeetCounter;
 
     private bool isSewinQueueInitialized;
-    private GreigeRoll _currentRoll = new GreigeRoll();
+    private GreigeRoll currentRoll = new GreigeRoll();
 
     public MeterLogic(
       IDbLocal dbLocal,
@@ -52,7 +53,7 @@ namespace MahloService.Logic
       IUserAttentions<Model> userAttentions,
       ICriticalStops<Model> criticalStops,
       IProgramState programState,
-      ISchedulerProvider schedulerProvider)
+      IScheduler scheduler)
     {
       this.dbLocal = dbLocal;
       this.sewinQueue = sewinQueue;
@@ -70,7 +71,7 @@ namespace MahloService.Logic
           .Subscribe(args => this.OpcValueChanged(args.EventArgs.PropertyName)),
 
         Observable
-          .Interval(TimeSpan.FromSeconds(1), schedulerProvider.WinFormsThread)
+          .Interval(TimeSpan.FromSeconds(1), scheduler)
           .Subscribe(_ =>
           {
             this.Recipe = this.srcData.Recipe;
@@ -123,7 +124,8 @@ namespace MahloService.Logic
     /// <summary>
     /// Get the roll that is currently being processed
     /// </summary>
-    public virtual GreigeRoll CurrentRoll { get => _currentRoll; set => _currentRoll = value; }
+    public virtual GreigeRoll CurrentRoll { get => this.currentRoll; set => this.currentRoll = value; }
+
     [DependsOn(nameof(CurrentRoll))]
     public int CurrentRollIndex => this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
 
@@ -197,14 +199,28 @@ namespace MahloService.Logic
       throw new NotImplementedException();
     }
 
-    public void MoveToNextRoll()
+    public void MoveToNextRoll(int lengthOfCurrentRoll)
     {
       this.IsSeamDetected = false;
       this.IsMappingNow = false;
+
       int index = this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
       if (index >= 0 && index < this.sewinQueue.Rolls.Count - 1)
       {
+        // The current roll is finished, update its ending feet counter
+        var feetCounter = this.FeetCounterStart + lengthOfCurrentRoll;
+        this.FeetCounterEnd = feetCounter;
+        this.dbLocal.UpdateGreigeRoll(this.CurrentRoll);
+
+        // Move to the next roll and set its beginning feet counter
         this.CurrentRoll = this.sewinQueue.Rolls[index + 1];
+        this.feetCounterAtRollStart = feetCounter;
+        this.FeetCounterStart = feetCounter;
+        this.FeetCounterEnd = this.CurrentFeetCounter;
+        this.dbLocal.UpdateGreigeRoll(this.CurrentRoll);
+
+        // Causes the client displays to be updated.
+        this.sewinQueue.IsChanged = true;
       }
     }
 
@@ -215,7 +231,17 @@ namespace MahloService.Logic
       int index = this.sewinQueue.Rolls.IndexOf(this.CurrentRoll);
       if (index > 0)
       {
+        // The current roll will be processed later
+        this.FeetCounterStart = this.FeetCounterEnd = 0;
+        this.dbLocal.UpdateGreigeRoll(this.CurrentRoll);
+
+        // Move back to the prior roll and update its ending length
         this.CurrentRoll = this.sewinQueue.Rolls[index - 1];
+        this.FeetCounterEnd = this.CurrentFeetCounter;
+        this.dbLocal.UpdateGreigeRoll(this.CurrentRoll);
+
+        // Causes the client displays to be updated.
+        this.sewinQueue.IsChanged = true;
       }
     }
 
@@ -277,13 +303,13 @@ namespace MahloService.Logic
     protected virtual void RestoreState()
     {
       var state = this.programState.GetSubState(nameof(MeterLogic<Model>), typeof(Model).Name);
-      this.checkRollSize = state.Get<bool?>(nameof(checkRollSize)) ?? true;
-      this.rollCount = state.Get<int?>(nameof(rollCount)) ?? 0;
-      this.styleCount = state.Get<int?>(nameof(styleCount)) ?? this.styleCount;
-      this.feetCounterOffset = state.Get<double?>(nameof(feetCounterOffset)) ?? 0.0;
-      this.feetCounterAtRollStart = state.Get<int?>(nameof(feetCounterAtRollStart)) ?? 0;
-      this.feetCounterAtLastSeam = state.Get<int?>(nameof(feetCounterAtLastSeam)) ?? 0;
-      this.seamAckNeeded = state.Get<bool?>(nameof(seamAckNeeded)) ?? false;
+      this.checkRollSize = state.Get<bool?>(nameof(this.checkRollSize)) ?? true;
+      this.rollCount = state.Get<int?>(nameof(this.rollCount)) ?? 0;
+      this.styleCount = state.Get<int?>(nameof(this.styleCount)) ?? this.styleCount;
+      this.feetCounterOffset = state.Get<double?>(nameof(this.feetCounterOffset)) ?? 0.0;
+      this.feetCounterAtRollStart = state.Get<int?>(nameof(this.feetCounterAtRollStart)) ?? 0;
+      this.feetCounterAtLastSeam = state.Get<int?>(nameof(this.feetCounterAtLastSeam)) ?? 0;
+      this.seamAckNeeded = state.Get<bool?>(nameof(this.seamAckNeeded)) ?? false;
 
       string rollNo = state.Get<string>(nameof(this.CurrentRoll.RollNo)) ?? string.Empty;
       this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == rollNo) ?? new GreigeRoll();
@@ -314,9 +340,6 @@ namespace MahloService.Logic
               if (this.CurrentFeetCounter % MappingInterval == 0)
               {
                 SaveMapDatum();
-
-                // Update current greige roll every time a map datum is recorded
-                this.dbLocal.UpdateGreigeRoll(this.CurrentRoll);
               }
             }
           }
@@ -393,15 +416,18 @@ namespace MahloService.Logic
         }
 
         //save realtime data to dataset
-        if (this.IsMappingNow)
-        {
-          SaveRealtimeDataToDataSet();
-        }
+        //if (this.IsMappingNow)
+        //{
+        //  SaveRealtimeDataToDataSet();
+        //}
 
         //if (oMahlo.LineSpeed == 0 || Math.Abs(nLastLineSpeed - oMahlo.LineSpeed) > 1)
         //{
         //  SaveLineSpeedToFile();
         //}
+
+        // Update current greige roll every foot
+        this.dbLocal.UpdateGreigeRoll(this.CurrentRoll);
       }
       catch (Exception)
       {
@@ -553,6 +579,7 @@ namespace MahloService.Logic
       {
         this.isSewinQueueInitialized = true;
         this.RestoreState();
+        
       }
 
       if (!this.sewinQueue.Rolls.Contains(this.CurrentRoll))
@@ -578,7 +605,7 @@ namespace MahloService.Logic
 
     private void SaveState()
     {
-      var state = programState.GetSubState(nameof(MeterLogic<Model>));
+      var state = this.programState.GetSubState(nameof(MeterLogic<Model>));
       state.Set(typeof(Model).Name, new
       {
         this.checkRollSize,
@@ -622,14 +649,14 @@ namespace MahloService.Logic
       }
     }
 
-    private void SaveRealtimeDataToDataSet()
-    {
+    //private void SaveRealtimeDataToDataSet()
+    //{
 
-    }
+    //}
 
-    private void SaveLineSpeedToFile()
-    {
+    //private void SaveLineSpeedToFile()
+    //{
 
-    }
+    //}
   }
 }

@@ -29,7 +29,7 @@ namespace MahloService.Settings
     public double RollTooLongFactor { get; set; } = 1.1;
     public double RollTooShortFactor { get; set; } = 0.9;
 
-    public BackingSpec[] BackingSpecs { get; set; } = 
+    public List<BackingSpec> BackingSpecs { get; set; } = new List<BackingSpec>
     {
       new BackingSpec { Backing = "SA", MaxBow = 0.5, MaxSkew = 1.25, DlotSpec = 0.0100 },
       new BackingSpec { Backing = "IR", MaxBow = 0.25, MaxSkew = 0.75, DlotSpec = 0.0075 },

@@ -84,19 +84,22 @@ namespace MahloClient.Views
 
     private void BtnGoToPreviousRoll_Click(object sender, EventArgs e)
     {
-      var dr = MessageBox.Show("You have requested to move back to the previous roll in the queue.  This will cancel mapping that may be in progress.\n\nAre you sure you want to do this?", "Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-      if (dr == DialogResult.Yes)
-      {
-        this.ipcClient.Call(Ipc.MahloIpcClient.MoveToPriorRollCommand, nameof(IMahloLogic));
-      }
+      this.ipcClient.Call(Ipc.MahloIpcClient.MoveToPriorRollCommand, nameof(IMahloLogic));
     }
 
     private void BtnGoToNextRoll_Click(object sender, EventArgs e)
     {
-      var dr = MessageBox.Show("You have requested to move ahead to the next roll in the queue.  This will cancel mapping that may be in progress.\n\nAre you sure you want to do this?", "Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-      if (dr == DialogResult.Yes)
+      using (var dlg = new MoveToNextDialog
       {
-        this.ipcClient.Call(Ipc.MahloIpcClient.MoveToNextRollCommand, nameof(IMahloLogic));
+        RollNumber = this.logic.CurrentRoll.RollNo,
+        RollLength = (int)this.logic.MeasuredLength,
+        MaxLength = (int)this.logic.MeasuredLength,
+      })
+      {
+        if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+        {
+          this.logic.MoveToNextRoll(dlg.RollLength);
+        }
       }
     }
 

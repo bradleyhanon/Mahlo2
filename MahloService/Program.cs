@@ -149,13 +149,15 @@ namespace MahloService
       container.RegisterSingleton<IMahloLogic, MahloLogic>();
       container.RegisterSingleton<IBowAndSkewLogic, BowAndSkewLogic>();
       container.RegisterSingleton<IPatternRepeatLogic, PatternRepeatLogic>();
+      container.RegisterSingleton<ISapRollAssigner, SapRollAssigner>();
 
       if (shouldSimulate)
       {
         container.RegisterSingleton<IMahloSrc, OpcSrcSim<MahloModel>>();
         container.RegisterSingleton<IBowAndSkewSrc, OpcSrcSim<BowAndSkewModel>>();
         container.RegisterSingleton<IPatternRepeatSrc, OpcSrcSim<PatternRepeatModel>>();
-        container.RegisterSingleton<IDbMfg, DbMfgSim>();
+        container.RegisterSingleton<IDbMfgSim, DbMfgSim>();
+        container.RegisterSingleton<IDbMfg>(() => container.GetInstance<IDbMfgSim>());
       }
       else
       {
@@ -170,7 +172,7 @@ namespace MahloService
       //container.RegisterSingleton<IMeterSrc<BowAndSkewRoll>, OpcClient<BowAndSkewRoll>>();
       //container.RegisterSingleton<IMeterSrc<PatternRepeatRoll>, OpcClient<PatternRepeatRoll>>();
 
-      container.RegisterSingleton<ISchedulerProvider, SchedulerProvider>();
+      container.RegisterInstance<IScheduler>(new SynchronizationContextScheduler(syncContext));
       container.RegisterInstance<SynchronizationContext>(syncContext);
       container.RegisterSingleton<IConcurrencyInfo, ConcurrencyInfo>();
       container.RegisterSingleton<ISewinQueue, SewinQueue>();

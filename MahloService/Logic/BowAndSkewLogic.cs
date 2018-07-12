@@ -12,6 +12,7 @@ using MahloService.Repository;
 using MahloService.Utilities;
 using Newtonsoft.Json;
 using PropertyChanged;
+using System.Reactive.Concurrency;
 
 namespace MahloService.Logic
 {
@@ -21,10 +22,10 @@ namespace MahloService.Logic
     private readonly IBowAndSkewSrc dataSrc;
     private readonly BowAndSkewMapDatum mapDatum = new BowAndSkewMapDatum();
 
-    private Averager bowAverager = new Averager();
-    private Averager skewAverager = new Averager();
-    private Averager bowMapAverager = new Averager();
-    private Averager skewMapAverager = new Averager();
+    private readonly Averager bowAverager = new Averager();
+    private readonly Averager skewAverager = new Averager();
+    private readonly Averager bowMapAverager = new Averager();
+    private readonly Averager skewMapAverager = new Averager();
 
     public BowAndSkewLogic(
       IDbLocal dbLocal,
@@ -34,8 +35,8 @@ namespace MahloService.Logic
       IUserAttentions<BowAndSkewModel> userAttentions,
       ICriticalStops<BowAndSkewModel> criticalStops,
       IProgramState programState,
-      ISchedulerProvider schedulerProvider)
-      : base(dbLocal, dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, schedulerProvider)
+      IScheduler scheduler)
+      : base(dbLocal, dataSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, scheduler)
     {
       this.dbLocal = dbLocal;
       this.dataSrc = dataSrc;
@@ -99,10 +100,13 @@ namespace MahloService.Logic
 
     protected override void SaveMapDatum()
     {
-      this.mapDatum.FeetCounter = this.CurrentFeetCounter;
-      this.mapDatum.Bow = this.bowMapAverager.Average;
-      this.mapDatum.Skew = this.skewMapAverager.Average;
-      this.dbLocal.InsertBowAndSkewMapDatum(this.mapDatum);
+      if (this.bowMapAverager.Count > 0)
+      {
+        this.mapDatum.FeetCounter = this.CurrentFeetCounter;
+        this.mapDatum.Bow = this.bowMapAverager.Average;
+        this.mapDatum.Skew = this.skewMapAverager.Average;
+        this.dbLocal.InsertBowAndSkewMapDatum(this.mapDatum);
+      }
 
       this.bowMapAverager.Clear();
       this.skewMapAverager.Clear();
@@ -124,13 +128,17 @@ namespace MahloService.Logic
 
     protected override void OpcValueChanged(string propertyName)
     {
+      base.OpcValueChanged(propertyName);
+
       switch(propertyName)
       {
         case nameof(this.dataSrc.FeetCounter):
           if (this.IsMovementForward)
           {
-            this.bowAverager.Add(this.dataSrc.Bow);
-            this.skewAverager.Add(this.dataSrc.Skew);
+            this.bowAverager.Add(Math.Abs(this.dataSrc.Bow));
+            this.skewAverager.Add(Math.Abs(this.dataSrc.Skew));
+            this.bowMapAverager.Add(Math.Abs(this.dataSrc.Bow));
+            this.skewMapAverager.Add(Math.Abs(this.dataSrc.Skew));
           }
 
           break;
@@ -141,10 +149,6 @@ namespace MahloService.Logic
 
         case nameof(this.dataSrc.Skew):
           this.CurrentRoll.Skew = this.dataSrc.Skew;
-          break;
-
-        default:
-          base.OpcValueChanged(propertyName);
           break;
       }
     }

@@ -18,8 +18,8 @@ namespace MahloServiceTests.Repository
 
     public ProgramStateTests()
     {
-      provider = Substitute.For<IProgramStateProvider>();
-      provider.GetProgramState().Returns("{}");
+      this.provider = Substitute.For<IProgramStateProvider>();
+      this.provider.GetProgramState().Returns("{}");
     }
 
     [Fact]
@@ -106,7 +106,7 @@ namespace MahloServiceTests.Repository
       this.provider
         .Received(1);
 
-      // Verify that the state can be reconstituted
+      // Be sure that the state can be reconstituted
       this.provider = Substitute.For<IProgramStateProvider>();
       this.provider.GetProgramState().Returns(savedState);
       var state2 = new ProgramState(this.provider);
@@ -144,7 +144,7 @@ namespace MahloServiceTests.Repository
       this.provider
         .Received(1);
 
-      // Verify that the state can be reconstituted
+      // Be sure that the state can be reconstituted
       this.provider = Substitute.For<IProgramStateProvider>();
       this.provider.GetProgramState().Returns(savedState);
       var state2 = new ProgramState(this.provider);

@@ -28,7 +28,7 @@ namespace MahloClient.Ipc
     private bool IsDisposed;
     private HubConnection hubConnection;
     private IHubProxy hubProxy;
-    private IClientSettings appInfo;
+    private readonly IClientSettings appInfo;
     private readonly ISewinQueue sewinQueue;
     private readonly ICutRollList cutRollList;
     private readonly SynchronizationContext context;
@@ -76,16 +76,16 @@ namespace MahloClient.Ipc
 
     public async Task Start()
     {
-      if (!isStarting)
+      if (!this.isStarting)
       {
         this.isStarting = true;
 
-        this.hubConnection = new HubConnection(appInfo.ServiceUrl);
-        this.hubConnection.StateChanged += HubConnection_StateChanged;
+        this.hubConnection = new HubConnection(this.appInfo.ServiceUrl);
+        this.hubConnection.StateChanged += this.HubConnection_StateChanged;
         this.hubConnection.Received += msg => Console.WriteLine(msg);
         //this.hubConnection.TraceLevel = TraceLevels.All;
         //this.hubConnection.TraceWriter = Console.Out;
-        this.hubProxy = hubConnection.CreateHubProxy("MahloHub");
+        this.hubProxy = this.hubConnection.CreateHubProxy("MahloHub");
         this.hubProxy.On("UpdateSewinQueue", arg =>this.context.Post(_ =>
         {
             this.sewinQueue.UpdateSewinQueue(arg);
@@ -105,7 +105,7 @@ namespace MahloClient.Ipc
         {
           try
           {
-            await hubConnection.Start();
+            await this.hubConnection.Start();
             this.IpcStatusMessage = this.hubConnection.State.ToString();
             break;
           }
@@ -193,7 +193,7 @@ namespace MahloClient.Ipc
         builder.AppendLine();
       }
 
-      connectionError = builder.ToString();
+      this.connectionError = builder.ToString();
     }
 
     /// <summary>
@@ -231,7 +231,7 @@ namespace MahloClient.Ipc
         try
         {
           await this.connectionTcs.Task;
-          result = await hubProxy.Invoke<T>(method, args);
+          result = await this.hubProxy.Invoke<T>(method, args);
           break;
         }
         catch (Exception ex) when (this.hubConnection.State != ConnectionState.Connected)

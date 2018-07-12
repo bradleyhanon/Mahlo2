@@ -10,6 +10,8 @@ namespace MahloService.Logic
   {
     event Action QueueChanged;
 
+    bool IsChanged { get; set; }
+
     BindingList<GreigeRoll> Rolls { get; }
 
     string Message { get; }

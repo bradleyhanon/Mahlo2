@@ -13,12 +13,11 @@ namespace Mahlo2Tests.Logic
 {
   public class PatternRepeatLogicTests
   {
-    IServiceSettings settings = Substitute.For<IServiceSettings>();
-    GreigeRoll greigeRoll = new GreigeRoll();
-    List<double> elongations = new List<double>();
-
-    BackingSpec saSpec = new BackingSpec { Backing = "SA", MaxBow = 0.5, MaxSkew = 1.25, DlotSpec = 0.0100 };
-    BackingSpec hlSpec = new BackingSpec { Backing = "HL", MaxBow = 0.25, MaxSkew = 0.75, DlotSpec = 0.0075 };
+    private readonly IServiceSettings settings = Substitute.For<IServiceSettings>();
+    private readonly GreigeRoll greigeRoll = new GreigeRoll();
+    private readonly List<double> elongations = new List<double>();
+    private readonly BackingSpec saSpec = new BackingSpec { Backing = "SA", MaxBow = 0.5, MaxSkew = 1.25, DlotSpec = 0.0100 };
+    private readonly BackingSpec hlSpec = new BackingSpec { Backing = "HL", MaxBow = 0.25, MaxSkew = 0.75, DlotSpec = 0.0075 };
 
     public PatternRepeatLogicTests()
     {
@@ -61,8 +60,8 @@ namespace Mahlo2Tests.Logic
       {
         this.settings.GetBackingSpec("SA").Returns(this.saSpec);
         var tuple = saTable[j];
-        Assert.Equal(tuple.dlot, PatternRepeatLogic.CalculateDlot("SA", tuple.gt + 0.001, settings));
-        Assert.Equal(tuple.dlot, PatternRepeatLogic.CalculateDlot("SA", tuple.le, settings));
+        Assert.Equal(tuple.dlot, PatternRepeatLogic.CalculateDlot("SA", tuple.gt + 0.001, this.settings));
+        Assert.Equal(tuple.dlot, PatternRepeatLogic.CalculateDlot("SA", tuple.le, this.settings));
 
         this.settings.GetBackingSpec("HL").Returns(this.hlSpec);
         tuple = vinylTable[j];
@@ -73,7 +72,7 @@ namespace Mahlo2Tests.Logic
       List<(double epe, string dlot)> list = new List<(double epe, string dlot)>();
       for (decimal eped = 0.950M; eped < 1.040M; eped += 0.001M)
       {
-        list.Add(((double)eped, PatternRepeatLogic.CalculateDlot("HL", (double)eped, settings)));
+        list.Add(((double)eped, PatternRepeatLogic.CalculateDlot("HL", (double)eped, this.settings)));
       }
     }
   }

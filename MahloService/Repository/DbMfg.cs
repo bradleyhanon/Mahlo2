@@ -78,38 +78,19 @@ namespace MahloService.Repository
       }
     }
 
-    public async Task<AS400FinishedRoll> GetCutRollFromHost()
+    /// <summary>
+    /// Read the current cut roll number from the AS/400
+    /// </summary>
+    /// <returns>The current cut roll number or null if there isn't one.</returns>
+    public async Task<decimal?> GetCutRollFromHost()
     {
       // This reads the current cut roll number from the AS/400
       using (var connection = this.GetOpenConnection())
       {
-        //var cmd = connection.CreateCommand();
-        //cmd.CommandText = "spGetNextCoaterRoll";
-        //cmd.CommandType = CommandType.StoredProcedure;
-        //var reader = await cmd.ExecuteReaderAsync();
-        //for (int j = 0; j < reader.FieldCount; j++)
-        //{
-        //  string name = reader.GetName(j);
-        //  Type type = reader.GetFieldType(j);
-        //  //object value = reader.GetValue(j);
-        //  x++;
-        //}
-
-        var roll = await connection.QuerySingleAsync<AS400FinishedRoll>("spGetNextCoaterRoll", commandType: CommandType.StoredProcedure);
-        return roll;
+        var roll = await connection.QuerySingleAsync<AS400CutRoll>("spGetNextCoaterRoll", commandType: CommandType.StoredProcedure);
+        return roll?.FRCROL;
       }
     }
-
-    // TODO: SaveRollMap needs to be done when we know what Mfg DB can take
-    //public Task SaveRollMap(CutRollDetail record)
-    //{
-    //  var p = new DynamicParameters();
-    //  p.Add("CutRoll", size: 8);
-    //  p.Add("DatTime");
-    //  p.Add("SpecPatternRepeat");
-    //  p.Add("MeasuredPatternRepeat");
-    //  p.Add("PositionInRoll");
-    //}
 
     public async Task<(string styleName, string colorName)> GetNamesFromLegacyCodes(string styleCode, string colorCode)
     {

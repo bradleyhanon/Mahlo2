@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MahloService.Models
 {
-  class AS400FinishedRoll
+  class AS400CutRoll
   {
     public decimal FRCROL { get; set; }
     public string FRSTYL { get; set; }

@@ -53,7 +53,7 @@ namespace MahloClient.Views
           this.grdGreigeRoll.Invalidate();
         });
 
-      BowAndSkewPropertyChangedSubscription =
+      this.BowAndSkewPropertyChangedSubscription =
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
         h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged += h,
         h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged -= h)
@@ -64,7 +64,7 @@ namespace MahloClient.Views
           this.grdGreigeRoll.Invalidate();
         });
 
-      PatternRepeatPropertyChangedSubscription =
+      this.PatternRepeatPropertyChangedSubscription =
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
         h => ((INotifyPropertyChanged)this.carpetProcessor.PatternRepeatLogic).PropertyChanged += h,
         h => ((INotifyPropertyChanged)this.carpetProcessor.PatternRepeatLogic).PropertyChanged -= h)
@@ -76,12 +76,12 @@ namespace MahloClient.Views
         });
 
       // Make column heading alignment match column data alignment
-      foreach (DataGridViewColumn column in grdGreigeRoll.Columns)
+      foreach (DataGridViewColumn column in this.grdGreigeRoll.Columns)
       {
         column.HeaderCell.Style.Alignment = column.DefaultCellStyle.Alignment;
       }
 
-      foreach (DataGridViewColumn column in grdCutRoll.Columns)
+      foreach (DataGridViewColumn column in this.grdCutRoll.Columns)
       {
         column.HeaderCell.Style.Alignment = column.DefaultCellStyle.Alignment;
       }
@@ -120,14 +120,14 @@ namespace MahloClient.Views
     private void MainForm_Load(object sender, EventArgs e)
     {
       this.carpetProcessor.Start();
-      this.grdGreigeRoll.DataSource = carpetProcessor.SewinQueue.Rolls;
-      this.mahloRollSrc.DataSource = carpetProcessor.MahloLogic.CurrentRoll;
-      this.bowAndSkewRollSrc.DataSource = carpetProcessor.BowAndSkewLogic.CurrentRoll;
-      this.patternRepeatRollSrc.DataSource = carpetProcessor.PatternRepeatLogic.CurrentRoll;
+      this.grdGreigeRoll.DataSource = this.carpetProcessor.SewinQueue.Rolls;
+      this.mahloRollSrc.DataSource = this.carpetProcessor.MahloLogic.CurrentRoll;
+      this.bowAndSkewRollSrc.DataSource = this.carpetProcessor.BowAndSkewLogic.CurrentRoll;
+      this.patternRepeatRollSrc.DataSource = this.carpetProcessor.PatternRepeatLogic.CurrentRoll;
 
-      this.mahloLogicSrc.DataSource = carpetProcessor.MahloLogic;
-      this.bowAndSkewLogicSrc.DataSource = carpetProcessor.BowAndSkewLogic;
-      this.patternRepeatLogicSrc.DataSource = carpetProcessor.PatternRepeatLogic;
+      this.mahloLogicSrc.DataSource = this.carpetProcessor.MahloLogic;
+      this.bowAndSkewLogicSrc.DataSource = this.carpetProcessor.BowAndSkewLogic;
+      this.patternRepeatLogicSrc.DataSource = this.carpetProcessor.PatternRepeatLogic;
       this.cutRollSrc.DataSource = this.cutRollList;
 
       this.grpMahlo.Tag = nameof(IMahloLogic);
@@ -150,9 +150,28 @@ namespace MahloClient.Views
       }
     }
 
-    private void BtnFore_Click(object sender, EventArgs e)
+    private void BtnForeMahlo2_Click(object sender, EventArgs e)
     {
-      this.ExecuteButtonCmd(sender, Ipc.MahloIpcClient.MoveToNextRollCommand);
+      this.ExecuteMoveToNextButtonCmd(
+        sender, 
+        this.carpetProcessor.MahloLogic.CurrentRoll.RollNo,
+        this.carpetProcessor.MahloLogic.MeasuredLength);
+    }
+
+    private void BtnForeBowAndSkew_Click(object sender, EventArgs e)
+    {
+      this.ExecuteMoveToNextButtonCmd(
+        sender, 
+        this.carpetProcessor.BowAndSkewLogic.CurrentRoll.RollNo,
+        this.carpetProcessor.BowAndSkewLogic.MeasuredLength);
+    }
+
+    private void BtnForePatternRepeat_Click(object sender, EventArgs e)
+    {
+      this.ExecuteMoveToNextButtonCmd(
+        sender, 
+        this.carpetProcessor.PatternRepeatLogic.CurrentRoll.RollNo, 
+        this.carpetProcessor.PatternRepeatLogic.MeasuredLength);
     }
 
     private void BtnBack_Click(object sender, EventArgs e)
@@ -165,13 +184,30 @@ namespace MahloClient.Views
       this.ExecuteButtonCmd(sender, Ipc.MahloIpcClient.WaitForSeamCommand);
     }
 
-    private async void ExecuteButtonCmd(object sender, string command)
+    private void ExecuteMoveToNextButtonCmd(object sender, string rollNo, long measuredLength)
+    {
+      using (var dlg = new MoveToNextDialog
+      {
+        RollNumber = rollNo,
+        RollLength = (int)measuredLength,
+        MaxLength = (int)measuredLength,
+      })
+      {
+        if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+        {
+          this.ExecuteButtonCmd(sender, Ipc.MahloIpcClient.MoveToNextRollCommand, dlg.RollLength);
+        }
+      }
+    }
+
+    private async void ExecuteButtonCmd(object sender, string command, params object[] args)
     {
       Button button = (Button)sender;
       string name = (string)button.Parent.Tag;
       var buttons = button.Parent.Controls.OfType<Button>();
       buttons.ForEach(item => item.Enabled = false);
-      await this.mahloClient.Call(command, name);
+      args = Enumerable.Repeat(name, 1).Concat(args).ToArray();
+      await this.mahloClient.Call(command, args);
       buttons.ForEach(item => item.Enabled = true);
     }
 
@@ -184,10 +220,10 @@ namespace MahloClient.Views
     private void GrdGreigeRoll_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
     {
       var col = this.grdGreigeRoll.Columns[e.ColumnIndex];
-      GreigeRoll gridRoll = carpetProcessor.SewinQueue.Rolls[e.RowIndex];
-      SetColor(this.carpetProcessor.MahloLogic, mahloColumnNames);
-      SetColor(this.carpetProcessor.BowAndSkewLogic, bowAndSkewColumnNames);
-      SetColor(this.carpetProcessor.PatternRepeatLogic, patternRepeatColumnNames);
+      GreigeRoll gridRoll = this.carpetProcessor.SewinQueue.Rolls[e.RowIndex];
+      SetColor(this.carpetProcessor.MahloLogic, this.mahloColumnNames);
+      SetColor(this.carpetProcessor.BowAndSkewLogic, this.bowAndSkewColumnNames);
+      SetColor(this.carpetProcessor.PatternRepeatLogic, this.patternRepeatColumnNames);
 
       void SetColor(IMeterLogic logic, string[] names)
       {
@@ -222,7 +258,7 @@ namespace MahloClient.Views
 
       (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
         roll.RollLength == 0 ?
-        new CellColor { ForeColor = grdGreigeRoll.DefaultCellStyle.BackColor, BackColor = grdGreigeRoll.DefaultCellStyle.ForeColor } :
+        new CellColor { ForeColor = this.grdGreigeRoll.DefaultCellStyle.BackColor, BackColor = this.grdGreigeRoll.DefaultCellStyle.ForeColor } :
         CellColor.GetFeetColor(roll.RollLength, (long)args.Value, this.serviceSettings);
     }
 

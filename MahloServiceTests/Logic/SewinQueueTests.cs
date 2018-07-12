@@ -26,7 +26,7 @@ namespace MahloServiceTests
 
     private readonly IDbLocal dbLocal = Substitute.For<IDbLocal>();
     private readonly IDbMfg dbMfg = Substitute.For<IDbMfg>();
-    private readonly TestSchedulers schedulers = new TestSchedulers();
+    private readonly TestScheduler scheduler = new TestScheduler();
 
     private SewinQueue target;
 
@@ -43,13 +43,13 @@ namespace MahloServiceTests
     public void GetIsSewinQueueChangedIsCalledPeriodically()
     {
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(false);
-      target = new SewinQueue(schedulers, dbLocal, dbMfg);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg);
       for (int j = 1; j < 5; j++)
       {
-        this.schedulers.WinFormsThread.AdvanceBy(target.RefreshInterval.Ticks - 1);
-        dbMfg.Received(j).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
-        this.schedulers.WinFormsThread.AdvanceBy(1);
-        dbMfg.Received(j + 1).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
+        this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks - 1);
+        this.dbMfg.Received(j).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
+        this.scheduler.AdvanceBy(1);
+        this.dbMfg.Received(j + 1).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
       }
     }
 
@@ -57,41 +57,41 @@ namespace MahloServiceTests
     public void GetCoaterSewinQueueIsNotCalledWhenGetIsQueChangedReturnsFalse()
     {
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(false);
-      target = new SewinQueue(schedulers, dbLocal, dbMfg);
-      dbMfg.Received(1).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
-      dbMfg.DidNotReceive().GetCoaterSewinQueue();
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg);
+      this.dbMfg.Received(1).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
+      this.dbMfg.DidNotReceive().GetCoaterSewinQueue();
     }
 
     [Fact]
     public void GetCoaterSewinQueueIsCalledWhenGetIsQueChangedReturnsTrue()
     {
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
-      target = new SewinQueue(schedulers, dbLocal, dbMfg);
-      dbMfg.Received(1).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
-      dbMfg.Received(1).GetCoaterSewinQueue();
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg);
+      this.dbMfg.Received(1).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
+      this.dbMfg.Received(1).GetCoaterSewinQueue();
     }
 
     [Fact]
     public void GetIsSewinQueueChangedCalledWithResultsFromPriorGetCoaterSewinQueue()
     {
-      var newRolls = new GreigeRoll[] { roll1, roll2, roll3 };
+      var newRolls = new GreigeRoll[] { this.roll1, this.roll2, this.roll3 };
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
       this.dbMfg.GetCoaterSewinQueue().Returns(newRolls);
-      target = new SewinQueue(schedulers, dbLocal, dbMfg);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg);
 
       this.dbMfg.ClearReceivedCalls();
-      this.schedulers.WinFormsThread.AdvanceBy(target.RefreshInterval.Ticks);
-      this.dbMfg.Received(1).GetIsSewinQueueChanged(3, roll1.RollNo, roll3.RollNo);
+      this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks);
+      this.dbMfg.Received(1).GetIsSewinQueueChanged(3, this.roll1.RollNo, this.roll3.RollNo);
     }
 
     [Fact]
     public void EmptyQueueIsPopulatedWithRecords()
     {
-      var newRolls = new GreigeRoll[] { roll1, roll2, roll3 };
+      var newRolls = new GreigeRoll[] { this.roll1, this.roll2, this.roll3 };
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
       this.dbLocal.GetNextGreigeRollId().Returns(1);
       this.dbMfg.GetCoaterSewinQueue().Returns(newRolls);
-      target = new SewinQueue(schedulers, dbLocal, dbMfg);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg);
       Assert.True(newRolls.SequenceEqual(this.target.Rolls));
 
       for (int j = 0; j < this.target.Rolls.Count; j++)
@@ -103,24 +103,24 @@ namespace MahloServiceTests
     [Fact]
     public void MatchingRollsUpdatedNewRollsAddedOthersRemoved()
     {
-      roll3.ProductImageURL = "Unchanged";
-      var newRolls1 = new GreigeRoll[] { Clone(roll2), Clone(roll3), Clone(roll4) };
-      roll3.ProductImageURL = "Now changed";
-      var newRolls2 = new GreigeRoll[] { Clone(roll4), Clone(roll3), Clone(roll5), Clone(roll1) };
-      var expected = new GreigeRoll[] { Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
+      this.roll3.ProductImageURL = "Unchanged";
+      var newRolls1 = new GreigeRoll[] { Clone(this.roll2), Clone(this.roll3), Clone(this.roll4) };
+      this.roll3.ProductImageURL = "Now changed";
+      var newRolls2 = new GreigeRoll[] { Clone(this.roll4), Clone(this.roll3), Clone(this.roll5), Clone(this.roll1) };
+      var expected = new GreigeRoll[] { Clone(this.roll3), Clone(this.roll4), Clone(this.roll5), Clone(this.roll1) };
 
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
       this.dbMfg.GetCoaterSewinQueue().Returns(newRolls1);
-      target = new SewinQueue(schedulers, dbLocal, dbMfg);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg);
       this.dbMfg.Received(1).GetCoaterSewinQueue();
 
       this.dbMfg.ClearReceivedCalls();
-      this.dbMfg.GetIsSewinQueueChanged(3, roll2.RollNo, roll4.RollNo).Returns(true);
+      this.dbMfg.GetIsSewinQueueChanged(3, this.roll2.RollNo, this.roll4.RollNo).Returns(true);
       this.dbMfg.GetCoaterSewinQueue().Returns(newRolls2);
-      this.schedulers.WinFormsThread.AdvanceBy(target.RefreshInterval.Ticks);
+      this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks);
       this.dbMfg.Received(1).GetCoaterSewinQueue();
-      Assert.True(target.Rolls.SequenceEqual(expected, this));
-      Assert.Equal("Now changed", target.Rolls.Single(item => item.RollNo == roll3.RollNo).ProductImageURL);
+      Assert.True(this.target.Rolls.SequenceEqual(expected, this));
+      Assert.Equal("Now changed", this.target.Rolls.Single(item => item.RollNo == this.roll3.RollNo).ProductImageURL);
     }
 
     //[Fact]

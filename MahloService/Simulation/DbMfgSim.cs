@@ -12,6 +12,7 @@ namespace MahloService.Simulation
   class DbMfgSim : IDbMfgSim
   {
     private int nextRollNo = 1000000;
+    private int nextCutRoll = 2000000;
 
     public DbMfgSim(IDbLocal dbLocal)
     {
@@ -34,8 +35,8 @@ namespace MahloService.Simulation
     {
       GreigeRoll roll = new GreigeRoll
       {
-        RollNo = nextRollNo.ToString(),
-        OrderNo = (nextRollNo + 1000000).ToString(),
+        RollNo = this.nextRollNo.ToString(),
+        OrderNo = (this.nextRollNo + 1000000).ToString(),
         ColorCode = "001",
         ColorName = "Red",
         StyleCode = "Plaid",
@@ -81,9 +82,9 @@ namespace MahloService.Simulation
       return Task.FromResult<IEnumerable<GreigeRoll>>(this.SewinQueue);
     }
 
-    public Task<AS400FinishedRoll> GetCutRollFromHost()
+    public Task<decimal?> GetCutRollFromHost()
     {
-      return Task.FromResult<AS400FinishedRoll>(new AS400FinishedRoll());
+      return Task.FromResult<decimal?>(this.nextCutRoll);
     }
 
     public Task<bool> GetIsSewinQueueChanged(int rowCount, string firstRollNo, string lastRollNo)
@@ -102,6 +103,11 @@ namespace MahloService.Simulation
     public Task SendEmail(string pRecipients, string pSubject, string pBody)
     {
       return Task.CompletedTask;
+    }
+
+    public void CutRollCompleted()
+    {
+      this.nextCutRoll++;
     }
   }
 }

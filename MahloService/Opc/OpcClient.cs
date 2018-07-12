@@ -34,10 +34,9 @@ namespace MahloService.Opc
     private IUserAttentions<Model> userAttentions;
     private ICriticalStops<Model> criticalStops;
     private Type priorExceptionType = null;
-    private IOpcSettings mahloSettings;
-    //private IPlcSettings seamSettings;
+    private readonly IOpcSettings mahloSettings;
     private readonly IProgramState programState;
-    private ILogger log;
+    private readonly ILogger log;
 
     private readonly SynchronizationContext synchronizationContext;
     private string seamAckTag;
@@ -141,12 +140,12 @@ namespace MahloService.Opc
 
     private void MahloSubscribe(string channel, IEnumerable<(string name, Action<object> action)> items)
     {
-      this.Subscribe(MahloServerClass, channel, items, MahloItemChangedCallback);
+      this.Subscribe(MahloServerClass, channel, items, this.MahloItemChangedCallback);
     }
 
     private void PlcSubscribe(string channel, IEnumerable<(string name, Action<object> action)> items)
     {
-      this.Subscribe(PlcServerClass, channel, items, PlcItemChangedCallback);
+      this.Subscribe(PlcServerClass, channel, items, this.PlcItemChangedCallback);
     }
 
     public void Initialize()
@@ -176,7 +175,7 @@ namespace MahloService.Opc
       if (typeof(Model) == typeof(BowAndSkewModel))
       {
         seamDetectorId = 2;
-        this.mahloChannel = mahloSettings.BowAndSkewChannelName;
+        this.mahloChannel = this.mahloSettings.BowAndSkewChannelName;
         mahloTags.AddRange(new(string, Action<object>)[]
         {
             ("Current.Bridge.0.Calc.1.OnOff", value => this.IsAutoMode = (int)value != 0),
@@ -195,7 +194,7 @@ namespace MahloService.Opc
         plcTags.Add(($"MahloPLC.MahloDoff", value => this.IsDoffDetected = (bool)value));
 
         seamDetectorId = 3;
-        this.mahloChannel = mahloSettings.PatternRepeatChannelName;
+        this.mahloChannel = this.mahloSettings.PatternRepeatChannelName;
         mahloTags.AddRange(new(string, Action<object>)[]
         {
             ("Current.Bridge.0.Calc.1.OnOff", value => this.IsAutoMode = (int)value != 0),
@@ -209,7 +208,7 @@ namespace MahloService.Opc
       else if (typeof(Model) == typeof(MahloModel))
       {
         seamDetectorId = 1;
-        this.mahloChannel = mahloSettings.Mahlo2ChannelName;
+        this.mahloChannel = this.mahloSettings.Mahlo2ChannelName;
 
         mahloTags.Clear();
         mahloTags.AddRange(new(string, Action<object>)[]
@@ -247,9 +246,9 @@ namespace MahloService.Opc
     {
       if (e.Exception != null)
       {
-        if (e.Exception.GetType() != priorExceptionType)
+        if (e.Exception.GetType() != this.priorExceptionType)
         {
-          log.Debug(e.Exception, e.Arguments.ItemDescriptor.ItemId);
+          this.log.Debug(e.Exception, e.Arguments.ItemDescriptor.ItemId);
           // TODO: Implement logging
           //log.Error(e.Arguments.NodeDescriptor);
           //log.Error(e.Exception.GetType());
@@ -258,7 +257,7 @@ namespace MahloService.Opc
         }
         else
         {
-          log.Debug(e.Arguments.ItemDescriptor.ItemId);
+          this.log.Debug(e.Arguments.ItemDescriptor.ItemId);
         }
       }
 

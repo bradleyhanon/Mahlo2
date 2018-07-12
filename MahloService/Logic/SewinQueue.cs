@@ -32,7 +32,7 @@ namespace MahloService.Logic
 
     IDisposable timer;
 
-    public SewinQueue(ISchedulerProvider schedulerProvider, IDbLocal dbLocal, IDbMfg dbMfg)
+    public SewinQueue(IScheduler scheduler, IDbLocal dbLocal, IDbMfg dbMfg)
     {
       this.dbLocal = dbLocal;
       this.dbMfg = dbMfg;
@@ -42,12 +42,14 @@ namespace MahloService.Logic
 
       var ignoredResultTask = this.RefreshIfChanged();
       this.timer = Observable
-        .Interval(this.RefreshInterval, schedulerProvider.WinFormsThread)
+        .Interval(this.RefreshInterval, scheduler)
         .Subscribe(async _ => await this.RefreshIfChanged());
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
     public event Action QueueChanged;
+
+    public bool IsChanged { get; set; }
 
     public TimeSpan RefreshInterval => TimeSpan.FromSeconds(10);
 

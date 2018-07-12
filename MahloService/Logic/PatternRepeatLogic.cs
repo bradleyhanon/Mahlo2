@@ -13,18 +13,20 @@ using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Collections.Specialized;
 using System.Threading;
+using System.Reactive.Concurrency;
 
 namespace MahloService.Logic
 {
   class PatternRepeatLogic : MeterLogic<PatternRepeatModel>, IPatternRepeatLogic
   {
     readonly IServiceSettings serviceSettings;
-    private IPatternRepeatSrc srcData;
+    private readonly IPatternRepeatSrc srcData;
     private CutRollList cutRolls;
-    private IDbLocal dbLocal;
+    private readonly ISapRollAssigner sapRollAssigner;
+    private readonly IDbLocal dbLocal;
 
-    private Averager currentRollAverager = new Averager();
-    private Averager mapDatumAverager = new Averager();
+    private readonly Averager currentRollAverager = new Averager();
+    private readonly Averager mapDatumAverager = new Averager();
     private long feetCounterAtCutRollStart;
     private int nextCutRollId;
     private CancellationTokenSource ctsDoff;
@@ -35,17 +37,19 @@ namespace MahloService.Logic
     public PatternRepeatLogic(
       IDbLocal dbLocal,
       CutRollList cutRolls,
+      ISapRollAssigner sapRollAssigner,
       IPatternRepeatSrc srcData,
       ISewinQueue sewinQueue,
       IServiceSettings serviceSettings,
       IUserAttentions<PatternRepeatModel> userAttentions,
       ICriticalStops<PatternRepeatModel> criticalStops,
       IProgramState programState,
-      ISchedulerProvider schedulerProvider)
-      : base(dbLocal, srcData, sewinQueue, serviceSettings, userAttentions, criticalStops, programState, schedulerProvider)
+      IScheduler scheduler)
+      : base(dbLocal, srcData, sewinQueue, serviceSettings, userAttentions, criticalStops, programState, scheduler)
     {
       this.dbLocal = dbLocal;
       this.cutRolls = cutRolls;
+      this.sapRollAssigner = sapRollAssigner;
       this.serviceSettings = serviceSettings;
       this.srcData = srcData;
 
@@ -115,9 +119,12 @@ namespace MahloService.Logic
 
     protected override void SaveMapDatum()
     {
-      this.mapDatum.FeetCounter = this.CurrentFeetCounter;
-      this.mapDatum.Elongation = this.mapDatumAverager.Average;
-      this.dbLocal.InsertPatternRepeatMapDatum(this.mapDatum);
+      if (this.mapDatumAverager.Count > 0)
+      {
+        this.mapDatum.FeetCounter = this.CurrentFeetCounter;
+        this.mapDatum.Elongation = this.mapDatumAverager.Average;
+        this.dbLocal.InsertPatternRepeatMapDatum(this.mapDatum);
+      }
 
       this.cutRollElongations.Add(this.mapDatum.Elongation);
 
@@ -151,6 +158,8 @@ namespace MahloService.Logic
 
     protected override void OpcValueChanged(string propertyName)
     {
+      base.OpcValueChanged(propertyName);
+
       switch (propertyName)
       {
         case nameof(this.srcData.FeetCounter):
@@ -165,17 +174,13 @@ namespace MahloService.Logic
         case nameof(this.srcData.PatternRepeatLength):
           if (this.IsMovementForward)
           {
-            this.Elongation = srcData.PatternRepeatLength; ;
+            this.Elongation = this.srcData.PatternRepeatLength; ;
           }
 
           break;
 
         case nameof(this.srcData.IsDoffDetected):
           this.DoffDetected();
-          break;
-
-        default:
-          base.OpcValueChanged(propertyName);
           break;
       }
     }
@@ -203,8 +208,8 @@ namespace MahloService.Logic
           this.isFeetCounterChanged = false;
           if (this.CurrentCutRoll != null)
           {
-            (this.CurrentCutRoll.Bow, this.CurrentCutRoll.Skew) = 
-              dbLocal.GetAverageBowAndSkew(this.CurrentCutRoll.GreigeRollId, this.CurrentCutRoll.FeetCounterStart, this.CurrentCutRoll.FeetCounterEnd);
+            (this.CurrentCutRoll.Bow, this.CurrentCutRoll.Skew) =
+              this.dbLocal.GetAverageBowAndSkew(this.CurrentCutRoll.GreigeRollId, this.CurrentCutRoll.FeetCounterStart, this.CurrentCutRoll.FeetCounterEnd);
           }
         }
       }
@@ -237,10 +242,12 @@ namespace MahloService.Logic
 
       if (this.CurrentCutRoll != null)
       {
-        this.dbLocal.UpdateCutRoll(this.CurrentCutRoll);
+        this.sapRollAssigner.AssignSapRollTo(this.CurrentCutRoll);
       }
 
-      if (this.CurrentCutRoll == null || this.CurrentCutRoll.Length >= this.serviceSettings.MinSeamSpacing)
+      // CurrentRoll.Id == 0 implies that there is no CurrentRoll that will be recorded 
+      if (this.CurrentRoll.Id != 0 &&
+        (this.CurrentCutRoll == null || this.CurrentCutRoll.Length >= this.serviceSettings.MinSeamSpacing))
       {
         // CutRoll is finished
         this.CurrentCutRoll = new CutRoll
@@ -253,6 +260,7 @@ namespace MahloService.Logic
 
         this.cutRolls.Add(this.CurrentCutRoll);
         this.dbLocal.AddCutRoll(this.CurrentCutRoll);
+        this.cutRollElongations.Clear();
       }
 
       this.ctsDoff?.Dispose();
@@ -261,7 +269,7 @@ namespace MahloService.Logic
       {
         do
         {
-          await Task.Delay(1000, ctsDoff.Token);
+          await Task.Delay(1000, this.ctsDoff.Token);
           this.srcData.AcknowledgeDoffDetect();
         } while (this.srcData.IsDoffDetected);
       }

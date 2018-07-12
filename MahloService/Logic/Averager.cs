@@ -8,9 +8,9 @@ namespace MahloService.Logic
 {
   class Averager
   {
-    public int Count { get; private set; }
+    public double Count { get; private set; }
     public double Sum { get; private set; }
-    public double Average => Sum / Count;
+    public double Average => this.Sum / this.Count;
 
     public void Add(double value)
     {
