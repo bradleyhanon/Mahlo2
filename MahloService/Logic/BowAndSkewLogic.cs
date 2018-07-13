@@ -98,6 +98,11 @@ namespace MahloService.Logic
       return Task.CompletedTask;
     }
 
+    protected override GreigeRoll FindCurrentRollOnStartup(ISewinQueue sewinQueue)
+    {
+      return sewinQueue.Rolls.LastOrDefault(roll => roll.BasFeetCounterEnd != 0);
+    }
+
     protected override void SaveMapDatum()
     {
       if (this.bowMapAverager.Count > 0)

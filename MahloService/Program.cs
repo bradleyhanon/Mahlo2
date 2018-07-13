@@ -82,6 +82,7 @@ namespace MahloService
               {
                 container.GetInstance<ICarpetProcessor>().Start();
                 Application.Run(container.GetInstance<FormSim>());
+                container.GetInstance<IProgramState>().Save();
               }
             }
             else
@@ -100,6 +101,7 @@ namespace MahloService
                 Log.Logger.Information("Application started");
                 container.GetInstance<ICarpetProcessor>().Start();
                 syncContext.RunOnCurrentThread();
+                container.GetInstance<IProgramState>().Save();
                 Log.Logger.Information("Application stopped");
               }
             }
@@ -134,7 +136,6 @@ namespace MahloService
       container.Options.DependencyInjectionBehavior =
         new SerilogContextualLoggerInjectionBehavior(container.Options);
 
-      // Register IProgramState first so it will be the last disposed
       container.RegisterSingleton<IProgramState, ProgramState>();
       container.RegisterSingleton<IProgramStateProvider, DbLocal>();
 

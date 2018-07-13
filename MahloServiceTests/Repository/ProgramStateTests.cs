@@ -102,7 +102,7 @@ namespace MahloServiceTests.Repository
       state.Set("Address", new { Street = street, City = city, Garbage = false });
       state.Set(nameof(BowAndSkewMapDatum), new { FeetCounter = 5 });
       state.Set(nameof(PatternRepeatMapDatum), new { FeetCounter = 4 });
-      state.Dispose();
+      state.Save();
       this.provider
         .Received(1);
 
@@ -140,7 +140,7 @@ namespace MahloServiceTests.Repository
         PatternRepeatMapDatum = new { FeetCounter = 4 },
       });
 
-      ((IDisposable)state).Dispose();
+      state.Save();
       this.provider
         .Received(1);
 

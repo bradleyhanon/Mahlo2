@@ -62,6 +62,7 @@ namespace MahloService.Logic
       this.UserAttentions = userAttentions;
       this.CriticalStops = criticalStops;
       this.programState = programState;
+      programState.Saving += this.SaveState;
       this.Disposables = new List<IDisposable>
       {
         Observable
@@ -210,14 +211,16 @@ namespace MahloService.Logic
         // The current roll is finished, update its ending feet counter
         var feetCounter = this.FeetCounterStart + lengthOfCurrentRoll;
         this.FeetCounterEnd = feetCounter;
-        this.dbLocal.UpdateGreigeRoll(this.CurrentRoll);
+        var priorRoll = this.CurrentRoll;
 
         // Move to the next roll and set its beginning feet counter
         this.CurrentRoll = this.sewinQueue.Rolls[index + 1];
         this.feetCounterAtRollStart = feetCounter;
         this.FeetCounterStart = feetCounter;
         this.FeetCounterEnd = this.CurrentFeetCounter;
-        this.dbLocal.UpdateGreigeRoll(this.CurrentRoll);
+
+        // Both rolls are updated at once in a database transaction
+        this.dbLocal.UpdateGreigeRoll(priorRoll, this.CurrentRoll);
 
         // Causes the client displays to be updated.
         this.sewinQueue.IsChanged = true;
@@ -282,8 +285,6 @@ namespace MahloService.Logic
 
     protected virtual void Dispose(bool disposing)
     {
-      // Save program state
-      this.SaveState();
       this.dbLocal.UpdateGreigeRoll(this.CurrentRoll);
       this.Disposables.ForEach(item => item.Dispose());
     }
@@ -300,6 +301,8 @@ namespace MahloService.Logic
       this.RollFinished?.Invoke(greigeRoll);
     }
 
+    protected abstract GreigeRoll FindCurrentRollOnStartup(ISewinQueue sewingQueue);
+
     protected virtual void RestoreState()
     {
       var state = this.programState.GetSubState(nameof(MeterLogic<Model>), typeof(Model).Name);
@@ -312,9 +315,17 @@ namespace MahloService.Logic
       this.seamAckNeeded = state.Get<bool?>(nameof(this.seamAckNeeded)) ?? false;
 
       string rollNo = state.Get<string>(nameof(this.CurrentRoll.RollNo)) ?? string.Empty;
-      this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault(roll => roll.RollNo == rollNo) ?? new GreigeRoll();
+      this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault(item => item.RollNo == rollNo) ?? new GreigeRoll();
 
       this.CurrentFeetCounter = this.dbLocal.GetLastFootCounterMapped(this.MapTableName) + 1;
+
+      var roll = this.FindCurrentRollOnStartup(this.sewinQueue);
+      if (roll != null)
+      {
+        this.CurrentRoll = roll;
+        this.CurrentFeetCounter = this.FeetCounterEnd;
+        this.feetCounterAtRollStart = this.FeetCounterStart;
+      }
 
       // On startup, roll sequence should be verified by operator
       this.UserAttentions.VerifyRollSequence = true;
@@ -468,10 +479,7 @@ namespace MahloService.Logic
 
       try
       {
-        //lock the queue
-        //oSewinQueue.Locked = true;
-
-        //store current roll measured length into variable in case it is needed
+        //save current roll measured length into variable in case it is needed
         //below to check for roll too short condition
         double rollExpectedLength = 0.0;
         double rollShortMeasuredLength = 0.0;
@@ -487,10 +495,7 @@ namespace MahloService.Logic
 
         string prevStyle = this.CurrentRoll.StyleCode;
 
-        //must reset mahlo footage counter immediately so roll measurement is as
-        //accurate as possible
         this.IsSeamDetected = true;
-        //this.meterResetAtLength = this.MeasuredLength;
         this.feetCounterAtRollStart = this.CurrentFeetCounter;
 
         //set seam detect indicator on immediately
@@ -503,7 +508,6 @@ namespace MahloService.Logic
           this.CurrentRoll = this.sewinQueue.Rolls[index + 1];
           this.FeetCounterStart = this.FeetCounterEnd = this.CurrentFeetCounter;
 
-          //InitializeRollsFromQueue(oCurrentRoll.PositionInQueue + 1);
           //InitializeCharts();)
           switch (CommonMethods.DetermineRollType(this.sewinQueue.Rolls, this.CurrentRoll))
           {
@@ -571,6 +575,8 @@ namespace MahloService.Logic
       {
         //WriteToErrorLog(ex.TargetSite.ToString(), ex.Message);
       }
+
+      this.programState.Save();
     }
 
     private void SewinQueueChanged()
@@ -600,13 +606,14 @@ namespace MahloService.Logic
       {
         // If the gap is too large or too negative, adjust offset to leave a 1000 foot gap
         this.feetCounterOffset = this.CurrentFeetCounter - rawFeetCounter + 1000;
+        this.programState.Save();
       }
     }
 
-    private void SaveState()
+    private void SaveState(IProgramState state)
     {
-      var state = this.programState.GetSubState(nameof(MeterLogic<Model>));
-      state.Set(typeof(Model).Name, new
+      state.GetSubState(nameof(MeterLogic<Model>))
+      .Set(typeof(Model).Name, new
       {
         this.checkRollSize,
         this.rollCount,
@@ -648,15 +655,5 @@ namespace MahloService.Logic
         this.srcData.SetMiscellaneousIndicator(false);
       }
     }
-
-    //private void SaveRealtimeDataToDataSet()
-    //{
-
-    //}
-
-    //private void SaveLineSpeedToFile()
-    //{
-
-    //}
   }
 }

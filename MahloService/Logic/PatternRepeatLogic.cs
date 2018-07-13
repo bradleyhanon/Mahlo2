@@ -117,6 +117,11 @@ namespace MahloService.Logic
 
     protected override string MapTableName => "PatternRepeatMap";
 
+    protected override GreigeRoll FindCurrentRollOnStartup(ISewinQueue sewinQueue)
+    {
+      return sewinQueue.Rolls.LastOrDefault(roll => roll.PrsFeetCounterEnd != 0);
+    }
+
     protected override void SaveMapDatum()
     {
       if (this.mapDatumAverager.Count > 0)

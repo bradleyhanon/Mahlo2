@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MahloService.Logic;
+using MahloService.Repository;
 using Serilog;
 
 namespace MahloService
@@ -52,12 +53,12 @@ namespace MahloService
         using (var container = Program.InitializeContainer(this.syncContext, false))
         {
           this.log = container.GetInstance<ILogger>();
-          var mapper = container.GetInstance<ICarpetProcessor>();
-          mapper.Start();
 
+          container.GetInstance<ICarpetProcessor>().Start();
           this.log.Information("Service started");
           this.syncContext.RunOnCurrentThread();
           this.log.Information("Service stopped");
+          container.GetInstance<IProgramState>().Save();
         }
       }
       catch (Exception ex)

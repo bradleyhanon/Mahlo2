@@ -83,6 +83,18 @@ namespace MahloService.Simulation
       this.FeetCounter = state.Get<double?>(nameof(this.FeetCounter)) ?? this.FeetCounter;
       this.feetCounterAtRollStart = state.Get<double?>(nameof(this.feetCounterAtRollStart)) ?? this.feetCounterAtRollStart;
 
+      programState.Saving += ps =>
+      {
+        ps.GetSubState(nameof(OpcSrcSim<Model>))
+        .Set(typeof(Model).Name, new
+        {
+          this.cutRollCount,
+          this.rollIndex,
+          this.FeetCounter,
+          this.feetCounterAtRollStart,
+        });
+      };
+
       this.isCheckRollEndSeamNeeded = this.sewinQueue.Rolls.FirstOrDefault()?.IsCheckRoll ?? false;
     }
 
@@ -114,15 +126,6 @@ namespace MahloService.Simulation
       {
         this.rollIndex = this.sewinQueue.Rolls.IndexOf(this.currentRoll);
       }
-
-      var state = this.programState.GetSubState(nameof(OpcSrcSim<Model>));
-      state.Set(typeof(Model).Name, new
-      {
-        this.cutRollCount,
-        this.rollIndex,
-        this.FeetCounter,
-        this.feetCounterAtRollStart,
-      });
     }
 
     public void AcknowledgeSeamDetect()

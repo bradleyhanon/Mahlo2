@@ -10,7 +10,9 @@ namespace MahloService.Repository
   class ProgramState : IProgramState
   {
     private readonly IProgramStateProvider provider;
-    JObject root;
+    private readonly JObject root;
+
+    public event Action<IProgramState> Saving;
 
     public ProgramState(IProgramStateProvider provider)
     {
@@ -29,11 +31,6 @@ namespace MahloService.Repository
     private ProgramState(JObject root)
     {
       this.root = root;
-    }
-
-    public void Dispose()
-    {
-      this.provider?.SaveProgramState(root.ToString());
     }
 
     public IProgramState GetSubState(params string[] names)
@@ -64,12 +61,18 @@ namespace MahloService.Repository
 
     public void Set<T>(string name, T value)
     {
-      root[name] = JToken.FromObject(value);
+      this.root[name] = JToken.FromObject(value);
     }
 
     public void RemoveAll()
     {
-      root.RemoveAll();
+      this.root.RemoveAll();
+    }
+
+    public void Save()
+    {
+      this.Saving?.Invoke(this);
+      this.provider?.SaveProgramState(this.root.ToString());
     }
   }
 }

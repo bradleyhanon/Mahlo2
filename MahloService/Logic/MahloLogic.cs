@@ -58,6 +58,11 @@ namespace MahloService.Logic
 
     protected override string MapTableName => "Mahlo2Map";
 
+    protected override GreigeRoll FindCurrentRollOnStartup(ISewinQueue sewinQueue)
+    {
+      return sewinQueue.Rolls.LastOrDefault(roll => roll.MalFeetCounterEnd != 0);
+    }
+
     protected override void SaveMapDatum()
     {
       this.mapDatum.FeetCounter = this.CurrentFeetCounter;

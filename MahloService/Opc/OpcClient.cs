@@ -35,7 +35,6 @@ namespace MahloService.Opc
     private ICriticalStops<Model> criticalStops;
     private Type priorExceptionType = null;
     private readonly IOpcSettings mahloSettings;
-    private readonly IProgramState programState;
     private readonly ILogger log;
 
     private readonly SynchronizationContext synchronizationContext;
@@ -50,7 +49,6 @@ namespace MahloService.Opc
       ICriticalStops<Model> criticalStops, 
       IOpcSettings mahloSettings, 
       //IPlcSettings seamSettings,
-      IProgramState programState,
       SynchronizationContext synchronizationContext,
       ILogger logger)
     {
@@ -60,7 +58,6 @@ namespace MahloService.Opc
       this.mahloSettings = mahloSettings;
       //this.seamSettings = seamSettings;
       this.synchronizationContext = synchronizationContext;
-      this.programState = programState;
       this.log = logger;
 
       this.criticalAlarmsSubscription =
@@ -77,7 +74,6 @@ namespace MahloService.Opc
           .Where(args => args.EventArgs.PropertyName == nameof(UserAttentions<Model>.Any))
           .Subscribe(_ => this.SetStatusIndicator(this.userAttentions.Any));
 
-      var state = programState.GetSubState(nameof(OpcClient<Model>), typeof(Model).Name);
       this.Initialize();
     }
 
@@ -95,11 +91,6 @@ namespace MahloService.Opc
     public bool IsAutoMode { get; set; }
     public string Recipe { get; set; }
 
-    public void Dispose()
-    {
-      this.Dispose(true);
-    }
-
     public void AcknowledgeSeamDetect()
     {
       Task.Run(() =>
@@ -113,14 +104,6 @@ namespace MahloService.Opc
     {
       this.opcClient.WriteItemValue(string.Empty, PlcServerClass, "MahloSeam.MahloPLC.MahloDoffAck", 1);
       this.opcClient.WriteItemValue(string.Empty, PlcServerClass, "MahloSeam.MahloPLC.MahloDoffAck", 0);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-      if (disposing)
-      {
-        var obj = this.programState.GetSubState(nameof(OpcClient<Model>), typeof(Model).Name);
-      }
     }
 
     /// <summary>

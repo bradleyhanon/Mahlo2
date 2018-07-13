@@ -52,11 +52,17 @@ namespace MahloService.Repository
       }
     }
 
-    public void UpdateGreigeRoll(GreigeRoll roll)
+    public void UpdateGreigeRoll(params GreigeRoll[] rolls)
     {
       using (var connection = this.GetOpenConnection())
+      using (var transaction = connection.BeginTransaction())
       {
-        connection.Update(roll);
+        foreach (var roll in rolls)
+        {
+          connection.Update(roll, transaction: transaction);
+        }
+
+        transaction.Commit();
       }
     }
 

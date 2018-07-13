@@ -13,7 +13,7 @@ namespace MahloService.Repository
 
     void AddGreigeRoll(GreigeRoll roll);
 
-    void UpdateGreigeRoll(GreigeRoll roll);
+    void UpdateGreigeRoll(params GreigeRoll[] rolls);
 
     void DeleteGreigeRoll(GreigeRoll roll);
 

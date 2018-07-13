@@ -70,9 +70,9 @@ namespace MahloService.Simulation
     /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing)
     {
-      if (disposing && (components != null))
+      if (disposing && (this.components != null))
       {
-        components.Dispose();
+        this.components.Dispose();
       }
       base.Dispose(disposing);
       this.simInfo.Dispose();
@@ -81,11 +81,11 @@ namespace MahloService.Simulation
     protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
-      if (MalFeetCounter <= 0.0)
+      if (this.MalFeetCounter <= 0.0)
       {
-        MalFeetCounter = 400;
-        BasFeetCounter = 200;
-        PrsFeetCounter = 0;
+        this.MalFeetCounter = 400;
+        this.BasFeetCounter = 200;
+        this.PrsFeetCounter = 0;
       }
     }
 
@@ -101,7 +101,7 @@ namespace MahloService.Simulation
 
     private void btnRun_Click(object sender, EventArgs e)
     {
-      if (btnRun.Text == "Run")
+      if (this.btnRun.Text == "Run")
       {
         this.btnRun.Text = "Stop";
         ((OpcSrcSim<MahloModel>)this.mahloSrc).Start(this.simInfo.FeetPerMinute);
@@ -110,7 +110,7 @@ namespace MahloService.Simulation
       }
       else
       {
-        btnRun.Text = "Run";
+        this.btnRun.Text = "Run";
         ((OpcSrcSim<MahloModel>)this.mahloSrc).Stop();
         ((OpcSrcSim<BowAndSkewModel>)this.bowAndSkewSrc).Stop();
         ((OpcSrcSim<PatternRepeatModel>)this.patternRepeatSrc).Stop();
