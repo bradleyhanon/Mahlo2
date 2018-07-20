@@ -40,6 +40,7 @@ namespace MahloService.Logic
     {
       this.dbLocal = dbLocal;
       this.dataSrc = dataSrc;
+      this.SeamDelayLine.DelayTicks = appInfo.SeamToBowAndSkew;
     }
 
     public override long FeetCounterStart

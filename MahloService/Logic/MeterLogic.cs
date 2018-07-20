@@ -177,6 +177,8 @@ namespace MahloService.Logic
     protected abstract string MapTableName { get; }
     protected List<IDisposable> Disposables { get; private set; }
 
+    protected DelayLine<bool> SeamDelayLine { get; set; } = new DelayLine<bool> { RetainTicks = 20 };
+
     /// <summary>
     /// Called to start data collection
     /// </summary>
@@ -314,6 +316,8 @@ namespace MahloService.Logic
       this.feetCounterAtLastSeam = state.Get<int?>(nameof(this.feetCounterAtLastSeam)) ?? 0;
       this.seamAckNeeded = state.Get<bool?>(nameof(this.seamAckNeeded)) ?? false;
 
+      this.SeamDelayLine.RestoreState(state);
+
       string rollNo = state.Get<string>(nameof(this.CurrentRoll.RollNo)) ?? string.Empty;
       this.CurrentRoll = this.sewinQueue.Rolls.FirstOrDefault(item => item.RollNo == rollNo) ?? new GreigeRoll();
 
@@ -338,8 +342,9 @@ namespace MahloService.Logic
         case nameof(this.srcData.FeetCounter):
           this.AdjustFeetCounterOffsetAsNeeded();
 
-          // Process feet counter change going forward not reverse.
           double newFeetCounter = this.srcData.FeetCounter + this.feetCounterOffset;
+
+          // Process feet counter change going forward not reverse.
           this.IsMovementForward = newFeetCounter > this.dblCurrentFeetCounter;
           if (this.IsMovementForward)
           {
@@ -355,10 +360,15 @@ namespace MahloService.Logic
             }
           }
 
-          break;
+          goto case nameof(this.srcData.IsSeamDetected);
 
         case nameof(this.srcData.IsSeamDetected):
-          this.SeamDetected(this.srcData.IsSeamDetected);
+          // The seam signal is delayed until the capet reaches the sensor / knife, etc.
+          if (this.SeamDelayLine.Add(this.srcData.FeetCounter + this.feetCounterOffset, this.srcData.IsSeamDetected))
+          {
+            this.SeamDetected(this.SeamDelayLine.Value);
+          }
+
           break;
 
         case nameof(this.srcData.MeasuredWidth):
@@ -612,8 +622,8 @@ namespace MahloService.Logic
 
     private void SaveState(IProgramState state)
     {
-      state.GetSubState(nameof(MeterLogic<Model>))
-      .Set(typeof(Model).Name, new
+      state = state.GetSubState(nameof(MeterLogic<Model>));
+      state.Set(typeof(Model).Name, new
       {
         this.checkRollSize,
         this.rollCount,
@@ -624,6 +634,8 @@ namespace MahloService.Logic
         this.seamAckNeeded,
         this.CurrentRoll.RollNo,
       });
+
+      this.SeamDelayLine.SaveState(state);
     }
 
     private void Simulate_lblMeasuredLen_TextChanged()

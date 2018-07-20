@@ -54,6 +54,10 @@ namespace MahloService.Settings
     //  set => this.metersPerPixelFactor = Math.Max(value, DEFAULT_METERS_PER_PIXEL);
     //}
 
+    public double Mahlo2SeamToBow { get; set; } = 9.0 + 10.5 / 12.0;    // 9' 10 1/2"
+    public double Mahlo2SeamToSkew { get; set; } = 14.0 + 1.5 / 12.0;   // 14' 1 1/2"
+    public double SeamToBowAndSkew { get; set; } = 4.0 + 7.75 / 12.0;   // 7' 7 3/4"
+    public double SeamToCutKnife { get; set; } = 15.0 + 2.5 / 12.0;     // 15' 2 1/2"
 
 
     public int SeamDetectableThreshold { get; set; } = 5; // Distance within which seam detects are ignored

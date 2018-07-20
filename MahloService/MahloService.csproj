@@ -75,6 +75,7 @@
     <Compile Include="Logic\CutRollLogic.cs" />
     <Compile Include="Logic\ISapRollAssigner.cs" />
     <Compile Include="Logic\SapRollAssigner.cs" />
+    <Compile Include="Logic\DelayLine.cs" />
     <Compile Include="Models\BowAndSkewMapDatum.cs" />
     <Compile Include="Models\Mahlo2MapDatum.cs" />
     <Compile Include="Models\PatternRepeatMapDatum.cs" />

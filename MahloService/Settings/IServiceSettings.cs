@@ -34,7 +34,13 @@ namespace MahloService.Settings
     //int QueueRefreshRate { get; set; }
     int SeamDetectableThreshold { get; set; }
     //string SendEmailAlertsTo { get; set; }
-    //string SqlServerMachine { get; set; }
+    //string SqlServerMachine { get; set; 
+
+    double Mahlo2SeamToBow { get; set; }
+    double Mahlo2SeamToSkew { get; set; }
+    double SeamToBowAndSkew { get; set; }
+    double SeamToCutKnife { get; set; }
+
 
     BackingSpec GetBackingSpec(string backingCode);
   }

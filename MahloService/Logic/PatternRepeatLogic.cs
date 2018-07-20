@@ -55,6 +55,8 @@ namespace MahloService.Logic
 
       this.nextCutRollId = dbLocal.GetNextCutRollId();
 
+      this.SeamDelayLine.DelayTicks = serviceSettings.SeamToCutKnife;
+
       this.Disposables.Add(
         Observable
         .FromEventPattern<ListChangedEventHandler, ListChangedEventArgs>(
