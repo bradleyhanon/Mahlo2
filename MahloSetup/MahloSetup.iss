@@ -1,29 +1,36 @@
 [Setup]
 AppName=MahloMapper
-AppVersion=0.0
+AppVersion=0.1
 PrivilegesRequired=none
 AppId={{743E0273-076F-4EB5-BCDE-4FD08FE1034D}
 DefaultDirName={pf}\PA-Group\MahloMapper
 AppPublisher=PA-Group, USA
 AppContact=John Kendall
 AppSupportPhone=423-473-7541
+OutputBaseFilename=MahloMapperSetup
 UninstallDisplayName=Mahlo Mapper
 VersionInfoVersion=0.0
 VersionInfoCompany=PA-Group, USA
 VersionInfoDescription=Broadloom Coater Monitor
 
 [Types]
+Name: "Mahlo2"; Description: "Mahlo 2"
+Name: "BowAndSkew"; Description: "Bow and Skew"
+Name: "PatternRepeat"; Description: "Pattern Repeat"
+Name: "client"; Description: "All Three Clients"
 Name: "server"; Description: "Server Installation"
-Name: "client"; Description: "Client Installatoin"
 
 [Components]
-Name: "MahloClient"; Description: "Mahlo Client Program"; Types: client
+Name: "Mahlo2"; Description: "Mahlo 2 Unique Components"; Types: Mahlo2 client server
+Name: "BowAndSkew"; Description: "Bow and Skew Unique Components"; Types: BowAndSkew client server
+Name: "PatternRepeat"; Description: "Pattern Repeat Unique Components"; Types: PatternRepeat client server
+Name: "MahloClient"; Description: "Mahlo Client Program"; Types: Mahlo2 BowAndSkew PatternRepeat client server
 Name: "MahloService"; Description: "Mahlo Service Program"; Types: server
 
 [Files]
 ;MahloClient files
 Source: "..\MahloClient\bin\Release\MahloClient.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
-Source: "..\MahloClient\bin\Release\MahloClient.exe.config"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
+Source: "..\MahloClient\bin\Release\MahloClient.exe.config"; DestDir: "{app}"; Flags: ignoreversion onlyifdoesntexist; Components: MahloClient MahloService
 Source: "..\MahloClient\bin\Release\MahloClient.pdb"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
 Source: "..\MahloClient\App.ico"; DestDir: "{app}"; Components: MahloClient MahloService
 Source: "..\MahloClient\Camera.ico"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
@@ -92,16 +99,13 @@ Source: "..\MahloService\bin\Release\Serilog.Sinks.Console.dll"; DestDir: "{app}
 Source: "..\MahloService\bin\Release\Serilog.Sinks.EventLog.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\System.Data.SqlServerCe.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 
-[Tasks]
-Name: "InstallIcons"; Description: "Install client icons"; Components: MahloClient MahloService
-
 [Icons]
-Name: "{commondesktop}\Mahlo2"; Filename: "{app}\MahloClient.exe"; IconFilename: "{app}\App.ico"; Parameters: "Mahlo"; Components: MahloClient MahloService; Tasks: InstallIcons
-Name: "{commondesktop}\BowAndSkew"; Filename: "{app}\MahloClient.exe"; IconFilename: "{app}\Rulers.ico"; IconIndex: 0; Parameters: "BowAndSkew"; Components: MahloClient MahloService; Tasks: InstallIcons
-Name: "{commondesktop}\PatternRepeat"; Filename: "{app}\MahloClient.exe"; IconFilename: "{app}\Camera.ico"; IconIndex: 0; Parameters: "PatternRepeat"; Components: MahloService MahloClient; Tasks: InstallIcons
-Name: "{group}\Mahlo2"; Filename: "{app}\MahloClient.exe"; IconFilename: "{app}\App.ico"; Parameters: "Mahlo"; Components: MahloClient MahloService; Tasks: InstallIcons
-Name: "{group}\BowAndSkew"; Filename: "{app}\MahloClient.exe"; IconFilename: "{app}\Rulers.ico"; Parameters: "BowAndSkew"; Components: MahloService MahloClient; Tasks: InstallIcons
-Name: "{group}\PatternRepeat"; Filename: "{app}\MahloClient.exe"; IconFilename: "{app}\Camera.ico"; IconIndex: 0; Parameters: "PatternRepeat"; Components: MahloService MahloClient; Tasks: InstallIcons
+Name: "{commondesktop}\Mahlo2"; Filename: "{app}\MahloClient.exe"; IconFilename: "{app}\Rulers.ico"; Parameters: "Mahlo"; Components: Mahlo2
+Name: "{commondesktop}\BowAndSkew"; Filename: "{app}\MahloClient.exe"; IconFilename: "{app}\Rulers.ico"; IconIndex: 0; Parameters: "BowAndSkew"; Components: BowAndSkew
+Name: "{commondesktop}\PatternRepeat"; Filename: "{app}\MahloClient.exe"; IconFilename: "{app}\Camera.ico"; IconIndex: 0; Parameters: "PatternRepeat"; Components: PatternRepeat
+Name: "{group}\Mahlo2"; Filename: "{app}\MahloClient.exe"; IconFilename: "{app}\Rulers.ico"; Parameters: "Mahlo"; Components: Mahlo2
+Name: "{group}\BowAndSkew"; Filename: "{app}\MahloClient.exe"; IconFilename: "{app}\Rulers.ico"; IconIndex: 0; Parameters: "BowAndSkew"; Components: BowAndSkew
+Name: "{group}\PatternRepeat"; Filename: "{app}\MahloClient.exe"; IconFilename: "{app}\Camera.ico"; IconIndex: 0; Parameters: "PatternRepeat"; Components: PatternRepeat
 
 [ThirdParty]
 UseRelativePaths=True
