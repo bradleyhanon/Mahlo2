@@ -79,6 +79,7 @@
     <Compile Include="Models\BowAndSkewMapDatum.cs" />
     <Compile Include="Models\Mahlo2MapDatum.cs" />
     <Compile Include="Models\PatternRepeatMapDatum.cs" />
+    <Compile Include="Settings\BackingCode.cs" />
     <Compile Include="Settings\BackingSpec.cs" />
     <Compile Include="Simulation\DbMfgSim.cs" />
     <Compile Include="Simulation\FormSim.cs">
@@ -94,7 +95,7 @@
     <Compile Include="Settings\IServiceSettings.cs" />
     <Compile Include="Settings\IOpcSettings.cs" />
     <Compile Include="Settings\OpcSettings.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="ServiceExtensions.cs" />
     <Compile Include="Ipc\IMahloServer.cs" />
     <Compile Include="Ipc\MahloServer.cs" />
     <Compile Include="Ipc\MahloHub.cs" />
@@ -163,7 +164,6 @@
     </Compile>
     <Compile Include="Simulation\SimInfo.cs" />
     <Compile Include="SingleInstance.cs" />
-    <Compile Include="Utilities\AsyncPump.cs" />
     <Compile Include="Utilities\ConcurrencyInfo.cs" />
     <Compile Include="Utilities\ConsoleControl.cs" />
     <Compile Include="Utilities\ConsoleEventArgs.cs" />

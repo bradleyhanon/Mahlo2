@@ -7,11 +7,10 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using MahloService.Opc;
 
 namespace MahloService
 {
-  static class Extensions
+  static class ServiceExtensions
   {
     public static double MetersToFeet(double meters)
     {

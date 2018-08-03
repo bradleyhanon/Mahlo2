@@ -142,6 +142,10 @@ namespace MahloClient.Ipc
 
     public async Task GetServiceSettings(IServiceSettings serviceSettings)
     {
+      // Clear the default values from the lists in serviceSetting
+      // otherwise there will be duplicate values when populated from the server.
+      //serviceSettings.BackingCodes.Clear();
+      //serviceSettings.BackingSpecs.Clear();
       JObject obj = await this.Call<JObject>(nameof(GetServiceSettings));
       obj.Populate(serviceSettings);
     }

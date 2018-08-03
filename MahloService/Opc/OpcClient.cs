@@ -139,9 +139,9 @@ namespace MahloService.Opc
       mahloTags.AddRange(new(string, Action<object>)[]
       {
         ("Current.Version.0.KeyColumn", value => this.Recipe = (string)value),
-        ("Readings.Bridge.0.General.0.MeterCount", value =>  this.FeetCounter = Extensions.MetersToFeet((double)value)),
+        ("Readings.Bridge.0.General.0.MeterCount", value =>  this.FeetCounter = ServiceExtensions.MetersToFeet((double)value)),
         //("Readings.Bridge.0.General.0.MeterOffset", value => this.MetersOffset = (double)value),
-        ("Readings.Bridge.0.General.0.Speed", value => this.FeetPerMinute = Extensions.MetersToFeet((double)value) * 60),
+        ("Readings.Bridge.0.General.0.Speed", value => this.FeetPerMinute = ServiceExtensions.MetersToFeet((double)value) * 60),
       });
 
       //case IWidthSrc widthSrc:
@@ -165,11 +165,11 @@ namespace MahloService.Opc
             //("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
             //("Readings.Bridge.0.Calc.1.MeterStamp", value => this.MeterStamp = (double)value),
             //("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewValid", value => this.SkewValid = (int)value == 1),
-            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewInPercent", value => this.Skew = Extensions.MetersToFeet((double)value) * 12),
+            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewInPercent", value => this.Skew = ServiceExtensions.MetersToFeet((double)value) * 12),
             //("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowValid", value => this.BowValid = (int)value == 1),
-            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowInPercent", value => this.Bow = Extensions.MetersToFeet((double)value) * 12),
+            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowInPercent", value => this.Bow = ServiceExtensions.MetersToFeet((double)value) * 12),
             //("Readings.Bridge.0.Calc.1.CalcDistortion.0.Contr_State", value => this.ControllerState = (int)value),
-            ("Readings.Bridge.0.Calc.0.CalcWidth.0.ValueInMeter", value => this.MeasuredWidth = Extensions.MetersToFeet((double)value) * 12),
+            ("Readings.Bridge.0.Calc.0.CalcWidth.0.ValueInMeter", value => this.MeasuredWidth = ServiceExtensions.MetersToFeet((double)value) * 12),
         });
       }
       else if (typeof(Model) == typeof(PatternRepeatModel))
@@ -184,7 +184,7 @@ namespace MahloService.Opc
             //("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
             //("Readings.Bridge.0.Calc.1.MeterStamp", value => this.MeterStamp = (double)value),
             //("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.Valid", value => this.Valid = (int)value == 1),
-            ("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.ValueInMeter", value => this.PatternRepeatLength = Extensions.MetersToFeet((double)value) * 12),
+            ("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.ValueInMeter", value => this.PatternRepeatLength = ServiceExtensions.MetersToFeet((double)value) * 12),
             //("Readings.Bridge.0.Calc.1.CalcLengthRepeat.0.Contr_State", value => this.ControllerState = (int)value),
         });
       }
@@ -197,7 +197,7 @@ namespace MahloService.Opc
         mahloTags.AddRange(new(string, Action<object>)[]
         {
           //("Current.Version.0.KeyColumn", value => this.Recipe = (string)value),
-          ("Readings.Metercounter.0.Value", value => this.FeetCounter = Extensions.MetersToFeet((double)value)),
+          ("Readings.Metercounter.0.Value", value => this.FeetCounter = ServiceExtensions.MetersToFeet((double)value)),
           //("Readings.Bridge.0.General.0.MeterOffset", value => this.MetersOffset = (double)value),
           //("Readings.Bridge.0.General.0.Speed", value => { this.speedSubject.OnNext((double)value); }),
         });

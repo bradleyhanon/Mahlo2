@@ -106,6 +106,12 @@
     <Compile Include="..\MahloService\Models\PatternRepeatModel.cs">
       <Link>Models\PatternRepeatModel.cs</Link>
     </Compile>
+    <Compile Include="..\MahloService\ServiceExtensions.cs">
+      <Link>ServiceExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\MahloService\Settings\BackingCode.cs">
+      <Link>Settings\BackingCode.cs</Link>
+    </Compile>
     <Compile Include="..\MahloService\Settings\BackingSpec.cs">
       <Link>Settings\BackingSpec.cs</Link>
     </Compile>
@@ -121,7 +127,7 @@
     <Compile Include="Models\ExplicitKeyAttribute.cs" />
     <Compile Include="Settings\ClientSettings.cs" />
     <Compile Include="Settings\IClientSettings.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="ClientExtensions.cs" />
     <Compile Include="Ipc\IMahloIpcClient.cs" />
     <Compile Include="Ipc\MahloIpcClient.cs" />
     <Compile Include="Logic\BowAndSkewLogic.cs" />

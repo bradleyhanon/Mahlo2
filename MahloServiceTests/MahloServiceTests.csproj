@@ -53,6 +53,7 @@
     <Compile Include="Logic\SewinQueueTests.cs" />
     <Compile Include="Repository\DbMfgTests.cs" />
     <Compile Include="Repository\ProgramStateTests.cs" />
+    <Compile Include="Settings\ServiceSettingsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Reactive.Testing">

@@ -629,6 +629,7 @@
       this.lblMappingStatus.Name = "lblMappingStatus";
       this.lblMappingStatus.Size = new System.Drawing.Size(100, 16);
       this.lblMappingStatus.TabIndex = 38;
+      this.lblMappingStatus.Visible = false;
       // 
       // label5
       // 
@@ -639,6 +640,7 @@
       this.label5.Size = new System.Drawing.Size(112, 16);
       this.label5.TabIndex = 37;
       this.label5.Text = "Mapping Status";
+      this.label5.Visible = false;
       // 
       // grpBow
       // 

@@ -3,40 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace MahloService.Settings
 {
   public class BackingSpec
   {
     public string Backing { get; set; }
-    public double MaxBow { get; set; }
-    public double MaxSkew { get; set; }
-    public double DlotSpec { get; set; }
 
-    public override string ToString()
-    {
-      return $"{this.Backing}, {this.MaxBow}, {this.MaxSkew}, {this.DlotSpec}";
-    }
+    /// <summary>
+    /// Gets or sets a value indicating the maximum bow in inches.
+    /// </summary>
+    public double MaxBow { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating the maximum skew in inches.
+    /// </summary>
+    public double MaxSkew { get; set; }
+
+    /// <summary>
+    /// Gets or seta a value indicating the maximum pattern elongation in percent.
+    /// </summary>
+    public double MaxElongation { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating the factor the DLot table is derived from.
+    /// </summary>
+    public double DlotSpec { get; set; }
 
     public static BackingSpec FromString(string s)
     {
+      return JsonConvert.DeserializeObject<BackingSpec>(s);
+    }
 
-      string[] ss = s.Split(',');
-      if (ss.Length == 4 && 
-        double.TryParse(ss[1].Trim(), out double maxBow) &&
-        double.TryParse(ss[2].Trim(), out double maxSkew) &&
-        double.TryParse(ss[3].Trim(), out double dlotSpec))
-      {
-        return new BackingSpec
-        {
-          Backing = ss[0].Trim().ToUpper(),
-          MaxBow = maxBow,
-          MaxSkew = maxSkew,
-          DlotSpec = dlotSpec
-        };
-      }
-
-      throw new Exception($"Bad EpeSpec in ServiceSettings: '{s}'");
+    public override string ToString()
+    {
+      return JsonConvert.SerializeObject(this).Replace('"', '\'');
     }
   }
 }

@@ -85,10 +85,17 @@ namespace MahloService.Repository
     public async Task<decimal?> GetCutRollFromHost()
     {
       // This reads the current cut roll number from the AS/400
-      using (var connection = this.GetOpenConnection())
+      try
       {
-        var roll = await connection.QuerySingleAsync<AS400CutRoll>("spGetNextCoaterRoll", commandType: CommandType.StoredProcedure);
-        return roll?.FRCROL;
+        using (var connection = this.GetOpenConnection())
+        {
+          var roll = await connection.QuerySingleAsync<AS400CutRoll>("spGetNextCoaterRoll", commandType: CommandType.StoredProcedure);
+          return roll?.FRCROL;
+        }
+      }
+      catch (Exception)
+      {
+        return null;
       }
     }
 

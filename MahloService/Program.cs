@@ -87,20 +87,24 @@ namespace MahloService
             }
             else
             {
-              SingleThreadSynchronizationContext syncContext = new SingleThreadSynchronizationContext();
+              ApplicationContext appContext = new ApplicationContext();
+              WindowsFormsSynchronizationContext.AutoInstall = false;
+   
+              WindowsFormsSynchronizationContext syncContext = new WindowsFormsSynchronizationContext();
               SynchronizationContext.SetSynchronizationContext(syncContext);
+
               using (var consoleCtrl = new ConsoleCtrl())
               using (var container = InitializeContainer(syncContext, shouldSimulate))
               {
                 consoleCtrl.ControlEvent += (sender, e) =>
                 {
-                  syncContext.Complete();
+                  Application.Exit();
                   e.Result = true;
                 };
 
                 Log.Logger.Information("Application started");
                 container.GetInstance<ICarpetProcessor>().Start();
-                syncContext.RunOnCurrentThread();
+                Application.Run(appContext);
                 container.GetInstance<IProgramState>().Save();
                 Log.Logger.Information("Application stopped");
               }
@@ -115,16 +119,24 @@ namespace MahloService
       }
       catch (SingleInstance.Exception)
       {
+        Environment.Exit(1);
       }
       catch (Exception ex)
       {
         MessageBox.Show(ex.ToString(), Application.ProductName);
+        Environment.Exit(1);
       }
     }
 
     private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
-      MessageBox.Show("Unhandled Exception: \n" + e.ExceptionObject.ToString(), Application.ProductName);
+      string message = "Unhandled Exception: \n" + e.ExceptionObject.ToString();
+      Log.Logger.Error(message);
+      if (Environment.UserInteractive)
+      {
+        MessageBox.Show(message, Application.ProductName);
+      }
+
       Environment.Exit(1);
     }
 

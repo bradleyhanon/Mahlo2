@@ -10,12 +10,14 @@ namespace MahloService.Settings
   internal class ServiceSettings : Westwind.Utilities.Configuration.AppConfiguration, IServiceSettings
   {
     public const double DEFAULT_METERS_PER_PIXEL = 0.00109d;
+    private const string Vinyl = "Vinyl";
 
     //private double metersPerPixelFactor = DEFAULT_METERS_PER_PIXEL;
 
     public ServiceSettings()
     {
       this.Initialize();
+      this.ValidateBackingSpecs();
     }
 
     public string ServiceUrl { get; set; } = "http://+:80/mahlo/";
@@ -29,11 +31,25 @@ namespace MahloService.Settings
     public double RollTooLongFactor { get; set; } = 1.1;
     public double RollTooShortFactor { get; set; } = 0.9;
 
+    public List<BackingCode> BackingCodes { get; set; } = new List<BackingCode>
+    {
+      new BackingCode { Code = "BL", Backing = "Latex" },
+      new BackingCode { Code = "HB", Backing = "Latex" },
+      new BackingCode { Code = "HL", Backing = "Vinyl" },
+      new BackingCode { Code = "HR", Backing = "Urethane" },
+      new BackingCode { Code = "IR", Backing = "Vinyl" },
+      new BackingCode { Code = "LP", Backing = "Latex" },
+      new BackingCode { Code = "SA", Backing = "Latex" },
+      new BackingCode { Code = "SI", Backing = "Latex" },
+      new BackingCode { Code = "TP", Backing = "Latex" },
+      new BackingCode { Code = "UL", Backing = "Latex" },
+    };
+
     public List<BackingSpec> BackingSpecs { get; set; } = new List<BackingSpec>
     {
-      new BackingSpec { Backing = "SA", MaxBow = 0.5, MaxSkew = 1.25, DlotSpec = 0.0100 },
-      new BackingSpec { Backing = "IR", MaxBow = 0.25, MaxSkew = 0.75, DlotSpec = 0.0075 },
-      new BackingSpec { Backing = "HL", MaxBow = 0.25, MaxSkew = 0.75, DlotSpec = 0.0075 },
+      new BackingSpec { Backing = "Latex", MaxBow = 0.5, MaxSkew = 1.25, MaxElongation = 0.01, DlotSpec = 0.0100 },
+      new BackingSpec { Backing = "Vinyl", MaxBow = 0.25, MaxSkew = 0.75, MaxElongation = 0.0067, DlotSpec = 0.0075 },
+      new BackingSpec { Backing = "Urethane", MaxBow = 0.25, MaxSkew = 0.75, MaxElongation = 0.0067, DlotSpec = 0.0075 },
     };
 
     //public int MainFormBackgroundColor { get; set; } = 0xECF2F2;
@@ -67,10 +83,80 @@ namespace MahloService.Settings
 
     public BackingSpec GetBackingSpec(string backingCode)
     {
-      var result = this.BackingSpecs.FirstOrDefault(item => item.Backing == backingCode) ??
-        this.BackingSpecs.First(item => item.Backing != "SA");
+      string backing = this.BackingCodes.FirstOrDefault(item => item.Code.Equals(backingCode, StringComparison.OrdinalIgnoreCase))?.Backing;
+      if (backing == null)
+      {
+        this.BackingCodes.Add(new BackingCode { Code = backingCode, Backing = Vinyl });
+      }
 
-      return result;
+      BackingSpec spec = this.BackingSpecs.FirstOrDefault(item => item.Backing.Equals(backing, StringComparison.OrdinalIgnoreCase));
+      if (spec == null)
+      {
+        spec = this.BackingSpecs.FirstOrDefault(item => item.Backing.Equals(Vinyl, StringComparison.OrdinalIgnoreCase));
+        if (spec == null)
+        {
+          throw new Exception($"Unable to find specifications for Vinyl backing.");
+        }
+      }
+
+      return spec;
+    }
+
+    private void ValidateBackingSpecs()
+    {
+      StringBuilder builder = new StringBuilder();
+
+      var dupCodes = this.BackingCodes
+        .GroupBy(item => item.Code, StringComparer.OrdinalIgnoreCase)
+        .Where(item => item.Count() > 1)
+        .Select(item => item.Key)
+        .ToArray();
+
+      AppendMessage("Duplicate BackingCodes: ", dupCodes);
+
+
+      var dupSpecs = this.BackingSpecs
+        .GroupBy(item => item.Backing, StringComparer.OrdinalIgnoreCase)
+        .Where(item => item.Count() > 1)
+        .Select(item => item.Key)
+        .ToArray();
+
+      AppendMessage("Duplicate BackingSpecs: ", dupSpecs);
+
+      var missingSpecs = this.BackingCodes
+        .Where(code => this.BackingSpecs
+           .FirstOrDefault(spec => code.Backing.Equals(spec.Backing, StringComparison.OrdinalIgnoreCase)) == null)
+        .Select(code => code.Backing);
+
+      if (!this.BackingCodes.Any(item=>item.Backing.Equals(Vinyl, StringComparison.OrdinalIgnoreCase)))
+      {
+        missingSpecs = missingSpecs
+          .Concat(Enumerable.Repeat(Vinyl, 1))
+          .Distinct(StringComparer.OrdinalIgnoreCase);
+      }
+
+      AppendMessage("BackingSpecs not found for: ", missingSpecs);
+
+      if (builder.Length > 0)
+      {
+        throw new ApplicationException(builder.ToString());
+      }
+
+      void AppendMessage(string message, IEnumerable<string> values)
+      {
+        if (values.Any())
+        {
+          if (builder.Length == 0)
+          {
+            builder.AppendLine("Errors found in MahloService.exe.config");
+          }
+
+          builder.Append(message);
+          values.ForEach(item => builder.Append($"'{item}', "));
+          builder.Length -= 2;
+          builder.AppendLine();
+        }
+      }
     }
   }
 }

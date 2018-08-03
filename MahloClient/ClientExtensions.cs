@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 namespace MahloClient
 {
-  static class Extensions
+  static class ClientExtensions
   {
     public static Color ContrastColor(this Color color)
     {
