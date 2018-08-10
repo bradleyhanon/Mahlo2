@@ -14,10 +14,12 @@ using MahloService.Repository;
 using MahloService.Settings;
 using Microsoft.AspNet.SignalR;
 using OpcLabs.EasyOpc.DataAccess;
+using PropertyChanged;
 using Serilog;
 
 namespace MahloService.Simulation
 {
+  [AddINotifyPropertyChangedInterface]
   sealed class OpcSrcSim<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc, IDisposable
   {
     private readonly IDbMfgSim dbMfg;
@@ -97,8 +99,6 @@ namespace MahloService.Simulation
 
       this.isCheckRollEndSeamNeeded = this.sewinQueue.Rolls.FirstOrDefault()?.IsCheckRoll ?? false;
     }
-
-    public event PropertyChangedEventHandler PropertyChanged;
 
     public double FeetCounter { get; set; } = -1.0;
 

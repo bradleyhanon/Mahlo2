@@ -10,10 +10,9 @@ using PropertyChanged;
 
 namespace MahloServiceTests.Mocks
 {
+  [AddINotifyPropertyChangedInterface]
   class MockMeterSrc<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc
   {
-    public event PropertyChangedEventHandler PropertyChanged;
-
     public double FeetCounter { get; set; }
     public double FeetPerMinute { get; set; }
     public double MeasuredWidth { get; set; }
@@ -69,11 +68,6 @@ namespace MahloServiceTests.Mocks
     public void SetStatusIndicator(bool value)
     {
       throw new NotImplementedException();
-    }
-
-    private void OnPropertyChanged(string propertyName)
-    {
-      this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
   }
 }

@@ -67,8 +67,8 @@ namespace MahloService.Logic
       {
         Observable
           .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-            h => this.srcData.PropertyChanged += h,
-            h => this.srcData.PropertyChanged -= h)
+            h => ((INotifyPropertyChanged)this.srcData).PropertyChanged += h,
+            h => ((INotifyPropertyChanged)this.srcData).PropertyChanged -= h)
           .Subscribe(args => this.OpcValueChanged(args.EventArgs.PropertyName)),
 
         Observable
@@ -97,8 +97,8 @@ namespace MahloService.Logic
 
         Observable
           .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-            h => this.CriticalStops.PropertyChanged += h,
-            h => this.CriticalStops.PropertyChanged -= h)
+            h => ((INotifyPropertyChanged)this.CriticalStops).PropertyChanged += h,
+            h => ((INotifyPropertyChanged)this.CriticalStops).PropertyChanged -= h)
           .Subscribe(_ =>
           {
             this.IsMapValid &= this.CriticalStops.Any;
@@ -107,8 +107,8 @@ namespace MahloService.Logic
 
         Observable
           .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-            h => this.sewinQueue.PropertyChanged += h,
-            h => this.sewinQueue.PropertyChanged -= h)
+            h => ((INotifyPropertyChanged)this.sewinQueue).PropertyChanged += h,
+            h => ((INotifyPropertyChanged)this.sewinQueue).PropertyChanged -= h)
           .Subscribe(args => this.QueueMessage = this.sewinQueue.Message),
       };
     }

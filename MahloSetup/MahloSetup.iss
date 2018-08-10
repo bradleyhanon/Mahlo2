@@ -1,6 +1,6 @@
 [Setup]
 AppName=MahloMapper
-AppVersion=0.1
+AppVersion=1.0
 PrivilegesRequired=none
 AppId={{743E0273-076F-4EB5-BCDE-4FD08FE1034D}
 DefaultDirName={pf}\PA-Group\MahloMapper
@@ -9,7 +9,7 @@ AppContact=John Kendall
 AppSupportPhone=423-473-7541
 OutputBaseFilename=MahloMapperSetup
 UninstallDisplayName=Mahlo Mapper
-VersionInfoVersion=0.0
+VersionInfoVersion=1.0
 VersionInfoCompany=PA-Group, USA
 VersionInfoDescription=Broadloom Coater Monitor
 
@@ -30,7 +30,7 @@ Name: "MahloService"; Description: "Mahlo Service Program"; Types: server
 [Files]
 ;MahloClient files
 Source: "..\MahloClient\bin\Release\MahloClient.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
-Source: "..\MahloClient\bin\Release\MahloClient.exe.config"; DestDir: "{app}"; Flags: ignoreversion onlyifdoesntexist; Components: MahloClient MahloService
+Source: "..\MahloClient\bin\Release\MahloClient.exe.config"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
 Source: "..\MahloClient\bin\Release\MahloClient.pdb"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
 Source: "..\MahloClient\App.ico"; DestDir: "{app}"; Components: MahloClient MahloService
 Source: "..\MahloClient\Camera.ico"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
@@ -43,7 +43,6 @@ Source: "..\MahloService\bin\Release\MahloService.pdb"; DestDir: "{app}"; Flags:
 Source: "..\MahloClient\bin\Release\Microsoft.AspNet.SignalR.Client.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
 Source: "..\MahloClient\bin\Release\System.ValueTuple.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
 ; DLLs used by both MahloClient and MahloService
-Source: "..\MahloService\bin\Release\Westwind.Utilities.Configuration.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService MahloClient
 Source: "..\MahloService\bin\Release\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService MahloClient
 Source: "..\MahloService\bin\Release\PropertyChanged.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService MahloClient
 Source: "..\MahloService\bin\Release\SimpleInjector.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService MahloClient
@@ -98,6 +97,7 @@ Source: "..\MahloService\bin\Release\Serilog.Settings.AppSettings.dll"; DestDir:
 Source: "..\MahloService\bin\Release\Serilog.Sinks.Console.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\Serilog.Sinks.EventLog.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\System.Data.SqlServerCe.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
+Source: "..\MahloService\bin\Release\Westwind.Utilities.Configuration.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 
 [Icons]
 Name: "{commondesktop}\Mahlo2"; Filename: "{app}\MahloClient.exe"; IconFilename: "{app}\Rulers.ico"; Parameters: "Mahlo"; Components: Mahlo2
@@ -109,3 +109,9 @@ Name: "{group}\PatternRepeat"; Filename: "{app}\MahloClient.exe"; IconFilename: 
 
 [ThirdParty]
 UseRelativePaths=True
+
+[Run]
+Filename: "{app}\MahloService.exe"; Parameters: "--install"; Components: MahloService
+
+[UninstallRun]
+Filename: "{app}\MahloService.exe"; Parameters: "--uninstall"; Components: MahloService

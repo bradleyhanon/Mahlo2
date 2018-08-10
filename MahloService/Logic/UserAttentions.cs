@@ -10,6 +10,7 @@ using PropertyChanged;
 
 namespace MahloService.Logic
 {
+  [AddINotifyPropertyChangedInterface]
   class UserAttentions<Model> : IUserAttentions<Model>
   {
     private Attention attentions;
@@ -23,8 +24,6 @@ namespace MahloService.Logic
       SystemDisabled = 8,
       All = VerifyRollSequence | RollTooLong | RollTooShort | SystemDisabled,
     }
-
-    public event PropertyChangedEventHandler PropertyChanged;
 
     public bool IsSystemDisabled
     {
@@ -66,7 +65,7 @@ namespace MahloService.Logic
       }
       else
       {
-        attentions |= (bitMask | Attention.VerifyRollSequence);
+        this.attentions |= (bitMask | Attention.VerifyRollSequence);
 
         switch (bitMask)
         {

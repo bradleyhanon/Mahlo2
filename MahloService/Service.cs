@@ -25,6 +25,7 @@ namespace MahloService
     public Service()
     {
       InitializeComponent();
+      this.ServiceName = Program.StrMahloMapper;
     }
 
     protected override void OnStart(string[] args)
@@ -55,9 +56,7 @@ namespace MahloService
           this.log = container.GetInstance<ILogger>();
 
           container.GetInstance<ICarpetProcessor>().Start();
-          this.log.Information("Service started");
           this.syncContext.RunOnCurrentThread();
-          this.log.Information("Service stopped");
           container.GetInstance<IProgramState>().Save();
         }
       }

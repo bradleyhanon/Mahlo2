@@ -77,8 +77,6 @@ namespace MahloService.Opc
       this.Initialize();
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
-
     public double FeetCounter { get; set; }
     public double FeetPerMinute { get; set; }
     public double MeasuredWidth { get; set; }

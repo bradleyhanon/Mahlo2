@@ -17,6 +17,7 @@ using PropertyChanged;
 
 namespace MahloService.Logic
 {
+  [AddINotifyPropertyChangedInterface]
   sealed class SewinQueue : ISewinQueue, IEqualityComparer<GreigeRoll>
   {
     private int nextRollId;
@@ -46,7 +47,6 @@ namespace MahloService.Logic
         .Subscribe(async _ => await this.RefreshIfChanged());
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
     public event Action QueueChanged;
 
     public bool IsChanged { get; set; }

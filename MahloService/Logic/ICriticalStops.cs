@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace MahloService.Logic
 {
-  interface ICriticalStops : INotifyPropertyChanged
+  interface ICriticalStops
   {
     bool Any { get; }
     bool IsMahloCommError { get; set; }

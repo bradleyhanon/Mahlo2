@@ -320,30 +320,6 @@ namespace MahloServiceTests.Logic
       }
     }
 
-    [Fact(Skip="No longer relavent")]
-    public void SeamDetectedIsIgnoredWhenFeetLessThanSeamDetectedThreshold()
-    {
-      this.appInfo.SeamDetectableThreshold = 50;
-
-      this.target.CurrentRoll = this.sewinQueue.Rolls[0];
-
-      this.target.FeetCounterEnd = this.appInfo.SeamDetectableThreshold - 1;
-      Observable.FromEvent<Action<GreigeRoll>, GreigeRoll>(
-        h => this.target.RollFinished += h,
-        h => this.target.RollFinished -= h)
-      .Subscribe(roll => throw new Exception());
-
-      Observable.FromEvent<Action<GreigeRoll>, GreigeRoll>(
-        h => this.target.RollStarted += h,
-        h => this.target.RollStarted -= h)
-      .Subscribe(roll => throw new Exception());
-
-      this.srcData.IsSeamDetected = true;
-
-      // ResetSeamDetector should be called for every seam detection event
-      Assert.Equal(1, this.srcData.AcknowledgeSeamDetectCalled);
-    }
-
     [Fact]
     public void NextRollSelectedWhenNewRollStarts()
     {

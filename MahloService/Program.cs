@@ -30,6 +30,7 @@ namespace MahloService
 {
   class Program
   {
+    public const string StrMahloMapper = "MahloMapper";
     private static Service service;
 
     public static Container Container { get; private set; }
@@ -46,7 +47,7 @@ namespace MahloService
           Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .WriteTo.Console()
-            .WriteTo.EventLog("MahloMapper", manageEventSource: true, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information)
+            .WriteTo.EventLog(StrMahloMapper, manageEventSource: true, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information)
             //.ReadFrom.AppSettings()
             .CreateLogger();
 
@@ -54,7 +55,6 @@ namespace MahloService
           {
             if (args.Contains("--migrate"))
             {
-              //var runner = container.GetInstance<Mahlo.DbMigrations.Runner>();
               var runner = new MahloService.DbMigrations.Runner(new DbLocal(new DbConnectionFactory.Factory()));
               runner.MigrateToLatest();
               Environment.Exit(0);
@@ -62,7 +62,10 @@ namespace MahloService
 
             if (args.Contains("--install"))
             {
+              var runner = new MahloService.DbMigrations.Runner(new DbLocal(new DbConnectionFactory.Factory()));
+              runner.MigrateToLatest();
               ManagedInstallerClass.InstallHelper(new string[] { Assembly.GetExecutingAssembly().Location });
+              new ServiceController(StrMahloMapper).Start();
               Environment.Exit(0);
             }
 
@@ -148,6 +151,7 @@ namespace MahloService
       container.Options.DependencyInjectionBehavior =
         new SerilogContextualLoggerInjectionBehavior(container.Options);
 
+      container.RegisterInstance(Log.Logger);
       container.RegisterSingleton<IProgramState, ProgramState>();
       container.RegisterSingleton<IProgramStateProvider, DbLocal>();
 

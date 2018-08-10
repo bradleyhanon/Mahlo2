@@ -19,7 +19,7 @@ namespace MahloService.Ipc
       try
       {
         result = WebApp.Start<Startup>(url);
-        Log.Logger.Debug("SignalR listening on: {url}", url);
+        Log.Logger.Information("SignalR listening on: {url}", url);
       }
       catch(Exception ex)
       {

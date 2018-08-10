@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MahloClient.AppSettings
 {
-  public class ClientSettings : Westwind.Utilities.Configuration.AppConfiguration, IClientSettings
+  public class ClientSettings : IClientSettings
   {
     public ClientSettings()
     {
-      this.Initialize();
+      this.ServiceUrl = ConfigurationManager.AppSettings["ServerUrl"] ?? this.ServiceUrl;
     }
 
-    public string ServiceUrl { get; set; } = "http://127.0.0.1/mahlo";
-
+    public string ServiceUrl { get; set; } = "http://172.23.1.44/mahlo";
   }
 }

@@ -79,8 +79,12 @@ namespace MahloClient.Logic
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
+
+#pragma warning disable 67
+    // These events are not used in the unit tests but no by the application.
     public event Action<GreigeRoll> RollStarted;
     public event Action<GreigeRoll> RollFinished;
+#pragma warning restore 67
 
     public abstract string InterfaceName { get; }
 

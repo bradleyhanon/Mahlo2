@@ -32,7 +32,7 @@
       // 
       // serviceController
       // 
-      this.serviceController.ServiceName = "Mahlo";
+      this.serviceController.ServiceName = "MahloMapper";
       // 
       // Service
       // 

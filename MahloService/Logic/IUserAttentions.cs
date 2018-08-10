@@ -4,7 +4,7 @@ using System.ComponentModel;
 namespace MahloService.Logic
 {
   
-  interface IUserAttentions : INotifyPropertyChanged
+  interface IUserAttentions
   {
     bool Any { get; }
     bool IsRollTooLong { get; set; }

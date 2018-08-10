@@ -114,7 +114,7 @@ namespace MahloClient.Ipc
             this.IpcStatusMessage = ex.Response.ReasonPhrase;
             await Task.Delay(3000);
           }
-          catch (Exception ex)
+          catch (Exception)
           {
             await Task.Delay(3000);
           }
