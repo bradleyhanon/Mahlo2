@@ -55,9 +55,11 @@ namespace MahloService
         {
           this.log = container.GetInstance<ILogger>();
 
-          container.GetInstance<ICarpetProcessor>().Start();
+          ICarpetProcessor carpetProcessor = container.GetInstance<ICarpetProcessor>();
+          carpetProcessor.Start();
           this.syncContext.RunOnCurrentThread();
           container.GetInstance<IProgramState>().Save();
+          carpetProcessor.Stop();
         }
       }
       catch (Exception ex)

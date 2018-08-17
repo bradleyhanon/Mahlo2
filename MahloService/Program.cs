@@ -83,9 +83,11 @@ namespace MahloService
               using (new Control()) { }
               using (var container = InitializeContainer(WindowsFormsSynchronizationContext.Current, shouldSimulate))
               {
-                container.GetInstance<ICarpetProcessor>().Start();
+                ICarpetProcessor carpetProcessor = container.GetInstance<ICarpetProcessor>();
+                carpetProcessor.Start();
                 Application.Run(container.GetInstance<FormSim>());
                 container.GetInstance<IProgramState>().Save();
+                carpetProcessor.Stop();
               }
             }
             else
@@ -106,9 +108,11 @@ namespace MahloService
                 };
 
                 Log.Logger.Information("Application started");
-                container.GetInstance<ICarpetProcessor>().Start();
+                ICarpetProcessor carpetProcessor = container.GetInstance<ICarpetProcessor>();
+                carpetProcessor.Start();
                 Application.Run(appContext);
                 container.GetInstance<IProgramState>().Save();
+                carpetProcessor.Stop();
                 Log.Logger.Information("Application stopped");
               }
             }
@@ -178,6 +182,7 @@ namespace MahloService
       }
       else
       {
+        container.RegisterSingleton<IOpcServerController, OpcServerController>();
         container.RegisterSingleton<IMahloSrc, OpcClient<MahloModel>>();
         container.RegisterSingleton<IBowAndSkewSrc, OpcClient<BowAndSkewModel>>();
         container.RegisterSingleton<IPatternRepeatSrc, OpcClient<PatternRepeatModel>>();

@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using MahloService.Settings;
 using MahloService.Ipc;
 using MahloService.Models;
+using MahloService.Utilities;
 
 namespace MahloService.Logic
 {
   class CarpetProcessor : ICarpetProcessor
   {
+    private readonly IOpcServerController opcServerController;
     private readonly IServiceSettings appInfo;
 
     public CarpetProcessor(
@@ -19,6 +21,7 @@ namespace MahloService.Logic
       IBowAndSkewLogic bowAndSkewLogic,
       IPatternRepeatLogic patternRepeatLogic,
       ICutRollLogic cutRollLogic,
+      IOpcServerController opcServerController,
       IServiceSettings appInfo)
     {
       this.SewinQueue = sewinQueue;
@@ -26,6 +29,7 @@ namespace MahloService.Logic
       this.BowAndSkewLogic = bowAndSkewLogic;
       this.PatternRepeatLogic = patternRepeatLogic;
       this.CutRollLogic = cutRollLogic;
+      this.opcServerController = opcServerController;
       this.appInfo = appInfo;
     }
 
@@ -39,10 +43,16 @@ namespace MahloService.Logic
 
     public void Start()
     {
+      this.opcServerController.Start();
       Startup.Start(this.appInfo.ServiceUrl);
       this.MahloLogic.Start();
       this.BowAndSkewLogic.Start();
       this.PatternRepeatLogic.Start();
+    }
+
+    public void Stop()
+    {
+      this.opcServerController.Stop();
     }
   }
 }

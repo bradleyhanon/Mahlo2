@@ -9,5 +9,6 @@
     ISewinQueue SewinQueue { get; }
 
     void Start();
+    void Stop();
   }
 }
