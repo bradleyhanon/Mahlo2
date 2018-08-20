@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 
-namespace MahloService.Utilities
+namespace MahloService.Opc
 {
   internal interface IOpcServerController
   {
     void Start();
-    void Stop();
   }
 }

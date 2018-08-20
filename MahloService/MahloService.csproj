@@ -175,8 +175,8 @@
     <Compile Include="Utilities\ConsoleControl.cs" />
     <Compile Include="Utilities\ConsoleEventArgs.cs" />
     <Compile Include="Utilities\IConcurrencyInfo.cs" />
-    <Compile Include="Utilities\IOpcServerController.cs" />
-    <Compile Include="Utilities\OpcServerController.cs" />
+    <Compile Include="Opc\IOpcServerController.cs" />
+    <Compile Include="Opc\OpcServerController.cs" />
     <Compile Include="Utilities\SingleThreadSynchronizationContext.cs" />
     <Compile Include="WinApi.cs" />
   </ItemGroup>

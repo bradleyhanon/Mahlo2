@@ -465,19 +465,11 @@ namespace MahloService.Logic
         return;
       }
 
-      double priorFeetCounter = this.feetCounterAtLastSeam;
       this.seamAckNeeded = true;
       this.feetCounterAtLastSeam = this.srcData.FeetCounter;
 
       //ignore seam detect if system is disabled
       if (this.UserAttentions.IsSystemDisabled)
-      {
-        return;
-      }
-
-      // Check roll can have multple seams
-      // a seam less than MaxEndCheckRollPieceLength designates the end of the check roll
-      if (this.CurrentRoll.IsCheckRoll && this.srcData.FeetCounter - priorFeetCounter > this.appInfo.MaxEndCheckRollPieceLength)
       {
         return;
       }

@@ -266,19 +266,24 @@ namespace MahloServiceTests.Logic
       Assert.Equal(1, this.srcData.AcknowledgeSeamDetectCalled);
     }
 
+    /// <summary>
+    /// End check roll logic was taken out.
+    /// Verify it no longer works like it did.
+    /// </summary>
     [Fact]
-    public void CheckRollFinishedWhenEndCheckRollPieceSeen()
+    public void CheckRollNotFinishedWhenEndCheckRollPieceSeen()
     {
       var roll = this.target.CurrentRoll;
       roll.RollNo = GreigeRoll.CheckRollId;
       this.appInfo.MaxEndCheckRollPieceLength = 10;
       this.appInfo.MinSeamSpacing = 4;
-      for (int j = 0; j < 10; j++)
+      for (int j = 0; j < 4; j++)
       {
         this.srcData.FeetCounter += this.appInfo.MaxEndCheckRollPieceLength + 1;
         this.srcData.IsSeamDetected = true;
         this.srcData.IsSeamDetected = false;
-        Assert.Equal(roll, this.target.CurrentRoll);
+        Assert.NotEqual(roll, this.target.CurrentRoll);
+        roll = this.target.CurrentRoll;
       }
 
       this.srcData.FeetCounter += this.appInfo.MaxEndCheckRollPieceLength;

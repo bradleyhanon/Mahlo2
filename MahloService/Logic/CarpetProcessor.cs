@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MahloService.Settings;
 using MahloService.Ipc;
 using MahloService.Models;
-using MahloService.Utilities;
+using MahloService.Opc;
 
 namespace MahloService.Logic
 {
@@ -52,7 +52,6 @@ namespace MahloService.Logic
 
     public void Stop()
     {
-      this.opcServerController.Stop();
     }
   }
 }
