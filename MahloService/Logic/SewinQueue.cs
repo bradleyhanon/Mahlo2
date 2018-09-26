@@ -14,17 +14,19 @@ using MahloService.Models;
 using MahloService.Repository;
 using MahloService.Utilities;
 using PropertyChanged;
+using Serilog;
 
 namespace MahloService.Logic
 {
-  [AddINotifyPropertyChangedInterface]
-  sealed class SewinQueue : ISewinQueue, IEqualityComparer<GreigeRoll>
+  sealed class SewinQueue : ISewinQueue, IEqualityComparer<GreigeRoll>, INotifyPropertyChanged
   {
+    private readonly ILogger logger;
     private int nextRollId;
 
     private readonly IDbLocal dbLocal;
     private readonly IDbMfg dbMfg;
 
+    private readonly Queue<string> messageQueue = new Queue<string>();
     private bool isRefreshBusy;
 
     private string priorFirstRoll = string.Empty;
@@ -33,10 +35,11 @@ namespace MahloService.Logic
 
     IDisposable timer;
 
-    public SewinQueue(IScheduler scheduler, IDbLocal dbLocal, IDbMfg dbMfg)
+    public SewinQueue(IScheduler scheduler, IDbLocal dbLocal, IDbMfg dbMfg, ILogger logger)
     {
       this.dbLocal = dbLocal;
       this.dbMfg = dbMfg;
+      this.logger = logger;
 
       this.nextRollId = this.dbLocal.GetNextGreigeRollId();
       this.Rolls.AddRange(this.dbLocal.GetIncompleteGreigeRolls());
@@ -48,6 +51,8 @@ namespace MahloService.Logic
     }
 
     public event Action QueueChanged;
+
+    public event PropertyChangedEventHandler PropertyChanged;
 
     public bool IsChanged { get; set; }
 
@@ -91,6 +96,8 @@ namespace MahloService.Logic
         this.dbLocal.SetGreigeRollsComplete(rollsToRemove);
         rollsToRemove.ForEach(roll => this.Rolls.Remove(roll));
 
+        int updatedCount = 0;
+        int addedCount = 0;
         foreach (var newRoll in newRolls)
         {
           var oldRoll = this.Rolls.FirstOrDefault(item => item.RollNo == newRoll.RollNo);
@@ -99,6 +106,7 @@ namespace MahloService.Logic
             // Update old rolls we already have
             newRoll.CopyTo(oldRoll);
             this.dbLocal.UpdateGreigeRoll(oldRoll);
+            updatedCount++;
             //Console.WriteLine($"Upd Roll={newRoll.RollNo}");
           }
           else
@@ -107,13 +115,16 @@ namespace MahloService.Logic
             newRoll.Id = this.nextRollId++;
             this.Rolls.Add(newRoll);
             this.dbLocal.AddGreigeRoll(newRoll);
+            addedCount++;
             //Console.WriteLine($"Add Roll={newRoll.RollNo}");
           }
         }
-      }
-      catch
-      {
 
+        this.logger.Debug("SewinQueue refreshed: added={added}, updated={updated}, removed={removed}", addedCount, updatedCount, rollsToRemove.Length);
+      }
+      catch (Exception ex)
+      {
+        this.logger.Debug("SewinQueue refresh failed: {exception}", ex.Message);
       }
 
       this.QueueChanged?.Invoke();
@@ -123,28 +134,59 @@ namespace MahloService.Logic
     {
       if (this.isRefreshBusy)
       {
+        this.logger.Debug("Sewin queue refresh is busy.");
         return;
       }
 
       this.isRefreshBusy = true;
       try
       {
-        this.Message = "Checking queue";
-        await this.dbMfg.GetCutRollFromHost();
+        this.SetMessage("Checking queue");
         if (await this.dbMfg.GetIsSewinQueueChanged(this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll))
         {
-          this.Message = "Reading queue";
+          this.SetMessage("Reading queue");
           await Refresh();
         }
+        else
+        {
+          this.logger.Debug("SewinQueue unchanged: size={priorQueueSize}, first={priorFirstRoll}, last={priorLastRoll}.", this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll);
+        }
 
-        this.Message = "Queue sleeping";
+        this.SetMessage("Queue sleeping");
       }
       catch (Exception ex)
       {
-        this.Message = $"Error: {ex.Message}";
+        this.SetMessage($"Error: {ex.Message}");
       }
 
       this.isRefreshBusy = false;
+    }
+
+    /// <summary>
+    /// Set the message to displayed on the user's screen.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    private void SetMessage(string message)
+    {
+      // Delay setting the message until the prior message has been sent
+      // This allows the user to read the first message before the next overwrites it.
+      if (this.IsChanged)
+      {
+        this.messageQueue.Enqueue(message);
+      }
+      else
+      {
+        this.Message = message;
+      }
+    }
+
+    private void OnPropertyChanged(string propertyName)
+    {
+      this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+      if (!this.IsChanged && propertyName == nameof(this.IsChanged) && this.messageQueue.Count > 0)
+      {
+        this.Message = this.messageQueue.Dequeue();
+      }
     }
 
     // For IEqualityComparer<GreigeRoll>

@@ -12,6 +12,7 @@ using MahloService.Utilities;
 using MahloServiceTests.Mocks;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
+using Serilog;
 using Xunit;
 
 namespace MahloServiceTests
@@ -27,6 +28,7 @@ namespace MahloServiceTests
     private readonly IDbLocal dbLocal = Substitute.For<IDbLocal>();
     private readonly IDbMfg dbMfg = Substitute.For<IDbMfg>();
     private readonly TestScheduler scheduler = new TestScheduler();
+    private readonly ILogger logger = Substitute.For<ILogger>();
 
     private SewinQueue target;
 
@@ -43,7 +45,7 @@ namespace MahloServiceTests
     public void GetIsSewinQueueChangedIsCalledPeriodically()
     {
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(false);
-      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
       for (int j = 1; j < 5; j++)
       {
         this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks - 1);
@@ -57,7 +59,7 @@ namespace MahloServiceTests
     public void GetCoaterSewinQueueIsNotCalledWhenGetIsQueChangedReturnsFalse()
     {
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(false);
-      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
       this.dbMfg.Received(1).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
       this.dbMfg.DidNotReceive().GetCoaterSewinQueue();
     }
@@ -66,7 +68,7 @@ namespace MahloServiceTests
     public void GetCoaterSewinQueueIsCalledWhenGetIsQueChangedReturnsTrue()
     {
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
-      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
       this.dbMfg.Received(1).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
       this.dbMfg.Received(1).GetCoaterSewinQueue();
     }
@@ -77,7 +79,7 @@ namespace MahloServiceTests
       var newRolls = new GreigeRoll[] { this.roll1, this.roll2, this.roll3 };
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
       this.dbMfg.GetCoaterSewinQueue().Returns(newRolls);
-      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
 
       this.dbMfg.ClearReceivedCalls();
       this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks);
@@ -91,7 +93,7 @@ namespace MahloServiceTests
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
       this.dbLocal.GetNextGreigeRollId().Returns(1);
       this.dbMfg.GetCoaterSewinQueue().Returns(newRolls);
-      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
       Assert.True(newRolls.SequenceEqual(this.target.Rolls));
 
       for (int j = 0; j < this.target.Rolls.Count; j++)
@@ -111,7 +113,7 @@ namespace MahloServiceTests
 
       this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
       this.dbMfg.GetCoaterSewinQueue().Returns(newRolls1);
-      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
       this.dbMfg.Received(1).GetCoaterSewinQueue();
 
       this.dbMfg.ClearReceivedCalls();

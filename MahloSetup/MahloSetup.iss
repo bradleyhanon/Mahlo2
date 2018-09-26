@@ -1,6 +1,6 @@
 [Setup]
 AppName=MahloMapper
-AppVersion=1.0
+AppVersion=1.1
 PrivilegesRequired=none
 AppId={{743E0273-076F-4EB5-BCDE-4FD08FE1034D}
 DefaultDirName={pf}\PA-Group\MahloMapper
@@ -9,7 +9,7 @@ AppContact=John Kendall
 AppSupportPhone=423-473-7541
 OutputBaseFilename=MahloMapperSetup
 UninstallDisplayName=Mahlo Mapper
-VersionInfoVersion=1.0
+VersionInfoVersion=1.1
 VersionInfoCompany=PA-Group, USA
 VersionInfoDescription=Broadloom Coater Monitor
 
@@ -96,6 +96,7 @@ Source: "..\MahloService\bin\Release\Serilog.dll"; DestDir: "{app}"; Flags: igno
 Source: "..\MahloService\bin\Release\Serilog.Settings.AppSettings.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\Serilog.Sinks.Console.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\Serilog.Sinks.EventLog.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
+Source: "..\MahloService\bin\Release\Serilog.Sinks.File.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\System.Data.SqlServerCe.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\Westwind.Utilities.Configuration.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 

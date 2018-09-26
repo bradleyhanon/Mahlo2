@@ -45,10 +45,7 @@ namespace MahloService
         using (new SingleInstance(instanceName))
         {
           Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.Console()
-            .WriteTo.EventLog(StrMahloMapper, manageEventSource: true, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information)
-            //.ReadFrom.AppSettings()
+            .ReadFrom.AppSettings()
             .CreateLogger();
 
           if (Environment.UserInteractive)

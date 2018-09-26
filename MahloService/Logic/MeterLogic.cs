@@ -109,6 +109,7 @@ namespace MahloService.Logic
           .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
             h => ((INotifyPropertyChanged)this.sewinQueue).PropertyChanged += h,
             h => ((INotifyPropertyChanged)this.sewinQueue).PropertyChanged -= h)
+          .Where(args => args.EventArgs.PropertyName == nameof(this.sewinQueue.Message))
           .Subscribe(args => this.QueueMessage = this.sewinQueue.Message),
       };
     }
