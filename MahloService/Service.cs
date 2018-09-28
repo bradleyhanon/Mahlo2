@@ -64,7 +64,7 @@ namespace MahloService
       }
       catch (Exception ex)
       {
-        this.log.Error("Service thread error.", ex);
+        this.log.Error("Service thread error." + Environment.NewLine + ex.ToString());
       }
     }
   }
