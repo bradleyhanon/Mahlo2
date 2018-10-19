@@ -26,6 +26,12 @@ namespace MahloService.Models
     public int Id { get; set; }
     public bool IsComplete { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the roll has been removed from the queue but is still in use.
+    /// </summary>
+    [Computed]
+    public bool IsInLimbo { get; set; }
+
     //-- Mfg database data --//
     public string RollNo { get; set; } = string.Empty;
     public string OrderNo { get; set; } = string.Empty;

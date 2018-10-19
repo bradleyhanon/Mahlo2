@@ -80,6 +80,7 @@
     <Compile Include="Models\BowAndSkewMapDatum.cs" />
     <Compile Include="Models\Mahlo2MapDatum.cs" />
     <Compile Include="Models\PatternRepeatMapDatum.cs" />
+    <Compile Include="Opc\OpcServerControllerSim.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>

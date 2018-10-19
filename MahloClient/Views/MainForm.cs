@@ -20,6 +20,8 @@ namespace MahloClient.Views
   {
     delegate void CellFormattingAction(DataGridViewCellFormattingEventArgs args, IServiceSettings settings);
 
+    private CellColor defaultCellColor;
+    private string[] sewinQueueColumnNames = { nameof(GreigeRoll.RollNo), nameof(GreigeRoll.StyleCode), nameof(GreigeRoll.ColorCode), nameof(GreigeRoll.BackingCode), nameof(GreigeRoll.RollLength), nameof(GreigeRoll.RollWidthStr), nameof(GreigeRoll.PatternRepeatLength) };
     private string[] mahloColumnNames = { nameof(GreigeRoll.MalFeet) };
     private string[] bowAndSkewColumnNames = { nameof(GreigeRoll.BasFeet), nameof(GreigeRoll.Bow), nameof(GreigeRoll.Skew) };
     private string[] patternRepeatColumnNames = { nameof(GreigeRoll.PrsFeet), nameof(GreigeRoll.Elongation) };
@@ -41,6 +43,11 @@ namespace MahloClient.Views
       this.mahloClient = mahloClient;
       this.serviceSettings = serviceSettings;
       this.statusBar1.StatusBarInfo = (IStatusBarInfo)this.carpetProcessor.PatternRepeatLogic;
+      this.defaultCellColor = new CellColor
+      {
+        ForeColor = this.grdGreigeRoll.DefaultCellStyle.ForeColor,
+        BackColor = this.grdGreigeRoll.DefaultCellStyle.BackColor
+      };
 
       this.MahloPropertyChangedSubscription =
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
@@ -220,6 +227,11 @@ namespace MahloClient.Views
     private void GrdGreigeRoll_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
     {
       var col = this.grdGreigeRoll.Columns[e.ColumnIndex];
+      if (e.RowIndex >= 0 && this.sewinQueueColumnNames.Contains(col.DataPropertyName))
+      {
+        this.SetLimboColor(e);
+      }
+
       GreigeRoll gridRoll = this.carpetProcessor.SewinQueue.Rolls[e.RowIndex];
       SetColor(this.carpetProcessor.MahloLogic, this.mahloColumnNames);
       SetColor(this.carpetProcessor.BowAndSkewLogic, this.bowAndSkewColumnNames);
@@ -231,7 +243,7 @@ namespace MahloClient.Views
         {
           if (logic.CurrentRoll == gridRoll)
           {
-            (e.CellStyle.BackColor, e.CellStyle.ForeColor) = CellColor.ActiveColor;
+            (e.CellStyle.ForeColor, e.CellStyle.BackColor) = CellColor.ActiveColor;
           }
           else if (e.RowIndex >= 0 && e.RowIndex < logic.CurrentRollIndex)
           {
@@ -251,14 +263,20 @@ namespace MahloClient.Views
       }
     }
 
+    public void SetLimboColor(DataGridViewCellFormattingEventArgs args)
+    {
+      GreigeRoll roll = (GreigeRoll)this.grdGreigeRoll.Rows[args.RowIndex].DataBoundItem;
+      (args.CellStyle.ForeColor, args.CellStyle.BackColor) =
+        roll.IsInLimbo ? CellColor.GetLimboColor() : this.defaultCellColor;
+    }
+
     public void SetFeetColor(DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
     {
       GreigeRoll roll = (GreigeRoll)this.grdGreigeRoll.Rows[args.RowIndex].DataBoundItem;
       long measuredLength = (long)args.Value;
 
-      (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
-        roll.RollLength == 0 ?
-        new CellColor { ForeColor = this.grdGreigeRoll.DefaultCellStyle.BackColor, BackColor = this.grdGreigeRoll.DefaultCellStyle.ForeColor } :
+      (args.CellStyle.ForeColor, args.CellStyle.BackColor) =
+        roll.RollLength == 0 ? this.defaultCellColor :
         CellColor.GetFeetColor(roll.RollLength, (long)args.Value, this.serviceSettings);
     }
 
@@ -266,7 +284,7 @@ namespace MahloClient.Views
     {
       GreigeRoll roll = (GreigeRoll)this.grdGreigeRoll.Rows[args.RowIndex].DataBoundItem;
 
-      (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
+      (args.CellStyle.ForeColor, args.CellStyle.BackColor) =
         CellColor.GetBowColor(roll.BackingCode, (double)args.Value, this.serviceSettings);
     }
 
@@ -274,7 +292,7 @@ namespace MahloClient.Views
     {
       GreigeRoll roll = (GreigeRoll)this.grdGreigeRoll.Rows[args.RowIndex].DataBoundItem;
 
-      (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
+      (args.CellStyle.ForeColor, args.CellStyle.BackColor) =
         CellColor.GetSkewColor(roll.BackingCode, (double)args.Value, this.serviceSettings);
     }
 
@@ -287,7 +305,7 @@ namespace MahloClient.Views
     {
       GreigeRoll roll = this.carpetProcessor.PatternRepeatLogic.CurrentRoll;
 
-      (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
+      (args.CellStyle.ForeColor, args.CellStyle.BackColor) =
         CellColor.GetBowColor(roll.BackingCode, (double)args.Value, this.serviceSettings);
     }
 
@@ -295,7 +313,7 @@ namespace MahloClient.Views
     {
       GreigeRoll roll = this.carpetProcessor.PatternRepeatLogic.CurrentRoll;
 
-      (args.CellStyle.BackColor, args.CellStyle.ForeColor) =
+      (args.CellStyle.ForeColor, args.CellStyle.BackColor) =
         CellColor.GetSkewColor(roll.BackingCode, (double)args.Value, this.serviceSettings);
     }
 

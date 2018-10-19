@@ -26,8 +26,6 @@ namespace MahloService.Opc
     private readonly string processName;
 
     private Process process;
-    private int opcWinHandle;
-    private int opcInstanceHandle;
 
     public OpcServerController(IOpcSettings opcSettings, ILogger logger)
     {

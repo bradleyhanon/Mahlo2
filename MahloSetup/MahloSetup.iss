@@ -9,7 +9,7 @@ AppContact=John Kendall
 AppSupportPhone=423-473-7541
 OutputBaseFilename=MahloMapperSetup
 UninstallDisplayName=Mahlo Mapper
-VersionInfoVersion=1.1
+VersionInfoVersion=1.2
 VersionInfoCompany=PA-Group, USA
 VersionInfoDescription=Broadloom Coater Monitor
 
@@ -30,7 +30,7 @@ Name: "MahloService"; Description: "Mahlo Service Program"; Types: server
 [Files]
 ;MahloClient files
 Source: "..\MahloClient\bin\Release\MahloClient.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
-Source: "..\MahloClient\bin\Release\MahloClient.exe.config"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
+Source: "..\MahloClient\bin\Release\MahloClient.exe.config"; DestDir: "{app}"; Flags: ignoreversion onlyifdoesntexist; Components: MahloClient MahloService
 Source: "..\MahloClient\bin\Release\MahloClient.pdb"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
 Source: "..\MahloClient\App.ico"; DestDir: "{app}"; Components: MahloClient MahloService
 Source: "..\MahloClient\Camera.ico"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService

@@ -145,7 +145,7 @@ namespace MahloClient.Views
       {
         if (e.ColumnIndex == this.moveUpColumn.Index)
         {
-          this.ipcClient.MoveQueueRoll(e.RowIndex, - 1);
+          this.ipcClient.MoveQueueRoll(e.RowIndex, -1);
         }
         else if (e.ColumnIndex == this.moveDownColumn.Index)
         {
@@ -185,14 +185,25 @@ namespace MahloClient.Views
 
     private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
     {
-      if (e.RowIndex >= 0 && e.RowIndex < this.logic.CurrentRollIndex && e.ColumnIndex == this.colMeasuredLength.Index)
+      if (e.RowIndex >= 0)
       {
-        GreigeRoll roll = this.logic.CurrentRoll;
-
-        (e.CellStyle.BackColor, e.CellStyle.ForeColor) =
-          roll.RollLength == 0 ?
-          new CellColor { ForeColor = this.dataGridView1.DefaultCellStyle.BackColor, BackColor = this.dataGridView1.DefaultCellStyle.ForeColor } :
-          CellColor.GetFeetColor(roll.RollLength, (long)e.Value, this.serviceSettings);
+        {
+          GreigeRoll roll = this.sewinQueue.Rolls[e.RowIndex];
+          if (e.ColumnIndex == this.colMeasuredLength.Index)
+          {
+            if (e.RowIndex < this.logic.CurrentRollIndex)
+            {
+              (e.CellStyle.ForeColor, e.CellStyle.BackColor) =
+                roll.RollLength == 0 ?
+                new CellColor { ForeColor = this.dataGridView1.DefaultCellStyle.ForeColor, BackColor = this.dataGridView1.DefaultCellStyle.BackColor } :
+                CellColor.GetFeetColor(roll.RollLength, (long)e.Value, this.serviceSettings);
+            }
+          }
+          else if (roll.IsInLimbo)
+          {
+            (e.CellStyle.ForeColor, e.CellStyle.BackColor) = CellColor.LimboColor;
+          }
+        }
       }
     }
   }

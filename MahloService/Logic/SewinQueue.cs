@@ -52,6 +52,8 @@ namespace MahloService.Logic
 
     public event Action QueueChanged;
 
+    public event CancelEventHandler CanRemoveRollQuery;
+
     public event PropertyChangedEventHandler PropertyChanged;
 
     public bool IsChanged { get; set; }
@@ -93,9 +95,22 @@ namespace MahloService.Logic
 
         // Remove completed rolls
         var rollsToRemove = this.Rolls.Except(newRolls, this).ToArray();
-        this.dbLocal.SetGreigeRollsComplete(rollsToRemove);
-        rollsToRemove.ForEach(roll => this.Rolls.Remove(roll));
+        var rollsRemoved = new List<GreigeRoll>();
+        foreach (var roll in rollsToRemove)
+        {
+          CancelEventArgs args = new CancelEventArgs();
+          this.CanRemoveRollQuery?.Invoke(roll, args);
+          roll.IsInLimbo = args.Cancel;
+          if (!args.Cancel)
+          {
+            rollsRemoved.Add(roll);
+            this.Rolls.Remove(roll);
+          }
+        }
 
+        this.dbLocal.SetGreigeRollsComplete(rollsRemoved);
+
+        // Update or add from the new rolls
         int updatedCount = 0;
         int addedCount = 0;
         foreach (var newRoll in newRolls)

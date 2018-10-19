@@ -21,13 +21,24 @@ namespace MahloClient.Views
     }
 
     // Greenish
-    public static readonly CellColor GoodColor = new CellColor { ForeColor = Color.FromArgb(198, 239, 206), BackColor = Color.FromArgb(0, 97, 0) };
+    public static readonly CellColor GoodColor = new CellColor { ForeColor = Color.FromArgb(0, 97, 0), BackColor = Color.FromArgb(198, 239, 206) };
 
     // Yellowish
-    public static readonly CellColor ActiveColor = new CellColor { ForeColor = Color.FromArgb(255, 235, 156), BackColor = Color.FromArgb(156, 87, 0) };
+    public static readonly CellColor ActiveColor = new CellColor { ForeColor = Color.FromArgb(156, 87, 0), BackColor = Color.FromArgb(255, 235, 156) };
 
     // Pinkish
-    public static readonly CellColor OutOfSpecColor = new CellColor { ForeColor = Color.FromArgb(255, 199, 206), BackColor = Color.FromArgb(156, 0, 6) };
+    public static readonly CellColor OutOfSpecColor = new CellColor { ForeColor = Color.FromArgb(156, 0, 6), BackColor = Color.FromArgb(255, 199, 206)  };
+
+    // Gray
+    public static readonly CellColor LimboColor = new CellColor { ForeColor = Color.White, BackColor = Color.FromArgb(165, 165, 165) };
+
+    // Orangeish
+    // public static readonly CellColor LimboColor = new CellColor { ForeColor = Color.FromArgb(63, 114, 142), BackColor = Color.FromArgb(255, 204, 153) };
+
+    public static CellColor GetLimboColor()
+    {
+      return LimboColor;
+    }
 
     public static CellColor GetFeetColor(int expectedLength, long measuredLength, IServiceSettings settings)
     {

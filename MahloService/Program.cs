@@ -171,6 +171,7 @@ namespace MahloService
 
       if (shouldSimulate)
       {
+        container.RegisterSingleton<IOpcServerController, OpcServerControllerSim>();
         container.RegisterSingleton<IMahloSrc, OpcSrcSim<MahloModel>>();
         container.RegisterSingleton<IBowAndSkewSrc, OpcSrcSim<BowAndSkewModel>>();
         container.RegisterSingleton<IPatternRepeatSrc, OpcSrcSim<PatternRepeatModel>>();

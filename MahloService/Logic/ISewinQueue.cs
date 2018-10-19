@@ -9,6 +9,8 @@ namespace MahloService.Logic
 {
   interface ISewinQueue : IDisposable
   {
+    event CancelEventHandler CanRemoveRollQuery;
+
     event Action QueueChanged;
 
     bool IsChanged { get; set; }

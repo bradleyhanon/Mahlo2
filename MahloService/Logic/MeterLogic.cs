@@ -86,6 +86,12 @@ namespace MahloService.Logic
           .Subscribe(_ => this.SewinQueueChanged()),
 
         Observable
+          .FromEventPattern<CancelEventHandler, CancelEventArgs>(
+          h => this.sewinQueue.CanRemoveRollQuery += h,
+          h => this.sewinQueue.CanRemoveRollQuery -= h)
+          .Subscribe(args => args.EventArgs.Cancel |= args.Sender == this.currentRoll),
+
+        Observable
           .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
             h => ((INotifyPropertyChanged)this.UserAttentions).PropertyChanged += h,
             h => ((INotifyPropertyChanged)this.UserAttentions).PropertyChanged -= h)

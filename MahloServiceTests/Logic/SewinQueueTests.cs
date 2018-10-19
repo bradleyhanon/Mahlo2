@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Concurrency;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Repository;
-using MahloService.Utilities;
-using MahloServiceTests.Mocks;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
@@ -125,6 +119,32 @@ namespace MahloServiceTests
       Assert.Equal("Now changed", this.target.Rolls.Single(item => item.RollNo == this.roll3.RollNo).ProductImageURL);
     }
 
+    [Fact]
+    public void RollsStillInUseAreNotRemoved()
+    {
+      var newRolls1 = this.Clone(this.roll1, this.roll2, this.roll3).ToArray();
+      var newRolls2 = this.Clone(this.roll3, this.roll4, this.roll5).ToArray();
+      var expected = new GreigeRoll[] { this.roll2, this.roll3, this.roll4, this.roll5 };
+
+      // Fill the queue with newRolls1
+      this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
+      this.dbMfg.GetCoaterSewinQueue().Returns(newRolls1);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
+      this.dbMfg.Received(1).GetCoaterSewinQueue();
+
+      this.target.CanRemoveRollQuery += (sender, e) => e.Cancel = sender == newRolls1[1];  // keep roll2
+
+      // Update with newRolls2
+      this.dbMfg.ClearReceivedCalls();
+      this.dbMfg.GetIsSewinQueueChanged(3, this.roll1.RollNo, this.roll3.RollNo).Returns(true);
+      this.dbMfg.GetCoaterSewinQueue().Returns(newRolls2);
+      this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks);
+      this.dbMfg.Received(1).GetCoaterSewinQueue();
+
+      // Verify the updated queue
+      Assert.True(this.target.Rolls.SequenceEqual(expected, this));
+    }
+
     //[Fact]
     //public void RollsNotInUpdateAreRemoved()
     //{
@@ -151,6 +171,16 @@ namespace MahloServiceTests
       GreigeRoll result = new GreigeRoll();
       roll.CopyTo(result);
       return result;
+    }
+
+    private IEnumerable<GreigeRoll> Clone(params GreigeRoll[] rolls)
+    {
+      foreach(var roll in rolls)
+      {
+        GreigeRoll result = new GreigeRoll();
+        roll.CopyTo(result);
+        yield return result;
+      }
     }
 
     public bool Equals(GreigeRoll x, GreigeRoll y)
