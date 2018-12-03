@@ -40,7 +40,7 @@ namespace MahloService.Logic
 
     string QueueMessage { get; set; }
 
-    Task ApplyRecipe(string recipeName, bool isManualMode);
+    Task ApplyRecipeAsync(string recipeName, bool isManualMode);
     void RefreshStatusDisplay();
     void MoveToNextRoll(int lengthOfCurrentRoll);
     void MoveToPriorRoll();

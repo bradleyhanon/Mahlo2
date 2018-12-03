@@ -287,7 +287,7 @@ namespace MahloService.Logic
       this.UserAttentions.IsSystemDisabled = true;
     }
 
-    public virtual Task ApplyRecipe(string recipeName, bool isManualMode)
+    public virtual Task ApplyRecipeAsync(string recipeName, bool isManualMode)
     {
       return Task.CompletedTask;
     }
@@ -522,7 +522,7 @@ namespace MahloService.Logic
           {
             case RollTypeEnum.Greige:
               //automatically set recipe
-              ApplyRecipe(this.CurrentRoll.DefaultRecipe, false);
+              ApplyRecipeAsync(this.CurrentRoll.DefaultRecipe, false).NoWait();
 
               //check roll and style counts, alarm if necessary
               if (this.appInfo.MinRollLengthForStyleAndRollCounting > 0 && this.CurrentRoll.RollLength >= this.appInfo.MinRollLengthForStyleAndRollCounting)
@@ -555,7 +555,7 @@ namespace MahloService.Logic
 
             default:
               //set controller to manual
-              ApplyRecipe(string.Empty, true);
+              ApplyRecipeAsync(string.Empty, true).NoWait();
               this.IsMapValid = false;
               this.IsMappingNow = false;
               break;

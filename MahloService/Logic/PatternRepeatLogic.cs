@@ -68,7 +68,7 @@ namespace MahloService.Logic
           this.CurrentCutRoll = this.cutRolls.LastOrDefault();
         }));
 
-      this.KeepBowAndSkewUpToDate();
+      this.KeepBowAndSkewUpToDateAsync().NoWait();
     }
 
     public override GreigeRoll CurrentRoll
@@ -187,7 +187,7 @@ namespace MahloService.Logic
           break;
 
         case nameof(this.srcData.IsDoffDetected):
-          this.DoffDetected();
+          this.DoffDetectedAsync().NoWait();
           break;
       }
     }
@@ -205,7 +205,7 @@ namespace MahloService.Logic
       this.CurrentCutRoll.FeetCounterEnd = this.CurrentFeetCounter;
     }
 
-    private async void KeepBowAndSkewUpToDate()
+    private async Task KeepBowAndSkewUpToDateAsync()
     {
       for (; ;)
       {
@@ -238,7 +238,7 @@ namespace MahloService.Logic
       return (index == 0 ? "" : epe < 1.0 ? "+" : "-") + index.ToString();
     }
 
-    private async void DoffDetected()
+    private async Task DoffDetectedAsync()
     {
       if (!this.srcData.IsDoffDetected)
       {

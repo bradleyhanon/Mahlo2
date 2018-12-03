@@ -60,7 +60,7 @@ namespace MahloService.Simulation
       }
     }
 
-    public Task BasUpdateDefaultRecipe(string styleCode, string rollNo, string recipeName)
+    public Task BasUpdateDefaultRecipeAsync(string styleCode, string rollNo, string recipeName)
     {
       if (!string.IsNullOrWhiteSpace(styleCode))
       {
@@ -72,22 +72,22 @@ namespace MahloService.Simulation
       return Task.CompletedTask;
     }
 
-    public Task<IEnumerable<CoaterScheduleRoll>> GetCoaterSchedule(int minSequence, int maxSequence)
+    public Task<IEnumerable<CoaterScheduleRoll>> GetCoaterScheduleAsync(int minSequence, int maxSequence)
     {
       return Task.FromResult<IEnumerable<CoaterScheduleRoll>>(new CoaterScheduleRoll[0]);
     }
 
-    public Task<IEnumerable<GreigeRoll>> GetCoaterSewinQueue()
+    public Task<IEnumerable<GreigeRoll>> GetCoaterSewinQueueAsync()
     {
       return Task.FromResult<IEnumerable<GreigeRoll>>(this.SewinQueue);
     }
 
-    public Task<decimal?> GetCutRollFromHost()
+    public Task<decimal?> GetCutRollFromHostAsync()
     {
       return Task.FromResult<decimal?>(this.nextCutRoll);
     }
 
-    public Task<bool> GetIsSewinQueueChanged(int rowCount, string firstRollNo, string lastRollNo)
+    public Task<bool> GetIsSewinQueueChangedAsync(int rowCount, string firstRollNo, string lastRollNo)
     {
       return Task.FromResult(
         this.SewinQueue.Count != rowCount ||
@@ -95,12 +95,12 @@ namespace MahloService.Simulation
         lastRollNo != (this.SewinQueue.Last()?.RollNo ?? string.Empty));
     }
 
-    public Task<(string styleName, string colorName)> GetNamesFromLegacyCodes(string styleCode, string colorCode)
+    public Task<(string styleName, string colorName)> GetNamesFromLegacyCodesAsync(string styleCode, string colorCode)
     {
       return Task.FromResult<(string, string)>((styleCode, colorCode));
     }
 
-    public Task SendEmail(string pRecipients, string pSubject, string pBody)
+    public Task SendEmailAsync(string pRecipients, string pSubject, string pBody)
     {
       return Task.CompletedTask;
     }

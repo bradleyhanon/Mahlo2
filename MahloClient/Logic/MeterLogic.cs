@@ -12,6 +12,7 @@ using MahloService;
 using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Settings;
+using MahloService.Utilities;
 using Microsoft.AspNet.SignalR.Client;
 using Newtonsoft.Json.Linq;
 using PropertyChanged;
@@ -240,7 +241,7 @@ namespace MahloClient.Logic
     }
 
 
-    public Task ApplyRecipe(string recipeName, bool isManualMode)
+    public Task ApplyRecipeAsync(string recipeName, bool isManualMode)
     {
       // Only used in MahloServer
       throw new NotImplementedException();
@@ -248,12 +249,12 @@ namespace MahloClient.Logic
 
     public void MoveToNextRoll(int rollLength)
     {
-      this.ipcClient.Call(Ipc.MahloIpcClient.MoveToNextRollCommand, this.InterfaceName, rollLength);
+      this.ipcClient.CallAsync(Ipc.MahloIpcClient.MoveToNextRollCommand, this.InterfaceName, rollLength).NoWait();
     }
 
     public void MoveToPriorRoll()
     {
-      this.ipcClient.Call(Ipc.MahloIpcClient.MoveToPriorRollCommand, this.InterfaceName);
+      this.ipcClient.CallAsync(Ipc.MahloIpcClient.MoveToPriorRollCommand, this.InterfaceName).NoWait();
     }
 
     public void Start()
@@ -263,12 +264,12 @@ namespace MahloClient.Logic
 
     public void WaitForSeam()
     {
-      this.ipcClient.Call(Ipc.MahloIpcClient.WaitForSeamCommand, this.InterfaceName);
+      this.ipcClient.CallAsync(Ipc.MahloIpcClient.WaitForSeamCommand, this.InterfaceName).NoWait();
     }
 
     public void DisableSystem()
     {
-      this.ipcClient.Call(Ipc.MahloIpcClient.DisableSystemCommand, this.InterfaceName);
+      this.ipcClient.CallAsync(Ipc.MahloIpcClient.DisableSystemCommand, this.InterfaceName).NoWait();
     }
 
     public void Dispose()

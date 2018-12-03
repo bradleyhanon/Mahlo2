@@ -44,10 +44,10 @@ namespace MahloService.Logic
       this.nextRollId = this.dbLocal.GetNextGreigeRollId();
       this.Rolls.AddRange(this.dbLocal.GetIncompleteGreigeRolls());
 
-      var ignoredResultTask = this.RefreshIfChanged();
+      var ignoredResultTask = this.RefreshIfChangedAsync();
       this.timer = Observable
         .Interval(this.RefreshInterval, scheduler)
-        .Subscribe(async _ => await this.RefreshIfChanged());
+        .Subscribe(_ => this.RefreshIfChangedAsync().NoWait());
     }
 
     public event Action QueueChanged;
@@ -83,11 +83,11 @@ namespace MahloService.Logic
       }
     }
 
-    public async Task Refresh()
+    public async Task RefreshAsync()
     {
       try
       {
-        var newRolls = (await this.dbMfg.GetCoaterSewinQueue()).ToArray();
+        var newRolls = (await this.dbMfg.GetCoaterSewinQueueAsync()).ToArray();
 
         this.priorFirstRoll = newRolls.FirstOrDefault()?.RollNo ?? string.Empty;
         this.priorLastRoll = newRolls.LastOrDefault()?.RollNo ?? string.Empty;
@@ -145,7 +145,7 @@ namespace MahloService.Logic
       this.QueueChanged?.Invoke();
     }
 
-    private async Task RefreshIfChanged()
+    private async Task RefreshIfChangedAsync()
     {
       if (this.isRefreshBusy)
       {
@@ -157,10 +157,10 @@ namespace MahloService.Logic
       try
       {
         this.SetMessage("Checking queue");
-        if (await this.dbMfg.GetIsSewinQueueChanged(this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll))
+        if (await this.dbMfg.GetIsSewinQueueChangedAsync(this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll))
         {
           this.SetMessage("Reading queue");
-          await Refresh();
+          await RefreshAsync();
         }
         else
         {

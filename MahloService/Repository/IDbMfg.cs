@@ -6,12 +6,12 @@ namespace MahloService.Repository
 {
   interface IDbMfg
   {
-    Task<IEnumerable<GreigeRoll>> GetCoaterSewinQueue();
-    Task<bool> GetIsSewinQueueChanged(int rowCount, string firstRollNo, string lastRollNo);
-    Task<(string styleName, string colorName)> GetNamesFromLegacyCodes(string styleCode, string colorCode);
-    Task BasUpdateDefaultRecipe(string styleCode, string rollNo, string recipeName);
-    Task<IEnumerable<CoaterScheduleRoll>> GetCoaterSchedule(int minSequence, int maxSequence);
-    Task SendEmail(string pRecipients, string pSubject, string pBody);
-    Task<decimal?> GetCutRollFromHost();
+    Task<IEnumerable<GreigeRoll>> GetCoaterSewinQueueAsync();
+    Task<bool> GetIsSewinQueueChangedAsync(int rowCount, string firstRollNo, string lastRollNo);
+    Task<(string styleName, string colorName)> GetNamesFromLegacyCodesAsync(string styleCode, string colorCode);
+    Task BasUpdateDefaultRecipeAsync(string styleCode, string rollNo, string recipeName);
+    Task<IEnumerable<CoaterScheduleRoll>> GetCoaterScheduleAsync(int minSequence, int maxSequence);
+    Task SendEmailAsync(string pRecipients, string pSubject, string pBody);
+    Task<decimal?> GetCutRollFromHostAsync();
   }
 }

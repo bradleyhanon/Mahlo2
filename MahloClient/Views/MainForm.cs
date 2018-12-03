@@ -157,41 +157,41 @@ namespace MahloClient.Views
       }
     }
 
-    private void BtnForeMahlo2_Click(object sender, EventArgs e)
+    private async void BtnForeMahlo2_Click(object sender, EventArgs e)
     {
-      this.ExecuteMoveToNextButtonCmd(
+      await this.ExecuteMoveToNextButtonCmdAsync(
         sender, 
         this.carpetProcessor.MahloLogic.CurrentRoll.RollNo,
         this.carpetProcessor.MahloLogic.MeasuredLength);
     }
 
-    private void BtnForeBowAndSkew_Click(object sender, EventArgs e)
+    private async void BtnForeBowAndSkew_Click(object sender, EventArgs e)
     {
-      this.ExecuteMoveToNextButtonCmd(
+      await this.ExecuteMoveToNextButtonCmdAsync(
         sender, 
         this.carpetProcessor.BowAndSkewLogic.CurrentRoll.RollNo,
         this.carpetProcessor.BowAndSkewLogic.MeasuredLength);
     }
 
-    private void BtnForePatternRepeat_Click(object sender, EventArgs e)
+    private async void BtnForePatternRepeat_Click(object sender, EventArgs e)
     {
-      this.ExecuteMoveToNextButtonCmd(
+      await this.ExecuteMoveToNextButtonCmdAsync(
         sender, 
         this.carpetProcessor.PatternRepeatLogic.CurrentRoll.RollNo, 
         this.carpetProcessor.PatternRepeatLogic.MeasuredLength);
     }
 
-    private void BtnBack_Click(object sender, EventArgs e)
+    private async void BtnBack_Click(object sender, EventArgs e)
     {
-      this.ExecuteButtonCmd(sender, Ipc.MahloIpcClient.MoveToPriorRollCommand);
+      await this.ExecuteButtonCmdAsync(sender, Ipc.MahloIpcClient.MoveToPriorRollCommand);
     }
 
-    private void BtnWaitForSeam_Click(object sender, EventArgs e)
+    private async void BtnWaitForSeam_Click(object sender, EventArgs e)
     {
-      this.ExecuteButtonCmd(sender, Ipc.MahloIpcClient.WaitForSeamCommand);
+      await this.ExecuteButtonCmdAsync(sender, Ipc.MahloIpcClient.WaitForSeamCommand);
     }
 
-    private void ExecuteMoveToNextButtonCmd(object sender, string rollNo, long measuredLength)
+    private async Task ExecuteMoveToNextButtonCmdAsync(object sender, string rollNo, long measuredLength)
     {
       using (var dlg = new MoveToNextDialog
       {
@@ -202,19 +202,19 @@ namespace MahloClient.Views
       {
         if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
         {
-          this.ExecuteButtonCmd(sender, Ipc.MahloIpcClient.MoveToNextRollCommand, dlg.RollLength);
+          await this.ExecuteButtonCmdAsync(sender, Ipc.MahloIpcClient.MoveToNextRollCommand, dlg.RollLength);
         }
       }
     }
 
-    private async void ExecuteButtonCmd(object sender, string command, params object[] args)
+    private async Task ExecuteButtonCmdAsync(object sender, string command, params object[] args)
     {
       Button button = (Button)sender;
       string name = (string)button.Parent.Tag;
       var buttons = button.Parent.Controls.OfType<Button>();
       buttons.ForEach(item => item.Enabled = false);
       args = Enumerable.Repeat(name, 1).Concat(args).ToArray();
-      await this.mahloClient.Call(command, args);
+      await this.mahloClient.CallAsync(command, args);
       buttons.ForEach(item => item.Enabled = true);
     }
 

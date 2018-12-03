@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MahloService.Models;
 using MahloClient.Ipc;
+using MahloService.Utilities;
 
 namespace MahloClient.Views
 {
@@ -27,24 +28,23 @@ namespace MahloClient.Views
       this.mahloClient = mahloClient;
     }
 
-    protected async override void OnLoad(EventArgs e)
+    protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
 
-      try
+      TaskUtilities.RunOnMainThreadAsync(async () =>
       {
         this.ShowMessage("Loading schedule details...please wait");
-        this.coaterSchedule = (await this.mahloClient.GetCoaterSchedule(0, 500)).ToList();
+        this.coaterSchedule = (await this.mahloClient.GetCoaterScheduleAsync(0, 500)).ToList();
         this.dbgCoaterSchedule.DataSource = this.coaterSchedule.Where(item => item.SeqNo >= 0 && item.SeqNo <= 99).ToList();
         this.LoadBackingSummary(this.coaterSchedule);
         this.ConfigureGrid();
-      }
-      catch (Exception ex)
+        this.ShowMessage(string.Empty);
+      }).NoWait(ex =>
       {
         MessageBox.Show($"Unable to get schedule.\n\n{ex.Message}", "Alert!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-      }
-
-      this.ShowMessage(string.Empty);
+        this.ShowMessage(string.Empty);
+      });
     }
 
     private void LoadBackingSummary(IEnumerable<CoaterScheduleRoll> schedule)

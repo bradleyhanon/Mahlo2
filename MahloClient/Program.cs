@@ -57,8 +57,8 @@ namespace MahloClient
             Application.Idle -= FirstIdle;
             var serviceSettings = container.GetInstance<IServiceSettings>();
             var ipcClient = container.GetInstance<IMahloIpcClient>();
-            await ipcClient.Start();
-            await ipcClient.GetServiceSettings(serviceSettings);
+            await ipcClient.StartAsync();
+            await ipcClient.GetServiceSettingsAsync(serviceSettings);
           };
         }
       }

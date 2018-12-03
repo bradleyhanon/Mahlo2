@@ -81,7 +81,7 @@ namespace MahloService.Logic
 
     protected override string MapTableName => "BowAndSkewMap";
 
-    public override Task ApplyRecipe(string recipeName, bool isManualMode)
+    public override Task ApplyRecipeAsync(string recipeName, bool isManualMode)
     {
       if (isManualMode)
       {

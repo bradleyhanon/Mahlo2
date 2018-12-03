@@ -78,12 +78,12 @@ namespace MahloService.Repository
       }
     }
 
-    public void SaveRoll<T>(T roll) 
+    public async Task SaveRollAsync<T>(T roll) 
       where T : MahloModel
     {
       using (var connection = this.GetOpenConnection())
       {
-        connection.InsertAsync(roll);
+        await connection.InsertAsync(roll);
       }
     }
 

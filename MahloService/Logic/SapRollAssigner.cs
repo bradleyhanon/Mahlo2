@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MahloService.Models;
 using MahloService.Repository;
+using MahloService.Utilities;
 
 namespace MahloService.Logic
 {
@@ -28,28 +29,30 @@ namespace MahloService.Logic
       this.dbMfg = dbMfg;
       this.dbLocal = dbLocal;
       this.scheduler = scheduler;
-      InitializePriorSapRoll();
+      this.InitializePriorSapRollAsync().NoWait();
 
       this.subscription = Observable
         .Interval(this.TryInterval, this.scheduler)
         .Where(_ => this.cutRoll != null)
-        .Subscribe(async _ =>
-        {
-          if (!this.busy)
-          {
-            this.busy = true;
-            decimal? sapRoll = await this.dbMfg.GetCutRollFromHost();
-            if (sapRoll != null && sapRoll.Value != this.priorSapRoll)
-            {
-              this.priorSapRoll = sapRoll.Value;
-              this.cutRoll.SapRoll = sapRoll.Value.ToString();
-              this.dbLocal.UpdateCutRoll(this.cutRoll);
-              this.cutRoll = null;
-            }
+        .Subscribe(_ => this.AssignSapRollAsync().NoWait());
+    }
 
-            this.busy = false;
-          }
-        });
+    private async Task AssignSapRollAsync()
+    {
+      if (!this.busy)
+      {
+        this.busy = true;
+        decimal? sapRoll = await this.dbMfg.GetCutRollFromHostAsync();
+        if (sapRoll != null && sapRoll.Value != this.priorSapRoll)
+        {
+          this.priorSapRoll = sapRoll.Value;
+          this.cutRoll.SapRoll = sapRoll.Value.ToString();
+          this.dbLocal.UpdateCutRoll(this.cutRoll);
+          this.cutRoll = null;
+        }
+
+        this.busy = false;
+      }
     }
 
     public void Dispose()
@@ -76,9 +79,9 @@ namespace MahloService.Logic
       this.cutRoll = cutRoll;
     }
 
-    private async void InitializePriorSapRoll()
+    private async Task InitializePriorSapRollAsync()
     {
-      this.priorSapRoll = await this.dbMfg.GetCutRollFromHost() ?? 0;
+      this.priorSapRoll = await this.dbMfg.GetCutRollFromHostAsync() ?? 0;
     }
   }
 }

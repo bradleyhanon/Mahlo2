@@ -67,7 +67,7 @@ namespace MahloClient.Views
     {
       string recipeName = this.recipeMap.FirstOrDefault(item => item.button.Checked).name;
       var applyTo = this.applyToMap.FirstOrDefault(item => item.button.Checked).applyTo;
-      (string message, string caption) = await this.mahloClient.BasSetRecipe(this.selectedRoll.RollNo, this.selectedRoll.StyleCode, recipeName, applyTo);
+      (string message, string caption) = await this.mahloClient.BasSetRecipeAsync(this.selectedRoll.RollNo, this.selectedRoll.StyleCode, recipeName, applyTo);
       if (message != string.Empty)
       {
         MessageBox.Show(this, message, caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);

@@ -13,6 +13,7 @@ using MahloClient.Logic;
 using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Settings;
+using MahloService.Utilities;
 
 namespace MahloClient.Views
 {
@@ -82,9 +83,9 @@ namespace MahloClient.Views
       base.Dispose(disposing);
     }
 
-    private void BtnGoToPreviousRoll_Click(object sender, EventArgs e)
+    private async void BtnGoToPreviousRoll_Click(object sender, EventArgs e)
     {
-      this.ipcClient.Call(Ipc.MahloIpcClient.MoveToPriorRollCommand, nameof(IMahloLogic));
+      await this.ipcClient.CallAsync(Ipc.MahloIpcClient.MoveToPriorRollCommand, nameof(IMahloLogic));
     }
 
     private void BtnGoToNextRoll_Click(object sender, EventArgs e)

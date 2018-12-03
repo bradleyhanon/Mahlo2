@@ -17,6 +17,7 @@ using MahloService.Repository;
 using MahloService.Logic;
 using Serilog;
 using PropertyChanged;
+using MahloService.Utilities;
 
 namespace MahloService.Opc
 {
@@ -95,7 +96,7 @@ namespace MahloService.Opc
       {
         this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 1);
         this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 0);
-      });
+      }).NoWait();
     }
 
     public void AcknowledgeDoffDetect()
@@ -245,7 +246,7 @@ namespace MahloService.Opc
       if (e.Exception == null && e.Vtq.HasValue)
       {
         //this.synchronizationContext.Send(PostCallback, (e.Arguments.State, e.Vtq.Value));
-        this.synchronizationContext.Post(new SendOrPostCallback((Action<object>)e.Arguments.State), e.Vtq.Value);
+        TaskUtilities.RunOnMainThreadAsync(() => ((Action<object>)e.Arguments.State)(e.Vtq.Value)).NoWait();
 
         //var setAction = (Action<object>)e.Arguments.State;
         //setAction(e.Vtq.Value);

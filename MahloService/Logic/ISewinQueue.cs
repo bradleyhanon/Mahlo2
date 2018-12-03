@@ -19,7 +19,7 @@ namespace MahloService.Logic
 
     string Message { get; }
 
-    Task Refresh();
+    Task RefreshAsync();
 
     void MoveRoll(int rollIndex, int direction);
   }

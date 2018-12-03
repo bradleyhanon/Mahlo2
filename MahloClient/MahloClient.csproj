@@ -122,6 +122,10 @@
     <Compile Include="..\MahloService\Settings\ServiceSettings.cs">
       <Link>Settings\ServiceSettings.cs</Link>
     </Compile>
+    <Compile Include="..\MahloService\Utilities\TaskUtilities.cs">
+      <Link>Utilities\TaskUtilities.cs</Link>
+    </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ServiceStubs\AppConfiguration.cs" />
     <Compile Include="ServiceStubs\ComputedAttribute.cs" />
     <Compile Include="Logic\CutRollList.cs" />
@@ -253,6 +257,12 @@
     <PackageReference Include="Microsoft.AspNet.SignalR.Client">
       <Version>2.2.3</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Threading">
+      <Version>15.8.168</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers">
+      <Version>15.8.168</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
     </PackageReference>
@@ -269,5 +279,6 @@
       <Version>4.5.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

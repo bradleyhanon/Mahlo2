@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Repository;
@@ -36,57 +37,57 @@ namespace MahloServiceTests
     }
 
     [Fact]
-    public void GetIsSewinQueueChangedIsCalledPeriodically()
+    public async Task GetIsSewinQueueChangedIsCalledPeriodically()
     {
-      this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(false);
+      this.dbMfg.GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty).Returns(false);
       this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
       for (int j = 1; j < 5; j++)
       {
         this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks - 1);
-        this.dbMfg.Received(j).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
+        await this.dbMfg.Received(j).GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty);
         this.scheduler.AdvanceBy(1);
-        this.dbMfg.Received(j + 1).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
+        await this.dbMfg.Received(j + 1).GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty);
       }
     }
 
     [Fact]
-    public void GetCoaterSewinQueueIsNotCalledWhenGetIsQueChangedReturnsFalse()
+    public async Task GetCoaterSewinQueueIsNotCalledWhenGetIsQueChangedReturnsFalse()
     {
-      this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(false);
+      this.dbMfg.GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty).Returns(false);
       this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
-      this.dbMfg.Received(1).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
-      this.dbMfg.DidNotReceive().GetCoaterSewinQueue();
+      await this.dbMfg.Received(1).GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty);
+      await this.dbMfg.DidNotReceive().GetCoaterSewinQueueAsync();
     }
 
     [Fact]
-    public void GetCoaterSewinQueueIsCalledWhenGetIsQueChangedReturnsTrue()
+    public async Task GetCoaterSewinQueueIsCalledWhenGetIsQueChangedReturnsTrue()
     {
-      this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
+      this.dbMfg.GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty).Returns(true);
       this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
-      this.dbMfg.Received(1).GetIsSewinQueueChanged(0, string.Empty, string.Empty);
-      this.dbMfg.Received(1).GetCoaterSewinQueue();
+      await this.dbMfg.Received(1).GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty);
+      await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
     }
 
     [Fact]
-    public void GetIsSewinQueueChangedCalledWithResultsFromPriorGetCoaterSewinQueue()
+    public async Task GetIsSewinQueueChangedCalledWithResultsFromPriorGetCoaterSewinQueue()
     {
       var newRolls = new GreigeRoll[] { this.roll1, this.roll2, this.roll3 };
-      this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
-      this.dbMfg.GetCoaterSewinQueue().Returns(newRolls);
+      this.dbMfg.GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty).Returns(true);
+      this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls);
       this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
 
       this.dbMfg.ClearReceivedCalls();
       this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks);
-      this.dbMfg.Received(1).GetIsSewinQueueChanged(3, this.roll1.RollNo, this.roll3.RollNo);
+      await this.dbMfg.Received(1).GetIsSewinQueueChangedAsync(3, this.roll1.RollNo, this.roll3.RollNo);
     }
 
     [Fact]
     public void EmptyQueueIsPopulatedWithRecords()
     {
       var newRolls = new GreigeRoll[] { this.roll1, this.roll2, this.roll3 };
-      this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
+      this.dbMfg.GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty).Returns(true);
       this.dbLocal.GetNextGreigeRollId().Returns(1);
-      this.dbMfg.GetCoaterSewinQueue().Returns(newRolls);
+      this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls);
       this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
       Assert.True(newRolls.SequenceEqual(this.target.Rolls));
 
@@ -97,7 +98,7 @@ namespace MahloServiceTests
     }
 
     [Fact]
-    public void MatchingRollsUpdatedNewRollsAddedOthersRemoved()
+    public async Task MatchingRollsUpdatedNewRollsAddedOthersRemoved()
     {
       this.roll3.ProductImageURL = "Unchanged";
       var newRolls1 = new GreigeRoll[] { Clone(this.roll2), Clone(this.roll3), Clone(this.roll4) };
@@ -105,41 +106,41 @@ namespace MahloServiceTests
       var newRolls2 = new GreigeRoll[] { Clone(this.roll4), Clone(this.roll3), Clone(this.roll5), Clone(this.roll1) };
       var expected = new GreigeRoll[] { Clone(this.roll3), Clone(this.roll4), Clone(this.roll5), Clone(this.roll1) };
 
-      this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
-      this.dbMfg.GetCoaterSewinQueue().Returns(newRolls1);
+      this.dbMfg.GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty).Returns(true);
+      this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls1);
       this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
-      this.dbMfg.Received(1).GetCoaterSewinQueue();
+      await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
 
       this.dbMfg.ClearReceivedCalls();
-      this.dbMfg.GetIsSewinQueueChanged(3, this.roll2.RollNo, this.roll4.RollNo).Returns(true);
-      this.dbMfg.GetCoaterSewinQueue().Returns(newRolls2);
+      this.dbMfg.GetIsSewinQueueChangedAsync(3, this.roll2.RollNo, this.roll4.RollNo).Returns(true);
+      this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls2);
       this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks);
-      this.dbMfg.Received(1).GetCoaterSewinQueue();
+      await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
       Assert.True(this.target.Rolls.SequenceEqual(expected, this));
       Assert.Equal("Now changed", this.target.Rolls.Single(item => item.RollNo == this.roll3.RollNo).ProductImageURL);
     }
 
     [Fact]
-    public void RollsStillInUseAreNotRemoved()
+    public async Task RollsStillInUseAreNotRemoved()
     {
       var newRolls1 = this.Clone(this.roll1, this.roll2, this.roll3).ToArray();
       var newRolls2 = this.Clone(this.roll3, this.roll4, this.roll5).ToArray();
       var expected = new GreigeRoll[] { this.roll2, this.roll3, this.roll4, this.roll5 };
 
       // Fill the queue with newRolls1
-      this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
-      this.dbMfg.GetCoaterSewinQueue().Returns(newRolls1);
+      this.dbMfg.GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty).Returns(true);
+      this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls1);
       this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
-      this.dbMfg.Received(1).GetCoaterSewinQueue();
+      await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
 
       this.target.CanRemoveRollQuery += (sender, e) => e.Cancel = sender == newRolls1[1];  // keep roll2
 
       // Update with newRolls2
       this.dbMfg.ClearReceivedCalls();
-      this.dbMfg.GetIsSewinQueueChanged(3, this.roll1.RollNo, this.roll3.RollNo).Returns(true);
-      this.dbMfg.GetCoaterSewinQueue().Returns(newRolls2);
+      this.dbMfg.GetIsSewinQueueChangedAsync(3, this.roll1.RollNo, this.roll3.RollNo).Returns(true);
+      this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls2);
       this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks);
-      this.dbMfg.Received(1).GetCoaterSewinQueue();
+      await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
 
       // Verify the updated queue
       Assert.True(this.target.Rolls.SequenceEqual(expected, this));

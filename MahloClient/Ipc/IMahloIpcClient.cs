@@ -15,12 +15,12 @@ namespace MahloClient.Ipc
     event Action<(string name, JObject jObject)> MeterLogicUpdated;
     ConnectionState State { get; }
 
-    Task Start();
-    Task Call(string cmd, params object[] args);
-    Task<T> Call<T>(string cmd, params object[] args);
-    Task<(string message, string caption)> BasSetRecipe(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo);
-    Task<IEnumerable<CoaterScheduleRoll>> GetCoaterSchedule(int minSequence, int maxSequence);
-    Task GetServiceSettings(IServiceSettings serviceSettings);
+    Task StartAsync();
+    Task CallAsync(string cmd, params object[] args);
+    Task<T> CallAsync<T>(string cmd, params object[] args);
+    Task<(string message, string caption)> BasSetRecipeAsync(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo);
+    Task<IEnumerable<CoaterScheduleRoll>> GetCoaterScheduleAsync(int minSequence, int maxSequence);
+    Task GetServiceSettingsAsync(IServiceSettings serviceSettings);
     void MoveQueueRoll(int rollIndex, int direction);
   }
 }

@@ -9,7 +9,9 @@ using MahloService.Models;
 using MahloService.Opc;
 using MahloService.Repository;
 using MahloService.Settings;
+using MahloService.Utilities;
 using Microsoft.AspNet.SignalR;
+using Microsoft.VisualStudio.Threading;
 
 namespace MahloService.Ipc
 {
@@ -17,13 +19,11 @@ namespace MahloService.Ipc
   {
     private readonly IMahloServer mahloServer;
     private readonly IDbMfg dbMfg;
-    private readonly SynchronizationContext syncContext;
 
     public MahloHub()
     {
       this.mahloServer = Program.Container.GetInstance<IMahloServer>();
       this.dbMfg = Program.Container.GetInstance<IDbMfg>();
-      this.syncContext = Program.Container.GetInstance<SynchronizationContext>();
     }
 
     public void RefreshAll()
@@ -33,29 +33,29 @@ namespace MahloService.Ipc
 
     public void MoveToPriorRoll(string name)
     {
-      this.syncContext.Post(_ => this.GetMeterLogicInstance(name).MoveToPriorRoll(), null);
+      TaskUtilities.RunOnMainThreadAsync(() => this.GetMeterLogicInstance(name).MoveToPriorRoll()).NoWait();
     }
 
     public void MoveToNextRoll(string name, int currentRollLength)
     {
-      this.syncContext.Post(_ => this.GetMeterLogicInstance(name).MoveToNextRoll(currentRollLength), null);
+      TaskUtilities.RunOnMainThreadAsync(() => this.GetMeterLogicInstance(name).MoveToNextRoll(currentRollLength)).NoWait();
     }
 
     public void WaitForSeam(string name)
     {
-      this.syncContext.Post(_ => this.GetMeterLogicInstance(name).WaitForSeam(), null);
+      TaskUtilities.RunOnMainThreadAsync(() => this.GetMeterLogicInstance(name).WaitForSeam()).NoWait();
     }
 
     public void DisableSystem(string name)
     {
-      this.syncContext.Post(_ => this.GetMeterLogicInstance(name).DisableSystem(), null);
+      TaskUtilities.RunOnMainThreadAsync(() => this.GetMeterLogicInstance(name).DisableSystem()).NoWait();
     }
 
-    public Task<(string message, string caption)> BasSetRecipe(string rollNo, string styleCode, string recipeName, bool isManualMode, RecipeApplyToEnum applyTo)
+    public Task<(string message, string caption)> BasSetRecipeAsync(string rollNo, string styleCode, string recipeName, bool isManualMode, RecipeApplyToEnum applyTo)
     {
       var tcs = new TaskCompletionSource<(string message, string caption)>();
 
-      this.syncContext.Post(async _ =>
+      TaskUtilities.RunOnMainThreadAsync(async () =>
       {
         try
         {
@@ -87,58 +87,58 @@ namespace MahloService.Ipc
 
           if (shouldApply)
           {
-            await this.BasApplyRecipe(recipeName, isManualMode);
+            await this.BasApplyRecipeAsync(recipeName, isManualMode);
           }
 
           // Save settings to the database
-          await this.dbMfg.BasUpdateDefaultRecipe(styleCode, rollNo, recipeName);
-          await sewinQueue.Refresh();
+          await this.dbMfg.BasUpdateDefaultRecipeAsync(styleCode, rollNo, recipeName);
+          await sewinQueue.RefreshAsync();
           tcs.SetResult((string.Empty, string.Empty));
         }
         catch (Exception ex)
         {
           tcs.SetException(ex);
         }
-      }, null);
+      }).NoWait();
 
       return tcs.Task;
     }
 
-    public Task BasApplyRecipe(string recipeName, bool isManualMode)
+    private Task BasApplyRecipeAsync(string recipeName, bool isManualMode)
     {
       TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
-      this.syncContext.Post(async _ =>
+      TaskUtilities.RunOnMainThreadAsync(async () =>
       {
         try
         {
           var bas = Program.Container.GetInstance<IBowAndSkewLogic>();
-          await bas.ApplyRecipe(recipeName, isManualMode);
+          await bas.ApplyRecipeAsync(recipeName, isManualMode);
           tcs.SetResult(null);
         }
         catch (Exception ex)
         {
           tcs.SetException(ex);
         }
-      }, null);
+      }).NoWait();
 
       return tcs.Task;
     }
 
-    public Task<IEnumerable<CoaterScheduleRoll>> GetCoaterSchedule(int minSequence, int maxSequence)
+    public Task<IEnumerable<CoaterScheduleRoll>> GetCoaterScheduleAsync(int minSequence, int maxSequence)
     {
       var tcs = new TaskCompletionSource<IEnumerable<CoaterScheduleRoll>>();
-      this.syncContext.Post(async _ =>
+      TaskUtilities.RunOnMainThreadAsync(async () =>
       {
         try
         {
-          var result = await this.dbMfg.GetCoaterSchedule(minSequence, maxSequence);
+          var result = await this.dbMfg.GetCoaterScheduleAsync(minSequence, maxSequence);
           tcs.SetResult(result);
         }
         catch (Exception ex)
         {
           tcs.SetException(ex);
         }
-      }, null);
+      }).NoWait();
 
       return tcs.Task;
     }

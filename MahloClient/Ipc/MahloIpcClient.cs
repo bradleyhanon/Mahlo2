@@ -15,6 +15,8 @@ using Microsoft.AspNet.SignalR.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using MahloService.Settings;
+using Microsoft.VisualStudio.Threading;
+using MahloService.Utilities;
 
 namespace MahloClient.Ipc
 {
@@ -58,7 +60,7 @@ namespace MahloClient.Ipc
         if (this.ipcStatusMessage != value)
         {
           this.ipcStatusMessage = value;
-          this.context.Post(_ => this.IpcStatusMessageChanged?.Invoke(value), null);
+          TaskUtilities.RunOnMainThreadAsync(() => this.IpcStatusMessageChanged?.Invoke(value)).NoWait();
         }
       }
     }
@@ -74,7 +76,7 @@ namespace MahloClient.Ipc
       this.hubConnection.Dispose();
     }
 
-    public async Task Start()
+    public async Task StartAsync()
     {
       if (!this.isStarting)
       {
@@ -86,20 +88,14 @@ namespace MahloClient.Ipc
         //this.hubConnection.TraceLevel = TraceLevels.All;
         //this.hubConnection.TraceWriter = Console.Out;
         this.hubProxy = this.hubConnection.CreateHubProxy("MahloHub");
-        this.hubProxy.On("UpdateSewinQueue", arg =>this.context.Post(_ =>
-        {
-            this.sewinQueue.UpdateSewinQueue(arg);
-        }, null));
+        this.hubProxy.On<JArray>("UpdateSewinQueue", arg =>
+          TaskUtilities.RunOnMainThreadAsync(() => this.sewinQueue.UpdateSewinQueue(arg)).NoWait());
 
-        this.hubProxy.On<string, JObject>("UpdateMeterLogic", (name, arg) => this.context.Post(_ =>
-        {
-          this.MeterLogicUpdated?.Invoke((name, arg));
-        }, null));
+        this.hubProxy.On<string, JObject>("UpdateMeterLogic", (name, arg) => 
+          TaskUtilities.RunOnMainThreadAsync(() => this.MeterLogicUpdated?.Invoke((name, arg))).NoWait());
 
-        this.hubProxy.On<JArray>("UpdateCutRollList", array =>this.context.Post(_ =>
-        {
-          this.cutRollList.Update(array);
-        }, null));
+        this.hubProxy.On<JArray>("UpdateCutRollList", array =>
+          TaskUtilities.RunOnMainThreadAsync(() => this.cutRollList.Update(array)).NoWait());
 
         while (true)
         {
@@ -129,51 +125,54 @@ namespace MahloClient.Ipc
       throw new NotImplementedException();
     }
 
-    public Task<(string message, string caption)> BasSetRecipe(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo)
+    public Task<(string message, string caption)> BasSetRecipeAsync(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo)
     {
       bool isManualMode = recipeName == FormSetRecipe.ManualModeRecipeName;
-      return this.Call<(string, string)>(nameof(BasSetRecipe), rollNo, styleCode, recipeName, isManualMode, applyTo);
+      return this.CallAsync<(string, string)>(nameof(BasSetRecipeAsync), rollNo, styleCode, recipeName, isManualMode, applyTo);
     }
 
-    public Task<IEnumerable<CoaterScheduleRoll>> GetCoaterSchedule(int minSequence, int maxSequence)
+    public Task<IEnumerable<CoaterScheduleRoll>> GetCoaterScheduleAsync(int minSequence, int maxSequence)
     {
-      return this.Call<IEnumerable<CoaterScheduleRoll>>(nameof(GetCoaterSchedule), minSequence, maxSequence);
+      return this.CallAsync<IEnumerable<CoaterScheduleRoll>>(nameof(GetCoaterScheduleAsync), minSequence, maxSequence);
     }
 
-    public async Task GetServiceSettings(IServiceSettings serviceSettings)
+    public async Task GetServiceSettingsAsync(IServiceSettings serviceSettings)
     {
       // Clear the default values from the lists in serviceSetting
       // otherwise there will be duplicate values when populated from the server.
       //serviceSettings.BackingCodes.Clear();
       //serviceSettings.BackingSpecs.Clear();
-      JObject obj = await this.Call<JObject>(nameof(GetServiceSettings));
+      JObject obj = await this.CallAsync<JObject>("GetServiceSettings");
       obj.Populate(serviceSettings);
     }
 
     public void MoveQueueRoll(int rollIndex, int direction)
     {
-      this.Call(nameof(MoveQueueRoll), rollIndex, direction);
+      this.CallAsync(nameof(MoveQueueRoll), rollIndex, direction).NoWait();
     }
 
-    private async void HubConnection_StateChanged(StateChange obj)
+    private void HubConnection_StateChanged(StateChange obj)
     {
-      this.IpcStatusMessage = obj.NewState.ToString();
-      
-      if (obj.NewState == ConnectionState.Connected)
+      TaskUtilities.RunOnMainThreadAsync(async () =>
       {
-        this.connectionTcs.SetResult(null);
-        this.context.Post(_ => Call("RefreshAll"), null);
-      }
-      else if (obj.OldState == ConnectionState.Connected)
-      {
-        this.connectionTcs = new TaskCompletionSource<object>();
-      }
+        this.IpcStatusMessage = obj.NewState.ToString();
 
-      if (!this.isStarting && obj.NewState == ConnectionState.Disconnected && !this.IsDisposed)
-      {
-        await Task.Delay(5000);
-        await this.Start();
-      }
+        if (obj.NewState == ConnectionState.Connected)
+        {
+          this.connectionTcs.SetResult(null);
+          this.CallAsync("RefreshAll").NoWait();
+        }
+        else if (obj.OldState == ConnectionState.Connected)
+        {
+          this.connectionTcs = new TaskCompletionSource<object>();
+        }
+
+        if (!this.isStarting && obj.NewState == ConnectionState.Disconnected && !this.IsDisposed)
+        {
+          await Task.Delay(5000);
+          await this.StartAsync();
+        }
+      }).NoWait();
     }
 
     private bool RetryCheck(string method, Exception ex)
@@ -206,12 +205,12 @@ namespace MahloClient.Ipc
     /// <param name="method">The name of the method.</param>
     /// <param name="args">The arguments.</param>
     /// <returns>A task that represents when invocation returned.</returns>
-    public Task Call(string method, params object[] args)
+    public Task CallAsync(string method, params object[] args)
     {
-      return this.Call<object>(method, args);
+      return this.CallAsync<object>(method, args);
     }
 
-    public async Task<T> Call<T>(string method, params object[] args)
+    public async Task<T> CallAsync<T>(string method, params object[] args)
     {
       //Console.Clear();
       StringBuilder builder = new StringBuilder();

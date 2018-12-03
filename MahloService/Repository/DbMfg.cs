@@ -46,7 +46,7 @@ namespace MahloService.Repository
 
     public IDbConnectionFactory ConnectionFactory { get; }
 
-    public async Task<bool> GetIsSewinQueueChanged(int rowCount, string firstRollNo, string lastRollNo)
+    public async Task<bool> GetIsSewinQueueChangedAsync(int rowCount, string firstRollNo, string lastRollNo)
     {
       var p = new DynamicParameters();
       p.Add("status", 0, direction: ParameterDirection.InputOutput);
@@ -65,7 +65,7 @@ namespace MahloService.Repository
       }
     }
 
-    public async Task<IEnumerable<GreigeRoll>> GetCoaterSewinQueue()
+    public async Task<IEnumerable<GreigeRoll>> GetCoaterSewinQueueAsync()
     {
       var p = new DynamicParameters();
       p.Add("Application", "BowAndSkew");
@@ -82,7 +82,7 @@ namespace MahloService.Repository
     /// Read the current cut roll number from the AS/400
     /// </summary>
     /// <returns>The current cut roll number or null if there isn't one.</returns>
-    public async Task<decimal?> GetCutRollFromHost()
+    public async Task<decimal?> GetCutRollFromHostAsync()
     {
       // This reads the current cut roll number from the AS/400
       try
@@ -99,7 +99,7 @@ namespace MahloService.Repository
       }
     }
 
-    public async Task<(string styleName, string colorName)> GetNamesFromLegacyCodes(string styleCode, string colorCode)
+    public async Task<(string styleName, string colorName)> GetNamesFromLegacyCodesAsync(string styleCode, string colorCode)
     {
       var p = new DynamicParameters();
       p.Add("style_code", styleCode);
@@ -115,7 +115,7 @@ namespace MahloService.Repository
       }
     }
 
-    public async Task BasUpdateDefaultRecipe(string styleCode, string rollNo, string recipeName)
+    public async Task BasUpdateDefaultRecipeAsync(string styleCode, string rollNo, string recipeName)
     {
       var p = new DynamicParameters();
       p.Add("Application", "BowAndSkew");
@@ -135,7 +135,7 @@ namespace MahloService.Repository
       }
     }
 
-    public async Task<IEnumerable<CoaterScheduleRoll>> GetCoaterSchedule(int minSequence, int maxSequence)
+    public async Task<IEnumerable<CoaterScheduleRoll>> GetCoaterScheduleAsync(int minSequence, int maxSequence)
     {
       var p = new DynamicParameters();
       p.Add("MinSequence", minSequence);
@@ -147,7 +147,7 @@ namespace MahloService.Repository
       }
     }
 
-    public async Task SendEmail(string pRecipients, string pSubject, string pBody)
+    public async Task SendEmailAsync(string pRecipients, string pSubject, string pBody)
     {
       if ((pRecipients == "" || pBody == ""))
       {

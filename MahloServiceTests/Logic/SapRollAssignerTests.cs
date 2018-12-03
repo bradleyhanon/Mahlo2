@@ -23,7 +23,7 @@ namespace MahloServiceTests.Logic
     {
       this.dbLocal = Substitute.For<IDbLocal>();
       this.dbMfg = Substitute.For<IDbMfg>();
-      this.dbMfg.GetCutRollFromHost().Returns(Task.FromResult<decimal?>(1));
+      this.dbMfg.GetCutRollFromHostAsync().Returns(Task.FromResult<decimal?>(1));
       this.target = new SapRollAssigner(this.dbMfg, this.dbLocal, this.scheduler);
     }
 
@@ -38,7 +38,7 @@ namespace MahloServiceTests.Logic
       Assert.Equal(string.Empty, cutRoll.SapRoll);
       this.dbLocal.DidNotReceiveWithAnyArgs().UpdateCutRoll(Arg.Any<CutRoll>());
 
-      this.dbMfg.GetCutRollFromHost().Returns(Task.FromResult<decimal?>(2));
+      this.dbMfg.GetCutRollFromHostAsync().Returns(Task.FromResult<decimal?>(2));
       this.scheduler.AdvanceBy(this.target.TryInterval.Ticks);
       Assert.Equal("2", cutRoll.SapRoll);
       this.dbLocal.Received(1).UpdateCutRoll(cutRoll);
@@ -53,7 +53,7 @@ namespace MahloServiceTests.Logic
       this.target.AssignSapRollTo(cutRoll1);
       this.scheduler.AdvanceBy(this.target.TryInterval.Ticks);
       this.target.AssignSapRollTo(cutRoll2);
-      this.dbMfg.GetCutRollFromHost().Returns(Task.FromResult<decimal?>(2));
+      this.dbMfg.GetCutRollFromHostAsync().Returns(Task.FromResult<decimal?>(2));
       this.scheduler.AdvanceBy(this.target.TryInterval.Ticks);
       Assert.Equal(string.Empty, cutRoll1.SapRoll);
       Assert.Equal("2", cutRoll2.SapRoll);
