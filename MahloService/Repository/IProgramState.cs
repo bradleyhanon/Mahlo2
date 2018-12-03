@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MahloService.Repository
 {
-  interface IProgramState
+  internal interface IProgramState
   {
     event Action<IProgramState> Saving;
     IProgramState GetSubState(params string[] names);

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace MahloService.Opc
+﻿namespace MahloService.Opc
 {
   internal interface IOpcServerController
   {

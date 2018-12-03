@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloClient.Ipc;
+﻿using MahloClient.Ipc;
 using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Settings;
-using PropertyChanged;
 
 namespace MahloClient.Logic
 {
-  class BowAndSkewLogic : MeterLogic<BowAndSkewModel>, IBowAndSkewLogic
+  internal class BowAndSkewLogic : MeterLogic<BowAndSkewModel>, IBowAndSkewLogic
   {
     public BowAndSkewLogic(IMahloIpcClient ipcClient, ISewinQueue sewinQueue, IServiceSettings serviceSettings)
       : base(ipcClient, sewinQueue, serviceSettings)

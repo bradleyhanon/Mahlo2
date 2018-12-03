@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
 using PropertyChanged;
 
 namespace MahloService.Logic
 {
   [AddINotifyPropertyChangedInterface]
-  class UserAttentions<Model> : IUserAttentions<Model>
+  internal class UserAttentions<Model> : IUserAttentions<Model>
   {
     private Attention attentions;
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Runtime.InteropServices;
 
 
@@ -10,11 +9,11 @@ namespace MahloService.Utilities
   /// </summary> 
   public enum ConsoleEvent
   {
-    CTRL_C = 0,             // From wincom.h 
-    CTRL_BREAK = 1,
-    CTRL_CLOSE = 2,
-    CTRL_LOGOFF = 5,
-    CTRL_SHUTDOWN = 6
+    CtrlC = 0,             // From wincom.h 
+    CtrlBreak = 1,
+    CtrlClose = 2,
+    CtrlLogoff = 5,
+    CtrlShutdown = 6
   }
 
   /// <summary> 
@@ -34,7 +33,7 @@ namespace MahloService.Utilities
     /// </summary> 
     public event EventHandler<ConsoleEventArgs> ControlEvent;
 
-    ControlEventHandler eventHandler;
+    private ControlEventHandler eventHandler;
 
     /// <summary> 
     /// Create a new instance. 
@@ -42,29 +41,29 @@ namespace MahloService.Utilities
     public ConsoleCtrl()
     {
       // save this to a private var so the GC doesn't collect it... 
-      eventHandler = new ControlEventHandler(Handler);
-      NativeMethods.SetConsoleCtrlHandler(eventHandler, true);
+      this.eventHandler = new ControlEventHandler(this.Handler);
+      NativeMethods.SetConsoleCtrlHandler(this.eventHandler, true);
     }
 
 
     ~ConsoleCtrl()
     {
-      Dispose(false);
+      this.Dispose(false);
     }
 
 
     public void Dispose()
     {
-      Dispose(true);
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
     }
 
-
-    void Dispose(bool disposing)
+    protected virtual void Dispose(bool disposing)
     {
-      if (eventHandler != null)
+      if (this.eventHandler != null)
       {
-        NativeMethods.SetConsoleCtrlHandler(eventHandler, false);
-        eventHandler = null;
+        NativeMethods.SetConsoleCtrlHandler(this.eventHandler, false);
+        this.eventHandler = null;
       }
     }
 

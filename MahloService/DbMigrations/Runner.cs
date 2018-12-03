@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using FluentMigrator;
 using MahloService.Repository;
 
 namespace MahloService.DbMigrations
 {
-  class Runner
+  internal class Runner
   {
-    private IDbLocal dbLocal;
+    private readonly IDbLocal dbLocal;
 
     public Runner(IDbLocal dbLocal)
     {
@@ -32,7 +28,7 @@ namespace MahloService.DbMigrations
         new { Name = "SqlServerCe", Provider = "System.Data.SqlServerCe.4.0" },
         new { Name = "Jet", Provider = "Microsoft.Jet.OLEDB.4.0" },
         new { Name = "Hana", Provider = "Sap.Data.Hana" },
-        new { Name = "Db2", Provider = "IBM.Data.DB2" }, 
+        new { Name = "Db2", Provider = "IBM.Data.DB2" },
       };
 
       // Unmapped names that FluentMigrator supports but the provider invariant name isn't known
@@ -47,9 +43,9 @@ namespace MahloService.DbMigrations
 
 
       //ConnectionStringSettings css = ConfigurationManager.ConnectionStrings["DbLocal"];
-      CreateDatabaseIfNeeded();
+      this.CreateDatabaseIfNeeded();
 
-      string migrationFactoryName = providerMap.Single(item => item.Provider == dbLocal.ConnectionFactory.ProviderName).Name;
+      string migrationFactoryName = providerMap.Single(item => item.Provider == this.dbLocal.ConnectionFactory.ProviderName).Name;
 
       var options = new MigrationOptions();
       var announcer = new FluentMigrator.Runner.Announcers.TextWriterAnnouncer(s => Console.WriteLine(s));
@@ -68,12 +64,12 @@ namespace MahloService.DbMigrations
 
     private void CreateDatabaseIfNeeded()
     {
-      DbConnectionStringBuilder csb = dbLocal.ConnectionFactory.ProviderFactory.CreateConnectionStringBuilder();
-      csb.ConnectionString = dbLocal.ConnectionFactory.ConnectionString;
+      DbConnectionStringBuilder csb = this.dbLocal.ConnectionFactory.ProviderFactory.CreateConnectionStringBuilder();
+      csb.ConnectionString = this.dbLocal.ConnectionFactory.ConnectionString;
       string databaseName = (string)csb["Initial Catalog"];
       csb["Initial Catalog"] = string.Empty;
 
-      using (IDbConnection connection = dbLocal.ConnectionFactory.ProviderFactory.CreateConnection())
+      using (IDbConnection connection = this.dbLocal.ConnectionFactory.ProviderFactory.CreateConnection())
       {
         connection.ConnectionString = csb.ToString();
         connection.Open();

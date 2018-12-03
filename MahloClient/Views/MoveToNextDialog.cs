@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace MahloClient.Views
@@ -14,19 +9,20 @@ namespace MahloClient.Views
   {
     public MoveToNextDialog()
     {
-      InitializeComponent();
+      this.InitializeComponent();
       Application.Idle += this.Application_Idle;
     }
 
     public string RollNumber
     {
+      get => this.lblRollNumber.Text;
       set => this.lblRollNumber.Text = $"Roll number {value}";
     }
 
     public int RollLength
     {
-      get => int.Parse(this.tbxLength.Text);
-      set => this.tbxLength.Text = value.ToString();
+      get => int.Parse(this.tbxLength.Text, CultureInfo.CurrentCulture);
+      set => this.tbxLength.Text = value.ToString(CultureInfo.CurrentCulture);
     }
 
     public int MaxLength { get; set; }
@@ -44,7 +40,7 @@ namespace MahloClient.Views
 
     private void TbxLength_KeyPress(object sender, KeyPressEventArgs e)
     {
-      e.Handled = e.KeyChar >= ' ' && (e.KeyChar < '0' || e.KeyChar > '9'); 
+      e.Handled = e.KeyChar >= ' ' && (e.KeyChar < '0' || e.KeyChar > '9');
     }
 
     private void TbxLength_Validating(object sender, CancelEventArgs e)

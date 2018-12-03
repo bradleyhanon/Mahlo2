@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace MahloService.Repository
 {
-  class ProgramState : IProgramState
+  internal class ProgramState : IProgramState
   {
     private readonly IProgramStateProvider provider;
     private readonly JObject root;

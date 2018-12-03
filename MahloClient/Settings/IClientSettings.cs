@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MahloClient.AppSettings
+﻿namespace MahloClient.AppSettings
 {
-  interface IClientSettings
+  internal interface IClientSettings
   {
     string ServiceUrl { get; }
   }

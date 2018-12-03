@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MahloService.Models;
 using MahloClient.Ipc;
+using MahloService.Models;
 using MahloService.Utilities;
 
 namespace MahloClient.Views
 {
-  partial class FormCoaterSchedule : Form
+  internal partial class FormCoaterSchedule : Form
   {
     private IMahloIpcClient mahloClient;
     private List<CoaterScheduleRoll> coaterSchedule = new List<CoaterScheduleRoll>();
@@ -23,7 +19,7 @@ namespace MahloClient.Views
 
     public FormCoaterSchedule(IMahloIpcClient mahloClient)
     {
-      InitializeComponent();
+      this.InitializeComponent();
 
       this.mahloClient = mahloClient;
     }
@@ -60,61 +56,61 @@ namespace MahloClient.Views
                   Time = TimeSpan.FromMinutes(Math.Max(0, (double)g.Sum(item => item.Minutes))),
                 };
 
-      dbgBackingSummary.DataSource = qry.ToArray();
-      dbgBackingSummary.Columns[0].Width = 70;
-      dbgBackingSummary.Columns[0].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-      dbgBackingSummary.Columns[1].Width = 70;
-      dbgBackingSummary.Columns[2].Width = 70;
-      dbgBackingSummary.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+      this.dbgBackingSummary.DataSource = qry.ToArray();
+      this.dbgBackingSummary.Columns[0].Width = 70;
+      this.dbgBackingSummary.Columns[0].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+      this.dbgBackingSummary.Columns[1].Width = 70;
+      this.dbgBackingSummary.Columns[2].Width = 70;
+      this.dbgBackingSummary.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
     }
 
     private void ConfigureGrid()
     {
-      for (int c = 0; c < dbgCoaterSchedule.Columns.Count; c++)
+      for (int c = 0; c < this.dbgCoaterSchedule.Columns.Count; c++)
       {
-        dbgCoaterSchedule.Columns[c].HeaderCell.Style.Alignment = dbgCoaterSchedule.Columns[c].DefaultCellStyle.Alignment;
+        this.dbgCoaterSchedule.Columns[c].HeaderCell.Style.Alignment = this.dbgCoaterSchedule.Columns[c].DefaultCellStyle.Alignment;
       }
     }
 
     private void btnToggleView_Click(object sender, EventArgs e)
     {
-      if (btnToggleView.Text == "Show Summary")
+      if (this.btnToggleView.Text == "Show Summary")
       {
-        btnToggleView.Text = "Show Details";
-        dbgCoaterSchedule.Visible = false;
-        dbgBackingSummary.Visible = true;
+        this.btnToggleView.Text = "Show Details";
+        this.dbgCoaterSchedule.Visible = false;
+        this.dbgBackingSummary.Visible = true;
       }
       else
       {
-        btnToggleView.Text = "Show Summary";
-        dbgCoaterSchedule.Visible = true;
-        dbgBackingSummary.Visible = false;
+        this.btnToggleView.Text = "Show Summary";
+        this.dbgCoaterSchedule.Visible = true;
+        this.dbgBackingSummary.Visible = false;
       }
     }
 
     private void btnWhichOrders_Click(object sender, EventArgs e)
     {
-      if (btnWhichOrders.Text == "All Orders")
+      if (this.btnWhichOrders.Text == "All Orders")
       {
-        btnWhichOrders.Text = "Scheduled Orders";
-        nMinSequence = 0;
-        nMaxSequence = 500;
+        this.btnWhichOrders.Text = "Scheduled Orders";
+        this.nMinSequence = 0;
+        this.nMaxSequence = 500;
       }
       else
       {
-        btnWhichOrders.Text = "All Orders";
-        nMinSequence = 0;
-        nMaxSequence = 99;
+        this.btnWhichOrders.Text = "All Orders";
+        this.nMinSequence = 0;
+        this.nMaxSequence = 99;
       }
 
-      var schedule = this.coaterSchedule.Where(item => item.SeqNo >= nMinSequence && item.SeqNo <= nMaxSequence);
+      var schedule = this.coaterSchedule.Where(item => item.SeqNo >= this.nMinSequence && item.SeqNo <= this.nMaxSequence);
       this.srcCoaterSchedule.DataSource = schedule.ToArray();
       this.LoadBackingSummary(schedule);
     }
 
     private void ShowMessage(string Message)
     {
-      pnlMessage.Text = Message;
+      this.pnlMessage.Text = Message;
     }
 
     private class BackingSummaryItem

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MahloService.Models;
 using Newtonsoft.Json;
 
 namespace MahloService.Logic
 {
-  interface IMeterLogic
+  internal interface IMeterLogic
   {
     event Action<GreigeRoll> RollStarted;
     event Action<GreigeRoll> RollFinished;
@@ -49,7 +46,7 @@ namespace MahloService.Logic
     void Start();
   }
 
-  interface IMeterLogic<Model> : IMeterLogic
+  internal interface IMeterLogic<Model> : IMeterLogic
   {
   }
 }

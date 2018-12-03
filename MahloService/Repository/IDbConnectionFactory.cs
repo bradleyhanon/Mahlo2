@@ -1,10 +1,9 @@
-﻿using System.Data;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace MahloService.Repository
 {
-  interface IDbConnectionFactory
+  internal interface IDbConnectionFactory
   {
     string ConnectionString { get; }
     string ProviderName { get; }

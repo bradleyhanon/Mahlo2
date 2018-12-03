@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
+using System.Reactive.Concurrency;
 using System.Threading.Tasks;
-using MahloService.Settings;
 using MahloService.Models;
 using MahloService.Opc;
 using MahloService.Repository;
-using MahloService.Utilities;
-using Newtonsoft.Json;
-using PropertyChanged;
-using System.Reactive.Concurrency;
+using MahloService.Settings;
 
 namespace MahloService.Logic
 {
-  class BowAndSkewLogic : MeterLogic<BowAndSkewModel>, IBowAndSkewLogic
+  internal class BowAndSkewLogic : MeterLogic<BowAndSkewModel>, IBowAndSkewLogic
   {
     private readonly IDbLocal dbLocal;
     private readonly IBowAndSkewSrc dataSrc;
@@ -136,7 +129,7 @@ namespace MahloService.Logic
     {
       base.OpcValueChanged(propertyName);
 
-      switch(propertyName)
+      switch (propertyName)
       {
         case nameof(this.dataSrc.FeetCounter):
           if (this.IsMovementForward)

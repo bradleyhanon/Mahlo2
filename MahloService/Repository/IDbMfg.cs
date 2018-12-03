@@ -4,7 +4,7 @@ using MahloService.Models;
 
 namespace MahloService.Repository
 {
-  interface IDbMfg
+  internal interface IDbMfg
   {
     Task<IEnumerable<GreigeRoll>> GetCoaterSewinQueueAsync();
     Task<bool> GetIsSewinQueueChangedAsync(int rowCount, string firstRollNo, string lastRollNo);

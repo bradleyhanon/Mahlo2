@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MahloService.Logic;
 using MahloService.Models;
-using MahloService.Opc;
-using NSubstitute;
 using Xunit;
 
 namespace MahloServiceTests.Logic
@@ -29,16 +24,16 @@ namespace MahloServiceTests.Logic
 
     public UserAttententionsTests()
     {
-      target = new UserAttentions<MahloModel>();
+      this.target = new UserAttentions<MahloModel>();
 
       this.subscription =
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
           h => ((INotifyPropertyChanged)this.target).PropertyChanged += h,
           h => ((INotifyPropertyChanged)this.target).PropertyChanged -= h)
           .Where(arg => arg.EventArgs.PropertyName == nameof(UserAttentions<MahloModel>.Any))
-          .Subscribe(_ => anyChanged = (this.target.Any ? ++this.anyChangesToTrue : ++this.anyChangesToFalse) != 0);
+          .Subscribe(_ => this.anyChanged = (this.target.Any ? ++this.anyChangesToTrue : ++this.anyChangesToFalse) != 0);
 
-      Assert.False(target.Any);
+      Assert.False(this.target.Any);
     }
 
     public void Dispose()
@@ -49,91 +44,91 @@ namespace MahloServiceTests.Logic
     [Fact]
     public void TestVerifyRollSequence()
     {
-      target.VerifyRollSequence = true;
-      Assert.True(target.VerifyRollSequence);
+      this.target.VerifyRollSequence = true;
+      Assert.True(this.target.VerifyRollSequence);
       Assert.Equal(1, this.anyChangesToTrue);
 
-      target.VerifyRollSequence = false;
-      Assert.False(target.VerifyRollSequence);
+      this.target.VerifyRollSequence = false;
+      Assert.False(this.target.VerifyRollSequence);
       Assert.Equal(1, this.anyChangesToFalse);
     }
 
     [Fact]
     public void TestRollTooLong()
     {
-      target.IsRollTooLong = true;
-      Assert.True(target.IsRollTooLong);
-      Assert.True(target.VerifyRollSequence);
+      this.target.IsRollTooLong = true;
+      Assert.True(this.target.IsRollTooLong);
+      Assert.True(this.target.VerifyRollSequence);
       Assert.Equal(1, this.anyChangesToTrue);
 
       this.anyChanged = false;
-      target.IsRollTooLong = false;
-      Assert.False(target.IsRollTooLong);
-      Assert.True(target.VerifyRollSequence);
-      Assert.False(anyChanged);
+      this.target.IsRollTooLong = false;
+      Assert.False(this.target.IsRollTooLong);
+      Assert.True(this.target.VerifyRollSequence);
+      Assert.False(this.anyChanged);
     }
 
     [Fact]
     public void TestRollTooShort()
     {
-      target.IsRollTooShort = true;
-      Assert.True(target.IsRollTooShort);
-      Assert.True(target.VerifyRollSequence);
+      this.target.IsRollTooShort = true;
+      Assert.True(this.target.IsRollTooShort);
+      Assert.True(this.target.VerifyRollSequence);
       Assert.Equal(1, this.anyChangesToTrue);
 
       this.anyChanged = false;
-      target.IsRollTooShort = false;
-      Assert.False(target.IsRollTooShort);
-      Assert.True(target.VerifyRollSequence);
+      this.target.IsRollTooShort = false;
+      Assert.False(this.target.IsRollTooShort);
+      Assert.True(this.target.VerifyRollSequence);
       Assert.False(this.anyChanged);
     }
 
     [Fact]
     public void TestSystemDisabled()
     {
-      target.IsSystemDisabled = true;
-      Assert.True(target.IsSystemDisabled);
-      Assert.True(target.VerifyRollSequence);
+      this.target.IsSystemDisabled = true;
+      Assert.True(this.target.IsSystemDisabled);
+      Assert.True(this.target.VerifyRollSequence);
       Assert.Equal(1, this.anyChangesToTrue);
 
       this.anyChanged = false;
-      target.IsSystemDisabled = false;
-      Assert.False(target.IsSystemDisabled);
-      Assert.True(target.VerifyRollSequence);
+      this.target.IsSystemDisabled = false;
+      Assert.False(this.target.IsSystemDisabled);
+      Assert.True(this.target.VerifyRollSequence);
       Assert.False(this.anyChanged);
     }
 
     [Fact]
     public void RollTooLongClearsRollTooShort()
     {
-      target.IsRollTooShort = true;
-      target.IsRollTooLong = true;
-      Assert.True(target.IsRollTooLong);
-      Assert.False(target.IsRollTooShort);
+      this.target.IsRollTooShort = true;
+      this.target.IsRollTooLong = true;
+      Assert.True(this.target.IsRollTooLong);
+      Assert.False(this.target.IsRollTooShort);
       Assert.Equal(1, this.anyChangesToTrue);
     }
 
     [Fact]
     public void RollTooShortClearsRollTooLong()
     {
-      target.IsRollTooLong = true;
-      target.IsRollTooShort = true;
-      Assert.True(target.IsRollTooShort);
-      Assert.False(target.IsRollTooLong);
+      this.target.IsRollTooLong = true;
+      this.target.IsRollTooShort = true;
+      Assert.True(this.target.IsRollTooShort);
+      Assert.False(this.target.IsRollTooLong);
       Assert.Equal(1, this.anyChangesToTrue);
     }
 
     [Fact]
     public void TestClearAll()
     {
-      target.IsRollTooLong =
-        target.IsRollTooShort =
-        target.IsSystemDisabled = true;
-      Assert.True(target.Any);
+      this.target.IsRollTooLong =
+        this.target.IsRollTooShort =
+        this.target.IsSystemDisabled = true;
+      Assert.True(this.target.Any);
       Assert.Equal(1, this.anyChangesToTrue);
 
-      target.ClearAll();
-      Assert.False(target.Any);
+      this.target.ClearAll();
+      Assert.False(this.target.Any);
       Assert.Equal(1, this.anyChangesToFalse);
     }
   }

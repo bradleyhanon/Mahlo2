@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace MahloClient.Ipc
 {
-  interface IMahloIpcClient
+  internal interface IMahloIpcClient
   {
     event Action<string> IpcStatusMessageChanged;
     event Action<(string name, JObject jObject)> MeterLogicUpdated;

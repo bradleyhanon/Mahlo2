@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService.Logic;
+﻿using MahloService.Logic;
 
 namespace MahloClient.Logic
 {
-  interface ICarpetProcessor
+  internal interface ICarpetProcessor
   {
     IBowAndSkewLogic BowAndSkewLogic { get; }
     ICutRollLogic CutRollLogic { get; }

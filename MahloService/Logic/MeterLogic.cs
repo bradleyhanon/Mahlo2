@@ -1,27 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using MahloService;
-using MahloService.Settings;
 using MahloService.Models;
 using MahloService.Opc;
 using MahloService.Repository;
+using MahloService.Settings;
 using MahloService.Utilities;
 using Newtonsoft.Json;
 using PropertyChanged;
-using System.Reactive.Concurrency;
 
 namespace MahloService.Logic
 {
   [AddINotifyPropertyChangedInterface]
-  abstract class MeterLogic<Model> : IMeterLogic<Model>, IDisposable
+  internal abstract class MeterLogic<Model> : IMeterLogic<Model>, IDisposable
     where Model : MahloModel, new()
   {
     private const int MappingInterval = 10;
@@ -197,6 +192,7 @@ namespace MahloService.Logic
     public void Dispose()
     {
       this.Dispose(true);
+      GC.SuppressFinalize(this);
     }
 
     public bool GetIsMappingValid()
@@ -362,7 +358,7 @@ namespace MahloService.Logic
               this.FeetCounterChanged();
               if (this.CurrentFeetCounter % MappingInterval == 0)
               {
-                SaveMapDatum();
+                this.SaveMapDatum();
               }
             }
           }
@@ -522,7 +518,7 @@ namespace MahloService.Logic
           {
             case RollTypeEnum.Greige:
               //automatically set recipe
-              ApplyRecipeAsync(this.CurrentRoll.DefaultRecipe, false).NoWait();
+              this.ApplyRecipeAsync(this.CurrentRoll.DefaultRecipe, false).NoWait();
 
               //check roll and style counts, alarm if necessary
               if (this.appInfo.MinRollLengthForStyleAndRollCounting > 0 && this.CurrentRoll.RollLength >= this.appInfo.MinRollLengthForStyleAndRollCounting)
@@ -555,7 +551,7 @@ namespace MahloService.Logic
 
             default:
               //set controller to manual
-              ApplyRecipeAsync(string.Empty, true).NoWait();
+              this.ApplyRecipeAsync(string.Empty, true).NoWait();
               this.IsMapValid = false;
               this.IsMappingNow = false;
               break;
@@ -594,7 +590,7 @@ namespace MahloService.Logic
       {
         this.isSewinQueueInitialized = true;
         this.RestoreState();
-        
+
       }
 
       if (!this.sewinQueue.Rolls.Contains(this.CurrentRoll))
@@ -611,7 +607,7 @@ namespace MahloService.Logic
     {
       double rawFeetCounter = this.srcData.FeetCounter;
       double diff = rawFeetCounter + this.feetCounterOffset - this.CurrentFeetCounter;
-      if (diff > 1000 || diff <= - MappingInterval * 2) 
+      if (diff > 1000 || diff <= -MappingInterval * 2)
       {
         // If the gap is too large or too negative, adjust offset to leave a 1000 foot gap
         this.feetCounterOffset = this.CurrentFeetCounter - rawFeetCounter + 1000;

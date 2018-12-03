@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Westwind.Utilities.Configuration;
+﻿using Westwind.Utilities.Configuration;
 
 namespace MahloService.Settings
 {
-  class OpcSettings : AppConfiguration, IOpcSettings
+  internal class OpcSettings : AppConfiguration, IOpcSettings
   {
     public OpcSettings()
     {

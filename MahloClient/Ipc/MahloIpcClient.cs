@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MahloService.Ipc;
-using MahloService.Logic;
-using MahloService.Models;
 using MahloClient.AppSettings;
 using MahloClient.Logic;
 using MahloClient.Views;
-using Microsoft.AspNet.SignalR.Client;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using MahloService.Ipc;
+using MahloService.Models;
 using MahloService.Settings;
-using Microsoft.VisualStudio.Threading;
 using MahloService.Utilities;
+using Microsoft.AspNet.SignalR.Client;
+using Microsoft.VisualStudio.Threading;
+using Newtonsoft.Json.Linq;
 
 namespace MahloClient.Ipc
 {
-  sealed class MahloIpcClient : IMahloIpcClient, IDisposable
+  internal sealed class MahloIpcClient : IMahloIpcClient, IDisposable
   {
     public const string MoveToNextRollCommand = "MoveToNextRoll";
     public const string MoveToPriorRollCommand = "MoveToPriorRoll";
@@ -91,7 +88,7 @@ namespace MahloClient.Ipc
         this.hubProxy.On<JArray>("UpdateSewinQueue", arg =>
           TaskUtilities.RunOnMainThreadAsync(() => this.sewinQueue.UpdateSewinQueue(arg)).NoWait());
 
-        this.hubProxy.On<string, JObject>("UpdateMeterLogic", (name, arg) => 
+        this.hubProxy.On<string, JObject>("UpdateMeterLogic", (name, arg) =>
           TaskUtilities.RunOnMainThreadAsync(() => this.MeterLogicUpdated?.Invoke((name, arg))).NoWait());
 
         this.hubProxy.On<JArray>("UpdateCutRollList", array =>
@@ -128,12 +125,12 @@ namespace MahloClient.Ipc
     public Task<(string message, string caption)> BasSetRecipeAsync(string rollNo, string styleCode, string recipeName, RecipeApplyToEnum applyTo)
     {
       bool isManualMode = recipeName == FormSetRecipe.ManualModeRecipeName;
-      return this.CallAsync<(string, string)>(nameof(BasSetRecipeAsync), rollNo, styleCode, recipeName, isManualMode, applyTo);
+      return this.CallAsync<(string, string)>("BasSetRecipe", rollNo, styleCode, recipeName, isManualMode, applyTo);
     }
 
     public Task<IEnumerable<CoaterScheduleRoll>> GetCoaterScheduleAsync(int minSequence, int maxSequence)
     {
-      return this.CallAsync<IEnumerable<CoaterScheduleRoll>>(nameof(GetCoaterScheduleAsync), minSequence, maxSequence);
+      return this.CallAsync<IEnumerable<CoaterScheduleRoll>>("GetCoaterSchedule", minSequence, maxSequence);
     }
 
     public async Task GetServiceSettingsAsync(IServiceSettings serviceSettings)
@@ -175,9 +172,9 @@ namespace MahloClient.Ipc
       }).NoWait();
     }
 
-    private bool RetryCheck(string method, Exception ex)
+    private static bool RetryCheck(string method, Exception ex)
     {
-      var dr = MessageBox.Show("Try again?", "Communication Failure", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+      var dr = MessageBox.Show("Try again?", $"Communication Failure ({method})\n{ex.Message}", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
       return dr == DialogResult.Retry;
     }
 
@@ -239,7 +236,7 @@ namespace MahloClient.Ipc
         }
         catch (Exception ex) when (this.hubConnection.State != ConnectionState.Connected)
         {
-          SetConnectionError(ex);
+          this.SetConnectionError(ex);
           if (!RetryCheck(method, ex))
           {
             break;

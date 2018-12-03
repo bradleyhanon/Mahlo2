@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloClient.Ipc;
+﻿using MahloClient.Ipc;
 using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Settings;
 
 namespace MahloClient.Logic
 {
-  class MahloLogic : MeterLogic<MahloModel>, IMahloLogic
+  internal class MahloLogic : MeterLogic<MahloModel>, IMahloLogic
   {
     public MahloLogic(IMahloIpcClient ipcClient, ISewinQueue sewinQueue, IServiceSettings serviceSettings)
       : base(ipcClient, sewinQueue, serviceSettings)

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using MahloService.Models;
-using PropertyChanged;
 
 namespace MahloService.Logic
 {
-  interface ISewinQueue : IDisposable
+  internal interface ISewinQueue : IDisposable
   {
     event CancelEventHandler CanRemoveRollQuery;
 

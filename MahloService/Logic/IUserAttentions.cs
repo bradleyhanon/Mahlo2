@@ -1,10 +1,6 @@
-﻿using System;
-using System.ComponentModel;
-
-namespace MahloService.Logic
+﻿namespace MahloService.Logic
 {
-  
-  interface IUserAttentions
+  internal interface IUserAttentions
   {
     bool Any { get; }
     bool IsRollTooLong { get; set; }
@@ -14,7 +10,7 @@ namespace MahloService.Logic
     void ClearAll();
   }
 
-  interface IUserAttentions<Model> : IUserAttentions
+  internal interface IUserAttentions<Model> : IUserAttentions
   {
   }
 }

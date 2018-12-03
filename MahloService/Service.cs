@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using MahloService.Logic;
 using MahloService.Repository;
 using Serilog;
 
 namespace MahloService
 {
-  partial class Service : ServiceBase
+  internal partial class Service : ServiceBase
   {
     private SingleThreadSynchronizationContext syncContext;
     private Thread serviceThread;
@@ -24,7 +16,7 @@ namespace MahloService
 
     public Service()
     {
-      InitializeComponent();
+      this.InitializeComponent();
       this.ServiceName = Program.StrMahloMapper;
     }
 
@@ -46,7 +38,7 @@ namespace MahloService
       }
     }
 
-    void ThreadProc(object args)
+    private void ThreadProc(object args)
     {
       try
       {

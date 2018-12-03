@@ -1,16 +1,13 @@
-﻿using System;
-using System.ComponentModel;
-
-namespace MahloService.Logic
+﻿namespace MahloService.Logic
 {
-  interface ICriticalStops
+  internal interface ICriticalStops
   {
     bool Any { get; }
     bool IsMahloCommError { get; set; }
     bool IsPlcCommError { get; set; }
   }
 
-  interface ICriticalStops<Model> : ICriticalStops
+  internal interface ICriticalStops<Model> : ICriticalStops
   {
   }
 }

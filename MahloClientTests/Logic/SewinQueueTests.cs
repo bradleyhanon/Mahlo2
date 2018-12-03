@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService.Models;
 using MahloClient.Logic;
-using Xunit;
+using MahloService.Models;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+using Xunit;
 
 namespace MahloClientTests.Logic
 {
@@ -19,7 +16,7 @@ namespace MahloClientTests.Logic
     public SewinQueueTests()
     {
       this.target = new SewinQueue();
-      this.target.UpdateSewinQueue(ToJArray(this.GenerateRolls(100, 3)));
+      this.target.UpdateSewinQueue(this.ToJArray(this.GenerateRolls(100, 3)));
     }
 
     [Fact]
@@ -34,7 +31,7 @@ namespace MahloClientTests.Logic
     public void NewRollsAreAddedAndOldRollsAreUpdated()
     {
       var newRolls = this.GenerateRolls(101, 3, 144);
-      this.target.UpdateSewinQueue(ToJArray(newRolls));
+      this.target.UpdateSewinQueue(this.ToJArray(newRolls));
 
       var expect = this.GenerateRolls(101, 3, 144);
       Assert.True(expect.SequenceEqual(this.target.Rolls, this));
@@ -58,11 +55,11 @@ namespace MahloClientTests.Logic
     [Fact]
     public void MovingExtremesWorks()
     {
-      var oldRolls = GenerateRolls(100, 100);
+      var oldRolls = this.GenerateRolls(100, 100);
       var newRolls = oldRolls.Skip(1).Concat(oldRolls.Take(1));
       this.target.Rolls.Clear();
-      this.target.UpdateSewinQueue(ToJArray(oldRolls));
-      this.target.UpdateSewinQueue(ToJArray(newRolls));
+      this.target.UpdateSewinQueue(this.ToJArray(oldRolls));
+      this.target.UpdateSewinQueue(this.ToJArray(newRolls));
       Assert.True(newRolls.SequenceEqual(this.target.Rolls, this));
     }
 
@@ -87,7 +84,7 @@ namespace MahloClientTests.Logic
     private JArray ToJArray(IEnumerable<object> src)
     {
       JArray result = new JArray();
-      foreach(var item in src)
+      foreach (var item in src)
       {
         result.Add(JObject.FromObject(item));
       }

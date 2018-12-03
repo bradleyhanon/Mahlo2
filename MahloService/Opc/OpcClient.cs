@@ -3,33 +3,29 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService.Settings;
-using MahloService.Models;
-using System.Collections.Concurrent;
 using System.Threading;
+using System.Threading.Tasks;
+using MahloService.Logic;
+using MahloService.Models;
+using MahloService.Settings;
+using MahloService.Utilities;
 using OpcLabs.EasyOpc.DataAccess;
 using OpcLabs.EasyOpc.DataAccess.OperationModel;
-using OpcLabs.EasyOpc.DataAccess.Generic;
-using MahloService.Repository;
-using MahloService.Logic;
-using Serilog;
 using PropertyChanged;
-using MahloService.Utilities;
+using Serilog;
 
 namespace MahloService.Opc
 {
   [AddINotifyPropertyChangedInterface]
-  class OpcClient<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc
+  internal class OpcClient<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc
   {
     private const string MahloServerClass = "mahlo.10AOpcServer.1";
     private const string PlcServerClass = "Kepware.KEPServerEX.V6";
-    private const string MeterCountTag = "Readings.Bridge.0.General.0.MeterCount";
+    //private const string MeterCountTag = "Readings.Bridge.0.General.0.MeterCount";
+
     //private const string MahloItemFormat = "nsu=mahlo.10AOpcServer.1;s={0}.{1}";
     //private const string PlcItemFormat = "nsu=KEPServerEX;ns=2;s={0}.{1}";
-    string mahloChannel;
+    private string mahloChannel;
 
     private readonly IEasyDAClient opcClient;
     private IUserAttentions<Model> userAttentions;
@@ -45,10 +41,10 @@ namespace MahloService.Opc
     private readonly IDisposable userAttentionsSubscription;
 
     public OpcClient(
-      IEasyDAClient opcClient, 
+      IEasyDAClient opcClient,
       IUserAttentions<Model> userAttentions,
-      ICriticalStops<Model> criticalStops, 
-      IOpcSettings mahloSettings, 
+      ICriticalStops<Model> criticalStops,
+      IOpcSettings mahloSettings,
       //IPlcSettings seamSettings,
       SynchronizationContext synchronizationContext,
       ILogger logger)
@@ -135,7 +131,7 @@ namespace MahloService.Opc
       int seamDetectorId;
       var plcTags = new List<(string, Action<object>)>();
       var mahloTags = new List<(string, Action<object>)>();
-      mahloTags.AddRange(new(string, Action<object>)[]
+      mahloTags.AddRange(new (string, Action<object>)[]
       {
         ("Current.Version.0.KeyColumn", value => this.Recipe = (string)value),
         ("Readings.Bridge.0.General.0.MeterCount", value =>  this.FeetCounter = ServiceExtensions.MetersToFeet((double)value)),
@@ -158,7 +154,7 @@ namespace MahloService.Opc
       {
         seamDetectorId = 2;
         this.mahloChannel = this.mahloSettings.BowAndSkewChannelName;
-        mahloTags.AddRange(new(string, Action<object>)[]
+        mahloTags.AddRange(new (string, Action<object>)[]
         {
             ("Current.Bridge.0.Calc.1.OnOff", value => this.IsAutoMode = (int)value != 0),
             //("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
@@ -177,7 +173,7 @@ namespace MahloService.Opc
 
         seamDetectorId = 3;
         this.mahloChannel = this.mahloSettings.PatternRepeatChannelName;
-        mahloTags.AddRange(new(string, Action<object>)[]
+        mahloTags.AddRange(new (string, Action<object>)[]
         {
             ("Current.Bridge.0.Calc.1.OnOff", value => this.IsAutoMode = (int)value != 0),
             //("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
@@ -193,7 +189,7 @@ namespace MahloService.Opc
         this.mahloChannel = this.mahloSettings.Mahlo2ChannelName;
 
         mahloTags.Clear();
-        mahloTags.AddRange(new(string, Action<object>)[]
+        mahloTags.AddRange(new (string, Action<object>)[]
         {
           //("Current.Version.0.KeyColumn", value => this.Recipe = (string)value),
           ("Readings.Metercounter.0.Value", value => this.FeetCounter = ServiceExtensions.MetersToFeet((double)value)),
@@ -203,7 +199,7 @@ namespace MahloService.Opc
       }
       else
       {
-          throw new ArgumentException();
+        throw new ArgumentException("Invalid model type");
       }
 
       this.seamAckTag = $"MahloSeam.MahloPLC.Mahlo{seamDetectorId}SeamAck";

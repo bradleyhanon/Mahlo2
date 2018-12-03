@@ -1,34 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration.Install;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MahloService.Settings;
 using MahloService.Ipc;
 using MahloService.Logging;
 using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Opc;
 using MahloService.Repository;
+using MahloService.Settings;
+using MahloService.Simulation;
 using MahloService.Utilities;
-using OpcLabs.EasyOpc;
 using OpcLabs.EasyOpc.DataAccess;
 using Serilog;
 using SimpleInjector;
-using SimpleInjector.Diagnostics;
-using MahloService.Simulation;
-using System.Collections.ObjectModel;
 
 namespace MahloService
 {
-  class Program
+  internal class Program
   {
     public const string StrMahloMapper = "MahloMapper";
     private static Service service;
@@ -37,7 +31,7 @@ namespace MahloService
 
     [STAThread]
     private static void Main(string[] args)
-    {      
+    {
       AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
       try
       {
@@ -91,7 +85,7 @@ namespace MahloService
             {
               ApplicationContext appContext = new ApplicationContext();
               WindowsFormsSynchronizationContext.AutoInstall = false;
-   
+
               WindowsFormsSynchronizationContext syncContext = new WindowsFormsSynchronizationContext();
               SynchronizationContext.SetSynchronizationContext(syncContext);
 
@@ -121,7 +115,7 @@ namespace MahloService
           }
         }
       }
-      catch (SingleInstance.Exception)
+      catch (SingleInstanceException)
       {
         Environment.Exit(1);
       }

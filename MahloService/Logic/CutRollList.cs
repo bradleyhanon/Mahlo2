@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using MahloService.Models;
 
 namespace MahloService.Logic
 {
-  class CutRollList : BindingList<CutRoll>
+  internal class CutRollList : BindingList<CutRoll>
   {
     public CutRollList()
     {

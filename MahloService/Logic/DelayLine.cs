@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MahloService.Repository;
 
 namespace MahloService.Logic
 {
-  class DelayLine<T>
+  internal class DelayLine<T>
     where T : IEquatable<T>
   {
     private List<DelayItem> delayItems = new List<DelayItem>();
@@ -51,7 +49,7 @@ namespace MahloService.Logic
     public bool Add(double tick, T value)
     {
       // Remove expired values
-      while (this.delayItems.Count > 0 && 
+      while (this.delayItems.Count > 0 &&
         tick - this.delayItems[0].Tick > this.DelayTicks + this.RetainTicks)
       {
         this.delayItems.RemoveAt(0);

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MahloService.Models
+﻿namespace MahloService.Models
 {
-  class AS400CutRoll
+  internal class AS400CutRoll
   {
     public decimal FRCROL { get; set; }
     public string FRSTYL { get; set; }

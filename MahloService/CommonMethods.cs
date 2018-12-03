@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService.Logic;
 using MahloService.Models;
 
 namespace MahloService
 {
-  static class CommonMethods
+  internal static class CommonMethods
   {
     public static string InchesToStr(double totalInches)
     {
@@ -25,7 +21,7 @@ namespace MahloService
       double nWidth1 = 0F, nWidth2 = 0F;
 
       int positionInQueue = rolls.IndexOf(roll);
-      if (roll.RollNo.ToUpper() == GreigeRoll.CheckRollId)
+      if (roll.RollNo.ToUpperInvariant() == GreigeRoll.CheckRollId)
       {
         if (positionInQueue == rolls.Count - 1)
         {
@@ -37,7 +33,7 @@ namespace MahloService
         //search backward in queue for first non-CheckRoll
         for (int n = positionInQueue - 1; n >= 0; n--)
         {
-          if (rolls[n].RollNo.ToUpper() != GreigeRoll.CheckRollId)
+          if (rolls[n].RollNo.ToUpperInvariant() != GreigeRoll.CheckRollId)
           {
             sBacking1 = rolls[n].BackingCode;
             nWidth1 = rolls[n].RollWidth;
@@ -48,7 +44,7 @@ namespace MahloService
         //search forward in queue for first non-CheckRoll
         for (int n = positionInQueue + 1; n < rolls.Count; n++)
         {
-          if (rolls[n].RollNo.ToUpper() != GreigeRoll.CheckRollId)
+          if (rolls[n].RollNo.ToUpperInvariant() != GreigeRoll.CheckRollId)
           {
             sBacking2 = rolls[n].BackingCode;
             nWidth2 = rolls[n].RollWidth;
@@ -57,13 +53,21 @@ namespace MahloService
         }
 
         if (nWidth1 != nWidth2)
+        {
           return RollTypeEnum.Leader;
+        }
         else if (!sHPBackingCodes.Contains(sBacking1) && sHPBackingCodes.Contains(sBacking2))
+        {
           return RollTypeEnum.Leader;
+        }
         else if (!sHPBackingCodes.Contains(sBacking2) && sHPBackingCodes.Contains(sBacking1))
+        {
           return RollTypeEnum.Leader;
+        }
         else
+        {
           return RollTypeEnum.CheckRoll;
+        }
       }
 
       return RollTypeEnum.Greige;

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MahloClient.Views
 {
-  class MyDataGridView : DataGridView
+  internal class MyDataGridView : DataGridView
   {
     private int wideRowIndex = -1;
     private CancellationTokenSource cts;

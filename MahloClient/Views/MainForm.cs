@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MahloService.Logic;
-using MahloService.Models;
 using MahloClient.Ipc;
 using MahloClient.Logic;
+using MahloService.Logic;
+using MahloService.Models;
 using MahloService.Settings;
 
 namespace MahloClient.Views
 {
-  partial class MainForm : Form
+  internal partial class MainForm : Form
   {
-    delegate void CellFormattingAction(DataGridViewCellFormattingEventArgs args, IServiceSettings settings);
+    private delegate void CellFormattingAction(DataGridViewCellFormattingEventArgs args, IServiceSettings settings);
 
     private CellColor defaultCellColor;
     private string[] sewinQueueColumnNames = { nameof(GreigeRoll.RollNo), nameof(GreigeRoll.StyleCode), nameof(GreigeRoll.ColorCode), nameof(GreigeRoll.BackingCode), nameof(GreigeRoll.RollLength), nameof(GreigeRoll.RollWidthStr), nameof(GreigeRoll.PatternRepeatLength) };
@@ -37,7 +35,7 @@ namespace MahloClient.Views
 
     public MainForm(ICarpetProcessor carpetProcessor, ICutRollList cutRollList, IMahloIpcClient mahloClient, IServiceSettings serviceSettings)
     {
-      InitializeComponent();
+      this.InitializeComponent();
       this.carpetProcessor = carpetProcessor;
       this.cutRollList = cutRollList;
       this.mahloClient = mahloClient;
@@ -160,7 +158,7 @@ namespace MahloClient.Views
     private async void BtnForeMahlo2_Click(object sender, EventArgs e)
     {
       await this.ExecuteMoveToNextButtonCmdAsync(
-        sender, 
+        sender,
         this.carpetProcessor.MahloLogic.CurrentRoll.RollNo,
         this.carpetProcessor.MahloLogic.MeasuredLength);
     }
@@ -168,7 +166,7 @@ namespace MahloClient.Views
     private async void BtnForeBowAndSkew_Click(object sender, EventArgs e)
     {
       await this.ExecuteMoveToNextButtonCmdAsync(
-        sender, 
+        sender,
         this.carpetProcessor.BowAndSkewLogic.CurrentRoll.RollNo,
         this.carpetProcessor.BowAndSkewLogic.MeasuredLength);
     }
@@ -176,8 +174,8 @@ namespace MahloClient.Views
     private async void BtnForePatternRepeat_Click(object sender, EventArgs e)
     {
       await this.ExecuteMoveToNextButtonCmdAsync(
-        sender, 
-        this.carpetProcessor.PatternRepeatLogic.CurrentRoll.RollNo, 
+        sender,
+        this.carpetProcessor.PatternRepeatLogic.CurrentRoll.RollNo,
         this.carpetProcessor.PatternRepeatLogic.MeasuredLength);
     }
 
@@ -319,7 +317,7 @@ namespace MahloClient.Views
 
     public void SetCutEPEColor(DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
     {
-      
+
     }
   }
 }

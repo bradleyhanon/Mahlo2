@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
 using MahloService.Opc;
 using PropertyChanged;
 
 namespace MahloServiceTests.Mocks
 {
   [AddINotifyPropertyChangedInterface]
-  class MockMeterSrc<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc
+  internal class MockMeterSrc<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc
   {
     public double FeetCounter { get; set; }
     public double FeetPerMinute { get; set; }

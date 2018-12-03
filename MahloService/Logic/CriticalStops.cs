@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
 using PropertyChanged;
 
 namespace MahloService.Logic
 {
   [AddINotifyPropertyChangedInterface]
-  class CriticalStops<Model> : ICriticalStops<Model>
+  internal class CriticalStops<Model> : ICriticalStops<Model>
   {
     private Stop stops;
 

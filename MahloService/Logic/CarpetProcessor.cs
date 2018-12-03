@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService.Settings;
-using MahloService.Ipc;
-using MahloService.Models;
+﻿using MahloService.Ipc;
 using MahloService.Opc;
+using MahloService.Settings;
 
 namespace MahloService.Logic
 {
-  class CarpetProcessor : ICarpetProcessor
+  internal class CarpetProcessor : ICarpetProcessor
   {
     private readonly IOpcServerController opcServerController;
     private readonly IServiceSettings appInfo;

@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MahloService.Opc
+﻿namespace MahloService.Opc
 {
-  interface IMeterSrc
+  internal interface IMeterSrc
   {
     double FeetCounter { get; set; }
     double FeetPerMinute { get; }
@@ -24,7 +17,7 @@ namespace MahloService.Opc
     void SetAutoMode(bool value);
   }
 
-  interface IMeterSrc<Model> : IMeterSrc
+  internal interface IMeterSrc<Model> : IMeterSrc
   {
   }
 }

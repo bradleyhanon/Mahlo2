@@ -1,9 +1,8 @@
-﻿using System.Threading.Tasks;
-using MahloService.Models;
+﻿using MahloService.Models;
 
 namespace MahloService.Logic
 {
-  interface ISapRollAssigner
+  internal interface ISapRollAssigner
   {
     void AssignSapRollTo(CutRoll cutRoll);
   }

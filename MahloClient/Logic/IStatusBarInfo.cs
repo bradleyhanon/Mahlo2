@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService.Logic;
-using Microsoft.AspNet.SignalR.Client;
+﻿using MahloService.Logic;
 
 namespace MahloClient.Logic
 {
-  interface IStatusBarInfo
+  internal interface IStatusBarInfo
   {
     string ConnectionStatusMessage { get; }
     bool IsSeamDetectEnabled { get; }

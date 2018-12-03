@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService.Repository;
-using Xunit;
+﻿using MahloService.Repository;
 
 namespace MahloServiceTests.Repository
 {
@@ -15,7 +9,7 @@ namespace MahloServiceTests.Repository
     public DbMfgTests()
     {
       var factoryFactory = new DbConnectionFactory.Factory();
-      target = new DbMfg(factoryFactory);
+      this.target = new DbMfg(factoryFactory);
     }
 
     //[Fact]

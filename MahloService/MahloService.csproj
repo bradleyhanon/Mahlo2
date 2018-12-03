@@ -71,9 +71,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonMethods.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Logic\Averager.cs" />
     <Compile Include="Logic\CutRollList.cs" />
     <Compile Include="Logic\CutRollLogic.cs" />
+    <Compile Include="Logic\ICutRollLogic.cs" />
     <Compile Include="Logic\ISapRollAssigner.cs" />
     <Compile Include="Logic\SapRollAssigner.cs" />
     <Compile Include="Logic\DelayLine.cs" />
@@ -114,7 +116,6 @@
     <Compile Include="Logic\IBowAndSkewLogic.cs" />
     <Compile Include="Logic\ICarpetProcessor.cs" />
     <Compile Include="Logic\ICriticalStops.cs" />
-    <Compile Include="Logic\ICutRollLogic.cs" />
     <Compile Include="Logic\IMahloLogic.cs" />
     <Compile Include="Logic\IMeterLogic.cs" />
     <Compile Include="Logic\IPatternRepeatLogic.cs" />
@@ -172,6 +173,7 @@
     </Compile>
     <Compile Include="Simulation\SimInfo.cs" />
     <Compile Include="SingleInstance.cs" />
+    <Compile Include="SingleInstanceException.cs" />
     <Compile Include="Utilities\ConcurrencyInfo.cs" />
     <Compile Include="Utilities\ConsoleControl.cs" />
     <Compile Include="Utilities\ConsoleEventArgs.cs" />
@@ -200,6 +202,11 @@
     </PackageReference>
     <PackageReference Include="Microsoft.AspNet.SignalR.SelfHost">
       <Version>2.2.3</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
+      <Version>2.6.2</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Owin">
       <Version>4.0.0</Version>

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using MahloService.Models;
 using MahloService.Repository;
@@ -12,7 +10,7 @@ using MahloService.Utilities;
 
 namespace MahloService.Logic
 {
-  sealed class SapRollAssigner : ISapRollAssigner, IDisposable
+  internal sealed class SapRollAssigner : ISapRollAssigner, IDisposable
   {
     public readonly TimeSpan TryInterval = TimeSpan.FromSeconds(2);
     private readonly IDbMfg dbMfg;
@@ -46,7 +44,7 @@ namespace MahloService.Logic
         if (sapRoll != null && sapRoll.Value != this.priorSapRoll)
         {
           this.priorSapRoll = sapRoll.Value;
-          this.cutRoll.SapRoll = sapRoll.Value.ToString();
+          this.cutRoll.SapRoll = sapRoll.Value.ToString(CultureInfo.InvariantCulture);
           this.dbLocal.UpdateCutRoll(this.cutRoll);
           this.cutRoll = null;
         }

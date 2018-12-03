@@ -1,9 +1,8 @@
 ﻿using MahloService.Models;
-using Newtonsoft.Json;
 
 namespace MahloService.Logic
 {
-  interface IPatternRepeatLogic : IMeterLogic<PatternRepeatModel>
+  internal interface IPatternRepeatLogic : IMeterLogic<PatternRepeatModel>
   {
   }
 }

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService.Logic;
+﻿using MahloService.Logic;
 
 namespace MahloClient.Logic
 {
-  class CarpetProcessor : ICarpetProcessor
+  internal class CarpetProcessor : ICarpetProcessor
   {
     public IBowAndSkewLogic BowAndSkewLogic { get; private set; }
 
@@ -22,7 +17,7 @@ namespace MahloClient.Logic
     public CarpetProcessor(
       ISewinQueue sewinQueue,
       IMahloLogic mahloLogic,
-      IBowAndSkewLogic bowAndSkewLogic, 
+      IBowAndSkewLogic bowAndSkewLogic,
       IPatternRepeatLogic patternRepeatLogic)
     {
       this.SewinQueue = sewinQueue;
@@ -33,7 +28,7 @@ namespace MahloClient.Logic
 
     public void Start()
     {
-      
+
     }
   }
 }

@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mahlo.Logic;
-using Mahlo.Models;
-using Mahlo2Tests.Mocks;
-using NSubstitute;
-using Xunit;
-
-namespace Mahlo2Tests.Logic
+﻿namespace Mahlo2Tests.Logic
 {
   public class MahloLogicTests
   {

@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
-using System.Text;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using MahloService.Settings;
 using MahloService.Models;
 using MahloService.Opc;
 using MahloService.Repository;
+using MahloService.Settings;
 using MahloService.Utilities;
 using Newtonsoft.Json;
-using System.ComponentModel;
-using System.Reactive.Linq;
-using System.Collections.Specialized;
-using System.Threading;
-using System.Reactive.Concurrency;
 
 namespace MahloService.Logic
 {
-  class PatternRepeatLogic : MeterLogic<PatternRepeatModel>, IPatternRepeatLogic
+  internal class PatternRepeatLogic : MeterLogic<PatternRepeatModel>, IPatternRepeatLogic
   {
-    readonly IServiceSettings serviceSettings;
+    private readonly IServiceSettings serviceSettings;
     private readonly IPatternRepeatSrc srcData;
     private CutRollList cutRolls;
     private readonly ISapRollAssigner sapRollAssigner;
@@ -207,7 +206,7 @@ namespace MahloService.Logic
 
     private async Task KeepBowAndSkewUpToDateAsync()
     {
-      for (; ;)
+      for (; ; )
       {
         await Task.Delay(1000);
         if (this.isFeetCounterChanged)
@@ -235,7 +234,7 @@ namespace MahloService.Logic
       var spec = settings.GetBackingSpec(backingCode).DlotSpec;
       var a = ((Math.Abs(1.0 - epe) + (spec / 2)) / spec);
       var index = (int)Math.Min(5, a);
-      return (index == 0 ? "" : epe < 1.0 ? "+" : "-") + index.ToString();
+      return (index == 0 ? "" : epe < 1.0 ? "+" : "-") + index.ToString(CultureInfo.InvariantCulture);
     }
 
     private async Task DoffDetectedAsync()

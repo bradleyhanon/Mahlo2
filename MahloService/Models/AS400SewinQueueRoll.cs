@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MahloService.Models
+﻿namespace MahloService.Models
 {
-  class AS400SewinQueueRoll
+  internal class AS400SewinQueueRoll
   {
     public string GridImage { get; set; }
     public string G2ROLL { get; set; }
@@ -27,7 +21,7 @@ namespace MahloService.Models
 
     public double RollLength => this.G2LTF;
 
-    public string StyleCode => G2STYL;
+    public string StyleCode => this.G2STYL;
 
     /// <summary>
     /// Copy all but RollId to the destination

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService.Models;
+﻿using MahloService.Models;
 using MahloService.Repository;
 using NSubstitute;
 using Xunit;
@@ -12,9 +7,9 @@ namespace MahloServiceTests.Repository
 {
   public class ProgramStateTests
   {
-    const string street = "101 1st Ave";
-    const string city = "Chattanooga";
-    IProgramStateProvider provider;
+    private const string street = "101 1st Ave";
+    private const string city = "Chattanooga";
+    private IProgramStateProvider provider;
 
     public ProgramStateTests()
     {

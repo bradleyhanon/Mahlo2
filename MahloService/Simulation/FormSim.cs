@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MahloService.Models;
 using MahloService.Opc;
@@ -15,7 +8,7 @@ using PropertyChanged;
 namespace MahloService.Simulation
 {
   [AddINotifyPropertyChangedInterface]
-  partial class FormSim : Form
+  internal partial class FormSim : Form
   {
     private IDbMfgSim dbMfgSim;
     private IMahloSrc mahloSrc;
@@ -32,7 +25,7 @@ namespace MahloService.Simulation
       IPatternRepeatSrc patternRepeatSrc,
       IProgramState programState)
     {
-      InitializeComponent();
+      this.InitializeComponent();
 
       this.dbMfgSim = (IDbMfgSim)dbMfg;
       this.mahloSrc = mahloSrc;

@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Reactive.Linq;
+using System.Windows.Forms;
 using MahloClient.Logic;
 
 namespace MahloClient.Views
 {
-  partial class MyStatusBar : UserControl
+  internal partial class MyStatusBar : UserControl
   {
     private const int PnlMessage = 0;
     private const int PnlIndicator = 1;
@@ -32,11 +27,11 @@ namespace MahloClient.Views
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IStatusBarInfo StatusBarInfo
     {
-      get => _statusBarInfo;
+      get => this._statusBarInfo;
       set
       {
         this.propertyChangedSubscription?.Dispose();
-        _statusBarInfo = value;
+        this._statusBarInfo = value;
         this.propertyChangedSubscription = Observable
           .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
             h => ((INotifyPropertyChanged)value).PropertyChanged += h,
@@ -45,22 +40,22 @@ namespace MahloClient.Views
           {
             switch (arg.EventArgs.PropertyName)
             {
-              case nameof(_statusBarInfo.IsSeamDetectEnabled):
-              case nameof(_statusBarInfo.IsSeamDetected):
-              case nameof(_statusBarInfo.UserAttentions):
-              case nameof(_statusBarInfo.CriticalStops):
-              case nameof(_statusBarInfo.AlertMessage):
-              case nameof(_statusBarInfo.CriticalAlarmMessage):
-              case nameof(_statusBarInfo.IgnoringSeams):
+              case nameof(this._statusBarInfo.IsSeamDetectEnabled):
+              case nameof(this._statusBarInfo.IsSeamDetected):
+              case nameof(this._statusBarInfo.UserAttentions):
+              case nameof(this._statusBarInfo.CriticalStops):
+              case nameof(this._statusBarInfo.AlertMessage):
+              case nameof(this._statusBarInfo.CriticalAlarmMessage):
+              case nameof(this._statusBarInfo.IgnoringSeams):
                 this.statusBar1.Invalidate();
                 break;
 
-              case nameof(_statusBarInfo.ConnectionStatusMessage):
-                this.statusBar1.Panels[PnlMessage].Text = $"Service: {_statusBarInfo.ConnectionStatusMessage}";
+              case nameof(this._statusBarInfo.ConnectionStatusMessage):
+                this.statusBar1.Panels[PnlMessage].Text = $"Service: {this._statusBarInfo.ConnectionStatusMessage}";
                 break;
 
-              case nameof(_statusBarInfo.QueueMessage):
-                this.statusBar1.Panels[PnlQueueMessage].Text = _statusBarInfo.QueueMessage;
+              case nameof(this._statusBarInfo.QueueMessage):
+                this.statusBar1.Panels[PnlQueueMessage].Text = this._statusBarInfo.QueueMessage;
                 break;
             }
           });
@@ -107,7 +102,9 @@ namespace MahloClient.Views
           txt = "Seam Detect";
           textBrush = Brushes.White;
           if (this.StatusBarInfo.IsSeamDetected)
+          {
             brsh = Brushes.RoyalBlue;
+          }
           else if (!this.StatusBarInfo.IsSeamDetectEnabled)
           {
             brsh = Brushes.Red;
@@ -122,7 +119,9 @@ namespace MahloClient.Views
               textBrush = Brushes.Black;
             }
             else
+            {
               brsh = Brushes.Green;
+            }
           }
           sbdevent.Graphics.FillRectangle(brsh, sbdevent.Bounds);
           sbdevent.Graphics.DrawString(txt, fnt, textBrush, sbdevent.Bounds, sf);
@@ -160,9 +159,13 @@ namespace MahloClient.Views
           fnt = new Font(this.Font.FontFamily, this.Font.Size, FontStyle.Regular);
           textBrush = Brushes.Black;
           if (this.StatusBarInfo.CriticalStops.Any)
+          {
             txt = this.StatusBarInfo.CriticalAlarmMessage;
+          }
           else
+          {
             txt = this.StatusBarInfo.AlertMessage;
+          }
           //brsh = Brushes.LightGray;
           sf.Alignment = StringAlignment.Near;
           sf.LineAlignment = StringAlignment.Center;

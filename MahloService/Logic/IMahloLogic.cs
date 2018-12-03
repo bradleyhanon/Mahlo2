@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using MahloService.Models;
-using Newtonsoft.Json;
+﻿using MahloService.Models;
 
 namespace MahloService.Logic
 {
-  interface IMahloLogic : IMeterLogic<MahloModel>
+  internal interface IMahloLogic : IMeterLogic<MahloModel>
   {
   }
 }

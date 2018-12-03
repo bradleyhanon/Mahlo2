@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Concurrency;
-using System.Text;
+﻿using System.Reactive.Concurrency;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MahloService.Utilities
 {
-  class ConcurrencyInfo : IConcurrencyInfo
+  internal class ConcurrencyInfo : IConcurrencyInfo
   {
-    public ConcurrencyInfo (SynchronizationContext synchronizationContext, IScheduler scheduler)
+    public ConcurrencyInfo(SynchronizationContext synchronizationContext, IScheduler scheduler)
     {
       this.SynchronizationContext = synchronizationContext;
       this.Scheduler = scheduler;

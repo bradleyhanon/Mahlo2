@@ -1,6 +1,6 @@
 ﻿namespace MahloService.Logic
 {
-  interface ICarpetProcessor
+  internal interface ICarpetProcessor
   {
     IBowAndSkewLogic BowAndSkewLogic { get; }
     ICutRollLogic CutRollLogic { get; }

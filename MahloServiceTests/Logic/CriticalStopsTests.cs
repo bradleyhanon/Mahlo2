@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MahloService.Logic;
 using MahloService.Models;
-using MahloService.Opc;
-using NSubstitute;
 using Xunit;
 
 namespace MahloServiceTests.Logic
-{ 
+{
   public class CriticalStopsTests
   {
     private bool anyChanged;
@@ -31,9 +26,9 @@ namespace MahloServiceTests.Logic
         h => ((INotifyPropertyChanged)this.target).PropertyChanged += h,
         h => ((INotifyPropertyChanged)this.target).PropertyChanged -= h)
         .Where(arg => arg.EventArgs.PropertyName == nameof(UserAttentions<MahloModel>.Any))
-        .Subscribe(_ => anyChanged = (this.target.Any ? ++this.anyChangesToTrue : ++this.anyChangesToFalse) != 0);
+        .Subscribe(_ => this.anyChanged = (this.target.Any ? ++this.anyChangesToTrue : ++this.anyChangesToFalse) != 0);
 
-      Assert.False(target.Any);
+      Assert.False(this.target.Any);
     }
 
     [Fact]

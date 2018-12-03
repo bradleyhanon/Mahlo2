@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService.Models;
+﻿using MahloService.Models;
 using Xunit;
 
 namespace MahloServiceTests.Models
@@ -11,7 +6,7 @@ namespace MahloServiceTests.Models
   public class GreigeRollTests
   {
     [Fact]
-    void SwapWithTest()
+    private void SwapWithTest()
     {
       GreigeRoll roll1 = new GreigeRoll
       {

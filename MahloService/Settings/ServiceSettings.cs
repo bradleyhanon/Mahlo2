@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace MahloService.Settings
 {
@@ -128,7 +126,7 @@ namespace MahloService.Settings
            .FirstOrDefault(spec => code.Backing.Equals(spec.Backing, StringComparison.OrdinalIgnoreCase)) == null)
         .Select(code => code.Backing);
 
-      if (!this.BackingCodes.Any(item=>item.Backing.Equals(Vinyl, StringComparison.OrdinalIgnoreCase)))
+      if (!this.BackingCodes.Any(item => item.Backing.Equals(Vinyl, StringComparison.OrdinalIgnoreCase)))
       {
         missingSpecs = missingSpecs
           .Concat(Enumerable.Repeat(Vinyl, 1))

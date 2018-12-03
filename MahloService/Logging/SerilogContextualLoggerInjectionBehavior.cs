@@ -5,8 +5,6 @@
 namespace MahloService.Logging
 {
   using System;
-  using System.Collections.Generic;
-  using System.Text;
   using Serilog;
   using SimpleInjector;
   using SimpleInjector.Advanced;

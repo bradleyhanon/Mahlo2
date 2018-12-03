@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Cors;
 using Microsoft.Owin.Hosting;
@@ -11,7 +7,7 @@ using Serilog;
 
 namespace MahloService.Ipc
 {
-  class Startup
+  internal class Startup
   {
     public static IDisposable Start(string url)
     {
@@ -21,7 +17,7 @@ namespace MahloService.Ipc
         result = WebApp.Start<Startup>(url);
         Log.Logger.Information("SignalR listening on: {url}", url);
       }
-      catch(Exception ex)
+      catch (Exception ex)
       {
         Log.Logger.Error(ex, "Unable to start SignalR");
         result = null;

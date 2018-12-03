@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MahloService.Logic;
 using Xunit;
 
@@ -43,7 +39,7 @@ namespace MahloServiceTests.Logic
     [Fact]
     public void ReverseMotionSeesDelayedValuesAgain()
     {
-      DelaysTwoValues();
+      this.DelaysTwoValues();
 
       Assert.True(this.Reverse(1, false));
       Assert.True(this.target.Value);

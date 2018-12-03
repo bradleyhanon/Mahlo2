@@ -1,6 +1,6 @@
 ﻿namespace MahloService.Settings
 {
-  interface IOpcSettings
+  internal interface IOpcSettings
   {
     string OpcServerPath { get; set; }
     string Mahlo2ChannelName { get; set; }

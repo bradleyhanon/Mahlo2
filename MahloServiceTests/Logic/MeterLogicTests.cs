@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService.Settings;
+using System.Reactive.Linq;
 using MahloService.Logic;
 using MahloService.Models;
-using MahloService.Opc;
 using MahloService.Repository;
+using MahloService.Settings;
 using MahloServiceTests.Mocks;
-using Newtonsoft.Json.Linq;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Xunit;
-using System.Reactive.Linq;
-using Microsoft.Reactive.Testing;
 
 namespace MahloServiceTests.Logic
 {
@@ -116,7 +111,7 @@ namespace MahloServiceTests.Logic
         CurrentRoll = this.sewinQueue.Rolls[0]
       };
 
-      this.sewinQueue.QueueChanged += Raise.Event<Action>(); 
+      this.sewinQueue.QueueChanged += Raise.Event<Action>();
       Assert.True(this.userAttentions.VerifyRollSequence);
       Assert.NotNull(this.target.CurrentRoll);
       this.userAttentions.ClearAll();

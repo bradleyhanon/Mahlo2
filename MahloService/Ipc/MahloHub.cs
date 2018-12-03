@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using MahloService.Logic;
 using MahloService.Models;
-using MahloService.Opc;
 using MahloService.Repository;
 using MahloService.Settings;
 using MahloService.Utilities;
 using Microsoft.AspNet.SignalR;
-using Microsoft.VisualStudio.Threading;
 
 namespace MahloService.Ipc
 {
@@ -33,25 +30,26 @@ namespace MahloService.Ipc
 
     public void MoveToPriorRoll(string name)
     {
-      TaskUtilities.RunOnMainThreadAsync(() => this.GetMeterLogicInstance(name).MoveToPriorRoll()).NoWait();
+      TaskUtilities.RunOnMainThreadAsync(() => GetMeterLogicInstance(name).MoveToPriorRoll()).NoWait();
     }
 
     public void MoveToNextRoll(string name, int currentRollLength)
     {
-      TaskUtilities.RunOnMainThreadAsync(() => this.GetMeterLogicInstance(name).MoveToNextRoll(currentRollLength)).NoWait();
+      TaskUtilities.RunOnMainThreadAsync(() => GetMeterLogicInstance(name).MoveToNextRoll(currentRollLength)).NoWait();
     }
 
     public void WaitForSeam(string name)
     {
-      TaskUtilities.RunOnMainThreadAsync(() => this.GetMeterLogicInstance(name).WaitForSeam()).NoWait();
+      TaskUtilities.RunOnMainThreadAsync(() => GetMeterLogicInstance(name).WaitForSeam()).NoWait();
     }
 
     public void DisableSystem(string name)
     {
-      TaskUtilities.RunOnMainThreadAsync(() => this.GetMeterLogicInstance(name).DisableSystem()).NoWait();
+      TaskUtilities.RunOnMainThreadAsync(() => GetMeterLogicInstance(name).DisableSystem()).NoWait();
     }
 
-    public Task<(string message, string caption)> BasSetRecipeAsync(string rollNo, string styleCode, string recipeName, bool isManualMode, RecipeApplyToEnum applyTo)
+    [SuppressMessage("Style", "VSTHRD200:Use \"Async\" suffix for async methods", Justification = "Not compatible with old clients")]
+    public Task<(string message, string caption)> BasSetRecipe(string rollNo, string styleCode, string recipeName, bool isManualMode, RecipeApplyToEnum applyTo)
     {
       var tcs = new TaskCompletionSource<(string message, string caption)>();
 
@@ -124,7 +122,8 @@ namespace MahloService.Ipc
       return tcs.Task;
     }
 
-    public Task<IEnumerable<CoaterScheduleRoll>> GetCoaterScheduleAsync(int minSequence, int maxSequence)
+    [SuppressMessage("Style", "VSTHRD200:Use \"Async\" suffix for async methods", Justification = "Not compatible with old clients")]
+    public Task<IEnumerable<CoaterScheduleRoll>> GetCoaterSchedule(int minSequence, int maxSequence)
     {
       var tcs = new TaskCompletionSource<IEnumerable<CoaterScheduleRoll>>();
       TaskUtilities.RunOnMainThreadAsync(async () =>
@@ -149,7 +148,7 @@ namespace MahloService.Ipc
       sewinQueue.MoveRoll(rollIndex, direction);
     }
 
-    private IMeterLogic GetMeterLogicInstance(string name)
+    private static IMeterLogic GetMeterLogicInstance(string name)
     {
       switch (name)
       {

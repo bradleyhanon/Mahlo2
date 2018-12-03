@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MahloService.Settings;
 
 namespace MahloClient.Views
 {
-  struct CellColor
+  internal struct CellColor
   {
     public Color ForeColor { get; set; }
 
@@ -27,7 +23,7 @@ namespace MahloClient.Views
     public static readonly CellColor ActiveColor = new CellColor { ForeColor = Color.FromArgb(156, 87, 0), BackColor = Color.FromArgb(255, 235, 156) };
 
     // Pinkish
-    public static readonly CellColor OutOfSpecColor = new CellColor { ForeColor = Color.FromArgb(156, 0, 6), BackColor = Color.FromArgb(255, 199, 206)  };
+    public static readonly CellColor OutOfSpecColor = new CellColor { ForeColor = Color.FromArgb(156, 0, 6), BackColor = Color.FromArgb(255, 199, 206) };
 
     // Gray
     public static readonly CellColor LimboColor = new CellColor { ForeColor = Color.White, BackColor = Color.FromArgb(165, 165, 165) };

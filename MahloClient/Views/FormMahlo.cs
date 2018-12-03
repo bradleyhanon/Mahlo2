@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MahloClient.Ipc;
 using MahloClient.Logic;
 using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Settings;
-using MahloService.Utilities;
 
 namespace MahloClient.Views
 {
-  partial class FormMahlo : Form
+  internal partial class FormMahlo : Form
   {
     private readonly string UpArrowStr = new string((char)0xdd, 1);
     private readonly string DownArrorStr = new string((char)0xde, 1);
@@ -31,14 +27,14 @@ namespace MahloClient.Views
 
     public FormMahlo(IMahloLogic logic, ISewinQueue sewinQueue, IMahloIpcClient ipcClient, IServiceSettings serviceSettings)
     {
-      InitializeComponent();
+      this.InitializeComponent();
       this.logic = logic;
       this.sewinQueue = sewinQueue;
       this.ipcClient = ipcClient;
       this.serviceSettings = serviceSettings;
       this.statusBar1.StatusBarInfo = (IStatusBarInfo)this.logic;
 
-      MahloPropertyChangedSubscription =
+      this.MahloPropertyChangedSubscription =
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
           h => ((INotifyPropertyChanged)this.logic).PropertyChanged += h,
           h => ((INotifyPropertyChanged)this.logic).PropertyChanged -= h)
@@ -54,7 +50,7 @@ namespace MahloClient.Views
         });
 
       // Make column heading alignment match column data alignment
-      foreach (DataGridViewColumn column in dataGridView1.Columns)
+      foreach (DataGridViewColumn column in this.dataGridView1.Columns)
       {
         column.HeaderCell.Style.Alignment = column.DefaultCellStyle.Alignment;
       }
@@ -160,10 +156,10 @@ namespace MahloClient.Views
       if (e.RowIndex == this.dataGridView1.WideRowIndex)
       {
         string s =
-          e.ColumnIndex == this.moveUpColumn.Index ? UpArrowStr :
-          e.ColumnIndex == this.moveDownColumn.Index ? DownArrorStr : string.Empty;
+          e.ColumnIndex == this.moveUpColumn.Index ? this.UpArrowStr :
+          e.ColumnIndex == this.moveDownColumn.Index ? this.DownArrorStr : string.Empty;
 
-        if (s != string.Empty)
+        if (!string.IsNullOrEmpty(s))
         {
           var cell = this.dataGridView1[e.ColumnIndex, e.RowIndex];
           int selectedRowIndex = this.dataGridView1.SelectedCells.Cast<DataGridViewCell>().FirstOrDefault()?.RowIndex ?? -100;

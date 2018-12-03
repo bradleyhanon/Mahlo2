@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
+﻿using System.Configuration;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MahloService.Repository
 {
-  interface IDbConnectionFactoryFactory
+  internal interface IDbConnectionFactoryFactory
   {
     IDbConnectionFactory Create(string dbName);
   }
 
-  class DbConnectionFactory : IDbConnectionFactory
+  internal class DbConnectionFactory : IDbConnectionFactory
   {
     public DbConnectionFactory(string dbName)
     {

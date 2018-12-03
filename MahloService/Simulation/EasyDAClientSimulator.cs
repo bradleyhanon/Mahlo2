@@ -1,15 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
-using OpcLabs.BaseLib;
-using OpcLabs.BaseLib.OperationModel;
-using OpcLabs.EasyOpc;
-using OpcLabs.EasyOpc.DataAccess;
-using OpcLabs.EasyOpc.DataAccess.AddressSpace;
-using OpcLabs.EasyOpc.DataAccess.OperationModel;
 
 namespace MahloService.Opc
 {

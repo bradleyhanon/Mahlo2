@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using MahloService.Models;
-using MahloService.Settings;
 
 namespace MahloClient.Views
 {
@@ -23,7 +15,7 @@ namespace MahloClient.Views
     //// Pinkish background
     //public static readonly Color OutOfSpecBackColor = Color.FromArgb(255, 199, 206);
     //public static readonly Color OutOfSpecForeColor = Color.FromArgb(156, 0, 6);
-    
+
     // Greenish
     public static (Color foreColor, Color backColor) GoodColor = (Color.FromArgb(198, 239, 206), Color.FromArgb(0, 97, 0));
 
@@ -31,7 +23,7 @@ namespace MahloClient.Views
     public static (Color foreColor, Color backColor) ActiveColor = (Color.FromArgb(255, 235, 156), Color.FromArgb(156, 87, 0));
 
     // Pinkish
-    public static (Color foreColor, Color backColor) OutOfSpecColor = (Color.FromArgb(255, 199, 206),Color.FromArgb(156, 0, 6));
+    public static (Color foreColor, Color backColor) OutOfSpecColor = (Color.FromArgb(255, 199, 206), Color.FromArgb(156, 0, 6));
 
     public static void SetFeetColor(DataGridView grid, DataGridViewCellFormattingEventArgs args, IServiceSettings settings)
     {

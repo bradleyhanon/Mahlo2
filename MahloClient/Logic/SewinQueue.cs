@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MahloService.Models;
 using Newtonsoft.Json.Linq;
 
 namespace MahloClient.Logic
 {
-  class SewinQueue : ISewinQueue
+  internal class SewinQueue : ISewinQueue
   {
     public event EventHandler Changed;
 
@@ -49,7 +46,7 @@ namespace MahloClient.Logic
       double nWidth1 = 0F, nWidth2 = 0F;
 
       int positionInQueue = this.Rolls.IndexOf(roll);
-      if (roll.RollNo.ToUpper() == GreigeRoll.CheckRollId)
+      if (string.Equals(roll.RollNo, GreigeRoll.CheckRollId, StringComparison.OrdinalIgnoreCase))
       {
         if (positionInQueue == this.Rolls.Count - 1)
         {
@@ -61,7 +58,7 @@ namespace MahloClient.Logic
         //search backward in queue for first non-CheckRoll
         for (int n = positionInQueue - 1; n >= 0; n--)
         {
-          if (this.Rolls[n].RollNo.ToUpper() != GreigeRoll.CheckRollId)
+          if (!string.Equals(this.Rolls[n].RollNo, GreigeRoll.CheckRollId, StringComparison.OrdinalIgnoreCase))
           {
             sBacking1 = this.Rolls[n].BackingCode;
             nWidth1 = this.Rolls[n].RollWidth;
@@ -72,7 +69,7 @@ namespace MahloClient.Logic
         //search forward in queue for first non-CheckRoll
         for (int n = positionInQueue + 1; n < this.Rolls.Count; n++)
         {
-          if (this.Rolls[n].RollNo.ToUpper() != GreigeRoll.CheckRollId)
+          if (!string.Equals(this.Rolls[n].RollNo, GreigeRoll.CheckRollId, StringComparison.OrdinalIgnoreCase))
           {
             sBacking2 = this.Rolls[n].BackingCode;
             nWidth2 = this.Rolls[n].RollWidth;
@@ -81,13 +78,21 @@ namespace MahloClient.Logic
         }
 
         if (nWidth1 != nWidth2)
+        {
           return RollTypeEnum.Leader;
+        }
         else if (!sHPBackingCodes.Contains(sBacking1) && sHPBackingCodes.Contains(sBacking2))
+        {
           return RollTypeEnum.Leader;
+        }
         else if (!sHPBackingCodes.Contains(sBacking2) && sHPBackingCodes.Contains(sBacking1))
+        {
           return RollTypeEnum.Leader;
+        }
         else
+        {
           return RollTypeEnum.CheckRoll;
+        }
       }
 
       return RollTypeEnum.Greige;

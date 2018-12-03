@@ -15,8 +15,8 @@ namespace MahloService.Settings
     double RollTooLongFactor { get; set; }
     double RollTooShortFactor { get; set; }
 
-    List<BackingCode> BackingCodes { get; set; }
-    List<BackingSpec> BackingSpecs { get; set; }
+    List<BackingCode> BackingCodes { get; }
+    List<BackingSpec> BackingSpecs { get; }
 
     //bool ArchiveRollMaps { get; set; }
     //bool AutoCloseMahloDDEServer { get; set; }

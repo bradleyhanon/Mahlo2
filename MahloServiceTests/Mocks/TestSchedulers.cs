@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Concurrency;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService.Utilities;
-using Microsoft.Reactive.Testing;
-
-namespace MahloServiceTests.Mocks
+﻿namespace MahloServiceTests.Mocks
 {
   sealed class TestSchedulers : ISchedulerProvider
   {

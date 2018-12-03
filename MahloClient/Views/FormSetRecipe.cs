@@ -1,24 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using MahloClient.Ipc;
 using MahloService.Ipc;
 using MahloService.Models;
-using MahloClient.Ipc;
 
 namespace MahloClient.Views
 {
-  partial class FormSetRecipe : Form
+  internal partial class FormSetRecipe : Form
   {
     public const string ManualModeRecipeName = "None (Run in Manual)";
-
-    (RadioButton button, string name)[] recipeMap;
-    (RadioButton button, RecipeApplyToEnum applyTo)[] applyToMap;
+    private (RadioButton button, string name)[] recipeMap;
+    private (RadioButton button, RecipeApplyToEnum applyTo)[] applyToMap;
 
     private IMahloIpcClient mahloClient;
     private GreigeRoll currentRoll;
@@ -27,14 +20,14 @@ namespace MahloClient.Views
 
     public FormSetRecipe(IMahloIpcClient mahloClient, GreigeRoll currentRoll, GreigeRoll selectedRoll)
     {
-      InitializeComponent();
+      this.InitializeComponent();
 
       this.mahloClient = mahloClient;
       this.currentRoll = currentRoll;
       this.selectedRoll = selectedRoll;
       this.srcSelectedRoll.DataSource = this.selectedRoll;
 
-      this.recipeMap = new(RadioButton button, string name)[]
+      this.recipeMap = new (RadioButton button, string name)[]
       {
         (this.radNoRecipe, ManualModeRecipeName),
         (this.radPatternDetection, "Pattern Detection"),
@@ -42,14 +35,14 @@ namespace MahloClient.Views
         (this.radFRETI, "FRETI"),
       };
 
-      this.applyToMap = new(RadioButton button, RecipeApplyToEnum name)[]
+      this.applyToMap = new (RadioButton button, RecipeApplyToEnum name)[]
       {
         (this.radApplyToRoll, RecipeApplyToEnum.Roll),
         (this.radApplyToStyle, RecipeApplyToEnum.Style),
       };
 
-      this.recipeMap.ForEach(item => item.button.Checked = this.selectedRoll.DefaultRecipe.ToLower() == item.name.ToLower());
-      
+      this.recipeMap.ForEach(item => item.button.Checked = string.Equals(this.selectedRoll.DefaultRecipe, item.name, StringComparison.OrdinalIgnoreCase));
+
       if (this.selectedRoll.Id >= this.currentRoll.Id)
       {
         // User can apply to style or individual roll
@@ -68,7 +61,7 @@ namespace MahloClient.Views
       string recipeName = this.recipeMap.FirstOrDefault(item => item.button.Checked).name;
       var applyTo = this.applyToMap.FirstOrDefault(item => item.button.Checked).applyTo;
       (string message, string caption) = await this.mahloClient.BasSetRecipeAsync(this.selectedRoll.RollNo, this.selectedRoll.StyleCode, recipeName, applyTo);
-      if (message != string.Empty)
+      if (!string.IsNullOrEmpty(message))
       {
         MessageBox.Show(this, message, caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
       }

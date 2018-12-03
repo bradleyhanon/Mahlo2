@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MahloClient;
 using MahloService.Logic;
-using MahloClient;
-using MahloClient.Logic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper.Contrib.Extensions;
+﻿using Dapper.Contrib.Extensions;
 using Newtonsoft.Json;
 using PropertyChanged;
 
 namespace MahloService.Models
 {
   [AddINotifyPropertyChangedInterface]
-  class CutRoll
+  internal class CutRoll
   {
     [ExplicitKey]
     public int Id { get; set; }

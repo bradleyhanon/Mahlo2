@@ -1,30 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService.Settings;
+﻿using System.Linq;
+using System.Reactive.Concurrency;
 using MahloService.Models;
 using MahloService.Opc;
 using MahloService.Repository;
-using MahloService.Utilities;
-using Newtonsoft.Json;
-using System.Reactive.Concurrency;
+using MahloService.Settings;
 
 namespace MahloService.Logic
 {
-  class MahloLogic : MeterLogic<MahloModel>, IMahloLogic
+  internal class MahloLogic : MeterLogic<MahloModel>, IMahloLogic
   {
     private readonly IDbLocal dbLocal;
     private readonly Mahlo2MapDatum mapDatum = new Mahlo2MapDatum();
 
     public MahloLogic(
       IDbLocal dbLocal,
-      IMahloSrc mahloSrc, 
-      ISewinQueue sewinQueue, 
-      IServiceSettings appInfo, 
-      IUserAttentions<MahloModel> userAttentions, 
-      ICriticalStops<MahloModel> criticalStops, 
+      IMahloSrc mahloSrc,
+      ISewinQueue sewinQueue,
+      IServiceSettings appInfo,
+      IUserAttentions<MahloModel> userAttentions,
+      ICriticalStops<MahloModel> criticalStops,
       IProgramState programState,
       IScheduler scheduler)
       : base(dbLocal, mahloSrc, sewinQueue, appInfo, userAttentions, criticalStops, programState, scheduler)
@@ -32,7 +26,7 @@ namespace MahloService.Logic
       this.dbLocal = dbLocal;
     }
 
-    public override long FeetCounterStart 
+    public override long FeetCounterStart
     {
       get => this.CurrentRoll.MalFeetCounterStart;
       set => this.CurrentRoll.MalFeetCounterStart = value;

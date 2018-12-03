@@ -43,7 +43,7 @@ namespace MahloServiceTests
       this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
       for (int j = 1; j < 5; j++)
       {
-        this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks - 1);
+        this.scheduler.AdvanceBy(SewinQueue.RefreshInterval.Ticks - 1);
         await this.dbMfg.Received(j).GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty);
         this.scheduler.AdvanceBy(1);
         await this.dbMfg.Received(j + 1).GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty);
@@ -77,7 +77,7 @@ namespace MahloServiceTests
       this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
 
       this.dbMfg.ClearReceivedCalls();
-      this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks);
+      this.scheduler.AdvanceBy(SewinQueue.RefreshInterval.Ticks);
       await this.dbMfg.Received(1).GetIsSewinQueueChangedAsync(3, this.roll1.RollNo, this.roll3.RollNo);
     }
 
@@ -101,10 +101,10 @@ namespace MahloServiceTests
     public async Task MatchingRollsUpdatedNewRollsAddedOthersRemoved()
     {
       this.roll3.ProductImageURL = "Unchanged";
-      var newRolls1 = new GreigeRoll[] { Clone(this.roll2), Clone(this.roll3), Clone(this.roll4) };
+      var newRolls1 = new GreigeRoll[] { this.Clone(this.roll2), this.Clone(this.roll3), this.Clone(this.roll4) };
       this.roll3.ProductImageURL = "Now changed";
-      var newRolls2 = new GreigeRoll[] { Clone(this.roll4), Clone(this.roll3), Clone(this.roll5), Clone(this.roll1) };
-      var expected = new GreigeRoll[] { Clone(this.roll3), Clone(this.roll4), Clone(this.roll5), Clone(this.roll1) };
+      var newRolls2 = new GreigeRoll[] { this.Clone(this.roll4), this.Clone(this.roll3), this.Clone(this.roll5), this.Clone(this.roll1) };
+      var expected = new GreigeRoll[] { this.Clone(this.roll3), this.Clone(this.roll4), this.Clone(this.roll5), this.Clone(this.roll1) };
 
       this.dbMfg.GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty).Returns(true);
       this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls1);
@@ -114,7 +114,7 @@ namespace MahloServiceTests
       this.dbMfg.ClearReceivedCalls();
       this.dbMfg.GetIsSewinQueueChangedAsync(3, this.roll2.RollNo, this.roll4.RollNo).Returns(true);
       this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls2);
-      this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks);
+      this.scheduler.AdvanceBy(SewinQueue.RefreshInterval.Ticks);
       await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
       Assert.True(this.target.Rolls.SequenceEqual(expected, this));
       Assert.Equal("Now changed", this.target.Rolls.Single(item => item.RollNo == this.roll3.RollNo).ProductImageURL);
@@ -139,7 +139,7 @@ namespace MahloServiceTests
       this.dbMfg.ClearReceivedCalls();
       this.dbMfg.GetIsSewinQueueChangedAsync(3, this.roll1.RollNo, this.roll3.RollNo).Returns(true);
       this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls2);
-      this.scheduler.AdvanceBy(this.target.RefreshInterval.Ticks);
+      this.scheduler.AdvanceBy(SewinQueue.RefreshInterval.Ticks);
       await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
 
       // Verify the updated queue
@@ -176,7 +176,7 @@ namespace MahloServiceTests
 
     private IEnumerable<GreigeRoll> Clone(params GreigeRoll[] rolls)
     {
-      foreach(var roll in rolls)
+      foreach (var roll in rolls)
       {
         GreigeRoll result = new GreigeRoll();
         roll.CopyTo(result);

@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MahloService
 {
-  static class ServiceExtensions
+  internal static class ServiceExtensions
   {
     public static double MetersToFeet(double meters)
     {
@@ -24,13 +20,13 @@ namespace MahloService
 
     public static void AddRange<T>(this BindingList<T> list, IEnumerable<T> items)
     {
-      foreach(var item in items)
+      foreach (var item in items)
       {
         list.Add(item);
       }
     }
 
-    public static IEnumerable<T> FindNewItems<T>(this IEnumerable<T> newItems, IEnumerable<T> oldItems, Func<T, T, bool> predicate)
+    public static IEnumerable<T> FindNewItems<T>(this IEnumerable<T> newItems, IEnumerable<T> oldItems)
     {
       int newCount = newItems.Count();
       int oldCount = oldItems.Count();
@@ -50,7 +46,7 @@ namespace MahloService
 
     public static void ForEach<T>(this IEnumerable<T> items, Action<T> action)
     {
-      foreach(T item in items)
+      foreach (T item in items)
       {
         action(item);
       }
@@ -64,11 +60,15 @@ namespace MahloService
       double a = 1 - (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255;
 
       if (a < 0.5)
+      {
         d = 0; // bright colors - black font
+      }
       else
+      {
         d = 255; // dark colors - white font
+      }
 
       return Color.FromArgb(d, d, d);
     }
   }
-} 
+}

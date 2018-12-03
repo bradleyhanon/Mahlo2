@@ -257,6 +257,11 @@
     <PackageReference Include="Microsoft.AspNet.SignalR.Client">
       <Version>2.2.3</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
+      <Version>2.6.2</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Threading">
       <Version>15.8.168</Version>
     </PackageReference>

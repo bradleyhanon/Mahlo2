@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MahloClient.Ipc;
 using MahloClient.Logic;
@@ -16,7 +13,7 @@ using MahloService.Settings;
 
 namespace MahloClient.Views
 {
-  partial class FormBowAndSkew : Form
+  internal partial class FormBowAndSkew : Form
   {
     private IBowAndSkewLogic logic;
     private ISewinQueue sewinQueue;
@@ -27,7 +24,7 @@ namespace MahloClient.Views
 
     public FormBowAndSkew(IBowAndSkewLogic logic, ISewinQueue sewinQueue, IMahloIpcClient mahloClient, IServiceSettings serviceSettings)
     {
-      InitializeComponent();
+      this.InitializeComponent();
       this.statusBar1.StatusBarInfo = (IStatusBarInfo)logic;
       this.logic = logic;
       this.sewinQueue = sewinQueue;

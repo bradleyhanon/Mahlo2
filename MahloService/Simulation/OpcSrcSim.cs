@@ -2,25 +2,20 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Opc;
 using MahloService.Repository;
 using MahloService.Settings;
-using Microsoft.AspNet.SignalR;
-using OpcLabs.EasyOpc.DataAccess;
 using PropertyChanged;
 using Serilog;
 
 namespace MahloService.Simulation
 {
   [AddINotifyPropertyChangedInterface]
-  sealed class OpcSrcSim<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc, IDisposable
+  internal sealed class OpcSrcSim<Model> : IMahloSrc, IBowAndSkewSrc, IPatternRepeatSrc, IDisposable
   {
     private readonly IDbMfgSim dbMfg;
     private readonly ISewinQueue sewinQueue;
@@ -140,27 +135,27 @@ namespace MahloService.Simulation
 
     public void SetAutoMode(bool value)
     {
-      
+
     }
 
     public void SetCriticalAlarmIndicator(bool value)
     {
-      
+
     }
 
     public void SetMiscellaneousIndicator(bool value)
     {
-      
+
     }
 
     public void SetRecipe(string recipeName)
     {
-      
+
     }
 
     public void SetStatusIndicator(bool value)
     {
-      
+
     }
 
     public void Start(double feetPerMinute)
@@ -221,7 +216,7 @@ namespace MahloService.Simulation
           });
       }
     }
-  
+
     public void Stop()
     {
       this.timer?.Dispose();

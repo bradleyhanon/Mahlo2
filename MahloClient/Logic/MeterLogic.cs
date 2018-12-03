@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MahloClient.Ipc;
-using MahloClient.Views;
 using MahloService;
 using MahloService.Logic;
 using MahloService.Models;
@@ -19,7 +16,7 @@ using PropertyChanged;
 
 namespace MahloClient.Logic
 {
-  abstract class MeterLogic<Model> : IMeterLogic, IStatusBarInfo, IDisposable, INotifyPropertyChanged
+  internal abstract class MeterLogic<Model> : IMeterLogic, IStatusBarInfo, IDisposable, INotifyPropertyChanged
   {
     private IMahloIpcClient ipcClient;
     private ISewinQueue sewinQueue;
@@ -275,6 +272,7 @@ namespace MahloClient.Logic
     public void Dispose()
     {
       this.Dispose(true);
+      GC.SuppressFinalize(this);
     }
 
     protected virtual void Dispose(bool disposing)

@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using Dapper.Contrib;
-using Dapper.Contrib.Extensions;
 using Dapper.FluentColumnMapping;
 using MahloService.Models;
 
 namespace MahloService.Repository
 {
-  class DbMfg : IDbMfg
+  internal class DbMfg : IDbMfg
   {
     private const int CommandTimeout = 10;
 
@@ -149,7 +145,7 @@ namespace MahloService.Repository
 
     public async Task SendEmailAsync(string pRecipients, string pSubject, string pBody)
     {
-      if ((pRecipients == "" || pBody == ""))
+      if ((string.IsNullOrEmpty(pRecipients) || string.IsNullOrEmpty(pBody)))
       {
         return;
       }

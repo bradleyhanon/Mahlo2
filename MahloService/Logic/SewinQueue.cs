@@ -1,24 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using MahloService.Models;
 using MahloService.Repository;
 using MahloService.Utilities;
-using PropertyChanged;
 using Serilog;
 
 namespace MahloService.Logic
 {
-  sealed class SewinQueue : ISewinQueue, IEqualityComparer<GreigeRoll>, INotifyPropertyChanged
+  internal sealed class SewinQueue : ISewinQueue, IEqualityComparer<GreigeRoll>, INotifyPropertyChanged
   {
     private readonly ILogger logger;
     private int nextRollId;
@@ -32,8 +26,7 @@ namespace MahloService.Logic
     private string priorFirstRoll = string.Empty;
     private string priorLastRoll = string.Empty;
     private int priorQueueSize;
-
-    IDisposable timer;
+    private IDisposable timer;
 
     public SewinQueue(IScheduler scheduler, IDbLocal dbLocal, IDbMfg dbMfg, ILogger logger)
     {
@@ -46,7 +39,7 @@ namespace MahloService.Logic
 
       var ignoredResultTask = this.RefreshIfChangedAsync();
       this.timer = Observable
-        .Interval(this.RefreshInterval, scheduler)
+        .Interval(RefreshInterval, scheduler)
         .Subscribe(_ => this.RefreshIfChangedAsync().NoWait());
     }
 
@@ -56,9 +49,9 @@ namespace MahloService.Logic
 
     public event PropertyChangedEventHandler PropertyChanged;
 
-    public bool IsChanged { get; set; }
+    public static TimeSpan RefreshInterval => TimeSpan.FromSeconds(10);
 
-    public TimeSpan RefreshInterval => TimeSpan.FromSeconds(10);
+    public bool IsChanged { get; set; }
 
     public BindingList<GreigeRoll> Rolls { get; private set; } = new BindingList<GreigeRoll>();
 
@@ -160,7 +153,7 @@ namespace MahloService.Logic
         if (await this.dbMfg.GetIsSewinQueueChangedAsync(this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll))
         {
           this.SetMessage("Reading queue");
-          await RefreshAsync();
+          await this.RefreshAsync();
         }
         else
         {

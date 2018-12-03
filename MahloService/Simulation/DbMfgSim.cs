@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MahloService.Models;
 using MahloService.Repository;
 
 namespace MahloService.Simulation
 {
-  class DbMfgSim : IDbMfgSim
+  internal class DbMfgSim : IDbMfgSim
   {
     private int nextRollNo = 1000000;
     private int nextCutRoll = 2000000;
@@ -35,8 +35,8 @@ namespace MahloService.Simulation
     {
       GreigeRoll roll = new GreigeRoll
       {
-        RollNo = this.nextRollNo.ToString(),
-        OrderNo = (this.nextRollNo + 1000000).ToString(),
+        RollNo = this.nextRollNo.ToString(CultureInfo.InvariantCulture),
+        OrderNo = (this.nextRollNo + 1000000).ToString(CultureInfo.InvariantCulture),
         ColorCode = "001",
         ColorName = "Red",
         StyleCode = "Plaid",
@@ -74,7 +74,7 @@ namespace MahloService.Simulation
 
     public Task<IEnumerable<CoaterScheduleRoll>> GetCoaterScheduleAsync(int minSequence, int maxSequence)
     {
-      return Task.FromResult<IEnumerable<CoaterScheduleRoll>>(new CoaterScheduleRoll[0]);
+      return Task.FromResult<IEnumerable<CoaterScheduleRoll>>(Array.Empty<CoaterScheduleRoll>());
     }
 
     public Task<IEnumerable<GreigeRoll>> GetCoaterSewinQueueAsync()

@@ -4,7 +4,7 @@
   /// We don't need configuration persistence in the client
   /// so we stub out Westwind's AppConfiguration class.
   /// </summary>
-  class AppConfiguration
+  internal class AppConfiguration
   {
     public void Initialize()
     {

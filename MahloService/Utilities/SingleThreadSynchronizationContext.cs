@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace System.Threading
 {
   /// <summary>Provides a SynchronizationContext that's single-threaded.</summary>
-  public sealed class SingleThreadSynchronizationContext : SynchronizationContext
+  public sealed class SingleThreadSynchronizationContext : SynchronizationContext, IDisposable
   {
     /// <summary>The queue of work items.</summary>
     private readonly BlockingCollection<KeyValuePair<SendOrPostCallback, object>> m_queue =
         new BlockingCollection<KeyValuePair<SendOrPostCallback, object>>();
 
-    /// <summary>The processing thread.</summary>
-    private readonly Thread m_thread = Thread.CurrentThread;
+    public void Dispose()
+    {
+      this.m_queue.Dispose();
+    }
 
     /// <summary>Dispatches an asynchronous message to the synchronization context.</summary>
     /// <param name="d">The System.Threading.SendOrPostCallback delegate to call.</param>
@@ -24,12 +22,12 @@ namespace System.Threading
     {
       if (d == null)
       {
-        throw new ArgumentNullException("d");
+        throw new ArgumentNullException(nameof(d));
       }
 
       if (!this.m_queue.IsAddingCompleted)
       {
-        m_queue.Add(new KeyValuePair<SendOrPostCallback, object>(d, state));
+        this.m_queue.Add(new KeyValuePair<SendOrPostCallback, object>(d, state));
       }
     }
 
@@ -42,14 +40,14 @@ namespace System.Threading
     /// <summary>Runs an loop to process all queued work items.</summary>
     public void RunOnCurrentThread()
     {
-      foreach (var workItem in m_queue.GetConsumingEnumerable())
+      foreach (var workItem in this.m_queue.GetConsumingEnumerable())
       {
         workItem.Key(workItem.Value);
       }
     }
 
     /// <summary>Notifies the context that no more work will arrive.</summary>
-    public void Complete() => m_queue.CompleteAdding();
+    public void Complete() => this.m_queue.CompleteAdding();
 
     public override SynchronizationContext CreateCopy() => this;
   }

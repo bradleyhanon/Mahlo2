@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using Dapper.Contrib;
 using Dapper.Contrib.Extensions;
-using Dapper.FluentColumnMapping;
 using MahloService.Models;
 
 namespace MahloService.Repository
 {
-  class DbLocal : IDbLocal, IProgramStateProvider
+  internal class DbLocal : IDbLocal, IProgramStateProvider
   {
     public DbLocal(IDbConnectionFactoryFactory factoryFactory)
     {
@@ -70,7 +65,7 @@ namespace MahloService.Repository
     {
       using (var connection = this.GetOpenConnection())
       {
-        foreach(var roll in rolls)
+        foreach (var roll in rolls)
         {
           roll.IsComplete = true;
           connection.Update(roll);
@@ -78,7 +73,7 @@ namespace MahloService.Repository
       }
     }
 
-    public async Task SaveRollAsync<T>(T roll) 
+    public async Task SaveRollAsync<T>(T roll)
       where T : MahloModel
     {
       using (var connection = this.GetOpenConnection())
@@ -88,7 +83,7 @@ namespace MahloService.Repository
     }
 
     public void UpdateRoll<T>(T roll)
-      where T:MahloModel
+      where T : MahloModel
     {
       using (var connection = this.GetOpenConnection())
       {
@@ -137,7 +132,7 @@ namespace MahloService.Repository
       using (var connection = this.GetOpenConnection())
       {
         return connection.Query<CutRoll>(
-          "SELECT * FROM CutRolls WHERE GreigeRollId = @GreigeRollId ORDER BY Id", 
+          "SELECT * FROM CutRolls WHERE GreigeRollId = @GreigeRollId ORDER BY Id",
           new { GreigeRollId = greigeRollId });
       }
     }

@@ -2,11 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using MahloService.Opc;
 using MahloService.Settings;
 using Serilog;
 
@@ -14,13 +9,6 @@ namespace MahloService.Opc
 {
   internal class OpcServerController : IOpcServerController
   {
-    const string OpcServerWindowCaption = "mahlo 10A OPC-Server";
-
-    private const int GW_HWNDNEXT = 2;
-    private const int WM_GETTEXT = 13;
-    private const int WM_GETTEXTLENGTH = 14;
-    private const int WM_CLOSE = 16;
-
     private readonly IOpcSettings opcSettings;
     private readonly ILogger logger;
     private readonly string processName;
@@ -74,6 +62,14 @@ namespace MahloService.Opc
       {
         this.logger.Error($"Unable to start OPC server: {this.opcSettings.OpcServerPath}\n{ex.Message}");
       }
+    }
+
+    private class NativeMethods
+    {
+      public const int GW_HWNDNEXT = 2;
+      public const int WM_GETTEXT = 13;
+      public const int WM_GETTEXTLENGTH = 14;
+      public const int WM_CLOSE = 16;
     }
   }
 }

@@ -3,7 +3,7 @@ using MahloService.Models;
 
 namespace MahloService.Repository
 {
-  interface IDbLocal
+  internal interface IDbLocal
   {
     IDbConnectionFactory ConnectionFactory { get; }
 

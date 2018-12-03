@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MahloService.Logic;
-using MahloService.Models;
-using MahloService.Utilities;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Serilog;
 
 namespace MahloService.Ipc
 {
-  sealed class MahloServer : IMahloServer, IDisposable
+  internal sealed class MahloServer : IMahloServer, IDisposable
   {
     private readonly ILogger log;
     private ISewinQueue sewinQueue;

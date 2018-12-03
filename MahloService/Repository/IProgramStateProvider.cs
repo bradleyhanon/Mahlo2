@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MahloService.Repository
+﻿namespace MahloService.Repository
 {
-  interface IProgramStateProvider
+  internal interface IProgramStateProvider
   {
     string GetProgramState();
     void SaveProgramState(string state);

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MahloService;
+﻿using MahloService;
 using Xunit;
 
 namespace MahloClientTests
@@ -13,7 +8,7 @@ namespace MahloClientTests
     [Fact]
     public void FeetToStrTest()
     {
-      (double value, string expect)[] tuples = new(double value, string expect)[]
+      (double value, string expect)[] tuples = new (double value, string expect)[]
       {
         (144, "12' 0\""),
         (145, "12' 1\""),
@@ -30,7 +25,7 @@ namespace MahloClientTests
         (156, "13' 0\""),
       };
 
-      foreach(var (value, expect) in tuples)
+      foreach (var (value, expect) in tuples)
       {
         Assert.Equal(expect, CommonMethods.InchesToStr(value));
       }

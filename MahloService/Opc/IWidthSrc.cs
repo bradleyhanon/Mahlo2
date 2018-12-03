@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MahloService.Opc
+﻿namespace MahloService.Opc
 {
-  interface IWidthSrc<Model> : IMeterSrc<Model>
+  internal interface IWidthSrc<Model> : IMeterSrc<Model>
   {
     bool OnOff { get; set; }
     int Status { get; set; }
