@@ -10,8 +10,8 @@ namespace MahloServiceTests.Mocks
     public double FeetCounter { get; set; }
     public double FeetPerMinute { get; set; }
     public double MeasuredWidth { get; set; }
-    public double Bow { get; set; }
-    public double Skew { get; set; }
+    public double BowInInches { get; set; }
+    public double SkewInInches { get; set; }
     public double PatternRepeatLength { get; set; }
     public bool IsSeamDetected { get; set; }
     public bool IsDoffDetected { get; set; }
@@ -60,6 +60,11 @@ namespace MahloServiceTests.Mocks
     }
 
     public void SetStatusIndicator(bool value)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void SetRecipeFromPatternLength(double targetPatternRepeatLength)
     {
       throw new NotImplementedException();
     }

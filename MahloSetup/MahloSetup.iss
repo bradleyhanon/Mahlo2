@@ -1,6 +1,6 @@
 [Setup]
 AppName=MahloMapper
-AppVersion=1.1
+AppVersion=1.3
 PrivilegesRequired=none
 AppId={{743E0273-076F-4EB5-BCDE-4FD08FE1034D}
 DefaultDirName={pf}\PA-Group\MahloMapper
@@ -9,7 +9,7 @@ AppContact=John Kendall
 AppSupportPhone=423-473-7541
 OutputBaseFilename=MahloMapperSetup
 UninstallDisplayName=Mahlo Mapper
-VersionInfoVersion=1.2
+VersionInfoVersion=1.3
 VersionInfoCompany=PA-Group, USA
 VersionInfoDescription=Broadloom Coater Monitor
 
@@ -41,20 +41,20 @@ Source: "..\MahloService\bin\Release\MahloService.exe.config"; DestDir: "{app}";
 Source: "..\MahloService\bin\Release\MahloService.pdb"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 ; MahloClient DLLs
 Source: "..\MahloClient\bin\Release\Microsoft.AspNet.SignalR.Client.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
-Source: "..\MahloClient\bin\Release\System.ValueTuple.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloClient MahloService
 ; DLLs used by both MahloClient and MahloService
+Source: "..\MahloService\bin\Release\Microsoft.VisualStudio.Threading.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService MahloClient
+Source: "..\MahloService\bin\Debug\Microsoft.VisualStudio.Validation.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService MahloClient
 Source: "..\MahloService\bin\Release\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService MahloClient
 Source: "..\MahloService\bin\Release\PropertyChanged.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService MahloClient
 Source: "..\MahloService\bin\Release\SimpleInjector.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService MahloClient
 Source: "..\MahloService\bin\Release\System.Reactive.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService MahloClient
 ; MahloService DLLs
-Source: "..\MahloService\bin\Release\System.ValueTuple.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\System.Web.Cors.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\App_Web_OpcLabs.EasyOpcClassicRaw.amd64.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\App_Web_OpcLabs.EasyOpcClassicRaw.x86.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\Dapper.Contrib.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
-Source: "..\MahloService\bin\Release\Dapper.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\Dapper.FluentColumnMapping.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
+Source: "..\MahloService\bin\Release\Dapper.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\FluentMigrator.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\FluentMigrator.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\FluentMigrator.Extensions.SqlAnywhere.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
@@ -98,6 +98,7 @@ Source: "..\MahloService\bin\Release\Serilog.Sinks.Console.dll"; DestDir: "{app}
 Source: "..\MahloService\bin\Release\Serilog.Sinks.EventLog.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\Serilog.Sinks.File.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 Source: "..\MahloService\bin\Release\System.Data.SqlServerCe.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
+Source: "..\MahloService\bin\Release\System.ValueTuple.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService MahloClient
 Source: "..\MahloService\bin\Release\Westwind.Utilities.Configuration.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: MahloService
 
 [Icons]

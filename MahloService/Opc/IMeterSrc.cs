@@ -15,6 +15,7 @@
     void SetMiscellaneousIndicator(bool value);
     void SetRecipe(string recipeName);
     void SetAutoMode(bool value);
+    void SetRecipeFromPatternLength(double targetPatternRepeatLength);
   }
 
   internal interface IMeterSrc<Model> : IMeterSrc

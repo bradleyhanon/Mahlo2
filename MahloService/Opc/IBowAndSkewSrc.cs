@@ -4,7 +4,7 @@ namespace MahloService.Opc
 {
   internal interface IBowAndSkewSrc : IMeterSrc<BowAndSkewModel>
   {
-    double Bow { get; }
-    double Skew { get; }
+    double BowInInches { get; }
+    double SkewInInches { get; }
   }
 }

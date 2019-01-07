@@ -107,9 +107,9 @@ namespace MahloService.Simulation
 
     public bool IsAutoMode { get; set; }
 
-    public double Bow { get; set; }
+    public double BowInInches { get; set; }
 
-    public double Skew { get; set; }
+    public double SkewInInches { get; set; }
 
     public double PatternRepeatLength { get; set; }
 
@@ -153,6 +153,11 @@ namespace MahloService.Simulation
 
     }
 
+    public void SetRecipeFromPatternLength(double targetPatternLength)
+    {
+
+    }
+
     public void SetStatusIndicator(bool value)
     {
 
@@ -172,8 +177,8 @@ namespace MahloService.Simulation
             //Console.WriteLine($"{typeof(Model).Name}: FeetCounter={this.FeetCounter}");
             double measuredLength = this.FeetCounter - this.feetCounterAtRollStart;
             var percentComplete = measuredLength / this.currentRoll.RollLength;
-            this.Bow = 2.0 * percentComplete;
-            this.Skew = 2.0 * percentComplete;
+            this.BowInInches = 2.0 * percentComplete;
+            this.SkewInInches = 2.0 * percentComplete;
             this.PatternRepeatLength = this.currentRoll.PatternRepeatLength * ((1.045 - 0.955) * percentComplete + 0.955);
 
             if (this.isCheckRollEndSeamNeeded && this.currentRoll.IsCheckRoll)

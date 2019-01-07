@@ -77,8 +77,8 @@ namespace MahloService.Opc
     public double FeetCounter { get; set; }
     public double FeetPerMinute { get; set; }
     public double MeasuredWidth { get; set; }
-    public double Bow { get; set; }
-    public double Skew { get; set; }
+    public double BowInInches { get; set; }
+    public double SkewInInches { get; set; }
     public double PatternRepeatLength { get; set; }
     public bool IsSeamDetected { get; set; }
     public bool IsDoffDetected { get; set; }
@@ -160,9 +160,9 @@ namespace MahloService.Opc
             //("Readings.Bridge.0.Calc.1.Status", value => this.Status = (int)value),
             //("Readings.Bridge.0.Calc.1.MeterStamp", value => this.MeterStamp = (double)value),
             //("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewValid", value => this.SkewValid = (int)value == 1),
-            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewInPercent", value => this.Skew = ServiceExtensions.MetersToFeet((double)value) * 12),
+            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.SkewInPercent", value => this.SkewInInches = ServiceExtensions.MetersToFeet((double)value * this.MeasuredWidth)),
             //("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowValid", value => this.BowValid = (int)value == 1),
-            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowInPercent", value => this.Bow = ServiceExtensions.MetersToFeet((double)value) * 12),
+            ("Readings.Bridge.0.Calc.1.CalcDistortion.0.BowInPercent", value => this.BowInInches = ServiceExtensions.MetersToFeet((double)value * this.MeasuredWidth)),
             //("Readings.Bridge.0.Calc.1.CalcDistortion.0.Contr_State", value => this.ControllerState = (int)value),
             ("Readings.Bridge.0.Calc.0.CalcWidth.0.ValueInMeter", value => this.MeasuredWidth = ServiceExtensions.MetersToFeet((double)value) * 12),
         });
@@ -281,6 +281,19 @@ namespace MahloService.Opc
       {
         //this.opcClient.WriteItemValue(string.Empty, MahloServerClass, $"{this.mahloChannel}.ApplyRecipe", recipeName);
       }
+    }
+
+    public void SetRecipeFromPatternLength(double targetPatternRepeatLength)
+    {
+      const int Small = 1;
+      const int Middle = 2;
+      const int Large = 3;
+
+      int level =
+        targetPatternRepeatLength <= 10.0 ? Small :
+        targetPatternRepeatLength <= 25.0 ? Middle : Large;
+
+      this.opcClient.WriteItemValue(string.Empty, MahloServerClass, $"{this.mahloChannel}.Current.Bridge.0.Algo.1.AlgoVertPattern.0.StartLevel", level);
     }
   }
 }

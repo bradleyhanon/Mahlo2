@@ -86,8 +86,40 @@ namespace MahloService.Logic
         this.priorLastRoll = newRolls.LastOrDefault()?.RollNo ?? string.Empty;
         this.priorQueueSize = newRolls.Count();
 
-        // Remove completed rolls
-        var rollsToRemove = this.Rolls.Except(newRolls, this).ToArray();
+        HashSet<GreigeRoll> seenRolls = new HashSet<GreigeRoll>(this.Rolls.Where(roll => roll.IsInLimbo));
+        
+        // Update or add from the new rolls
+        int updatedCount = 0;
+        int addedCount = 0;
+        int lastIdUpdated = 0;
+        foreach (var newRoll in newRolls)
+        {
+          var oldRoll = this.Rolls.FirstOrDefault(item => item.RollNo == newRoll.RollNo && !seenRolls.Contains(item) && 
+            (!newRoll.IsCheckRoll || item.Id > lastIdUpdated));
+          if (oldRoll != null)
+          {
+            // Update old rolls we already have
+            newRoll.CopyTo(oldRoll);
+            this.dbLocal.UpdateGreigeRoll(oldRoll);
+            updatedCount++;
+            seenRolls.Add(oldRoll);
+            lastIdUpdated = oldRoll.Id;
+            //Console.WriteLine($"Upd Roll={newRoll.RollNo}");
+          }
+          else
+          {
+            // Add new rolls
+            newRoll.Id = this.nextRollId++;
+            this.Rolls.Add(newRoll);
+            this.dbLocal.AddGreigeRoll(newRoll);
+            addedCount++;
+            seenRolls.Add(newRoll);
+            //Console.WriteLine($"Add Roll={newRoll.RollNo}");
+          }
+        }
+
+        // Remove rolls that are no longer in the list
+        var rollsToRemove = this.Rolls.Except(seenRolls).ToList();
         var rollsRemoved = new List<GreigeRoll>();
         foreach (var roll in rollsToRemove)
         {
@@ -103,32 +135,7 @@ namespace MahloService.Logic
 
         this.dbLocal.SetGreigeRollsComplete(rollsRemoved);
 
-        // Update or add from the new rolls
-        int updatedCount = 0;
-        int addedCount = 0;
-        foreach (var newRoll in newRolls)
-        {
-          var oldRoll = this.Rolls.FirstOrDefault(item => item.RollNo == newRoll.RollNo);
-          if (oldRoll != null)
-          {
-            // Update old rolls we already have
-            newRoll.CopyTo(oldRoll);
-            this.dbLocal.UpdateGreigeRoll(oldRoll);
-            updatedCount++;
-            //Console.WriteLine($"Upd Roll={newRoll.RollNo}");
-          }
-          else
-          {
-            // Add new rolls
-            newRoll.Id = this.nextRollId++;
-            this.Rolls.Add(newRoll);
-            this.dbLocal.AddGreigeRoll(newRoll);
-            addedCount++;
-            //Console.WriteLine($"Add Roll={newRoll.RollNo}");
-          }
-        }
-
-        this.logger.Debug("SewinQueue refreshed: added={added}, updated={updated}, removed={removed}", addedCount, updatedCount, rollsToRemove.Length);
+        this.logger.Debug("SewinQueue refreshed: added={added}, updated={updated}, removed={removed}", addedCount, updatedCount, rollsToRemove.Count);
       }
       catch (Exception ex)
       {

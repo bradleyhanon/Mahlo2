@@ -14,11 +14,11 @@ namespace MahloServiceTests
 {
   public class SewinQueueTests : IEqualityComparer<GreigeRoll>, IDisposable
   {
-    private readonly GreigeRoll roll1 = new GreigeRoll() { RollNo = "100" };
-    private readonly GreigeRoll roll2 = new GreigeRoll() { RollNo = "200" };
-    private readonly GreigeRoll roll3 = new GreigeRoll() { RollNo = "300" };
-    private readonly GreigeRoll roll4 = new GreigeRoll() { RollNo = "400" };
-    private readonly GreigeRoll roll5 = new GreigeRoll() { RollNo = "500" };
+    private readonly GreigeRoll roll1;
+    private readonly GreigeRoll roll2;
+    private readonly GreigeRoll roll3;
+    private readonly GreigeRoll roll4;
+    private readonly GreigeRoll roll5;
 
     private readonly IDbLocal dbLocal = Substitute.For<IDbLocal>();
     private readonly IDbMfg dbMfg = Substitute.For<IDbMfg>();
@@ -29,6 +29,12 @@ namespace MahloServiceTests
 
     public SewinQueueTests()
     {
+      int nextId = 0;
+      this.roll1 = new GreigeRoll() { RollNo = "100", Id = nextId++ };
+      this.roll2 = new GreigeRoll() { RollNo = "200", Id = nextId++ };
+      this.roll3 = new GreigeRoll() { RollNo = "300", Id = nextId++ };
+      this.roll4 = new GreigeRoll() { RollNo = "400", Id = nextId++ };
+      this.roll5 = new GreigeRoll() { RollNo = "500", Id = nextId++ };
     }
 
     public void Dispose()
@@ -110,6 +116,7 @@ namespace MahloServiceTests
       this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls1);
       this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
       await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
+      Assert.True(this.target.Rolls.SequenceEqual(newRolls1));
 
       this.dbMfg.ClearReceivedCalls();
       this.dbMfg.GetIsSewinQueueChangedAsync(3, this.roll2.RollNo, this.roll4.RollNo).Returns(true);
@@ -146,26 +153,89 @@ namespace MahloServiceTests
       Assert.True(this.target.Rolls.SequenceEqual(expected, this));
     }
 
-    //[Fact]
-    //public void RollsNotInUpdateAreRemoved()
-    //{
-    //  var newRolls1 = new GreigeRoll[] { Clone(roll2), Clone(roll3), Clone(roll4) };
-    //  var newRolls2 = new GreigeRoll[] { Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
-    //  var expected = new GreigeRoll[] { Clone(roll2), Clone(roll3), Clone(roll4), Clone(roll5), Clone(roll1) };
+    [Fact]
+    public async Task SewinQueueCanHoldTwoCheckRolls()
+    {
+      var checkRoll1 = new GreigeRoll { RollNo = "CHKROL" };
+      var checkRoll2 = new GreigeRoll { RollNo = "CHKROL" };
+      var newRolls1 = this.Clone(this.roll1, checkRoll1, this.roll2, checkRoll2, this.roll3).ToArray();
+      var expected = newRolls1;
 
-    //  this.dbMfg.GetIsSewinQueueChanged(0, string.Empty, string.Empty).Returns(true);
-    //  this.dbMfg.GetCoaterSewinQueue().Returns(newRolls1);
-    //  target = new SewinQueue(schedulers, dbLocal, dbMfg);
-    //  this.dbMfg.Received(1).GetCoaterSewinQueue();
+      this.dbMfg.GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty).Returns(true);
+      this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls1);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
+      await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
+      Assert.True(this.target.Rolls.SequenceEqual(expected, this));
+    }
 
-    //  this.dbMfg.ClearReceivedCalls();
-    //  this.dbMfg.GetIsSewinQueueChanged(3, roll2.RollNo, roll4.RollNo).Returns(true);
-    //  this.dbMfg.GetCoaterSewinQueue().Returns(newRolls2);
-    //  this.schedulers.WinFormsThread.AdvanceBy(target.RefreshInterval.Ticks);
-    //  this.dbMfg.Received(1).GetCoaterSewinQueue();
-    //  Assert.True(target.Rolls.SequenceEqual(expected, this));
-    //  Assert.Equal("Now changed", target.Rolls.Single(item => item.RollNo == roll3.RollNo).ProductImageURL);
-    //}
+    [Fact]
+    public async Task CheckRollsAreRemovedCorrectly()
+    {
+      var checkRoll1 = new GreigeRoll { RollNo = "CHKROL" };
+      var checkRoll2 = new GreigeRoll { RollNo = "CHKROL" };
+      var newRolls1 = (IEnumerable<GreigeRoll>)this.Clone(this.roll1, checkRoll1, this.roll2, checkRoll2, this.roll3).ToArray();
+      var expected = newRolls1;
+
+      this.dbMfg.GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty).Returns(true);
+      this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls1);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
+      await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
+      Assert.True(this.target.Rolls.SequenceEqual(expected, this));
+
+      do
+      {
+        // Update with newRolls1; remove one roll each time
+        expected = newRolls1 = newRolls1.Skip(1);
+        this.dbMfg.ClearReceivedCalls();
+        this.dbMfg.GetIsSewinQueueChangedAsync(this.target.Rolls.Count, this.target.Rolls.First().RollNo, this.target.Rolls.Last().RollNo).Returns(true);
+        this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls1);
+        this.scheduler.AdvanceBy(SewinQueue.RefreshInterval.Ticks);
+        await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
+
+        // Verify the updated queue
+        Assert.True(this.target.Rolls.SequenceEqual(expected, this));
+      }
+      while (newRolls1.Any());
+    }
+
+    [Fact]
+    public async Task MultipleCheckRollsCycleThroughProperly()
+    {
+      int nextId = 1;
+      var greigeRolls = new List<GreigeRoll>();
+      for (int j = 0; j < 20; j++)
+      {
+        greigeRolls.Add(new GreigeRoll { RollNo = nextId++.ToString() });
+        greigeRolls.Add(new GreigeRoll { RollNo = nextId++.ToString() });
+        greigeRolls.Add(new GreigeRoll { RollNo = "CHKROL" });
+      }
+
+      var newRolls1 = greigeRolls.Take(7);
+      var expected = newRolls1;
+
+      this.dbMfg.GetIsSewinQueueChangedAsync(0, string.Empty, string.Empty).Returns(true);
+      this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls1);
+      this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
+      await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
+      Assert.True(this.target.Rolls.SequenceEqual(expected, this));
+
+      int skipCount = 0;
+      do
+      {
+        // Update with newRolls1; shift one roll each time
+        expected = newRolls1 = newRolls1.Skip(skipCount).Take(7);
+        this.dbMfg.ClearReceivedCalls();
+        this.dbMfg.GetIsSewinQueueChangedAsync(this.target.Rolls.Count, this.target.Rolls.First().RollNo, this.target.Rolls.Last().RollNo).Returns(true);
+        this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls1);
+        this.scheduler.AdvanceBy(SewinQueue.RefreshInterval.Ticks);
+        await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
+
+        // Verify the updated queue
+        Assert.True(this.target.Rolls.SequenceEqual(expected, this));
+        skipCount++;
+      }
+      while (newRolls1.Any());
+    }
 
     private GreigeRoll Clone(GreigeRoll roll)
     {

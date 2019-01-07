@@ -158,6 +158,7 @@ namespace MahloService.Logic
     {
       base.OnRollStarted(greigeRoll);
       this.currentRollAverager.Clear();
+      this.srcData.SetRecipeFromPatternLength(greigeRoll.PatternRepeatLength);
 
       this.feetCounterAtCutRollStart = this.CurrentFeetCounter;
     }
