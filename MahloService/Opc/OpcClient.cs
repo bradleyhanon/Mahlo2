@@ -293,7 +293,7 @@ namespace MahloService.Opc
         targetPatternRepeatLength <= 10.0 ? Small :
         targetPatternRepeatLength <= 25.0 ? Middle : Large;
 
-      this.opcClient.WriteItemValue(string.Empty, MahloServerClass, $"{this.mahloChannel}.Current.Bridge.0.Algo.1.AlgoVertPattern.0.StartLevel", level);
+      this.opcClient.WriteItemValue(string.Empty, MahloServerClass, $"{this.mahloChannel}.Current.Bridge.0.Algo.2.AlgoVertPattern.0.StartLevel", level);
     }
   }
 }
