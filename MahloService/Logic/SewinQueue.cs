@@ -156,6 +156,20 @@ namespace MahloService.Logic
       this.isRefreshBusy = true;
       try
       {
+        // Remove rolls in limbo that are no longer referenced
+        for (int j = this.Rolls.Count - 1; j >= 0; j--)
+        {
+          if (this.Rolls[j].IsInLimbo)
+          {
+            CancelEventArgs args = new CancelEventArgs();
+            this.CanRemoveRollQuery?.Invoke(this.Rolls[j], args);
+            if (!args.Cancel)
+            {
+              this.Rolls.RemoveAt(j);
+            }
+          }
+        }
+
         this.SetMessage("Checking queue");
         if (await this.dbMfg.GetIsSewinQueueChangedAsync(this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll))
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using MahloService.Logic;
@@ -140,7 +141,7 @@ namespace MahloServiceTests
       this.target = new SewinQueue(this.scheduler, this.dbLocal, this.dbMfg, this.logger);
       await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
 
-      this.target.CanRemoveRollQuery += (sender, e) => e.Cancel = sender == newRolls1[1];  // keep roll2
+      this.target.CanRemoveRollQuery += RollInUseHandler;  // keep roll2
 
       // Update with newRolls2
       this.dbMfg.ClearReceivedCalls();
@@ -148,6 +149,31 @@ namespace MahloServiceTests
       this.dbMfg.GetCoaterSewinQueueAsync().Returns(newRolls2);
       this.scheduler.AdvanceBy(SewinQueue.RefreshInterval.Ticks);
       await this.dbMfg.Received(1).GetCoaterSewinQueueAsync();
+
+      // Verify the updated queue
+      Assert.True(this.target.Rolls.SequenceEqual(expected, this));
+
+      this.target.CanRemoveRollQuery -= RollInUseHandler;
+      return;
+
+      void RollInUseHandler(object sender, CancelEventArgs e) => e.Cancel = sender == newRolls1[1];
+    }
+
+
+    [Fact]
+    public async Task RollsInLimboAreRemovedWhenNoLongerReferenced()
+    {
+      // Roll2 should be removed
+      var expected = new GreigeRoll[] { /*this.roll2,*/ this.roll3, this.roll4, this.roll5 };
+
+      await this.RollsStillInUseAreNotRemoved();
+
+      // Update with newRolls2
+      this.dbMfg.ClearReceivedCalls();
+      this.dbMfg.GetIsSewinQueueChangedAsync(this.target.Rolls.Count, this.target.Rolls[0].RollNo, this.target.Rolls.Last().RollNo).Returns(false);
+      this.dbMfg.GetCoaterSewinQueueAsync().Returns(Enumerable.Empty<GreigeRoll>());
+      this.scheduler.AdvanceBy(SewinQueue.RefreshInterval.Ticks);
+      await this.dbMfg.DidNotReceive().GetCoaterSewinQueueAsync();
 
       // Verify the updated queue
       Assert.True(this.target.Rolls.SequenceEqual(expected, this));

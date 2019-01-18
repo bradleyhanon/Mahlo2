@@ -88,9 +88,10 @@ namespace MahloService.Opc
 
     public void AcknowledgeSeamDetect()
     {
-      Task.Run(() =>
+      Task.Run(async () =>
       {
         this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 1);
+        await Task.Delay(1000);
         this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 0);
       }).NoWait();
     }
