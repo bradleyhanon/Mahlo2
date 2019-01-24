@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using MahloService.Logic;
 using MahloService.Models;
 using MahloService.Opc;
@@ -132,14 +133,16 @@ namespace MahloService.Simulation
       }
     }
 
-    public void AcknowledgeSeamDetect()
+    public Task AcknowledgeSeamDetectAsync(CancellationToken token)
     {
       this.IsSeamDetected = false;
+      return Task.CompletedTask;
     }
 
-    public void AcknowledgeDoffDetect()
+    public Task AcknowledgeDoffDetectAsync(CancellationToken token)
     {
       this.IsDoffDetected = false;
+      return Task.CompletedTask;
     }
 
     public void SetAutoMode(bool value)

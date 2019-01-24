@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MahloService.Models;
 using MahloService.Opc;
@@ -32,6 +33,7 @@ namespace MahloService.Logic
     //private double meterResetAtLength;
     private long feetCounterAtRollStart;
     private bool seamAckNeeded;
+    private CancellationTokenSource seamAckCts;
     private double feetCounterAtLastSeam;
 
     private double feetCounterOffset;
@@ -393,7 +395,8 @@ namespace MahloService.Logic
         if (this.seamAckNeeded && this.srcData.FeetCounter - this.feetCounterAtLastSeam >= this.appInfo.MinSeamSpacing)
         {
           this.seamAckNeeded = false;
-          this.srcData.AcknowledgeSeamDetect();
+          this.srcData.AcknowledgeSeamDetectAsync(this.seamAckCts?.Token ?? CancellationToken.None).NoWait();
+          this.seamAckCts = null;
         }
 
         if (this.CurrentRoll == null)
@@ -465,9 +468,11 @@ namespace MahloService.Logic
     {
       if (!isSeamDetected)
       {
+        this.seamAckCts?.Cancel();
         return;
       }
 
+      this.seamAckCts = new CancellationTokenSource();
       this.seamAckNeeded = true;
       this.feetCounterAtLastSeam = this.srcData.FeetCounter;
 

@@ -1,4 +1,6 @@
-﻿using MahloService.Models;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using MahloService.Models;
 
 namespace MahloService.Opc
 {
@@ -7,6 +9,6 @@ namespace MahloService.Opc
     bool IsDoffDetected { get; }
     double PatternRepeatLength { get; }
 
-    void AcknowledgeDoffDetect();
+    Task AcknowledgeDoffDetectAsync(CancellationToken token);
   }
 }

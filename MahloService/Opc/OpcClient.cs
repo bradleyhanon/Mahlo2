@@ -36,6 +36,8 @@ namespace MahloService.Opc
 
     private readonly SynchronizationContext synchronizationContext;
     private string seamAckTag;
+    private string seamDetectedTag;
+    private bool isAcknowledgeSeamDetectAsyncBusy;
 
     private readonly IDisposable criticalAlarmsSubscription;
     private readonly IDisposable userAttentionsSubscription;
@@ -86,19 +88,17 @@ namespace MahloService.Opc
     public bool IsAutoMode { get; set; }
     public string Recipe { get; set; }
 
-    public void AcknowledgeSeamDetect()
+    public async Task AcknowledgeSeamDetectAsync(CancellationToken token)
     {
-      Task.Run(async () =>
-      {
-        this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 1);
-        await Task.Delay(1000);
-        this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 0);
-      }).NoWait();
+      this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 1);
+      await Task.Delay(1000, token).ContinueWith(_ => { }, TaskScheduler.Current);
+      this.opcClient.WriteItemValue(string.Empty, PlcServerClass, this.seamAckTag, 0);
     }
 
-    public void AcknowledgeDoffDetect()
+    public async Task AcknowledgeDoffDetectAsync(CancellationToken token)
     {
       this.opcClient.WriteItemValue(string.Empty, PlcServerClass, "MahloSeam.MahloPLC.MahloDoffAck", 1);
+      await Task.Delay(1000, token).ContinueWith(task => { }, TaskScheduler.Current);
       this.opcClient.WriteItemValue(string.Empty, PlcServerClass, "MahloSeam.MahloPLC.MahloDoffAck", 0);
     }
 
@@ -204,7 +204,8 @@ namespace MahloService.Opc
       }
 
       this.seamAckTag = $"MahloSeam.MahloPLC.Mahlo{seamDetectorId}SeamAck";
-      plcTags.Add(($"MahloPLC.Mahlo{seamDetectorId}SeamDetected", value => this.IsSeamDetected = (bool)value));
+      this.seamDetectedTag = $"MahloPLC.Mahlo{seamDetectorId}SeamDetected";
+      plcTags.Add((this.seamDetectedTag, value => this.IsSeamDetected = (bool)value));
       this.PlcSubscribe("MahloSeam", plcTags);
       this.MahloSubscribe(this.mahloChannel, mahloTags);
     }

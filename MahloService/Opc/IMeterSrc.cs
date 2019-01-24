@@ -1,4 +1,7 @@
-﻿namespace MahloService.Opc
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace MahloService.Opc
 {
   internal interface IMeterSrc
   {
@@ -9,7 +12,7 @@
     string Recipe { get; }
     bool IsAutoMode { get; }
 
-    void AcknowledgeSeamDetect();
+    Task AcknowledgeSeamDetectAsync(CancellationToken token);
     void SetStatusIndicator(bool value);
     void SetCriticalAlarmIndicator(bool value);
     void SetMiscellaneousIndicator(bool value);

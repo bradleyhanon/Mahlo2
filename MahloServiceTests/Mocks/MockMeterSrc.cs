@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using MahloService.Opc;
 using PropertyChanged;
 
@@ -29,14 +31,16 @@ namespace MahloServiceTests.Mocks
       this.ResetMeterOffsetCalled++;
     }
 
-    public void AcknowledgeSeamDetect()
+    public Task AcknowledgeSeamDetectAsync(CancellationToken token)
     {
       this.AcknowledgeSeamDetectCalled++;
+      return Task.CompletedTask;
     }
 
-    public void AcknowledgeDoffDetect()
+    public Task AcknowledgeDoffDetectAsync(CancellationToken token)
     {
       this.AcknowledgeDoffDetectCalled++;
+      return Task.CompletedTask;
     }
 
     public void SetAutoMode(bool value)
