@@ -143,6 +143,8 @@ namespace MahloService.Logic
           CalculateEPE(this.CurrentRoll.PatternRepeatLength, this.cutRollElongations);
         this.CurrentCutRoll.Dlot =
           CalculateDlot(this.CurrentRoll.BackingCode, this.CurrentCutRoll.EPE, this.serviceSettings);
+        this.CurrentCutRoll.Elongation = 
+          this.cutRollElongations.Average();
 
         this.dbLocal.UpdateCutRoll(this.CurrentCutRoll);
       }

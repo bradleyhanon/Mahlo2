@@ -80,6 +80,15 @@ namespace MahloService.Simulation
       this.FeetCounter = state.Get<double?>(nameof(this.FeetCounter)) ?? this.FeetCounter;
       this.feetCounterAtRollStart = state.Get<double?>(nameof(this.feetCounterAtRollStart)) ?? this.feetCounterAtRollStart;
 
+      // 
+      state = this.programState.GetSubState(nameof(MeterLogic<MahloModel>), typeof(Model).Name);
+      string rollNo = state.Get<string>(nameof(GreigeRoll.RollNo)) ?? string.Empty;
+      if (!string.IsNullOrEmpty(rollNo))
+      {
+        var currentRoll = this.sewinQueue.Rolls.FirstOrDefault(item => item.RollNo == rollNo) ?? new GreigeRoll();
+        this.rollIndex = this.sewinQueue.Rolls.IndexOf(currentRoll);
+      }
+
       programState.Saving += ps =>
       {
         ps.GetSubState(nameof(OpcSrcSim<Model>))

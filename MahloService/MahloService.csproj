@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonMethods.cs" />
+    <Compile Include="DbMigrations\M002CutRollPatternRepeatLength.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Logic\Averager.cs" />
     <Compile Include="Logic\CutRollList.cs" />

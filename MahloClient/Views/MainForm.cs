@@ -101,7 +101,7 @@ namespace MahloClient.Views
 
       this.colCutBow.Tag = new CellFormattingAction(this.SetCutBowColor);
       this.colCutSkew.Tag = new CellFormattingAction(this.SetCutSkewColor);
-      this.colCutEPE.Tag = new CellFormattingAction(this.SetCutEPEColor);
+      this.colCutElongation.Tag = new CellFormattingAction(this.SetCutEPEColor);
     }
 
     /// <summary>
@@ -120,7 +120,6 @@ namespace MahloClient.Views
 
       base.Dispose(disposing);
     }
-
 
     private void MainForm_Load(object sender, EventArgs e)
     {

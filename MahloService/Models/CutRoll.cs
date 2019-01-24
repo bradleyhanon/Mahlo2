@@ -23,5 +23,6 @@ namespace MahloService.Models
     public double Skew { get; set; }
     public double EPE { get; set; }
     public string Dlot { get; set; } = string.Empty;
+    public double Elongation { get; set; }
   }
 }
