@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Reactive.Concurrency;
@@ -20,13 +19,14 @@ namespace MahloService.Logic
   {
     private readonly IServiceSettings serviceSettings;
     private readonly IPatternRepeatSrc srcData;
-    private CutRollList cutRolls;
+    private readonly ISewinQueue sewinQueue;
+    private readonly CutRollList cutRolls;
     private readonly ISapRollAssigner sapRollAssigner;
     private readonly IDbLocal dbLocal;
+    private readonly IProgramState programState;
 
-    private readonly Averager currentRollAverager = new Averager();
+    private readonly Averager greigeRollAverager = new Averager();
     private readonly Averager mapDatumAverager = new Averager();
-    private long feetCounterAtCutRollStart;
     private int nextCutRollId;
     private CancellationTokenSource ctsDoff;
     private bool isFeetCounterChanged;
@@ -51,21 +51,14 @@ namespace MahloService.Logic
       this.sapRollAssigner = sapRollAssigner;
       this.serviceSettings = serviceSettings;
       this.srcData = srcData;
+      this.sewinQueue = sewinQueue;
+      this.programState = programState;
 
       this.nextCutRollId = dbLocal.GetNextCutRollId();
 
       this.SeamDelayLine.DelayTicks = serviceSettings.SeamToCutKnife;
 
-      this.Disposables.Add(
-        Observable
-        .FromEventPattern<ListChangedEventHandler, ListChangedEventArgs>(
-          h => this.cutRolls.ListChanged += h,
-          h => this.cutRolls.ListChanged -= h)
-        .Where(args => args.EventArgs.ListChangedType != ListChangedType.ItemChanged)
-        .Subscribe(_ =>
-        {
-          this.CurrentCutRoll = this.cutRolls.LastOrDefault();
-        }));
+      programState.Saving += this.SaveState;
 
       this.KeepBowAndSkewUpToDateAsync().NoWait();
     }
@@ -122,6 +115,41 @@ namespace MahloService.Logic
     {
       return sewinQueue.Rolls.LastOrDefault(roll => roll.PrsFeetCounterEnd != 0);
     }
+ 
+    protected override void RestoreState()
+    {
+      base.RestoreState();
+
+      try
+      {
+        var state = this.programState.GetSubState(nameof(CutRoll));
+        var id = state.Get<int?>(nameof(CutRoll.Id)) ?? 0;
+        if (id != 0)
+        {
+          var cutRoll = this.cutRolls.FirstOrDefault(cr => cr.Id == id) ?? new CutRoll
+          {
+            Id = id,
+          };
+
+          cutRoll.GreigeRollId = state.Get<int>(nameof(CutRoll.GreigeRollId));
+          cutRoll.SapRoll = state.Get<string>(nameof(CutRoll.SapRoll));
+          cutRoll.FeetCounterStart = state.Get<int>(nameof(CutRoll.FeetCounterStart));
+          cutRoll.FeetCounterEnd = state.Get<int>(nameof(CutRoll.FeetCounterEnd));
+          cutRoll.Bow = state.Get<double>(nameof(CutRoll.Bow));
+          cutRoll.Skew = state.Get<double>(nameof(CutRoll.Skew));
+          cutRoll.EPE = state.Get<double>(nameof(CutRoll.EPE));
+          cutRoll.Dlot = state.Get<string>(nameof(CutRoll.Dlot));
+          cutRoll.Elongation = state.Get<double>(nameof(CutRoll.Elongation));
+
+          this.CurrentCutRoll = cutRoll;
+        }
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine("Unable to restore current cut roll");
+        Console.WriteLine(ex.ToString());
+      }
+    }
 
     protected override void SaveMapDatum()
     {
@@ -153,16 +181,21 @@ namespace MahloService.Logic
     protected override void OnRollFinished(GreigeRoll greigeRoll)
     {
       base.OnRollFinished(greigeRoll);
-      this.Elongation = this.currentRollAverager.Average;
+      this.Elongation = this.greigeRollAverager.Average;
     }
 
     protected override void OnRollStarted(GreigeRoll greigeRoll)
     {
       base.OnRollStarted(greigeRoll);
-      this.currentRollAverager.Clear();
+      this.greigeRollAverager.Clear();
       this.srcData.SetRecipeFromPatternLength(greigeRoll.PatternRepeatLength);
 
-      this.feetCounterAtCutRollStart = this.CurrentFeetCounter;
+      // If the current cut roll is too short, it belongs to the new greige roll rather than the prior one.
+      if (this.CurrentCutRoll != null && this.CurrentCutRoll.Length < this.serviceSettings.MinSeamSpacing)
+      {
+        this.cutRolls.Add(this.CurrentCutRoll);
+        this.CurrentCutRoll.GreigeRollId = greigeRoll.Id;
+      }
     }
 
     protected override void OpcValueChanged(string propertyName)
@@ -174,8 +207,8 @@ namespace MahloService.Logic
         case nameof(this.srcData.FeetCounter):
           if (this.IsMovementForward)
           {
-            this.currentRollAverager.Add(this.srcData.PatternRepeatLength);
-            this.mapDatumAverager.Add(this.srcData.PatternRepeatLength);
+            this.greigeRollAverager.Add(this.srcData.PatternRepeatLength, this.srcData.FeetCounter);
+            this.mapDatumAverager.Add(this.srcData.PatternRepeatLength, this.srcData.FeetCounter);
           }
 
           break;
@@ -217,8 +250,16 @@ namespace MahloService.Logic
           this.isFeetCounterChanged = false;
           if (this.CurrentCutRoll != null)
           {
-            (this.CurrentCutRoll.Bow, this.CurrentCutRoll.Skew) =
-              this.dbLocal.GetAverageBowAndSkew(this.CurrentCutRoll.GreigeRollId, this.CurrentCutRoll.FeetCounterStart, this.CurrentCutRoll.FeetCounterEnd);
+            var greigeRoll = this.sewinQueue.Rolls.FirstOrDefault(gr => gr.Id == this.CurrentCutRoll.GreigeRollId);
+            if (greigeRoll != null)
+            {
+              var basOffset = greigeRoll.BasFeetCounterStart - greigeRoll.PrsFeetCounterStart;
+              (this.CurrentCutRoll.Bow, this.CurrentCutRoll.Skew) =
+                this.dbLocal.GetAverageBowAndSkew(this.CurrentCutRoll.FeetCounterStart + basOffset, this.CurrentCutRoll.FeetCounterEnd + basOffset);
+            }
+
+            this.CurrentCutRoll.Elongation = 
+              this.dbLocal.GetAverageElongation(this.CurrentCutRoll.FeetCounterStart, this.CurrentCutRoll.FeetCounterEnd);
           }
         }
       }
@@ -240,6 +281,35 @@ namespace MahloService.Logic
       return (index == 0 ? "" : epe < 1.0 ? "+" : "-") + index.ToString(CultureInfo.InvariantCulture);
     }
 
+    private void SaveState(IProgramState state)
+    {
+      var cutRoll = this.CurrentCutRoll;
+      if (cutRoll != null)
+      {
+        state.Set(nameof(CutRoll), new
+        {
+          cutRoll.Id,
+          cutRoll.GreigeRollId,
+          cutRoll.SapRoll,
+          cutRoll.FeetCounterStart,
+          cutRoll.FeetCounterEnd,
+          cutRoll.Bow,
+          cutRoll.Skew,
+          cutRoll.EPE,
+          cutRoll.Dlot,
+          cutRoll.Elongation,
+        });
+      }
+
+      if (this.CurrentCutRoll != null)
+      {
+        state.Set(typeof(PatternRepeatModel).Name, new
+        {
+          CurrentCutRollId = this.CurrentCutRoll.Id,
+        });
+      }
+    }
+
     private async Task DoffDetectedAsync()
     {
       if (!this.srcData.IsDoffDetected)
@@ -254,9 +324,7 @@ namespace MahloService.Logic
         this.sapRollAssigner.AssignSapRollTo(this.CurrentCutRoll);
       }
 
-      // CurrentRoll.Id == 0 implies that there is no CurrentRoll that will be recorded 
-      if (this.CurrentRoll.Id != 0 &&
-        (this.CurrentCutRoll == null || this.CurrentCutRoll.Length >= this.serviceSettings.MinSeamSpacing))
+      if (this.CurrentCutRoll == null || this.CurrentCutRoll.Length >= this.serviceSettings.MinSeamSpacing)
       {
         // CutRoll is finished
         this.CurrentCutRoll = new CutRoll
@@ -274,16 +342,7 @@ namespace MahloService.Logic
 
       this.ctsDoff?.Dispose();
       this.ctsDoff = new CancellationTokenSource();
-      try
-      {
-        do
-        {
-          await this.srcData.AcknowledgeDoffDetectAsync(this.ctsDoff.Token);
-        } while (this.srcData.IsDoffDetected);
-      }
-      catch (TaskCanceledException)
-      {
-      }
+      await this.srcData.AcknowledgeDoffDetectAsync(this.ctsDoff.Token);
     }
   }
 }

@@ -43,11 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logic\CutRollTests.cs" />
     <Compile Include="Logic\DelayLineTests.cs" />
     <Compile Include="Logic\SapRollAssignerTests.cs" />
     <Compile Include="Logic\CriticalStopsTests.cs" />
     <Compile Include="Logic\MeterLogicTests.cs" />
-    <Compile Include="Logic\PatternRepeatLogicTests.cs" />
+    <Compile Include="Logic\CalculateDlotTests.cs" />
     <Compile Include="Logic\UserAttententionsTests.cs" />
     <Compile Include="Mocks\MockMeterSrc.cs" />
     <Compile Include="Models\CarpetRollTests.cs" />

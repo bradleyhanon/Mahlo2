@@ -25,11 +25,12 @@ namespace MahloService.Repository
     int GetNextCutRollId();
     void AddCutRoll(CutRoll cutRoll);
     void UpdateCutRoll(CutRoll cutRoll);
-    (double bow, double skew) GetAverageBowAndSkew(int greigeRollId, long feetCounterStart, long feetCounterEnd);
-
+    (double bow, double skew) GetAverageBowAndSkew(long feetCounterStart, long feetCounterEnd);
+    double GetAverageElongation(long feetCounterStart, long FeetCounterEnd);
     void InsertMahlo2MapDatum(Mahlo2MapDatum datum);
     void InsertBowAndSkewMapDatum(BowAndSkewMapDatum datum);
     void InsertPatternRepeatMapDatum(PatternRepeatMapDatum datum);
     IEnumerable<CutRoll> GetCutRollsFor(int greigeRollId);
+    CutRoll GetCutRoll(int cutRollId);
   }
 }

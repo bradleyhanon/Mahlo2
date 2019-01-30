@@ -134,10 +134,10 @@ namespace MahloService.Logic
         case nameof(this.dataSrc.FeetCounter):
           if (this.IsMovementForward)
           {
-            this.bowAverager.Add(Math.Abs(this.dataSrc.BowInInches));
-            this.skewAverager.Add(Math.Abs(this.dataSrc.SkewInInches));
-            this.bowMapAverager.Add(Math.Abs(this.dataSrc.BowInInches));
-            this.skewMapAverager.Add(Math.Abs(this.dataSrc.SkewInInches));
+            this.bowAverager.Add(Math.Abs(this.dataSrc.BowInInches), this.dataSrc.FeetCounter);
+            this.skewAverager.Add(Math.Abs(this.dataSrc.SkewInInches), this.dataSrc.FeetCounter);
+            this.bowMapAverager.Add(Math.Abs(this.dataSrc.BowInInches), this.dataSrc.FeetCounter);
+            this.skewMapAverager.Add(Math.Abs(this.dataSrc.SkewInInches), this.dataSrc.FeetCounter);
           }
 
           break;

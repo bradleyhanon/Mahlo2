@@ -70,7 +70,7 @@ namespace MahloClient.Ipc
     public void Dispose()
     {
       this.IsDisposed = true;
-      this.hubConnection.Dispose();
+      this.hubConnection?.Dispose();
     }
 
     public async Task StartAsync()

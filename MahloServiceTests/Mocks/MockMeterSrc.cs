@@ -70,7 +70,6 @@ namespace MahloServiceTests.Mocks
 
     public void SetRecipeFromPatternLength(double targetPatternRepeatLength)
     {
-      throw new NotImplementedException();
     }
   }
 }

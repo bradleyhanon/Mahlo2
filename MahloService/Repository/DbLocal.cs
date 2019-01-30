@@ -145,6 +145,14 @@ namespace MahloService.Repository
       }
     }
 
+    public CutRoll GetCutRoll(int cutRollId)
+    {
+      using (var connection = this.GetOpenConnection())
+      {
+        return (connection.Get<CutRoll>(cutRollId));
+      }
+    }
+
     public void AddCutRoll(CutRoll cutRoll)
     {
       using (var connection = this.GetOpenConnection())
@@ -169,19 +177,47 @@ namespace MahloService.Repository
 
       string cmdText =
         @"SELECT COALESCE(AVG(Bow), 0.0) AvgBow, 
-                 COALESCE(AVG(Skew), 0.0) AvgSkew
-          FROM BowAndSkewMap map
-          JOIN (SELECT gr.BasFeetCounterStart + (@StartFeet - gr.PrsFeetCounterStart) BasStart,
-		               (SELECT MIN(v)
-			            FROM (VALUES (gr.BasFeetCounterStart + (@EndFeet - gr.PrsFeetCounterStart)), (gr.BasFeetCounterEnd)) as value(v)) BasEnd
-	            FROM GreigeRolls gr
-	            WHERE gr.Id = @Id) sub
-          ON sub.BasStart >= map.FeetCounter AND map.FeetCounter < sub.BasEnd";
+                    COALESCE(AVG(Skew), 0.0) AvgSkew
+            FROM BowAndSkewMap map
+            JOIN (SELECT gr.BasFeetCounterStart + (@StartFeet - gr.PrsFeetCounterStart) BasStart,
+		                  (SELECT MIN(v)
+			              FROM (VALUES (gr.BasFeetCounterStart + (@EndFeet - gr.PrsFeetCounterStart)), (gr.BasFeetCounterEnd)) as value(v)) BasEnd
+	              FROM GreigeRolls gr
+	              WHERE gr.Id = @Id) sub
+            ON sub.BasStart >= map.FeetCounter AND map.FeetCounter < sub.BasEnd";
 
       using (var connection = this.GetOpenConnection())
       {
         var result = connection.Query(cmdText, new { Id = greigeRollId, StartFeet = feetCounterStart, EndFeet = feetCounterEnd }).First();
         return (result.AvgBow, result.AvgSkew);
+      }
+    }
+
+    public (double bow, double skew) GetAverageBowAndSkew(long feetCounterStart, long feetCounterEnd)
+    {
+      string cmdText =
+        @"SELECT COALESCE(AVG(Bow), 0.0) AvgBow, 
+                 COALESCE(AVG(Skew), 0.0) AvgSkew
+          FROM BowAndSkewMap
+          WHERE @FeetStart <= FeetCounter AND FeetCounter < @FeetEnd";
+
+      using (var connection = this.GetOpenConnection())
+      {
+        var result = connection.Query(cmdText, new { FeetStart = feetCounterStart, FeetEnd = feetCounterEnd }).First();
+        return (result.AvgBow, result.AvgSkew);
+      }
+    }
+
+    public double GetAverageElongation(long feetCounterStart, long feetCounterEnd)
+    {
+      var cmdText =
+        @"SELECT COALESCE(AVG(Elongation), 0.0)
+          FROM PatternRepeatMap
+          WHERE @feetCounterStart <= FeetCounter AND FeetCounter < @feetCounterEnd";
+
+      using (var connection = this.GetOpenConnection())
+      {
+        return connection.ExecuteScalar<double>(cmdText, new { feetCounterStart, feetCounterEnd });
       }
     }
 

@@ -37,7 +37,6 @@ namespace MahloService.Opc
     private readonly SynchronizationContext synchronizationContext;
     private string seamAckTag;
     private string seamDetectedTag;
-    private bool isAcknowledgeSeamDetectAsyncBusy;
 
     private readonly IDisposable criticalAlarmsSubscription;
     private readonly IDisposable userAttentionsSubscription;
@@ -97,9 +96,18 @@ namespace MahloService.Opc
 
     public async Task AcknowledgeDoffDetectAsync(CancellationToken token)
     {
-      this.opcClient.WriteItemValue(string.Empty, PlcServerClass, "MahloSeam.MahloPLC.MahloDoffAck", 1);
-      await Task.Delay(1000, token).ContinueWith(task => { }, TaskScheduler.Current);
-      this.opcClient.WriteItemValue(string.Empty, PlcServerClass, "MahloSeam.MahloPLC.MahloDoffAck", 0);
+      try
+      {
+        do
+        {
+          this.opcClient.WriteItemValue(string.Empty, PlcServerClass, "MahloSeam.MahloPLC.MahloDoffAck", 1);
+          await Task.Delay(1000, token).ContinueWith(task => { }, TaskScheduler.Current);
+          this.opcClient.WriteItemValue(string.Empty, PlcServerClass, "MahloSeam.MahloPLC.MahloDoffAck", 0);
+        } while (this.IsDoffDetected);
+      }
+      catch (TaskCanceledException)
+      {
+      }
     }
 
     /// <summary>

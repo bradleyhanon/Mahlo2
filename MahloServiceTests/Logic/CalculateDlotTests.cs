@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Mahlo2Tests.Logic
 {
-  public class PatternRepeatLogicTests
+  public class CalculateDlotTests
   {
     private readonly IServiceSettings settings = Substitute.For<IServiceSettings>();
     private readonly GreigeRoll greigeRoll = new GreigeRoll();
@@ -15,7 +15,7 @@ namespace Mahlo2Tests.Logic
     private readonly BackingSpec saSpec = new BackingSpec { Backing = "SA", MaxBow = 0.5, MaxSkew = 1.25, DlotSpec = 0.0100 };
     private readonly BackingSpec hlSpec = new BackingSpec { Backing = "HL", MaxBow = 0.25, MaxSkew = 0.75, DlotSpec = 0.0075 };
 
-    public PatternRepeatLogicTests()
+    public CalculateDlotTests()
     {
     }
 
