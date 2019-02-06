@@ -8,6 +8,7 @@ using MahloClient.Ipc;
 using MahloClient.Logic;
 using MahloClient.Views;
 using MahloService.Logic;
+using MahloService.Models;
 using MahloService.Settings;
 using SimpleInjector;
 using SimpleInjector.Diagnostics;
@@ -78,6 +79,7 @@ namespace MahloClient
       container.RegisterSingleton<IMahloIpcClient, MahloIpcClient>();
       container.RegisterSingleton<ISewinQueue, SewinQueue>();
       container.RegisterSingleton<ICutRollList, CutRollList>();
+      container.RegisterSingleton<IInspectionAreaList, InspectionAreaList>();
       container.RegisterSingleton<IMahloLogic, MahloLogic>();
       container.RegisterSingleton<IBowAndSkewLogic, BowAndSkewLogic>();
       container.RegisterSingleton<IPatternRepeatLogic, PatternRepeatLogic>();

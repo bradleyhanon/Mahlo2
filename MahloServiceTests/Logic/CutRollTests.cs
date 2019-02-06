@@ -18,6 +18,7 @@ namespace MahloServiceTests.Logic
     private readonly PatternRepeatLogic target;
     private readonly IDbLocal dbLocal = Substitute.For<IDbLocal>();
     private readonly CutRollList cutRolls = new CutRollList();
+    private readonly InspectionAreaList inspectionAreaList = new InspectionAreaList();
     private readonly ISewinQueue sewinQueue = Substitute.For<ISewinQueue>();
     private readonly ISapRollAssigner sapRollAssigner = Substitute.For<ISapRollAssigner>();
     private readonly MockMeterSrc<PatternRepeatModel> patternRepeatSrc = new MockMeterSrc<PatternRepeatModel>();
@@ -42,6 +43,7 @@ namespace MahloServiceTests.Logic
       this.target = new PatternRepeatLogic(
         this.dbLocal, 
         this.cutRolls,
+        this.inspectionAreaList,
         this.sapRollAssigner,
         this.patternRepeatSrc,
         this.sewinQueue,

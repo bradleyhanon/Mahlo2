@@ -16,7 +16,7 @@ namespace MahloService.Simulation
 
     public DbMfgSim(IDbLocal dbLocal)
     {
-      this.SewinQueue.AddRange(dbLocal.GetIncompleteGreigeRolls());
+      this.SewinQueue.AddRange(dbLocal.GetRecentGreigeRolls(0));
       this.nextRollNo = dbLocal.GetNextGreigeRollId() + 1000000;
       if (this.SewinQueue.Count == 0)
       {

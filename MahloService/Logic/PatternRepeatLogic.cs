@@ -21,6 +21,7 @@ namespace MahloService.Logic
     private readonly IPatternRepeatSrc srcData;
     private readonly ISewinQueue sewinQueue;
     private readonly CutRollList cutRolls;
+    private readonly InspectionAreaList inspectionAreaList;
     private readonly ISapRollAssigner sapRollAssigner;
     private readonly IDbLocal dbLocal;
     private readonly IProgramState programState;
@@ -36,6 +37,7 @@ namespace MahloService.Logic
     public PatternRepeatLogic(
       IDbLocal dbLocal,
       CutRollList cutRolls,
+      InspectionAreaList inspectionAreaList,
       ISapRollAssigner sapRollAssigner,
       IPatternRepeatSrc srcData,
       ISewinQueue sewinQueue,
@@ -48,6 +50,7 @@ namespace MahloService.Logic
     {
       this.dbLocal = dbLocal;
       this.cutRolls = cutRolls;
+      this.inspectionAreaList = inspectionAreaList;
       this.sapRollAssigner = sapRollAssigner;
       this.serviceSettings = serviceSettings;
       this.srcData = srcData;
@@ -260,6 +263,48 @@ namespace MahloService.Logic
 
             this.CurrentCutRoll.Elongation = 
               this.dbLocal.GetAverageElongation(this.CurrentCutRoll.FeetCounterStart, this.CurrentCutRoll.FeetCounterEnd);
+
+            this.UpdateInspectionArea();
+          }
+        }
+      }
+    }
+
+    internal void UpdateInspectionArea()
+    {
+      var rollPosition = this.CurrentFeetCounter - this.CurrentRoll.PrsFeetCounterStart;
+      var basFirstFoot = (long)(this.CurrentRoll.BasFeetCounterStart + rollPosition + this.serviceSettings.SeamToCutKnife);
+      var basLastFoot = basFirstFoot + 50;
+      var list = this.dbLocal.GetBowAndSkewMap((long)basFirstFoot, (long)basLastFoot).ToList();
+      int j = 0;
+      while (j < list.Count || j < this.inspectionAreaList.Count)
+      {
+        if (j < list.Count)
+        {
+          var src = list[j];
+          InspectionAreaDatum dst;
+          if (j < this.inspectionAreaList.Count)
+          {
+            dst = this.inspectionAreaList[j];
+          }
+          else
+          {
+            dst = new InspectionAreaDatum();
+            this.inspectionAreaList.Add(dst);
+          }
+
+          dst.FeetCounter = list[j].FeetCounter;
+          dst.RollPosition = (int)(src.FeetCounter - this.CurrentRoll.BasFeetCounterStart);
+          dst.FeetToSeamDetector = (int)(src.FeetCounter - basFirstFoot);
+          dst.Bow = list[j].Bow;
+          dst.Skew = list[j].Skew;
+          j++;
+        }
+        else
+        {
+          if (j < this.inspectionAreaList.Count)
+          {
+            this.inspectionAreaList.RemoveAt(j);
           }
         }
       }

@@ -44,6 +44,7 @@ namespace MahloClient.Views
           this.srcNextRoll.DataSource = nextIndex < this.sewinQueue.Rolls.Count ? this.sewinQueue.Rolls[nextIndex] : new GreigeRoll();
           this.DataGridView1_SelectionChanged(this.dataGridView1, EventArgs.Empty);
           this.dataGridView1.EnsureVisibleRow(this.logic.CurrentRollIndex);
+          this.myScrollBar.AutoScrollPosition = this.logic.CurrentRollIndex - 2;
         }),
 
         Observable.FromEventPattern<EventHandler, EventArgs>(
@@ -164,9 +165,9 @@ namespace MahloClient.Views
               CellColor.GetFeetColor(roll.RollLength, (long)e.Value, this.serviceSettings);
           }
         }
-        else if (roll.IsInLimbo)
+        else if (roll.IsComplete)
         {
-          (e.CellStyle.ForeColor, e.CellStyle.BackColor) = CellColor.GetLimboColor();
+          (e.CellStyle.ForeColor, e.CellStyle.BackColor) = CellColor.GetIsCompletedColorColor();
         }
       }
     }

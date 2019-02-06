@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -24,20 +25,22 @@ namespace MahloClient.Views
     private string[] bowAndSkewColumnNames = { nameof(GreigeRoll.BasFeet), nameof(GreigeRoll.Bow), nameof(GreigeRoll.Skew) };
     private string[] patternRepeatColumnNames = { nameof(GreigeRoll.PrsFeet), nameof(GreigeRoll.Elongation) };
 
-    private IDisposable MahloPropertyChangedSubscription;
-    private IDisposable BowAndSkewPropertyChangedSubscription;
-    private IDisposable PatternRepeatPropertyChangedSubscription;
+    private List<IDisposable> disposables = new List<IDisposable>();
 
     private ICarpetProcessor carpetProcessor;
     private ICutRollList cutRollList;
+    private IInspectionAreaList inspectionAreaList;
     private IMahloIpcClient mahloClient;
     private IServiceSettings serviceSettings;
 
-    public MainForm(ICarpetProcessor carpetProcessor, ICutRollList cutRollList, IMahloIpcClient mahloClient, IServiceSettings serviceSettings)
+    private bool autoScroll = true;
+
+    public MainForm(ICarpetProcessor carpetProcessor, ICutRollList cutRollList, IInspectionAreaList inspectionAreaList, IMahloIpcClient mahloClient, IServiceSettings serviceSettings)
     {
       this.InitializeComponent();
       this.carpetProcessor = carpetProcessor;
       this.cutRollList = cutRollList;
+      this.inspectionAreaList = inspectionAreaList;
       this.mahloClient = mahloClient;
       this.serviceSettings = serviceSettings;
       this.statusBar1.StatusBarInfo = (IStatusBarInfo)this.carpetProcessor.PatternRepeatLogic;
@@ -47,38 +50,41 @@ namespace MahloClient.Views
         BackColor = this.grdGreigeRoll.DefaultCellStyle.BackColor
       };
 
-      this.MahloPropertyChangedSubscription =
+      this.disposables.Add(
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-        h => ((INotifyPropertyChanged)this.carpetProcessor.MahloLogic).PropertyChanged += h,
-        h => ((INotifyPropertyChanged)this.carpetProcessor.MahloLogic).PropertyChanged -= h)
-        .Where(args => args.EventArgs.PropertyName == nameof(this.carpetProcessor.MahloLogic.CurrentRoll))
-        .Subscribe(args =>
-        {
-          this.mahloRollSrc.DataSource = this.carpetProcessor.MahloLogic.CurrentRoll;
-          this.grdGreigeRoll.Invalidate();
-        });
+          h => ((INotifyPropertyChanged)this.carpetProcessor.MahloLogic).PropertyChanged += h,
+          h => ((INotifyPropertyChanged)this.carpetProcessor.MahloLogic).PropertyChanged -= h)
+          .Where(args => args.EventArgs.PropertyName == nameof(this.carpetProcessor.MahloLogic.CurrentRoll))
+          .Subscribe(args =>
+          {
+            this.mahloRollSrc.DataSource = this.carpetProcessor.MahloLogic.CurrentRoll;
+            this.DoAutoScroll();
+            this.grdGreigeRoll.Invalidate();
+          }));
 
-      this.BowAndSkewPropertyChangedSubscription =
+      this.disposables.Add(
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-        h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged += h,
-        h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged -= h)
-        .Where(args => args.EventArgs.PropertyName == nameof(this.carpetProcessor.BowAndSkewLogic.CurrentRoll))
-        .Subscribe(args =>
-        {
-          this.bowAndSkewRollSrc.DataSource = this.carpetProcessor.BowAndSkewLogic.CurrentRoll;
-          this.grdGreigeRoll.Invalidate();
-        });
+          h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged += h,
+          h => ((INotifyPropertyChanged)this.carpetProcessor.BowAndSkewLogic).PropertyChanged -= h)
+          .Where(args => args.EventArgs.PropertyName == nameof(this.carpetProcessor.BowAndSkewLogic.CurrentRoll))
+          .Subscribe(args =>
+          {
+            this.bowAndSkewRollSrc.DataSource = this.carpetProcessor.BowAndSkewLogic.CurrentRoll;
+            this.DoAutoScroll();
+            this.grdGreigeRoll.Invalidate();
+          }));
 
-      this.PatternRepeatPropertyChangedSubscription =
+      this.disposables.Add(
         Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-        h => ((INotifyPropertyChanged)this.carpetProcessor.PatternRepeatLogic).PropertyChanged += h,
-        h => ((INotifyPropertyChanged)this.carpetProcessor.PatternRepeatLogic).PropertyChanged -= h)
-        .Where(args => args.EventArgs.PropertyName == nameof(this.carpetProcessor.PatternRepeatLogic.CurrentRoll))
-        .Subscribe(args =>
-        {
-          this.patternRepeatRollSrc.DataSource = this.carpetProcessor.PatternRepeatLogic.CurrentRoll;
-          this.grdGreigeRoll.Invalidate();
-        });
+          h => ((INotifyPropertyChanged)this.carpetProcessor.PatternRepeatLogic).PropertyChanged += h,
+          h => ((INotifyPropertyChanged)this.carpetProcessor.PatternRepeatLogic).PropertyChanged -= h)
+          .Where(args => args.EventArgs.PropertyName == nameof(this.carpetProcessor.PatternRepeatLogic.CurrentRoll))
+          .Subscribe(args =>
+          {
+            this.patternRepeatRollSrc.DataSource = this.carpetProcessor.PatternRepeatLogic.CurrentRoll;
+            this.DoAutoScroll();
+            this.grdGreigeRoll.Invalidate();
+          }));
 
       // Make column heading alignment match column data alignment
       foreach (DataGridViewColumn column in this.grdGreigeRoll.Columns)
@@ -87,6 +93,11 @@ namespace MahloClient.Views
       }
 
       foreach (DataGridViewColumn column in this.grdCutRoll.Columns)
+      {
+        column.HeaderCell.Style.Alignment = column.DefaultCellStyle.Alignment;
+      }
+
+      foreach (DataGridViewColumn column in this.grdInspectionArea.Columns)
       {
         column.HeaderCell.Style.Alignment = column.DefaultCellStyle.Alignment;
       }
@@ -112,9 +123,7 @@ namespace MahloClient.Views
     {
       if (disposing)
       {
-        this.MahloPropertyChangedSubscription.Dispose();
-        this.BowAndSkewPropertyChangedSubscription.Dispose();
-        this.PatternRepeatPropertyChangedSubscription.Dispose();
+        this.disposables.ForEach(item => item.Dispose());
         this.components?.Dispose();
       }
 
@@ -124,7 +133,9 @@ namespace MahloClient.Views
     private void MainForm_Load(object sender, EventArgs e)
     {
       this.carpetProcessor.Start();
-      this.grdGreigeRoll.DataSource = this.carpetProcessor.SewinQueue.Rolls;
+      this.sewinQueueSrc.DataSource = this.carpetProcessor.SewinQueue.Rolls;
+
+      //this.grdGreigeRoll.DataSource = this.carpetProcessor.SewinQueue.Rolls;
       this.mahloRollSrc.DataSource = this.carpetProcessor.MahloLogic.CurrentRoll;
       this.bowAndSkewRollSrc.DataSource = this.carpetProcessor.BowAndSkewLogic.CurrentRoll;
       this.patternRepeatRollSrc.DataSource = this.carpetProcessor.PatternRepeatLogic.CurrentRoll;
@@ -133,6 +144,7 @@ namespace MahloClient.Views
       this.bowAndSkewLogicSrc.DataSource = this.carpetProcessor.BowAndSkewLogic;
       this.patternRepeatLogicSrc.DataSource = this.carpetProcessor.PatternRepeatLogic;
       this.cutRollSrc.DataSource = this.cutRollList;
+      this.inspectionAreaBindingSource.DataSource = this.inspectionAreaList;
 
       this.grpMahlo.Tag = nameof(IMahloLogic);
       this.grpBowAndSkew.Tag = nameof(IBowAndSkewLogic);
@@ -151,6 +163,17 @@ namespace MahloClient.Views
         rect.X--;
         rect.Width++;
         e.Graphics.FillRectangle(SystemBrushes.AppWorkspace, rect);
+      }
+    }
+
+    private void DoAutoScroll()
+    {
+      if (this.autoScroll)
+      {
+        var cp = this.carpetProcessor;
+        int minIndex = Math.Min(cp.MahloLogic.CurrentRollIndex, cp.BowAndSkewLogic.CurrentRollIndex);
+        minIndex = Math.Min(minIndex, cp.PatternRepeatLogic.CurrentRollIndex);
+        this.myScrollBar.AutoScrollPosition = minIndex - 2;
       }
     }
 
@@ -226,7 +249,7 @@ namespace MahloClient.Views
       var col = this.grdGreigeRoll.Columns[e.ColumnIndex];
       if (e.RowIndex >= 0 && this.sewinQueueColumnNames.Contains(col.DataPropertyName))
       {
-        this.SetLimboColor(e);
+        this.SetCompletedColor(e);
       }
 
       GreigeRoll gridRoll = this.carpetProcessor.SewinQueue.Rolls[e.RowIndex];
@@ -260,11 +283,11 @@ namespace MahloClient.Views
       }
     }
 
-    public void SetLimboColor(DataGridViewCellFormattingEventArgs args)
+    public void SetCompletedColor(DataGridViewCellFormattingEventArgs args)
     {
       GreigeRoll roll = (GreigeRoll)this.grdGreigeRoll.Rows[args.RowIndex].DataBoundItem;
       (args.CellStyle.ForeColor, args.CellStyle.BackColor) =
-        roll.IsInLimbo ? CellColor.GetLimboColor() : this.defaultCellColor;
+        roll.IsComplete ? CellColor.GetIsCompletedColorColor() : this.defaultCellColor;
     }
 
     public void SetFeetColor(DataGridViewCellFormattingEventArgs args, IServiceSettings settings)

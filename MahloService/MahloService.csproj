@@ -72,15 +72,18 @@
   <ItemGroup>
     <Compile Include="CommonMethods.cs" />
     <Compile Include="DbMigrations\M002CutRollPatternRepeatLength.cs" />
+    <Compile Include="DbMigrations\M003GreigeRollCreatedTime.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Logic\Averager.cs" />
     <Compile Include="Logic\CutRollList.cs" />
     <Compile Include="Logic\CutRollLogic.cs" />
     <Compile Include="Logic\ICutRollLogic.cs" />
+    <Compile Include="Logic\InspectionAreaList.cs" />
     <Compile Include="Logic\ISapRollAssigner.cs" />
     <Compile Include="Logic\SapRollAssigner.cs" />
     <Compile Include="Logic\DelayLine.cs" />
     <Compile Include="Models\BowAndSkewMapDatum.cs" />
+    <Compile Include="Models\InspectionAreaDatum.cs" />
     <Compile Include="Models\Mahlo2MapDatum.cs" />
     <Compile Include="Models\PatternRepeatMapDatum.cs" />
     <Compile Include="Opc\OpcServerControllerSim.cs" />

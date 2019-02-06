@@ -101,6 +101,9 @@
     <Compile Include="..\MahloService\Models\CutRollDetail.cs">
       <Link>Models\CutRollDetail.cs</Link>
     </Compile>
+    <Compile Include="..\MahloService\Models\InspectionAreaDatum.cs">
+      <Link>Models\InspectionAreaDatum.cs</Link>
+    </Compile>
     <Compile Include="..\MahloService\Models\MahloModel.cs">
       <Link>Models\MahloModel.cs</Link>
     </Compile>
@@ -126,9 +129,13 @@
       <Link>Utilities\TaskUtilities.cs</Link>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Logic\CutRollList.cs" />
+    <Compile Include="Logic\IInspectionAreaList.cs" />
+    <Compile Include="Logic\InspectionAreaList.cs" />
+    <Compile Include="Logic\IShadowList.cs" />
+    <Compile Include="Logic\ShadowList.cs" />
     <Compile Include="ServiceStubs\AppConfiguration.cs" />
     <Compile Include="ServiceStubs\ComputedAttribute.cs" />
-    <Compile Include="Logic\CutRollList.cs" />
     <Compile Include="Logic\ICutRollList.cs" />
     <Compile Include="Models\ExplicitKeyAttribute.cs" />
     <Compile Include="Settings\ClientSettings.cs" />
@@ -147,6 +154,7 @@
     <Compile Include="Logic\SewinQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\TableAttribute.cs" />
     <Compile Include="Views\CellColor.cs" />
     <Compile Include="Views\FormBowAndSkew.cs">
       <SubType>Form</SubType>
@@ -187,6 +195,12 @@
     <Compile Include="Views\MyDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Views\MyScrollBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\MyScrollBar.Designer.cs">
+      <DependentUpon>MyScrollBar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\MyStatusBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -222,11 +236,15 @@
     <EmbeddedResource Include="Views\MoveToNextDialog.resx">
       <DependentUpon>MoveToNextDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\MyScrollBar.resx">
+      <DependentUpon>MyScrollBar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\MyStatusBar.resx">
       <DependentUpon>MyStatusBar.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\DataSources\Mahlo.Models.CoaterScheduleRoll.datasource" />
     <None Include="Properties\DataSources\MahloClient.Logic.MahloLogic.datasource" />
+    <None Include="Properties\DataSources\MahloService.Models.BowAndSkewMapDatum.datasource" />
     <None Include="Properties\DataSources\MapperClient.Logic.IBowAndSkewLogic.datasource" />
     <None Include="Properties\DataSources\Mahlo.Logic.IMahloLogic.datasource" />
     <None Include="Properties\DataSources\Mahlo.Logic.IPatternRepeatLogic.datasource" />
@@ -252,6 +270,8 @@
   <ItemGroup>
     <Content Include="App.ico" />
     <Content Include="FodyWeavers.xml" />
+    <Content Include="Resources\StackedV.png" />
+    <None Include="Resources\xStackedV.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.SignalR.Client">

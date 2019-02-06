@@ -15,6 +15,7 @@ namespace MahloService.Ipc
     private readonly ILogger log;
     private ISewinQueue sewinQueue;
     private readonly CutRollList cutRolls;
+    private readonly InspectionAreaList inspectionAreaList;
     private IMahloLogic mahloLogic;
     private IBowAndSkewLogic bowAndSkewLogic;
     private IPatternRepeatLogic patternRepeatLogic;
@@ -24,6 +25,7 @@ namespace MahloService.Ipc
       ILogger logger,
       ISewinQueue sewinQueue,
       CutRollList cutRolls,
+      InspectionAreaList inspectionAreaList,
       IMahloLogic mahloLogic,
       IBowAndSkewLogic bowAndSkewLogic,
       IPatternRepeatLogic patternRepeatLogic,
@@ -32,6 +34,7 @@ namespace MahloService.Ipc
       this.log = logger;
       this.sewinQueue = sewinQueue;
       this.cutRolls = cutRolls;
+      this.inspectionAreaList = inspectionAreaList;
       this.mahloLogic = mahloLogic;
       this.bowAndSkewLogic = bowAndSkewLogic;
       this.patternRepeatLogic = patternRepeatLogic;
@@ -46,6 +49,7 @@ namespace MahloService.Ipc
             this.UpdateMeterLogic(nameof(IBowAndSkewLogic), this.bowAndSkewLogic);
             this.UpdateMeterLogic(nameof(IPatternRepeatLogic), this.patternRepeatLogic);
             this.UpdateCutRollList();
+            this.UpdateInspectionArea();
             if (this.sewinQueue.IsChanged)
             {
               this.UpdateSewinQueue();
@@ -80,6 +84,15 @@ namespace MahloService.Ipc
       {
         this.cutRolls.IsChanged = false;
         this.Clients.All.UpdateCutRollList(this.cutRolls.ToArray());
+      }
+    }
+
+    public void UpdateInspectionArea()
+    {
+      if (this.inspectionAreaList.IsChanged)
+      {
+        this.inspectionAreaList.IsChanged = false;
+        this.Clients.All.UpdateInspectionArea(this.inspectionAreaList.ToArray());
       }
     }
 

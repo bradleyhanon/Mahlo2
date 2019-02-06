@@ -7,7 +7,7 @@ namespace MahloService.Repository
   {
     IDbConnectionFactory ConnectionFactory { get; }
 
-    IEnumerable<GreigeRoll> GetIncompleteGreigeRolls();
+    IEnumerable<GreigeRoll> GetRecentGreigeRolls(int maxCount);
 
     int GetNextGreigeRollId();
 
@@ -32,5 +32,6 @@ namespace MahloService.Repository
     void InsertPatternRepeatMapDatum(PatternRepeatMapDatum datum);
     IEnumerable<CutRoll> GetCutRollsFor(int greigeRollId);
     CutRoll GetCutRoll(int cutRollId);
+    IEnumerable<BowAndSkewMapDatum> GetBowAndSkewMap(long basFirstFoot, long basLastFoot);
   }
 }

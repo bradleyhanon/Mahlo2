@@ -26,14 +26,14 @@ namespace MahloClient.Views
     public static readonly CellColor OutOfSpecColor = new CellColor { ForeColor = Color.FromArgb(156, 0, 6), BackColor = Color.FromArgb(255, 199, 206) };
 
     // Gray
-    public static readonly CellColor LimboColor = new CellColor { ForeColor = Color.White, BackColor = Color.FromArgb(165, 165, 165) };
+    public static readonly CellColor IsCompletedColor = new CellColor { ForeColor = Color.White, BackColor = Color.FromArgb(165, 165, 165) };
 
     // Orangeish
     // public static readonly CellColor LimboColor = new CellColor { ForeColor = Color.FromArgb(63, 114, 142), BackColor = Color.FromArgb(255, 204, 153) };
 
-    public static CellColor GetLimboColor()
+    public static CellColor GetIsCompletedColorColor()
     {
-      return LimboColor;
+      return IsCompletedColor;
     }
 
     public static CellColor GetFeetColor(int expectedLength, long measuredLength, IServiceSettings settings)

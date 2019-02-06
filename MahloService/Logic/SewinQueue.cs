@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using MahloService.Models;
 using MahloService.Repository;
+using MahloService.Settings;
 using MahloService.Utilities;
 using Serilog;
 
@@ -14,28 +15,32 @@ namespace MahloService.Logic
 {
   internal sealed class SewinQueue : ISewinQueue, IEqualityComparer<GreigeRoll>, INotifyPropertyChanged
   {
+    private int maxRollsToKeep = 200;
     private readonly ILogger logger;
     private int nextRollId;
 
     private readonly IDbLocal dbLocal;
     private readonly IDbMfg dbMfg;
+    private readonly IServiceSettings settings;
 
     private readonly Queue<string> messageQueue = new Queue<string>();
     private bool isRefreshBusy;
 
     private string priorFirstRoll = string.Empty;
     private string priorLastRoll = string.Empty;
-    private int priorQueueSize;
+    private int? priorQueueSize;
     private IDisposable timer;
 
-    public SewinQueue(IScheduler scheduler, IDbLocal dbLocal, IDbMfg dbMfg, ILogger logger)
+    public SewinQueue(IScheduler scheduler, IDbLocal dbLocal, IDbMfg dbMfg, IServiceSettings settings, ILogger logger)
     {
       this.dbLocal = dbLocal;
       this.dbMfg = dbMfg;
+      this.settings = settings;
       this.logger = logger;
 
       this.nextRollId = this.dbLocal.GetNextGreigeRollId();
-      this.Rolls.AddRange(this.dbLocal.GetIncompleteGreigeRolls());
+      this.maxRollsToKeep = settings.MaxSewinQueueRolls;
+      this.Rolls.AddRange(this.dbLocal.GetRecentGreigeRolls(this.maxRollsToKeep));
 
       var ignoredResultTask = this.RefreshIfChangedAsync();
       this.timer = Observable
@@ -86,15 +91,16 @@ namespace MahloService.Logic
         this.priorLastRoll = newRolls.LastOrDefault()?.RollNo ?? string.Empty;
         this.priorQueueSize = newRolls.Count();
 
-        HashSet<GreigeRoll> seenRolls = new HashSet<GreigeRoll>(this.Rolls.Where(roll => roll.IsInLimbo));
-        
+        HashSet<GreigeRoll> seenRolls = new HashSet<GreigeRoll>(
+          this.Rolls.Where(roll => roll.IsComplete));
+
         // Update or add from the new rolls
         int updatedCount = 0;
         int addedCount = 0;
         int lastIdUpdated = 0;
         foreach (var newRoll in newRolls)
         {
-          var oldRoll = this.Rolls.FirstOrDefault(item => item.RollNo == newRoll.RollNo && !seenRolls.Contains(item) && 
+          var oldRoll = this.Rolls.FirstOrDefault(item => item.RollNo == newRoll.RollNo && !seenRolls.Contains(item) &&
             (!newRoll.IsCheckRoll || item.Id > lastIdUpdated));
           if (oldRoll != null)
           {
@@ -118,24 +124,11 @@ namespace MahloService.Logic
           }
         }
 
-        // Remove rolls that are no longer in the list
-        var rollsToRemove = this.Rolls.Except(seenRolls).ToList();
-        var rollsRemoved = new List<GreigeRoll>();
-        foreach (var roll in rollsToRemove)
-        {
-          CancelEventArgs args = new CancelEventArgs();
-          this.CanRemoveRollQuery?.Invoke(roll, args);
-          roll.IsInLimbo = args.Cancel;
-          if (!args.Cancel)
-          {
-            rollsRemoved.Add(roll);
-            this.Rolls.Remove(roll);
-          }
-        }
-
+        // Set rolls that have been removed from the queue as complete
+        var rollsRemoved = this.Rolls.Except(seenRolls).ToList();
         this.dbLocal.SetGreigeRollsComplete(rollsRemoved);
 
-        this.logger.Debug("SewinQueue refreshed: added={added}, updated={updated}, removed={removed}", addedCount, updatedCount, rollsToRemove.Count);
+        this.logger.Debug("SewinQueue refreshed: added={added}, updated={updated}, removed={removed}", addedCount, updatedCount, rollsRemoved.Count);
       }
       catch (Exception ex)
       {
@@ -156,22 +149,8 @@ namespace MahloService.Logic
       this.isRefreshBusy = true;
       try
       {
-        // Remove rolls in limbo that are no longer referenced
-        for (int j = this.Rolls.Count - 1; j >= 0; j--)
-        {
-          if (this.Rolls[j].IsInLimbo)
-          {
-            CancelEventArgs args = new CancelEventArgs();
-            this.CanRemoveRollQuery?.Invoke(this.Rolls[j], args);
-            if (!args.Cancel)
-            {
-              this.Rolls.RemoveAt(j);
-            }
-          }
-        }
-
         this.SetMessage("Checking queue");
-        if (await this.dbMfg.GetIsSewinQueueChangedAsync(this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll))
+        if (await this.dbMfg.GetIsSewinQueueChangedAsync(this.priorQueueSize ?? 0, this.priorFirstRoll, this.priorLastRoll))
         {
           this.SetMessage("Reading queue");
           await this.RefreshAsync();
@@ -179,6 +158,24 @@ namespace MahloService.Logic
         else
         {
           this.logger.Debug("SewinQueue unchanged: size={priorQueueSize}, first={priorFirstRoll}, last={priorLastRoll}.", this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll);
+        }
+
+        if (this.priorQueueSize.HasValue)
+        {
+          // Remove rolls that are no longer needed for display
+          CancelEventArgs args = new CancelEventArgs();
+          while (this.Rolls.Count > this.maxRollsToKeep + this.priorQueueSize.Value)
+          {
+            args.Cancel = false;
+            this.CanRemoveRollQuery?.Invoke(this.Rolls[0], args);
+
+            if (args.Cancel)
+            {
+              break;
+            }
+
+            this.Rolls.RemoveAt(0);
+          }
         }
 
         this.SetMessage("Queue sleeping");

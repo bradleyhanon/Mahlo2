@@ -47,6 +47,7 @@ namespace MahloClient.Views
           this.srcNextRoll.DataSource = nextIndex < this.sewinQueue.Rolls.Count ? this.sewinQueue.Rolls[nextIndex] : new GreigeRoll();
           this.DataGridView1_SelectionChanged(this.dataGridView1, EventArgs.Empty);
           this.dataGridView1.EnsureVisibleRow(this.logic.CurrentRollIndex);
+          this.myScrollBar1.AutoScrollPosition = this.logic.CurrentRollIndex - 2;
         });
 
       // Make column heading alignment match column data alignment
@@ -196,9 +197,9 @@ namespace MahloClient.Views
                 CellColor.GetFeetColor(roll.RollLength, (long)e.Value, this.serviceSettings);
             }
           }
-          else if (roll.IsInLimbo)
+          else if (roll.IsComplete)
           {
-            (e.CellStyle.ForeColor, e.CellStyle.BackColor) = CellColor.LimboColor;
+            (e.CellStyle.ForeColor, e.CellStyle.BackColor) = CellColor.IsCompletedColor;
           }
         }
       }

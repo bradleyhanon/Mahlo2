@@ -30,6 +30,7 @@ namespace MahloClient.Ipc
     private readonly IClientSettings appInfo;
     private readonly ISewinQueue sewinQueue;
     private readonly ICutRollList cutRollList;
+    private readonly IInspectionAreaList inspectionAreaList;
     private readonly SynchronizationContext context;
 
     private bool isStarting;
@@ -40,12 +41,14 @@ namespace MahloClient.Ipc
     public MahloIpcClient(
       ISewinQueue sewinQueue,
       ICutRollList cutRollList,
+      IInspectionAreaList inspectionAreaList,
       IClientSettings appInfo,
       SynchronizationContext context)
     {
       this.appInfo = appInfo;
       this.sewinQueue = sewinQueue;
       this.cutRollList = cutRollList;
+      this.inspectionAreaList = inspectionAreaList;
       this.context = context;
     }
 
@@ -93,6 +96,9 @@ namespace MahloClient.Ipc
 
         this.hubProxy.On<JArray>("UpdateCutRollList", array =>
           TaskUtilities.RunOnMainThreadAsync(() => this.cutRollList.Update(array)).NoWait());
+
+        this.hubProxy.On<JArray>("UpdateInspectionArea", array =>
+          TaskUtilities.RunOnMainThreadAsync(() => this.inspectionAreaList.Update(array)).NoWait());
 
         while (true)
         {

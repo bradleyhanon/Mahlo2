@@ -6,6 +6,7 @@ namespace MahloService.Settings
   {
     string ServiceUrl { get; set; }
 
+    int MaxSewinQueueRolls { get; set; }
     double MaxEndCheckRollPieceLength { get; set; }
     double MinSeamSpacing { get; set; }
     double SeamDetectIgnoreThreshold { get; set; }
@@ -40,7 +41,6 @@ namespace MahloService.Settings
     double Mahlo2SeamToSkew { get; set; }
     double SeamToBowAndSkew { get; set; }
     double SeamToCutKnife { get; set; }
-
 
     BackingSpec GetBackingSpec(string backingCode);
   }

@@ -192,6 +192,7 @@ namespace MahloService
       container.RegisterSingleton<ISewinQueue, SewinQueue>();
       container.RegisterSingleton<CutRollList>();
       container.RegisterSingleton<ICutRollLogic, CutRollLogic>();
+      container.RegisterSingleton<InspectionAreaList>();
 
       container.RegisterSingleton<IDbConnectionFactoryFactory, DbConnectionFactory.Factory>();
       container.RegisterSingleton<IDbLocal, DbLocal>();

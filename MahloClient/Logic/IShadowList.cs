@@ -5,7 +5,9 @@ using Newtonsoft.Json.Linq;
 
 namespace MahloClient.Logic
 {
-  internal interface ICutRollList : IShadowList<CutRoll>
+  internal interface IShadowList<T> : IList<T>, IBindingList
+    where T : class, new()
   {
+    void Update(JArray jArray);
   }
 }

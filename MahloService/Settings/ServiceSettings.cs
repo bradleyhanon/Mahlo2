@@ -20,6 +20,8 @@ namespace MahloService.Settings
 
     public string ServiceUrl { get; set; } = "http://+:80/mahlo/";
 
+    public int MaxSewinQueueRolls { get; set; } = 200;
+
     public double MaxEndCheckRollPieceLength { get; set; } = 10;
     public double MinSeamSpacing { get; set; } = 4;
     public double SeamDetectIgnoreThreshold { get; set; } = 0.5;

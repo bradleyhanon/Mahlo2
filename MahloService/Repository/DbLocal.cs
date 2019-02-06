@@ -39,11 +39,17 @@ namespace MahloService.Repository
       }
     }
 
-    public IEnumerable<GreigeRoll> GetIncompleteGreigeRolls()
+    public IEnumerable<GreigeRoll> GetRecentGreigeRolls(int maxCount)
     {
       using (var connection = this.GetOpenConnection())
       {
-        return connection.Query<GreigeRoll>("SELECT * FROM GreigeRolls WHERE IsComplete = 0 ORDER BY Id");
+        const string cmdText = "SELECT * FROM GreigeRolls " +
+          "WHERE Id > (SELECT COALESCE(MAX(Id), 0) - @MaxCount " +
+          "            FROM GreigeRolls gr " +
+          "            WHERE gr.IsComplete <> 0) " +
+          "ORDER BY Id ";
+
+        return connection.Query<GreigeRoll>(cmdText, new { MaxCount = maxCount });
       }
     }
 
@@ -166,6 +172,19 @@ namespace MahloService.Repository
       using (var connection = this.GetOpenConnection())
       {
         connection.Update(cutRoll);
+      }
+    }
+    public IEnumerable<BowAndSkewMapDatum> GetBowAndSkewMap(long basFirstFoot, long basLastFoot)
+    {
+      string cmdText =
+        "SELECT FeetCounter, Bow, Skew " +
+        "FROM BowAndSkewMap " +
+        "WHERE @FirstFoot <= FeetCounter AND FeetCounter < @LastFoot " +
+        "ORDER BY FeetCounter ";
+
+      using (var connection = this.GetOpenConnection())
+      {
+        return connection.Query<BowAndSkewMapDatum>(cmdText, new { FirstFoot = basFirstFoot, LastFoot = basLastFoot });
       }
     }
 
