@@ -155,10 +155,10 @@ namespace MahloService.Logic
           this.SetMessage("Reading queue");
           await this.RefreshAsync();
         }
-        else
-        {
-          this.logger.Debug("SewinQueue unchanged: size={priorQueueSize}, first={priorFirstRoll}, last={priorLastRoll}.", this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll);
-        }
+        //else
+        //{
+        //  this.logger.Debug("SewinQueue unchanged: size={priorQueueSize}, first={priorFirstRoll}, last={priorLastRoll}.", this.priorQueueSize, this.priorFirstRoll, this.priorLastRoll);
+        //}
 
         if (this.priorQueueSize.HasValue)
         {

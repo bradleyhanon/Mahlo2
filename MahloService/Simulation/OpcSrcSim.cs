@@ -165,9 +165,9 @@ namespace MahloService.Simulation
 
     }
 
-    public void SetRecipeFromPatternLength(double targetPatternLength)
+    public Task SetRecipeFromPatternLength(double targetPatternLength)
     {
-
+      return Task.CompletedTask;
     }
 
     public void SetStatusIndicator(bool value)

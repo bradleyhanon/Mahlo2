@@ -293,17 +293,36 @@ namespace MahloService.Opc
       }
     }
 
-    public void SetRecipeFromPatternLength(double targetPatternRepeatLength)
+    public async Task SetRecipeFromPatternLength(double targetPatternRepeatLength)
     {
       const int Small = 1;
       const int Middle = 2;
       const int Large = 3;
 
-      int level =
+      string[] RecipeNames = new string[]
+      {
+        "Line Detection",
+        "SMALL_SCALE_1",
+        "MEDIUM_SCALE_1",
+        "LARGE_SCALE_1",
+      };
+
+      int index =
         targetPatternRepeatLength <= 10.0 ? Small :
         targetPatternRepeatLength <= 25.0 ? Middle : Large;
 
-      this.opcClient.WriteItemValue(string.Empty, MahloServerClass, $"{this.mahloChannel}.Current.Bridge.0.Algo.2.AlgoVertPattern.0.StartLevel", level);
+      log.Debug("Updating Recipe");
+      String priorRecipe = (string)this.opcClient.ReadItemValue(string.Empty, MahloServerClass, $"{this.mahloChannel}.Current.Version.0.KeyColumn");
+      double priorMeters = (double)this.opcClient.ReadItemValue(string.Empty, MahloServerClass, $"{this.mahloChannel}.Current.Bridge.0.Calc.1.CalcLengthRepeat.0.TrendY.0.Preset");
+      double priorInches = ServiceExtensions.MetersToFeet(priorMeters) * 12;
+      this.log.Debug($"SetRecipe, priorRecipe = {priorRecipe}, priorTarget = {priorInches}");
+
+      this.log.Debug($"SetRecipe, currentRecipe = {RecipeNames[index]}, currentTarget = {targetPatternRepeatLength}");
+
+      this.opcClient.WriteItemValue(string.Empty, MahloServerClass, $"{this.mahloChannel}.ApplyRecipe", RecipeNames[index]);
+      await Task.Delay(2000);
+      double targetMeters = ServiceExtensions.FeetToMeters(targetPatternRepeatLength / 12);
+      this.opcClient.WriteItemValue(string.Empty, MahloServerClass, $"{this.mahloChannel}.Current.Bridge.0.Calc.1.CalcLengthRepeat.0.TrendY.0.Preset", targetMeters);
     }
   }
 }

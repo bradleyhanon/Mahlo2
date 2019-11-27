@@ -1,6 +1,6 @@
 [Setup]
 AppName=MahloMapper
-AppVersion=1.3
+AppVersion=1.5
 PrivilegesRequired=none
 AppId={{743E0273-076F-4EB5-BCDE-4FD08FE1034D}
 DefaultDirName={pf}\PA-Group\MahloMapper
@@ -9,7 +9,7 @@ AppContact=John Kendall
 AppSupportPhone=423-473-7541
 OutputBaseFilename=MahloMapperSetup
 UninstallDisplayName=Mahlo Mapper
-VersionInfoVersion=1.3
+VersionInfoVersion=1.5
 VersionInfoCompany=PA-Group, USA
 VersionInfoDescription=Broadloom Coater Monitor
 

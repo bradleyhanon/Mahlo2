@@ -191,7 +191,7 @@ namespace MahloService.Logic
     {
       base.OnRollStarted(greigeRoll);
       this.greigeRollAverager.Clear();
-      this.srcData.SetRecipeFromPatternLength(greigeRoll.PatternRepeatLength);
+      this.srcData.SetRecipeFromPatternLength(greigeRoll.PatternRepeatLength).NoWait();
 
       // If the current cut roll is too short, it belongs to the new greige roll rather than the prior one.
       if (this.CurrentCutRoll != null && this.CurrentCutRoll.Length < this.serviceSettings.MinSeamSpacing)

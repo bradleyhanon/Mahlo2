@@ -68,8 +68,9 @@ namespace MahloServiceTests.Mocks
       throw new NotImplementedException();
     }
 
-    public void SetRecipeFromPatternLength(double targetPatternRepeatLength)
+    public Task SetRecipeFromPatternLength(double targetPatternRepeatLength)
     {
+      return Task.CompletedTask;
     }
   }
 }

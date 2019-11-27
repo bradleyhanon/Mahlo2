@@ -4,7 +4,7 @@
     <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>-x-uninstall -z-migrate --simulate</StartArguments>
+    <StartArguments>-x-uninstall -z-migrate -x-simulate</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <StartArguments>--simulate</StartArguments>
